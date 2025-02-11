@@ -31,6 +31,18 @@ export const DashboardMenu = [
 		icon: 'home',
 		link: '/dashboard'
 	},
+	{
+		id: uuid(),
+		title: 'User Management',
+		icon: 'user',
+		children: [
+			{ id: uuid(), link: '/user-management/profile', name: 'Manage User' },
+			{ id: uuid(), link: '/user-management/profile', name: 'Profile' },
+			{ id: uuid(), link: '/user-management/profile', name: 'Profile' },
+			{ id: uuid(), link: '/user-management/profile', name: 'Profile' },
+		]
+	},
+	
 	// {
 	// 	id: uuid(),
 	// 	title: 'LAYOUTS & PAGES',
