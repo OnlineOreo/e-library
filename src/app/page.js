@@ -1,95 +1,34 @@
 import Image from "next/image";
 import styles from "./page.module.css";
+import Navbar from "./Component/landing-page/Navbar";
+import '../../public/landingPageAsset/css/style2.css';
+import '../../public/landingPageAsset/css/header.css';
+import Banner from "./Component/landing-page/Banner";
+import Publisher from "./Component/landing-page/Publisher";
+import NoticeBoard from "./Component/landing-page/NoticeBoard";
+import AboutUs from "./Component/landing-page/AboutUs";
+import TrendingBook from "./Component/landing-page/TrendingBook";
+import StaffPick from "./Component/landing-page/StaffPick";
+import Download from "./Component/landing-page/Download";
+import TopUser from "./Component/landing-page/TopUser";
+import Footer from "./Component/landing-page/Footer";
+
 
 export default function Home() {
   return (
     <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.js</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      <div id="main_widget_section">
+        <Navbar/>
+        <Banner/>
+        <Publisher/>
+        <NoticeBoard/>
+        <AboutUs/>
+        <TrendingBook/>
+        <StaffPick/>
+        <Download/>
+        <TopUser/>
+        <Footer/>
+     </div>
     </div>
   );
 }

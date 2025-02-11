@@ -1,42 +1,79 @@
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+.navbar-nav{
+  flex-direction: row;
 }
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+.one_line_ellipses{
+  line-height: 25px;
+}
+.nav{
+  line-height: 25px;
+}
+.hero-header{
+  position: relative;
+  height: 50vh;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  overflow: hidden;
+}
+#typing{
+  height: 100% !important;
+} 
+.book-items{
+  height: 300px;
+}
+.index-banner{
+  position:absolute; 
+  top: 48%; 
+  left:50%; 
+  transform:translate(-48%,-50%)
+}
+@media (max-width:986px){
+  .index-banner p{
+      padding: 10px 20px !important;
+      width: 90% !important;
+      text-align: start !important;
+      margin: 0px auto !important;
+      line-height: 1.3 !important;
+  }
+  .index-banner h2{
+      max-width: 630px !important;
+  }
+  .header-wrap.header-space-between{
+      justify-content: space-between;
+  }
+  .hero-header{
+      height: 40vh;
+      overflow: hidden;
+  }
+  h2 span{
+      font-size: 23px !important;
+      padding: 0px 5px;
+  }
+  .logo.logo-width-1 a img{
+      height: 55px;
+  }
+  .index-banner{
+      top: 50% !important; 
+      width:100% !important;
+      
+  }
+  .hero-header h2{
+      line-height: 0.8;
+      margin-bottom: 20px;
+      max-width: 630px;
+  }
+  .header-action-2 .header-action-icon-2 > a{
+      line-height: 1.2;
+  }
+  .logo.logo-width-1{
+      margin-right: 85px;
+  }
+  .book-items{
+      height: 250px;
   }
 }
-
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+@media (max-width:986px){
+  .logo.logo-width-1{
+      margin-right: 30px;
   }
 }
