@@ -36,10 +36,10 @@ export const DashboardMenu = [
 		title: 'User Management',
 		icon: 'user',
 		children: [
-			{ id: uuid(), link: '/user-management/profile', name: 'Manage User' },
-			{ id: uuid(), link: '/user-management/profile', name: 'Profile' },
-			{ id: uuid(), link: '/user-management/profile', name: 'Profile' },
-			{ id: uuid(), link: '/user-management/profile', name: 'Profile' },
+			{ id: uuid(), link: '/user-management/manage-user', name: 'Manage User' },
+			{ id: uuid(), link: '/user-management/add-user', name: 'Add User' },
+			{ id: uuid(), link: '/user-management/self-restriction', name: 'Self Restriction' },
+			{ id: uuid(), link: '/user-management/domain-restriction', name: 'Domain Restriction' },
 		]
 	},
 	
