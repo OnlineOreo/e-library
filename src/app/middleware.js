@@ -15,5 +15,5 @@ export function middleware(request) {
 
 // Define which routes to protect
 export const config = {
-  matcher: ["/dashboard/:path*", "/profile/:path*"], // Protect dashboard and profile pages
+  matcher: ["/user-management/:path*", "/profile/:path*"], // Protect dashboard and profile pages
 };
