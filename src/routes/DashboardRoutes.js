@@ -42,6 +42,14 @@ export const DashboardMenu = [
 			{ id: uuid(), link: '/user-management/domain-restriction', name: 'Domain Restriction' },
 		]
 	},
+	{
+		id: uuid(),
+		title: 'Library & Department',
+		icon: 'user',
+		children: [
+			{ id: uuid(), link: '/library-department/institute/view', name: 'Institutes' },
+		]
+	},
 	
 	// {
 	// 	id: uuid(),

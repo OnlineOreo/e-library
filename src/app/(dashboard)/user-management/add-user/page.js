@@ -78,7 +78,7 @@ const Home = () => {
 
         try {
             const response = await axios.post(
-              "http://192.168.1.20:8010/api/register",
+              `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/register`,
               formDataToSend,
               {
                 headers: {
