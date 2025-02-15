@@ -1,7 +1,7 @@
 'use client';
 import { Fragment, useEffect, useState } from "react";
 import Link from "next/link";
-import { Container, Col, Row } from "react-bootstrap";
+import { Container, Col, Row, Card} from "react-bootstrap";
 import axios from "axios";
 import Box from "@mui/material/Box";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
@@ -89,8 +89,9 @@ const ViewInstitute = () => {
 
   return (
     <Fragment>
-      <div className="bg-primary pt-10 pb-21"></div>
-      <Container fluid className="mt-n22 px-6">
+      <Card>
+
+      <Container fluid className=" px-6">
         <Row>
           <Col lg={12} md={12} xs={12}>
             <div className="d-flex justify-content-between align-items-center">
@@ -113,6 +114,7 @@ const ViewInstitute = () => {
           </Box>
         </div>
       </Container>
+      </Card>
       <ToastContainer />
     </Fragment>
   );

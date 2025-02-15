@@ -8,15 +8,25 @@ import axios from 'axios';
 import { useRouter } from "next/navigation";
 import { use } from "react";
 import EditInstituteComponent from "@/app/Component/Institute/EditInstituteComponent";
+import ShowInstitute from "@/app/Component/Institute/ShowInstitute";
 
 const EditInstitute = ({params}) => {
-    const [page , setPage] = useState();
-    
+    const { id } = use(params)
+    const [page , setPage] = useState("edit");
+    useEffect(() => {
+        if (id[1] === 'show') {
+            setPage('show');
+        }else{
+            setPage('edit');
+        }
+    }, [id]);   
+
     return (
         <>
-        <EditInstituteComponent params={params} />
-
-          <ToastContainer />
+        {
+            page == 'edit' ? <EditInstituteComponent params={params} /> : <ShowInstitute/>
+        }
+        <ToastContainer />
         </>
     );
 };
