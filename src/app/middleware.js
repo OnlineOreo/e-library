@@ -8,7 +8,7 @@ export function middleware(request) {
   if (!token) {
     return NextResponse.redirect(new URL("/authentication/sign-in", request.url));
   }
-
+  
 //   return NextResponse.next(); // Allow access if token exists
     return "hello middleware";
 }

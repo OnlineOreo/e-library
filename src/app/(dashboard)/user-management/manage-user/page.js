@@ -11,11 +11,8 @@ const Home = () => {
   const [users, setUsers] = useState([]);
 
   const getToken = () => localStorage.getItem("access_token");
-
   const loadUser = async () => {
     const token = getToken();
-    console.log("Token:", token);
-    console.log("API URL:", "http://192.168.1.20:8010/api/users");
   
     if (!token) {
       errorToaster("Authentication required!");
@@ -23,8 +20,9 @@ const Home = () => {
     }
   
     try {
-      const response = await axios.get("http://192.168.1.20:8010/api/users", {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users`, {
         headers: { Authorization: `${token}` },
+        method:'GET'
       });
       console.log("Server Response:", response.data);
       if (response.status === 200) {

@@ -4,6 +4,7 @@ import { Fragment, useContext } from 'react';
 import Link from 'next/link';
 import { usePathname   } from 'next/navigation'
 import { useMediaQuery } from 'react-responsive';
+import { FaAngleDown } from "react-icons/fa";
 import {
 	ListGroup,
 	Card,
@@ -28,12 +29,13 @@ const NavbarVertical = (props) => {
 		const decoratedOnClick = useAccordionButton(eventKey, () =>
 			console.log('totally custom!')
 		);
+
 		const isCurrentEventKey = activeEventKey === eventKey;
 		return (
 			<li className="nav-item">
 				<Link
 					href="#"
-					className="nav-link "
+					className="nav-link"
 					onClick={decoratedOnClick}
 					data-bs-toggle="collapse"
 					data-bs-target="#navDashboard"
@@ -41,6 +43,7 @@ const NavbarVertical = (props) => {
 					aria-controls="navDashboard">
 					{icon ? <i className={`nav-icon fe fe-${icon} me-2`}></i> : ''}{' '}
 					{children}
+					<FaAngleDown className='ms-1' />
 				</Link>
 			</li>
 		);

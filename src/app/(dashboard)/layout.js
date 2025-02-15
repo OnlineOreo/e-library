@@ -6,8 +6,6 @@ import { useState } from 'react';
 import '../styles/theme.scss';
 
 
-// import sub components
-// import NavbarVertical from '../layouts/navbars/NavbarVertical';
 import NavbarTop from '@/layouts/navbars/NavbarTop';
 import NavbarVertical from '@/layouts/navbars/NavbarVertical';
 // import NavbarTop from '../layouts/navbars/NavbarTop';
