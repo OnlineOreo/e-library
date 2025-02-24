@@ -1,5 +1,4 @@
 'use client';
-
 // Import libraries
 import { Row, Col, Card, Form, Button } from 'react-bootstrap';
 import Link from 'next/link';
@@ -26,7 +25,6 @@ const SignIn = () => {
     setIsLoading(true);
     
     try {
-      console.log('Sending login request with:', { email, password });
 
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/login`, {
         method: "POST",
@@ -40,11 +38,11 @@ const SignIn = () => {
 
       if (data.access_token) {
         // Set cookies only in the client
-        if (typeof window !== 'undefined') {
+        // if (typeof window !== 'undefined') {
           document.cookie = `access_token=${data.access_token}; path=/; max-age=${60 * 60 * 24}; secure=${process.env.NODE_ENV === 'production' ? 'true' : 'false'}; samesite=strict`;
 
           localStorage.setItem('access_token', data.access_token);
-        }
+        // }
       }
       
       if (response.ok) {
@@ -53,15 +51,14 @@ const SignIn = () => {
         setError(data.detail);
         setIsLoading(false);
       }
-      
     } catch (err) {
       console.error('Login error:', err);
-      setError(err.message || 'Login failed');
+      setError('Login failed. Something went wrong!');
       setIsLoading(false);
     }
   };
 
-  if (!isClient) return null; // Avoid hydration issues
+  if (!isClient) return null; 
 
   return (
     <Row className="align-items-center justify-content-center g-0 min-vh-100">

@@ -7,29 +7,25 @@ import {
 	Nav,
 	Container
 } from 'react-bootstrap';
+
+import Link from "next/link";
 export default function ShowInstitute(){
     return (
         <>
-        <Container fluid className="p-6 justify-content-center">
-        <Row>
+		<div className="bg-primary pt-10 pb-21"></div>
+        <Container fluid className="mt-n22 px-6 ">
+			<Row>
+				<Col lg={12} md={12} xs={12}>
+					<div className="d-flex justify-content-between align-items-center">
+						<h3 className="mb-0 text-white">Show Institute</h3>
+						<Link href="../view" className="btn btn-white">Back</Link>
+					</div>
+				</Col>
+			</Row>
+        <Row className="justify-content-center mt-4">
 				<Col xl={8} lg={8} md={8} sm={12}>
-
 					<Tab.Container id="tab-container-8" defaultActiveKey="design">
 						<Card>
-							<Card.Header className="border-bottom-0 p-0">
-								<Nav className="nav-lb-tab">
-									<Nav.Item>
-										<Nav.Link className="mb-sm-3 mb-md-0">
-											Show
-										</Nav.Link>
-									</Nav.Item>
-									{/* <Nav.Item>
-										<Nav.Link eventKey="react" className="mb-sm-3 mb-md-0">
-											Code
-										</Nav.Link>
-									</Nav.Item> */}
-								</Nav>
-							</Card.Header>
 							<Card.Body className="p-0">
 								<Tab.Content>
 									<Tab.Pane eventKey="design" className="pb-4 p-4">

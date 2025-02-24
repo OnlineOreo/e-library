@@ -34,7 +34,7 @@ import {
 
 const Cards = () => {
 	return (
-		<Container fluid className="p-6">
+		<Container className="p-6">
 			<Row>
 				<Col lg={12} md={12} sm={12}>
 					<div className="border-bottom pb-4 mb-4 d-md-flex align-items-center justify-content-between">
