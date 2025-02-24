@@ -14,6 +14,7 @@ import TopUser from "./Component/landing-page/TopUser";
 import Footer from "./Component/landing-page/Footer";
 
 
+
 export default function Home() {
   return (
     <div className={styles.page}>
