@@ -24,6 +24,7 @@ const ViewInstitute = () => {
     const token = getToken();
     if (!token) {
       errorToaster("Authentication required!");
+      router.push('/authentication/sign-in')
       return;
     }
 
@@ -88,10 +89,9 @@ const ViewInstitute = () => {
   ];
 
   return (
-    <Fragment>
-      <Card>
-
-      <Container fluid className=" px-6">
+    <>
+      <div className="bg-primary pt-10 pb-21"></div>
+      <Container fluid className="mt-n22 px-6">
         <Row>
           <Col lg={12} md={12} xs={12}>
             <div className="d-flex justify-content-between align-items-center">
@@ -114,9 +114,8 @@ const ViewInstitute = () => {
           </Box>
         </div>
       </Container>
-      </Card>
       <ToastContainer />
-    </Fragment>
+    </>
   );
 };
 
