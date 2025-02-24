@@ -1,11 +1,6 @@
 'use client'
-
-import { Fragment, useState, useEffect } from "react";
-import Link from 'next/link';
-import { Container, Col, Row, Form, Button, Spinner } from 'react-bootstrap';
-import { ToastContainer, toast } from 'react-toastify';
-import axios from 'axios';
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { ToastContainer } from 'react-toastify';
 import { use } from "react";
 import EditInstituteComponent from "@/app/Component/Institute/EditInstituteComponent";
 import ShowInstitute from "@/app/Component/Institute/ShowInstitute";
@@ -19,12 +14,12 @@ const EditInstitute = ({params}) => {
         }else{
             setPage('edit');
         }
-    }, [id]);   
+    }, [id]);
 
     return (
         <>
         {
-            page == 'edit' ? <EditInstituteComponent params={params} /> : <ShowInstitute/>
+            page == 'edit' ? <EditInstituteComponent params={params} /> : <ShowInstitute params={params} />
         }
         <ToastContainer />
         </>

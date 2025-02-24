@@ -1,22 +1,22 @@
 'use client';
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Container, Col, Row, Card} from "react-bootstrap";
+import { Container, Col, Row } from "react-bootstrap";
 import axios from "axios";
 import Box from "@mui/material/Box";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useRouter } from "next/navigation";
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaEye } from "react-icons/fa";
 import { ToastContainer, toast } from 'react-toastify';
 
 const ViewInstitute = () => {
-
   const router = useRouter();
   const successToaster = (text) => toast(text);
   const errorToaster = (text) => toast.error(text);
 
-  const [institute, setInstutes] = useState([]);
+  const [institutes, setInstitutes] = useState([]);
+  const [search, setSearch] = useState("");
 
   const getToken = () => localStorage.getItem("access_token");
 
@@ -24,7 +24,7 @@ const ViewInstitute = () => {
     const token = getToken();
     if (!token) {
       errorToaster("Authentication required!");
-      router.push('/authentication/sign-in')
+      router.push('/authentication/sign-in');
       return;
     }
 
@@ -35,7 +35,7 @@ const ViewInstitute = () => {
       });
 
       if (response.status === 200) {
-        setInstutes(response.data);
+        setInstitutes(response.data);
       }
     } catch (error) {
       console.log(error);
@@ -46,26 +46,34 @@ const ViewInstitute = () => {
     loadUser();
   }, []);
 
-  const handleDelete = async (params)=> {
+  const handleDelete = async (params) => {
     const token = getToken();
     try {
-      const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/institutes?institute_id=${params.id}`, {
+      await axios.delete(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/institutes?institute_id=${params.id}`, {
         headers: { Authorization: `${token}` },
       });
-
-      successToaster("Instiute deleted successfully!")
       
-      setInstutes((prev) => prev.filter(item => item.institute_id !== params.id));
-
+      successToaster("Institute deleted successfully!");
+      setInstitutes((prev) => prev.filter(item => item.institute_id !== params.id));
     } catch (error) {
-      errorToaster("Something went wrong!")
+      errorToaster("Something went wrong!");
       console.log(error);
     }
-  }
+  };
 
-  const handleEdit = (params)=> {
-    router.push(`/library-department/institute/view/${params.id}`)
-  }
+  const handleEdit = (params) => {
+    router.push(`/library-department/institute/view/${params.id}`);
+  };
+  
+  const handleShow = (params) => {
+    router.push(`/library-department/institute/view/${params.id}/show`);
+  };
+
+  const filteredInstitutes = institutes.filter(inst =>
+    inst.institute_name.toLowerCase().includes(search.toLowerCase()) ||
+    inst.email.toLowerCase().includes(search.toLowerCase()) ||
+    inst.address.toLowerCase().includes(search.toLowerCase())
+  );
 
   const columns = [
     { field: "institute_id", headerName: "ID", width: 150 },
@@ -81,8 +89,9 @@ const ViewInstitute = () => {
       width: 150,
       renderCell: (params) => (
         <div>
-          <button onClick={() => handleEdit(params)} className="btn btn-danger btn-sm"><FaEdit /></button>
-          <button onClick={() => handleDelete(params)} className="btn btn-primary mx-2 btn-sm"><RiDeleteBin6Line /></button>
+          <button onClick={() => handleShow(params)} className="btn btn-secondary mx-2 btn-sm"><FaEye /></button>
+          <button onClick={() => handleEdit(params)} className="btn btn-primary btn-sm"><FaEdit /></button>
+          <button onClick={() => handleDelete(params)} className="btn btn-danger mx-2 btn-sm"><RiDeleteBin6Line /></button>
         </div>
       ),
     },
@@ -102,10 +111,18 @@ const ViewInstitute = () => {
             </div>
           </Col>
         </Row>
+
         <div className="card p-3 mt-4">
+          <input
+            type="text"
+            className="form-control mb-3"
+            placeholder="Search by name, email or address..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
           <Box sx={{ height: 500, width: "100%" }}>
             <DataGrid
-              rows={institute}
+              rows={filteredInstitutes}
               columns={columns}
               pageSize={5}
               components={{ Toolbar: GridToolbar }}

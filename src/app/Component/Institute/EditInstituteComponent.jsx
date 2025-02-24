@@ -1,6 +1,4 @@
-
 'use client';
-
 import { Fragment, useState, useEffect } from "react";
 import Link from 'next/link';
 import { Container, Col, Row, Form, Button, Spinner } from 'react-bootstrap';
@@ -30,10 +28,9 @@ export default function EditInstituteComponent(props){
               }
             );
             successToaster(response.data.message);
-            setIsLoading(false)
-
+            
             const fetchedData = response.data;
-
+            
             setFormData({
                 institute_name: fetchedData.institute_name,
                 email: fetchedData.email,
@@ -42,7 +39,10 @@ export default function EditInstituteComponent(props){
                 domain: fetchedData.domain,
                 sub_domain: fetchedData.sub_domain,
             });
+            setIsLoading(false)
+            
           } catch (error) {
+              setIsLoading(false)
               errorToaster("Something went wrong!");
           }
     }
@@ -50,7 +50,6 @@ export default function EditInstituteComponent(props){
     useEffect(() => {
         getInstitute(id);
     }, []);
-
 
 
     const [formData, setFormData] = useState({
@@ -67,7 +66,7 @@ export default function EditInstituteComponent(props){
         if (type === "file") {
             setFormData({
                 ...formData,
-                [name]: files[0], 
+                [name]: files[0],
             });
         } else {
             setFormData({
@@ -109,10 +108,12 @@ export default function EditInstituteComponent(props){
             setTimeout(() => {
                 router.push('../view')
             }, 4000);
-          } catch (error) {
+        } catch (error) {
+              setIsLoading(false)
               errorToaster("Something went wrong!");
           }
     };
+    
     return (
       <>
       <div className="bg-primary pt-10 pb-21"></div>
