@@ -1293,9 +1293,9 @@ a {
     overflow: hidden;
 } */
 
-.card:hover {
+/* .card:hover {
     transform: scale(1.02);
-}
+} */
 
 .card__header { 
     height: 150px;
