@@ -48,6 +48,7 @@ export const DashboardMenu = [
 		icon: 'user',
 		children: [
 			{ id: uuid(), link: '/library-department/institute/view', name: 'Institutes' },
+			{ id: uuid(), link: '/library-department/content-group', name: 'Content Group	' },
 		]
 	},
 	
