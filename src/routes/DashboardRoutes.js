@@ -25,6 +25,7 @@ export const DashboardMenu = [
 		children: [
 			{ id: uuid(), link: '/library-department/institute/view', name: 'Institutes' },
 			{ id: uuid(), link: '/library-department/library', name: 'Library' },
+			{ id: uuid(), link: '/library-department/user-type', name: 'user-type' },
 		]
 	},
 	
