@@ -116,7 +116,7 @@ const ViewContentGroup = () => {
         <Row>
           <Col lg={12} md={12} xs={12}>
             <div className="d-flex justify-content-between align-items-center">
-              <h3 className="mb-0 text-white">Manage Content Group</h3>
+              <h3 className="mb-0 text-dark">Manage Content Group</h3>
               <Link href="./content-group/add" className="btn btn-white">
                 <FaPlusCircle /> Content Group
               </Link>
