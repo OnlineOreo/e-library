@@ -27,6 +27,7 @@ export const DashboardMenu = [
 			{ id: uuid(), link: '/library-department/library', name: 'Library' },
 			{ id: uuid(), link: '/library-department/user-type', name: 'User type' },
 			{ id: uuid(), link: '/library-department/content-group', name: 'Content Group' },
+			{ id: uuid(), link: '/library-department/program', name: 'Program' },
 		]
 	},
 	
