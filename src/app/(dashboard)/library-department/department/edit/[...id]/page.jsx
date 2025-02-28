@@ -1,110 +1,69 @@
-'use client'
+'use client';
 
 import { Fragment, useState, useEffect } from "react";
 import Link from 'next/link';
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { Container, Col, Row, Form, Button, Spinner } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
-import Swal from "sweetalert2";
+import Swal from "sweetalert2"; 
 import { FaMinusCircle } from "react-icons/fa";
 
-const AddDepartment = () => {
+const EditDepartment = () => {
     const router = useRouter();
+    const { id } = useParams(); // Get department_id from URL
     const successToaster = (text) => toast(text);
     const errorToaster = (text) => toast.error(text);
-    
+
     const [isLoading, setIsLoading] = useState(false);
     const [library, setLibrary] = useState([]);
-    const [errors, setErrors] = useState({}); // Store validation errors
-
+    const [errors, setErrors] = useState({});
     const [formData, setFormData] = useState({
         department_name: "",
         department_code: "",
         library: "",
     });
 
-    const handleInputChange = (event) => {
-        const { name, value } = event.target;
-        setFormData({
-            ...formData,
-            [name]: value,
-        });
-        setErrors({ ...errors, [name]: "" }); // Clear error on user input
-    };
-
     const getToken = () => localStorage.getItem("access_token");
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        setIsLoading(true);
-        setErrors({}); // Clear previous errors
-
+    // Fetch department details
+    const loadDepartment = async () => {
         const token = getToken();
         if (!token) {
             errorToaster("Authentication required!");
             return;
         }
 
-        let formDataToSend = new FormData();
-        Object.entries(formData).forEach(([key, value]) => {
-            formDataToSend.append(key, value);
-        });
-
         try {
-            const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/departments`,
-                formDataToSend,
-                {
-                    headers: {
-                        "Authorization": `${token}`,
-                        "Content-Type": "multipart/form-data",
-                    },
-                }
-            );
-
-            Swal.fire({
-                title: "Success!",
-                text: "Department added successfully!",
-                icon: "success",
-                confirmButtonText: "OK",
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/departments?department_id=${id}`, {
+                headers: { Authorization: `${token}` },
             });
 
-            setIsLoading(false);
-            setFormData({
-                department_name: "",
-                department_code: "",
-                library: "",
-            });
-
-            setTimeout(() => {
-                router.push("../department");
-            }, 2000);
-
-        } catch (error) {
-            setIsLoading(false);
-            if (error.response && error.response.data) {
-                setErrors(error.response.data); // Store validation errors
-            } else {
-                errorToaster("Something went wrong!");
+            if (response.status === 200) {
+                const data = response.data;
+                setFormData({
+                    department_name: data.department_name || "",
+                    department_code: data.department_code || "",
+                    library: data.library|| "",
+                });
             }
+        } catch (error) {
+            errorToaster("Failed to load department details!");
+            console.error("Error fetching department:", error);
         }
     };
 
+    // Fetch library list
     const loadLibrary = async () => {
         const token = getToken();
-
         if (!token) {
-            console.error("Authentication token is missing!");
+            errorToaster("Authentication required!");
             return;
         }
 
         try {
             const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/libraries`, {
-                headers: {
-                    "Authorization": `${token}`,
-                    "Content-Type": "application/json",
-                },
+                headers: { Authorization: `${token}` },
             });
 
             if (response.status === 200) {
@@ -116,8 +75,51 @@ const AddDepartment = () => {
     };
 
     useEffect(() => {
+        loadDepartment();
         loadLibrary();
-    }, []);
+    }, [id]);
+
+    const handleInputChange = (event) => {
+        const { name, value } = event.target;
+        setFormData({ ...formData, [name]: value });
+        setErrors({ ...errors, [name]: "" });
+    };
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        setIsLoading(true);
+        setErrors({});
+
+        const token = getToken();
+        if (!token) {
+            errorToaster("Authentication required!");
+            return;
+        }
+        
+        try {
+            await axios.put(
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/departments?department_id=${id}`,
+                formData,
+                { headers: { Authorization: `${token}` } }
+            );
+
+            Swal.fire({
+                title: "Success!",
+                text: "Department updated successfully!",
+                icon: "success",
+                confirmButtonText: "OK",
+            });
+
+            setTimeout(() => router.push("../"), 2000);
+        } catch (error) {
+            setIsLoading(false);
+            if (error.response?.data) {
+                setErrors(error.response.data);
+            } else {
+                errorToaster("Something went wrong!");
+            }
+        }
+    };
 
     return (
         <Fragment>
@@ -126,7 +128,7 @@ const AddDepartment = () => {
                 <Row>
                     <Col lg={12} md={12} xs={12}>
                         <div className="d-flex justify-content-between align-items-center">
-                            <h3 className="mb-0 text-dark">Add Department</h3>
+                            <h3 className="mb-0 text-dark">Edit Department</h3>
                             <Link href="/library-department/department" className="btn btn-white">
                                 <FaMinusCircle /> Back
                             </Link>
@@ -136,7 +138,6 @@ const AddDepartment = () => {
                 <div className="card p-6 mt-5">
                     <Form onSubmit={handleSubmit}>
                         <Row className="justify-content-center">
-                            {/* Department Name Field */}
                             <Col lg={6} className="mb-3" md={6} xs={12}>
                                 <Form.Group controlId="formName">
                                     <Form.Label>Department Name</Form.Label>
@@ -145,7 +146,7 @@ const AddDepartment = () => {
                                         name="department_name"
                                         value={formData.department_name}
                                         onChange={handleInputChange}
-                                        placeholder="Enter Department name"
+                                        placeholder="Enter Department Name"
                                         isInvalid={!!errors.department_name}
                                     />
                                     {errors.department_name && (
@@ -156,7 +157,6 @@ const AddDepartment = () => {
                                 </Form.Group>
                             </Col>
 
-                            {/* Department Code Field */}
                             <Col lg={6} className="mb-3" md={6} xs={12}>
                                 <Form.Group controlId="formCode">
                                     <Form.Label>Department Code</Form.Label>
@@ -176,13 +176,11 @@ const AddDepartment = () => {
                                 </Form.Group>
                             </Col>
 
-                            {/* Library Select Dropdown */}
                             <Col lg={12} className="mb-3" md={12} xs={12}>
                                 <Form.Group controlId="library">
                                     <Form.Label>Library</Form.Label>
                                     <Form.Select
                                         name="library"
-                                        aria-label="Select Library"
                                         value={formData.library}
                                         onChange={handleInputChange}
                                         isInvalid={!!errors.library}
@@ -202,10 +200,9 @@ const AddDepartment = () => {
                                 </Form.Group>
                             </Col>
 
-                            {/* Submit Button */}
                             <Col lg={12} className="mb-3" md={3} xs={12}>
                                 <Button variant="primary" className="w-100" disabled={isLoading} type="submit">
-                                    {isLoading ? <Spinner animation="border" size="sm" /> : "Submit"}
+                                    {isLoading ? <Spinner animation="border" size="sm" /> : "Update"}
                                 </Button>
                             </Col>
                         </Row>
@@ -217,4 +214,4 @@ const AddDepartment = () => {
     );
 };
 
-export default AddDepartment;
+export default EditDepartment;
