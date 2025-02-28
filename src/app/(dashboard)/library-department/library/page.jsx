@@ -1,27 +1,28 @@
-'use client'
+"use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Container, Col, Row } from "react-bootstrap";
+import { Container, Col, Row, Form } from "react-bootstrap";
 import axios from "axios";
 import Box from "@mui/material/Box";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { FaEdit , FaEye } from "react-icons/fa";
-import { ToastContainer, toast } from 'react-toastify';
+import { FaEdit, FaEye, FaPlusCircle } from "react-icons/fa";
+import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
 
 const ViewLibrary = () => {
   const router = useRouter();
   const [library, setLibrary] = useState([]);
+  const [filteredLibrary, setFilteredLibrary] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [token, setToken] = useState(null);
 
   useEffect(() => {
-    // Ensure token is set only in client-side
     const storedToken = localStorage.getItem("access_token");
     if (!storedToken) {
       toast.error("Authentication required!");
-      router.push('/authentication/sign-in');
+      router.push("/authentication/sign-in");
     } else {
       setToken(storedToken);
     }
@@ -29,26 +30,34 @@ const ViewLibrary = () => {
 
   useEffect(() => {
     if (!token) return;
-
     const loadLibrary = async () => {
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/libraries`, {
-          headers: { Authorization: token },
-        });
-
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/libraries`,
+          { headers: { Authorization: token } }
+        );
         if (response.status === 200) {
           setLibrary(response.data);
+          setFilteredLibrary(response.data);
         }
       } catch (error) {
         console.error("Failed to fetch libraries:", error);
+        toast.error("Error loading libraries.");
       }
     };
-
     loadLibrary();
   }, [token]);
 
+  useEffect(() => {
+    const filtered = library.filter((lib) =>
+      lib.library_name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredLibrary(filtered);
+  }, [searchQuery, library]);
+
   const handleDelete = async (params) => {
-    if (!token) return;
+    if (!token || !params?.id) return;
+
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -60,27 +69,24 @@ const ViewLibrary = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.delete(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/libraries?library_id=${params.id}`, {
-            headers: { Authorization: token },
-          });
-          Swal.fire("Deleted!", "Your file has been deleted.", "success");
-          setLibrary((prev) => prev.filter(item => item.library_id !== params.id));
-          
+          const response = await axios.delete(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/libraries?library_id=${params.id}`,
+            { headers: { Authorization: token, "Content-Type": "application/json" } }
+          );
+
+          if (response.status === 200) {
+            Swal.fire("Deleted!", "Library has been deleted.", "success");
+            setLibrary((prev) => prev.filter((item) => item.library_id !== params.id));
+          }
         } catch (error) {
-          toast.error("Something went wrong!");
-          console.error("Delete error:", error);
+          toast.error(error.response?.data?.error || "Something went wrong!");
         }
       }
     });
   };
 
-  const handleEdit = (params) => {
-    router.push(`/library-department/library/edit/${params.id}`);
-  };
-
-  const handleShow = (params) => {
-    router.push(`/library-department/library/show/${params.id}`);
-  };
+  const handleEdit = (params) => router.push(`/library-department/library/edit/${params.id}`);
+  const handleShow = (params) => router.push(`/library-department/library/show/${params.id}`);
 
   const columns = [
     { field: "library_id", headerName: "ID", width: 150 },
@@ -108,26 +114,31 @@ const ViewLibrary = () => {
       ),
     },
   ];
-  
+
   return (
     <>
       <div className="bg-primary pt-10 pb-21"></div>
       <Container fluid className="mt-n22 px-6">
         <Row>
-          <Col lg={12} md={12} xs={12}>
-            <div className="d-flex justify-content-between align-items-center">
-              <h3 className="mb-0 text-white">Manage Library</h3>
-              <Link href="./library/add" className="btn btn-white">
-                Add Library
-              </Link>
-            </div>
+          <Col lg={12} md={12} xs={12} className="d-flex justify-content-between align-items-center">
+            <h3 className="mb-0 text-dark">Manage Library</h3>
+            <Link href="./library/add" className="btn btn-white">
+              <FaPlusCircle /> Library
+            </Link>
           </Col>
         </Row>
 
         <div className="card p-3 mt-4">
+          <Form.Control
+            type="text"
+            placeholder="Search Library"
+            className="mb-3"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
           <Box sx={{ height: 500, width: "100%" }}>
             <DataGrid
-              rows={library}
+              rows={filteredLibrary}
               columns={columns}
               pageSize={5}
               components={{ Toolbar: GridToolbar }}

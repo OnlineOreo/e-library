@@ -7,6 +7,7 @@ import { Container, Col, Row, Form, Button, Spinner } from "react-bootstrap";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { FaMinusCircle } from "react-icons/fa";
 
 const AddLibrary = () => {
   const router = useRouter();
@@ -76,7 +77,7 @@ const AddLibrary = () => {
     setErrors({});
 
     if (!token) {
-      errorToaster("Authentication required!");
+      router.push("/authentication/sign-in");
       setIsLoading(false);
       return;
     }
@@ -140,9 +141,9 @@ const AddLibrary = () => {
         <Row>
           <Col lg={12} md={12} xs={12}>
             <div className="d-flex justify-content-between align-items-center">
-              <h3 className="mb-0 text-white">Add Library</h3>
+              <h3 className="mb-0 text-dark">Add Library</h3>
               <Link href="../library" className="btn btn-white">
-                Back
+               <FaMinusCircle /> Back
               </Link>
             </div>
           </Col>
