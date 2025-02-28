@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { ListGroup, Container, Row, Col, Card, Tab } from "react-bootstrap";
 import Link from "next/link";
 import axios from "axios";
+import { FaMinusCircle } from "react-icons/fa";
 
 export default function ShowLibrary() {
   const { id } = useParams();
@@ -47,9 +48,9 @@ export default function ShowLibrary() {
         <Row>
           <Col lg={12} md={12} xs={12}>
             <div className="d-flex justify-content-between align-items-center">
-              <h3 className="mb-0 text-white">Show Library</h3>
+              <h3 className="mb-0 text-dark">Show Library</h3>
               <Link href="../" className="btn btn-white">
-                Back
+                <FaMinusCircle /> Back
               </Link>
             </div>
           </Col>

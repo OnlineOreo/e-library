@@ -8,6 +8,7 @@ import { Container, Col, Row, Form, Button, Spinner } from "react-bootstrap";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { FaMinusCircle } from "react-icons/fa";
 
 const EditLibrary = () => {
   const router = useRouter();
@@ -155,9 +156,9 @@ const EditLibrary = () => {
         <Row>
           <Col lg={12} md={12} xs={12}>
             <div className="d-flex justify-content-between align-items-center">
-              <h3 className="mb-0 text-white">{id ? "Edit Library" : "Add Library"}</h3>
+              <h3 className="mb-0 text-dark">Edit Library</h3>
               <Link href="/library-department/library" className="btn btn-white">
-                Back
+                <FaMinusCircle /> Back
               </Link>
             </div>
           </Col>
