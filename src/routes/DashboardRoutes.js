@@ -37,6 +37,7 @@ export const DashboardMenu = [
 		icon: 'layers',
 		children: [	
 			{ id: uuid(), link: '/resources/item-types', name: 'Item types' },
+			{ id: uuid(), link: '/resources/publisher-package', name: 'Publisher package' },
 			// { id: uuid(), link: '/pages/settings', name: 'Settings'},
 			// { id: uuid(), link: '/pages/billing', name: 'Billing' },
 			// { id: uuid(), link: '/pages/pricing', name: 'Pricing'},
