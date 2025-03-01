@@ -31,24 +31,18 @@ export const DashboardMenu = [
 			{ id: uuid(), link: '/library-department/program', name: 'Program' },
 		]
 	},
-	
-	// {
-	// 	id: uuid(),
-	// 	title: 'LAYOUTS & PAGES',
-	// 	grouptitle: true
-	// },
-	// {
-	// 	id: uuid(),
-	// 	title: 'Pages',
-	// 	icon: 'layers',
-	// 	children: [
-	// 		{ id: uuid(), link: '/pages/profile', name: 'Profile' },
-	// 		{ id: uuid(), link: '/pages/settings', name: 'Settings'},
-	// 		{ id: uuid(), link: '/pages/billing', name: 'Billing' },
-	// 		{ id: uuid(), link: '/pages/pricing', name: 'Pricing'},
-	// 		{ id: uuid(), link: '/not-found', name: '404 Error' }
-	// 	]
-	// },	
+	{
+		id: uuid(),
+		title: 'Resource',
+		icon: 'layers',
+		children: [
+			{ id: uuid(), link: '/resources/publishers', name: 'Publishers' },
+			// { id: uuid(), link: '/pages/settings', name: 'Settings'},
+			// { id: uuid(), link: '/pages/billing', name: 'Billing' },
+			// { id: uuid(), link: '/pages/pricing', name: 'Pricing'},
+			// { id: uuid(), link: '/not-found', name: '404 Error' }
+		]
+	},	
 	// {
 	// 	id: uuid(),
 	// 	title: 'Authentication',
