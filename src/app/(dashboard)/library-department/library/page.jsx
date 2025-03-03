@@ -76,7 +76,7 @@ const ViewLibrary = () => {
 
           if (response.status === 200) {
             Swal.fire("Deleted!", "Library has been deleted.", "success");
-            setLibrary((prev) => prev.filter((item) => item.library_id !== params.id));
+            setLibrary((prev) => prev.filter((item) => item.library_id !== S.id));
           }
         } catch (error) {
           toast.error(error.response?.data?.error || "Something went wrong!");

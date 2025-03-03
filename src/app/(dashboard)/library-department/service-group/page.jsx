@@ -7,24 +7,21 @@ import Box from "@mui/material/Box";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useRouter } from "next/navigation";
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaPlusCircle } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
-import { FaPlusCircle } from "react-icons/fa";
 import moment from "moment";
 
-const ViewUserType = () => { const token = getToken();
-  if (!token) {
-    errorToaster("Authentication required!");
-    router.push("/authentication/sign-in");
-    return;
-  }
+export default function ServiceGroup() {
   const router = useRouter();
-  const successToaster = (text) => toast(text);
-  const errorToaster = (text) => toast.error(text);
-
-  const [userType, setUserType] = useState([]);
+  const [serviceGroup, setServiceGroup] = useState([]);
   const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      loadServiceGroup();
+    }
+  }, []);
 
   const getToken = () => {
     if (typeof window !== "undefined") {
@@ -33,33 +30,23 @@ const ViewUserType = () => { const token = getToken();
     return null;
   };
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      loadUserType();
-    }
-  }, []);
-
-  const loadUserType = async () => {
+  const loadServiceGroup = async () => {
     const token = getToken();
     if (!token) {
-      errorToaster("Authentication required!");
+      toast.error("Authentication required!");
       router.push("/authentication/sign-in");
       return;
     }
-
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-types`,
-        {
-          headers: { Authorization: `${token}` },
-        }
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/service-groups`,
+        { headers: { Authorization: `${token}` } }
       );
-
       if (response.status === 200) {
-        setUserType(response.data);
+        setServiceGroup(response.data);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -77,56 +64,45 @@ const ViewUserType = () => { const token = getToken();
       if (result.isConfirmed) {
         try {
           await axios.delete(
-            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-types?user_type_id=${params.id}`,
-            {
-              headers: { Authorization: `${token}` },
-            }
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/service-groups?sg_id=${params.id}`,
+            { headers: { Authorization: `${token}` } }
           );
-          Swal.fire("Deleted!", "User Type has been deleted.", "success");
-          setUserType((prev) =>
-            prev.filter((item) => item.user_type_id !== params.id)
-          );
+          Swal.fire("Deleted!", "Service Group has been deleted.", "success");
+          setServiceGroup((prev) => prev.filter((item) => item.sg_id !== params.id));
         } catch (error) {
-          errorToaster("Something went wrong!");
-          console.log(error);
+          toast.error("Something went wrong!");
+          console.error(error);
         }
       }
     });
   };
 
   const handleEdit = (params) => {
-    router.push(`/library-department/user-type/edit/${params.id}`);
+    router.push(`/library-department/service-group/edit/${params.id}`);
   };
 
-  const formattedUserType = userType.map((inst) => ({
-    ...inst,
-    created_at: inst.created_at ? moment(inst.created_at).format("MMMM D, YYYY, h:mm A") : "",
-    updated_at: inst.updated_at ? moment(inst.updated_at).format("MMMM D, YYYY, h:mm A") : "",
-  })).filter((inst) =>
-    inst.type_name.toLowerCase().includes(search.toLowerCase())
-  );
+  const formattedServiceGroup = serviceGroup
+    .map((inst) => ({
+      ...inst,
+      created_at: inst.created_at ? moment(inst.created_at).format("MMMM D, YYYY, h:mm A") : "",
+      updated_at: inst.updated_at ? moment(inst.updated_at).format("MMMM D, YYYY, h:mm A") : "",
+    }))
+    .filter((inst) => inst.service_name.toLowerCase().includes(search.toLowerCase()));
 
   const columns = [
-    { field: "user_type_id", headerName: "Id", width: 150 },
-    { field: "type_name", headerName: "Name", width: 150 },
-    { field: "created_at", headerName: "Created At", width: 200 },
-    { field: "updated_at", headerName: "Updated At", width: 200 },
+    { field: "service_name", headerName: "Name", width: 300 },
+    { field: "created_at", headerName: "Created At", width: 300 },
+    { field: "updated_at", headerName: "Updated At", width: 250 },
     {
       field: "action",
       headerName: "Action",
       width: 150,
       renderCell: (params) => (
         <div>
-          <button
-            onClick={() => handleEdit(params)}
-            className="btn btn-primary btn-sm"
-          >
+          <button onClick={() => handleEdit(params)} className="btn btn-primary btn-sm">
             <FaEdit />
           </button>
-          <button
-            onClick={() => handleDelete(params)}
-            className="btn btn-danger mx-2 btn-sm"
-          >
+          <button onClick={() => handleDelete(params)} className="btn btn-danger mx-2 btn-sm">
             <RiDeleteBin6Line />
           </button>
         </div>
@@ -139,11 +115,11 @@ const ViewUserType = () => { const token = getToken();
       <div className="bg-primary pt-10 pb-21"></div>
       <Container fluid className="mt-n22 px-6">
         <Row>
-          <Col lg={12} md={12} xs={12}>
+          <Col lg={12} md={12} xs={12} className="mb-4">
             <div className="d-flex justify-content-between align-items-center">
-              <h3 className="mb-0 text-white">User Type</h3>
-              <Link href="./user-type/add" className="btn btn-white">
-                <FaPlusCircle /> user type
+              <h3 className="mb-0 text-dark">Service Group</h3>
+              <Link href="./service-group/add" className="btn btn-white">
+                <FaPlusCircle /> Service Group
               </Link>
             </div>
           </Col>
@@ -157,24 +133,22 @@ const ViewUserType = () => { const token = getToken();
             onChange={(e) => setSearch(e.target.value)}
           />
 
-          {userType.length > 0 ? (
+          {serviceGroup.length > 0 ? (
             <Box sx={{ height: 500, width: "100%" }}>
               <DataGrid
-                rows={formattedUserType}
+                rows={formattedServiceGroup}
                 columns={columns}
                 pageSize={5}
                 components={{ Toolbar: GridToolbar }}
-                getRowId={(row) => row.user_type_id}
+                getRowId={(row) => row.sg_id}
               />
             </Box>
           ) : (
-            <p>Loading user types...</p>
+            <p>Loading Service Groups...</p>
           )}
         </div>
       </Container>
       <ToastContainer />
     </>
   );
-};
-
-export default ViewUserType;
+}
