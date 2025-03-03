@@ -10,6 +10,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { useRouter } from "next/navigation";
 import { FaEdit } from "react-icons/fa";
 import { ToastContainer, toast } from 'react-toastify';
+import Image from "next/image";
 import Swal from "sweetalert2";
 import { FaPlusCircle } from "react-icons/fa";
 
@@ -23,7 +24,7 @@ const ViewPublishers = () => {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    setIsClient(true); 
+    setIsClient(true);
   }, []);
 
   const getToken = () => (typeof window !== "undefined" ? localStorage.getItem("access_token") : null);
@@ -56,7 +57,6 @@ const ViewPublishers = () => {
   }, [isClient]);
 
   const handleDelete = async (params) => {
-    console.log(params)
     const token = getToken();
     Swal.fire({
         title: "Are you sure?",
@@ -75,15 +75,15 @@ const ViewPublishers = () => {
             Swal.fire("Deleted!", "Publisher has been deleted.", "success");
             setContentGroup((prev) => prev.filter(item => item.publisher_id !== params.id));
           } catch (error) {
-            errorToaster("Something went wrong!");
-            console.log(error);
+            // console.log(error.response.data.details);
+            errorToaster(error.response.data.details);
           }
         }
       });
   };
 
   const handleEdit = (params) => {
-    router.push(`/resource/publishers/edit/${params.id}`);
+    router.push(`./publishers/edit/${params.id}`);
   };
 
   const filteredContentGroup = contentGroup.filter(inst =>
@@ -91,25 +91,42 @@ const ViewPublishers = () => {
   );
 
   const columns = [
-    { field: "publisher_id", headerName: "publisher_id", width: 150 },
-    { field: "publisher_name", headerName: "Publisher name", width: 150 },
-    { field: "web_url", headerName: "web url", width: 200 },
-    { field: "image", headerName: "image", width: 130 },
-    { field: "address", headerName: "Address", width: 150 },
-    { field: "redirect_url", headerName: "Redirect url", width: 150 },
-    {
-      field: "action",
-      headerName: "Action",
-      width: 150,
-      renderCell: (params) => (
-        <div>
-          <button onClick={() => handleEdit(params)} className="btn btn-primary btn-sm"><FaEdit /></button>
-          <button onClick={() => handleDelete(params)} className="btn btn-danger mx-2 btn-sm"><RiDeleteBin6Line /></button>
-        </div>
-      ),
-    },
+      {
+          field: "image", 
+          headerName: "Logo",
+          width: 130,
+          renderCell: (params) => (
+            <div className="avatar avatar-md">
+              <Image 
+                  src={params.value || ""}
+                  alt="Publisher"
+                  width={50}
+                  height={50}
+                  className="rounded-circle"
+              />
+            </div>
+          ) 
+      },
+      { field: "publisher_id", headerName: "Publisher ID", width: 150 },
+      { field: "publisher_name", headerName: "Publisher Name", width: 150 },
+      { field: "web_url", headerName: "Web URL", width: 200 },
+      { field: "address", headerName: "Address", width: 150 },
+      { field: "redirect_url", headerName: "Redirect URL", width: 150 },
+      {
+        field: "action",
+        headerName: "Action",
+        width: 150,
+        renderCell: (params) => (
+          <div>
+            <button onClick={() => handleEdit(params)} className="btn btn-primary btn-sm"><FaEdit /></button>
+            <button onClick={() => handleDelete(params)} className="btn btn-danger mx-2 btn-sm"><RiDeleteBin6Line /></button>
+          </div>
+        ),
+      },
   ];
-
+  
+  
+  
   if (!isClient) return null;
   
   return (
