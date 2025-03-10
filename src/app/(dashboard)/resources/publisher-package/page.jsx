@@ -7,35 +7,32 @@ import Box from "@mui/material/Box";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useRouter } from "next/navigation";
-import { FaEdit } from "react-icons/fa";
+import { FaEdit , FaEye, FaPlusCircle } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
-import { FaPlusCircle } from "react-icons/fa";
-import moment from "moment";
 
 const ViewItemTypes = () => {
   const router = useRouter();
   const successToaster = (text) => toast(text);
   const errorToaster = (text) => toast.error(text);
 
-  const [publishertPkg, setPublisherPkg] = useState([]);
+  const [publisherPkg, setPublisherPkg] = useState([]);
   const [search, setSearch] = useState("");
-
-  const getToken = () => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("access_token");
-    }
-    return null;
-  };
+  const [token, setToken] = useState(null);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      loadItemTypes();
+      setToken(localStorage.getItem("access_token"));
     }
   }, []);
 
+  useEffect(() => {
+    if (token) {
+      loadItemTypes();
+    }
+  }, [token]);
+
   const loadItemTypes = async () => {
-    const token = getToken();
     if (!token) {
       errorToaster("Authentication required!");
       router.push("/authentication/sign-in");
@@ -52,7 +49,6 @@ const ViewItemTypes = () => {
 
       if (response.status === 200) {
         setPublisherPkg(response.data);
-        console.log(response.data);
       }
     } catch (error) {
       console.log(error);
@@ -60,10 +56,9 @@ const ViewItemTypes = () => {
   };
 
   const handleDelete = async (params) => {
-    const token = getToken();
     Swal.fire({
       title: "Are you sure?",
-      text: "You won't be able to revert this!",
+      text: "Deletes package with all mapping!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -72,15 +67,20 @@ const ViewItemTypes = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
+          var deleteMappingIdArr = [];
+          params.row.mappings.forEach(element => {
+            deleteMappingIdArr.push(element.publisher_package_mapping_id);
+          });
+          var deleteMappingParam = deleteMappingIdArr.join(',');
           await axios.delete(
-            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/publisher-packages?package_id=${params.id}`,
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/publisher-packages?package_id=${params.id}&mapping_ids=${deleteMappingParam}&delete_all=True`,
             {
               headers: { Authorization: `${token}` },
             }
           );
           Swal.fire("Deleted!", "Publisher package has been deleted.", "success");
-          setPublisherPkg((prev) =>
-            prev.filter((item) => item.item_type_id !== params.id)
+          setPublisherPkg((prev) => 
+            prev.filter((item) => item.package_id !== params.id)
           );
         } catch (error) {
           errorToaster("Something went wrong!");
@@ -93,42 +93,39 @@ const ViewItemTypes = () => {
   const handleEdit = (params) => {
     router.push(`/resources/publisher-package/edit/${params.id}`);
   };
+  const handleShow = (params) => {
+    router.push(`/resources/publisher-package/show/${params.id}`);
+  };
 
-  // const formattedItemTypes = publishertPkg.map((inst) => ({
-  //   ...inst,
-  //   created_at: inst.created_at ? moment(inst.created_at).format("MMMM D, YYYY, h:mm A") : "",
-  //   updated_at: inst.updated_at ? moment(inst.updated_at).format("MMMM D, YYYY, h:mm A") : "",
-  // })).filter((inst) =>
-  //   inst.type_name.toLowerCase().includes(search.toLowerCase())
-  // );
+  const columns = [
+    { field: "package_name", headerName: "Package Name", width: 250 },
+    { field: "created_at", headerName: "Created At", width: 200 },
+    { field: "publisher", headerName: "Publisher", width: 200 },
+    {
+      field: "action",
+      headerName: "Action",
+      width: 200,
+      renderCell: (params) => (
+        <div>
+          <button onClick={() => handleShow(params)} className="btn btn-secondary btn-sm">
+            <FaEye />
+          </button>
+          <button onClick={() => handleEdit(params)} className="btn btn-primary mx-2 btn-sm">
+            <FaEdit />
+          </button>
+          <button onClick={() => handleDelete(params)} className="btn btn-danger mx-2 btn-sm">
+            <RiDeleteBin6Line />
+          </button>
+        </div>
+      ),
+    },
+  ];
 
-  // const columns = [
-  //   { field: "item_type_id", headerName: "Id", width: 150 },
-  //   { field: "type_name", headerName: "Name", width: 350 },
-  //   { field: "created_at", headerName: "Created At", width: 200 },
-  //   { field: "updated_at", headerName: "Updated At", width: 200 },
-  //   {
-  //     field: "action",
-  //     headerName: "Action",
-  //     width: 150,
-  //     renderCell: (params) => (
-  //       <div>
-  //         <button
-  //           onClick={() => handleEdit(params)}
-  //           className="btn btn-primary btn-sm"
-  //         >
-  //           <FaEdit />
-  //         </button>
-  //         <button
-  //           onClick={() => handleDelete(params)}
-  //           className="btn btn-danger mx-2 btn-sm"
-  //         >
-  //           <RiDeleteBin6Line />
-  //         </button>
-  //       </div>
-  //     ),
-  //   },
-  // ];
+  // Ensure DataGrid receives correctly formatted rows
+  const formattedItemTypes = publisherPkg.map((item) => ({
+    id: item.package_id,
+    ...item,
+  }));
 
   return (
     <>
@@ -137,9 +134,9 @@ const ViewItemTypes = () => {
         <Row>
           <Col lg={12} md={12} xs={12}>
             <div className="d-flex justify-content-between align-items-center">
-              <h3 className="mb-0 text-dark">Publisher package</h3>
+              <h3 className="mb-0 text-dark">Publisher Packages</h3>
               <Link href="./publisher-package/add" className="btn btn-white">
-                <FaPlusCircle /> Publisher package  
+                <FaPlusCircle /> Publisher Package
               </Link>
             </div>
           </Col>
@@ -148,25 +145,24 @@ const ViewItemTypes = () => {
           <input
             type="text"
             className="form-control mb-3"
-            placeholder="Search by name"
+            placeholder="Search by package name"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
 
-          {/* {publishertPkg.length > 0 ? (
+          {formattedItemTypes.length > 0 ? (
             <Box sx={{ height: 500, width: "100%" }}>
               <DataGrid
                 rows={formattedItemTypes}
                 columns={columns}
                 pageSize={5}
                 components={{ Toolbar: GridToolbar }}
-                getRowId={(row) => row.item_type_id}
-                columnVisibilityModel={{ item_type_id: false }}
+                getRowId={(row) => row.id}
               />
             </Box>
           ) : (
-            <p>Don't have any data...</p>
-          )} */}
+            <p>No data available...</p>
+          )}
         </div>
       </Container>
       <ToastContainer />
