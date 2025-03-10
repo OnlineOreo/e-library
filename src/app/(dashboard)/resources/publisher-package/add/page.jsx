@@ -16,13 +16,13 @@ const AddPublisherPackage = () => {
   const [formData, setFormData] = useState({
     package_name: "",
     publisher: "",
-    mapping: [{ department_id: "", program_id: "" }],
+    mappings: [{ department_id: "", program_id: "" }],
   });
 
   const [publishers, setPublishers] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [programs, setPrograms] = useState([]);
-  const [institute, setInstitute] = useState([]);
+  const [institute, setInstitute] = useState([]); 
   const [library, setLibrary] = useState([]);
   const [loadingDropdowns, setLoadingDropdowns] = useState(false);
 
@@ -33,20 +33,13 @@ const AddPublisherPackage = () => {
       setLoadingDropdowns(true);
       const token = getToken();
       if (!token) {
-        toast.error("Authentication required!");
         router.push("/authentication/sign-in");
         return;
       }
 
       try {
-        const [pubRes, deptRes, progRes, institute] = await Promise.all([
+        const [pubRes, institute] = await Promise.all([
           axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/publishers`, {
-            headers: { Authorization: token },
-          }),
-          axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/departments`, {
-            headers: { Authorization: token },
-          }),
-          axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/programs`, {
             headers: { Authorization: token },
           }),
           axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/institutes`, {
@@ -55,11 +48,13 @@ const AddPublisherPackage = () => {
         ]);
 
         setPublishers(pubRes.data);
-        setDepartments(deptRes.data);
-        setPrograms(progRes.data);
         setInstitute(institute.data);
       } catch (error) {
+        if(error.response.data.error.trim() == 'Token has expired.'){
+          router.push("/authentication/sign-in");
+        }
         toast.error("Failed to load dropdown data.");
+        
       } finally {
         setLoadingDropdowns(false);
       }
@@ -76,28 +71,28 @@ const AddPublisherPackage = () => {
   const handleInstituteChange = async (event) => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
-
-    if (value) {
-      const token = getToken();
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/libraries`,
-          {
-            headers: { Authorization: token },
-          }
-        );
-        setLibrary(response.data);
-      } catch (error) {
-        toast.error("Failed to load libraries.");
-      }
-    } else {
-      setLibrary([]); // Reset library dropdown when no institute is selected
+    const allChildData =  institute.find((ins) => ins.institute_id === value);
+    if (allChildData) {
+      setLibrary(allChildData.libraries || []);
+      setDepartments([])
+      setPrograms([])
     }
-  };
+  }
 
-  const handleMappingChange = (index, event) => {
+  const handleLibraryChange = async (event) => {
     const { name, value } = event.target;
-    const newMappings = [...formData.mapping];
+    setFormData({ ...formData, [name]: value });
+    const allLibrayChild =  library.find((ins) => ins.library_id === value);
+    if (allLibrayChild) {
+      setDepartments(allLibrayChild.departments || []);
+      setPrograms(allLibrayChild.programs || []);
+    }
+  }
+
+
+  const handleMappingsChange = (index, event) => {
+    const { name, value } = event.target;
+    const newMappings = [...formData.mappings];
 
     // Map "department" to "department_id" and "program" to "program_id"
     if (name === "department") {
@@ -108,22 +103,22 @@ const AddPublisherPackage = () => {
       newMappings[index]["library"] = value;
     }
 
-    setFormData({ ...formData, mapping: newMappings });
+    setFormData({ ...formData, mappings: newMappings });
   };
 
-  const addMapping = () => {
+  const addMappings = () => {
     setFormData({
       ...formData,
-      mapping: [...formData.mapping, { department_id: "", program_id: "" }],
+      mappings: [...formData.mappings, { department_id: "", program_id: "" }],
     });
   };
 
-  const removeMapping = (index) => {
-    if (formData.mapping.length > 1) {
-      const newMappings = formData.mapping.filter((_, i) => i !== index);
-      setFormData({ ...formData, mapping: newMappings });
+  const removeMappings = (index) => {
+    if (formData.mappings.length > 1) {
+      const newMappings = formData.mappings.filter((_, i) => i !== index);
+      setFormData({ ...formData, mappings: newMappings });
     } else {
-      // toast.warning("At least one mapping is required!");
+      // toast.warning("At least one mappings is required!");
     }
   };
   
@@ -144,14 +139,22 @@ const AddPublisherPackage = () => {
     const transformedData = {
       package_name: formData.package_name,
       publisher: formData.publisher,
-      mapping: formData.mapping.map((mapItem) => ({
+      mappings: formData.mappings.map((mapItem) => ({
         department: mapItem.department_id,
         program: mapItem.program_id,
         library: formData.library,
       })),
     };
 
-    // console.log(transformedData);
+    const programSet = new Set();
+    for (let mapping of transformedData.mappings) {
+        if (programSet.has(mapping.program)) {
+            toast.error("Dublicate proram found");
+            setIsLoading(false);
+            return;
+        }
+        programSet.add(mapping.program);
+    }
 
     try {
       await axios.post(
@@ -173,11 +176,12 @@ const AddPublisherPackage = () => {
       });
 
       setTimeout(() => router.push("/resources/publisher-package"), 2000);
+
     } catch (error) {
       setErrors(error.response.data);
 
-      if (error.response?.data?.mapping) {
-        const errorMessages = error.response.data.mapping
+      if (error.response?.data?.mappings) {
+        const errorMessages = error.response.data.mappings
           .map((err) => err.non_field_errors?.join(", "))
           .filter(Boolean)
           .join("\n");
@@ -278,7 +282,7 @@ const AddPublisherPackage = () => {
                   <Form.Select
                     name="library"
                     value={formData.library}
-                    onChange={handleInputChange}
+                    onChange={handleLibraryChange}
                     isInvalid={!!errors.library}
                   >
                     <option value="">Select Library</option>
@@ -294,30 +298,26 @@ const AddPublisherPackage = () => {
                 </Form.Group>
               </Col>
             </Row>
-            {formData.mapping.map((mapping, index) => (
+            {formData.mappings.map((mappings, index) => (
               <Row key={index} className="mb-3 align-items-center">
                 <Col lg={5} className="mb-3">
                   <Form.Group>
                     <Form.Label>Department</Form.Label>
                     <Form.Select
                       name="department"
-                      required="required"
-                      value={mapping.department_id}
-                      onChange={(e) => handleMappingChange(index, e)}
-                      isInvalid={!!errors[`mapping.${index}.department`]}
+                      value={mappings.department_id}
+                      onChange={(e) => handleMappingsChange(index, e)}
+                      isInvalid={!!errors.mappings?.[index]?.department}
                     >
                       <option value="">Select Department</option>
                       {departments.map((dept) => (
-                        <option
-                          key={dept.department_id}
-                          value={dept.department_id}
-                        >
+                        <option key={dept.department_id} value={dept.department_id}>
                           {dept.department_name}
                         </option>
                       ))}
                     </Form.Select>
                     <Form.Control.Feedback type="invalid">
-                      {errors[`mapping.${index}.department`]?.join(", ")}
+                      {errors.mappings?.[index]?.department?.join(", ")}
                     </Form.Control.Feedback>
                   </Form.Group>
                 </Col>
@@ -327,10 +327,9 @@ const AddPublisherPackage = () => {
                     <Form.Label>Program</Form.Label>
                     <Form.Select
                       name="program"
-                      value={mapping.program_id}
-                      required="required"
-                      onChange={(e) => handleMappingChange(index, e)}
-                      isInvalid={!!errors[`mapping.${index}.program`]}
+                      value={mappings.program_id}
+                      onChange={(e) => handleMappingsChange(index, e)}
+                      isInvalid={!!errors.mappings?.[index]?.program}
                     >
                       <option value="">Select Program</option>
                       {programs.map((prog) => (
@@ -340,22 +339,25 @@ const AddPublisherPackage = () => {
                       ))}
                     </Form.Select>
                     <Form.Control.Feedback type="invalid">
-                      {errors[`mapping.${index}.program`]?.join(", ")}
+                      {errors.mappings?.[index]?.program?.join(", ")}
                     </Form.Control.Feedback>
                   </Form.Group>
                 </Col>
 
                 <Col lg={2} className="mt-4">
-                <Button variant="danger" onClick={() => removeMapping(index)} disabled={formData.mapping.length === 1}>
-                  <FaMinusCircle />
-                </Button>
+                  <Button
+                    variant="danger"
+                    onClick={() => removeMappings(index)}
+                    disabled={formData.mappings.length === 1}
+                  >
+                    <FaMinusCircle />
+                  </Button>
                 </Col>
               </Row>
             ))}
-
             <Row>
               <Col lg={12}>
-                <Button onClick={addMapping}>
+                <Button onClick={addMappings}>
                   <FaPlusCircle /> Add
                 </Button>
               </Col>
