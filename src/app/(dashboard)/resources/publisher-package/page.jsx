@@ -84,7 +84,6 @@ const ViewItemTypes = () => {
           );
         } catch (error) {
           errorToaster("Something went wrong!");
-          console.log(error);
         }
       }
     });

@@ -93,8 +93,6 @@ const AddPublisherPackage = () => {
   const handleMappingsChange = (index, event) => {
     const { name, value } = event.target;
     const newMappings = [...formData.mappings];
-
-    // Map "department" to "department_id" and "program" to "program_id"
     if (name === "department") {
       newMappings[index]["department_id"] = value;
     } else if (name === "program") {
