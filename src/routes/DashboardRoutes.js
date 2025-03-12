@@ -23,7 +23,7 @@ export const DashboardMenu = [
 		title: 'Library & Department',
 		icon: 'user',
 		children: [
-			{ id: uuid(), link: '/library-department/institute/view', name: 'Institutes' },
+			{ id: uuid(), link: '/library-department/institute', name: 'Institutes' },
 			{ id: uuid(), link: '/library-department/library', name: 'Library' },
 			{ id: uuid(), link: '/library-department/department', name: 'Department' },
 			{ id: uuid(), link: '/library-department/user-type', name: 'User type' },

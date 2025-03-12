@@ -1,10 +1,12 @@
+'use client'
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { ListGroup, Col, Row, Card, Tab, Container, Spinner } from "react-bootstrap";
 import Link from "next/link";
-import { use } from "react";
+import { FaMinusCircle } from "react-icons/fa";
+import { useParams } from "next/navigation";
 
-export default function ShowInstitute(props) {
+export default function ShowInstitute() {
     const [isLoading, setIsLoading] = useState(true);
     const [formData, setFormData] = useState({
         institute_name: "",
@@ -15,8 +17,7 @@ export default function ShowInstitute(props) {
         sub_domain: "",
     });
 
-    const params = use(props.params);
-    const id = Array.isArray(params?.id) ? params.id[0] : params?.id;
+    const { id } = useParams();
 
     // Function to safely get token
     const getToken = () => {
@@ -28,6 +29,7 @@ export default function ShowInstitute(props) {
 
     const getInstitute = async (instituteId) => {
         if (!instituteId) return;
+        console.log(instituteId)
 
         setIsLoading(true);
         const token = getToken();
@@ -71,8 +73,8 @@ export default function ShowInstitute(props) {
                 <Row>
                     <Col lg={12} md={12} xs={12}>
                         <div className="d-flex justify-content-between align-items-center">
-                            <h3 className="mb-0 text-white">Show Institute</h3>
-                            <Link href={`../`} className="btn btn-white">Back</Link>
+                            <h3 className="mb-0 text-dark">Show Institute</h3>
+                            <Link href="../" className="btn btn-white"><FaMinusCircle /> Back</Link>
                         </div>
                     </Col>
                 </Row>

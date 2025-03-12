@@ -1,17 +1,20 @@
 'use client'
 
-import { Fragment, useState, useEffect } from "react";
+import { Fragment, useState } from "react";
 import Link from 'next/link';
 import { useRouter } from "next/navigation";
 import { Container, Col, Row, Form, Button, Spinner } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
+import { FaMinusCircle } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 const AddInstitute = () => {
     const router = useRouter();
     const successToaster = (text) => toast(text);
     const errorToaster = (text) => toast.error(text);
     const [isLoading, setIsLoading] = useState(false);
+    const [errors, setErrors] = useState({}); // State to store API validation errors
 
     const [formData, setFormData] = useState({
         institute_name: "",
@@ -35,16 +38,20 @@ const AddInstitute = () => {
                 [name]: value,
             });
         }
+        setErrors({ ...errors, [name]: null }); // Clear error when user types
     };
     
     const getToken = () => localStorage.getItem("access_token");
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        setIsLoading(true)
+        setIsLoading(true);
+        setErrors({}); // Reset previous errors
+
         const token = getToken();
         if (!token) {
             errorToaster("Authentication required!");
+            setIsLoading(false);
             return;
         }
 
@@ -56,16 +63,23 @@ const AddInstitute = () => {
         try {
             const response = await axios.post(
                 `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/institutes`,
-              formDataToSend,
-              {
-                headers: {
-                  "Authorization": `${token}`,
-                  "Content-Type": "multipart/form-data",
-                },
-              }
+                formDataToSend,
+                {
+                    headers: {
+                        "Authorization": `${token}`,
+                        "Content-Type": "multipart/form-data",
+                    },
+                }
             );
-            successToaster(response.data.message);
-            setIsLoading(false)
+
+            Swal.fire({
+                title: "Success!",
+                text: "Institute Added successfully!",
+                icon: "success",
+                confirmButtonText: "OK",
+            });
+
+            setIsLoading(false);
             setFormData({
                 institute_name: "",
                 email: "",
@@ -76,13 +90,17 @@ const AddInstitute = () => {
             });
 
             setTimeout(() => {
-                router.push('../institute/view')
-            }, 6000);
-          } catch (error) {
-            setIsLoading(false)
-              errorToaster("Something went wrong!");
-          }
-          
+                router.push('../institute')
+            }, 3000);
+
+        } catch (error) {
+            setIsLoading(false);
+            if (error.response && error.response.data) {
+                setErrors(error.response.data); // Store API errors
+            } else {
+                errorToaster("Something went wrong!");
+            }
+        }
     };
     
     return (
@@ -92,8 +110,8 @@ const AddInstitute = () => {
                 <Row>
                     <Col lg={12} md={12} xs={12}>
                         <div className="d-flex justify-content-between align-items-center">
-                            <h3 className="mb-0 text-white">Add Institute</h3>
-                            <Link href="../institute/view" className="btn btn-white">Back</Link>
+                            <h3 className="mb-0 text-dark">Add Institute</h3>
+                            <Link href="../institute" className="btn btn-white"><FaMinusCircle /> Back</Link>
                         </div>
                     </Col>
                 </Row>
@@ -108,9 +126,13 @@ const AddInstitute = () => {
                                         name="institute_name"
                                         value={formData.institute_name}
                                         onChange={handleInputChange}
-                                        placeholder="Enter instute name"
+                                        placeholder="Enter institute name"
                                         required
+                                        isInvalid={!!errors.institute_name}
                                     />
+                                    <Form.Control.Feedback type="invalid">
+                                        {errors.institute_name && errors.institute_name[0]}
+                                    </Form.Control.Feedback>
                                 </Form.Group>
                             </Col>
 
@@ -124,9 +146,14 @@ const AddInstitute = () => {
                                         onChange={handleInputChange}
                                         placeholder="Enter your email"
                                         required
+                                        isInvalid={!!errors.email}
                                     />
+                                    <Form.Control.Feedback type="invalid">
+                                        {errors.email && errors.email[0]}
+                                    </Form.Control.Feedback>
                                 </Form.Group>
                             </Col>
+
                             <Col lg={6} className="mb-3" md={6} xs={12}>
                                 <Form.Group controlId="address">
                                     <Form.Label>Address</Form.Label>
@@ -137,12 +164,17 @@ const AddInstitute = () => {
                                         onChange={handleInputChange}
                                         placeholder="Enter address"
                                         required
+                                        isInvalid={!!errors.address}
                                     />
+                                    <Form.Control.Feedback type="invalid">
+                                        {errors.address && errors.address[0]}
+                                    </Form.Control.Feedback>
                                 </Form.Group>
                             </Col>
+
                             <Col lg={6} className="mb-3" md={6} xs={12}>
-                            <Form.Group controlId="phone">
-                                <Form.Label>Phone</Form.Label>
+                                <Form.Group controlId="phone">
+                                    <Form.Label>Phone</Form.Label>
                                     <Form.Control
                                         type="number"
                                         name="phone"
@@ -150,12 +182,17 @@ const AddInstitute = () => {
                                         onChange={handleInputChange}
                                         placeholder="Enter your number"
                                         required
+                                        isInvalid={!!errors.phone}
                                     />
+                                    <Form.Control.Feedback type="invalid">
+                                        {errors.phone && errors.phone[0]}
+                                    </Form.Control.Feedback>
                                 </Form.Group>
                             </Col>
+
                             <Col lg={6} className="mb-3" md={6} xs={12}>
-                            <Form.Group controlId="domain">
-                                <Form.Label>Domain</Form.Label>
+                                <Form.Group controlId="domain">
+                                    <Form.Label>Domain</Form.Label>
                                     <Form.Control
                                         type="text"
                                         name="domain"
@@ -163,13 +200,17 @@ const AddInstitute = () => {
                                         onChange={handleInputChange}
                                         placeholder="Enter domain"
                                         required
+                                        isInvalid={!!errors.domain}
                                     />
+                                    <Form.Control.Feedback type="invalid">
+                                        {errors.domain && errors.domain[0]}
+                                    </Form.Control.Feedback>
                                 </Form.Group>
                             </Col>
 
                             <Col lg={6} className="mb-3" md={6} xs={12}>
-                            <Form.Group controlId="sub_domain">
-                                <Form.Label>Sub domain</Form.Label>
+                                <Form.Group controlId="sub_domain">
+                                    <Form.Label>Sub domain</Form.Label>
                                     <Form.Control
                                         type="text"
                                         name="sub_domain"
@@ -177,11 +218,18 @@ const AddInstitute = () => {
                                         onChange={handleInputChange}
                                         placeholder="Enter sub domain"
                                         required
+                                        isInvalid={!!errors.sub_domain}
                                     />
+                                    <Form.Control.Feedback type="invalid">
+                                        {errors.sub_domain && errors.sub_domain[0]}
+                                    </Form.Control.Feedback>
                                 </Form.Group>
                             </Col>
+
                             <Col lg={3} className="mb-3" md={3} xs={12}>
-                            <Button variant="primary" className="w-100" disabled={isLoading} type="submit"> {isLoading ? <Spinner animation="border" size="sm" /> : "Submit"} </Button>
+                                <Button variant="primary" className="w-100" disabled={isLoading} type="submit"> 
+                                    {isLoading ? <Spinner animation="border" size="sm" /> : "Submit"} 
+                                </Button>
                             </Col>
                         </Row>
                     </Form>

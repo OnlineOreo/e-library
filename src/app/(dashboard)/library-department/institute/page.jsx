@@ -7,8 +7,9 @@ import Box from "@mui/material/Box";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useRouter } from "next/navigation";
-import { FaEdit, FaEye } from "react-icons/fa";
+import { FaEdit, FaEye , FaPlusCircle } from "react-icons/fa";
 import { ToastContainer, toast } from 'react-toastify';
+import Swal from "sweetalert2";
 
 const ViewInstitute = () => {
   const router = useRouter();
@@ -48,25 +49,37 @@ const ViewInstitute = () => {
 
   const handleDelete = async (params) => {
     const token = getToken();
-    try {
-      await axios.delete(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/institutes?institute_id=${params.id}`, {
-        headers: { Authorization: `${token}` },
-      });
-      
-      successToaster("Institute deleted successfully!");
-      setInstitutes((prev) => prev.filter(item => item.institute_id !== params.id));
-    } catch (error) {
-      errorToaster("Something went wrong!");
-      console.log(error);
-    }
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Deletes  Institute?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+          try {
+            await axios.delete(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/institutes?institute_id=${params.id}`, {
+              headers: { Authorization: `${token}` },
+            });
+
+            Swal.fire("Deleted!", "Institute deleted successfully!", "success");
+            setInstitutes((prev) => prev.filter(item => item.institute_id !== params.id));
+          } catch (error) {
+            errorToaster("Something went wrong!");
+            console.log(error);
+          }
+      }
+    });
   };
 
   const handleEdit = (params) => {
-    router.push(`/library-department/institute/view/${params.id}`);
+    router.push(`./institute/edit/${params.id}`);
   };
   
   const handleShow = (params) => {
-    router.push(`/library-department/institute/view/${params.id}/show`);
+    router.push(`./institute/show/${params.id}`);
   };
 
   const filteredInstitutes = institutes.filter(inst =>
@@ -79,10 +92,8 @@ const ViewInstitute = () => {
     { field: "institute_id", headerName: "ID", width: 150 },
     { field: "institute_name", headerName: "Institute Name", width: 150 },
     { field: "email", headerName: "Email", width: 200 },
-    { field: "address", headerName: "Address", width: 150 },
     { field: "phone", headerName: "Phone", width: 150 },
-    { field: "domain", headerName: "Domain", width: 150 },
-    { field: "sub_domain", headerName: "Sub Domain", width: 100 },
+    { field: "domain", headerName: "Domain", width: 200 },
     {
       field: "action",
       headerName: "Action",
@@ -104,9 +115,9 @@ const ViewInstitute = () => {
         <Row>
           <Col lg={12} md={12} xs={12}>
             <div className="d-flex justify-content-between align-items-center">
-              <h3 className="mb-0 text-white">Manage Institute</h3>
-              <Link href="../institute/add" className="btn btn-white">
-                Add Institute
+              <h3 className="mb-0 text-dark">Manage Institute</h3>
+              <Link href="./institute/add" className="btn btn-white">
+                 <FaPlusCircle /> Institute
               </Link>
             </div>
           </Col>
@@ -127,6 +138,7 @@ const ViewInstitute = () => {
               pageSize={5}
               components={{ Toolbar: GridToolbar }}
               getRowId={(row) => row.institute_id} 
+              columnVisibilityModel={{ institute_id: false }}
             />
           </Box>
         </div>
