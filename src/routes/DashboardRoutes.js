@@ -30,6 +30,7 @@ export const DashboardMenu = [
 			{ id: uuid(), link: '/library-department/content-group', name: 'Content Group' },
 			{ id: uuid(), link: '/library-department/program', name: 'Program' },
 			{ id: uuid(), link: '/library-department/service-group', name: 'servicegroup' },
+			
 		]
 	},
 	{
@@ -40,6 +41,7 @@ export const DashboardMenu = [
 			{ id: uuid(), link: '/resources/item-types', name: 'Item types' },
 			{ id: uuid(), link: '/resources/publisher-package', name: 'Publisher package' },
 			{ id: uuid(), link: '/resources/publishers', name: 'Publishers' },
+			{ id: uuid(), link: '/resources/item', name: 'item' },
 			// { id: uuid(), link: '/pages/settings', name: 'Settings'},
 			// { id: uuid(), link: '/pages/billing', name: 'Billing' },
 			// { id: uuid(), link: '/pages/pricing', name: 'Pricing'},
