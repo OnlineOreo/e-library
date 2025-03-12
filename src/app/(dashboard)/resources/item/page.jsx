@@ -1,0 +1,212 @@
+"use client";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { Container, Col, Row } from "react-bootstrap";
+import axios from "axios";
+import Box from "@mui/material/Box";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { FaEdit, FaPlusCircle, FaEye, FaTrashAlt } from "react-icons/fa";
+import { useRouter } from "next/navigation";
+import { ToastContainer, toast } from "react-toastify";
+import Swal from "sweetalert2";
+
+export default function Item() {
+  const router = useRouter();
+  const [item, setItem] = useState([]);
+  const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      loadItem();
+    }
+  }, []);
+
+  const getToken = () => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("access_token");
+    }
+    return null;
+  };
+
+  const loadItem = async () => {
+    const token = getToken();
+    if (!token) {
+      toast.error("Authentication required!");
+      router.push("/authentication/sign-in");
+      return;
+    }
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/items`,
+        { headers: { Authorization: `${token}` } }
+      );
+      if (response.status === 200) {
+        setItem(response.data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDeleteAll = async () => {
+    const token = getToken();
+    Swal.fire({
+      title: "Are you sure?",
+      text: "This will delete ALL items and cannot be undone!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete all!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await axios.delete(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/items/delete-all`,
+            {
+              headers: { Authorization: `${token}` },
+            }
+          );
+          Swal.fire("Deleted!", "All items have been deleted.", "success");
+          setItem([]);
+        } catch (error) {
+          toast.error("Error deleting all items!");
+          console.error(error);
+        }
+      }
+    });
+  };
+
+  const handleEdit = (params) => {
+    router.push(`/resources/item/edit/${params.id}`);
+  };
+
+  const handleView = (params) => {
+    router.push(`/resources/item/show/${params.id}`);
+  };
+
+  const handleDelete = async (params) => {
+    const token = getToken();
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Deletes package with all mapping!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          var deleteMappingIdArr = [];
+          params.row.mappings.forEach((element) => {
+            deleteMappingIdArr.push(element.item_package_mapping_id);
+          });
+
+          var deleteMappingParam = deleteMappingIdArr.join(",");
+          await axios.delete(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/items?item_id=${params.id}&mapping_ids=${deleteMappingParam}&delete_all=True`,
+            {
+              headers: { Authorization: `${token}` },
+            }
+          );
+          Swal.fire(
+            "Deleted!",
+            "Publisher package has been deleted.",
+            "success"
+          );
+          setItem((prev) => prev.filter((item) => item.item_id !== params.id));
+        } catch (error) {
+          console.log(error);
+          // errorToaster("Something went wrong!");
+        }
+      }
+    });
+  };
+
+  const columns = [
+    { field: "title", headerName: "Title", width: 180 },
+    { field: "author", headerName: "Author", width: 180 },
+    { field: "place", headerName: "Place", width: 180 },
+    { field: "year", headerName: "Year", width: 100 },
+    { field: "ISBN", headerName: "ISBN", width: 100 },
+    { field: "language", headerName: "Language", width: 100 },
+    {
+      field: "action",
+      headerName: "Action",
+      width: 200,
+      renderCell: (params) => (
+        <div>
+          <button
+            onClick={() => handleView(params)}
+            className="btn btn-info btn-sm mx-1"
+          >
+            <FaEye />
+          </button>
+          <button
+            onClick={() => handleEdit(params)}
+            className="btn btn-primary btn-sm mx-1"
+          >
+            <FaEdit />
+          </button>
+          <button
+            onClick={() => handleDelete(params)}
+            className="btn btn-danger btn-sm mx-1"
+          >
+            <RiDeleteBin6Line />
+          </button>
+        </div>
+      ),
+    },
+  ];
+
+  return (
+    <>
+      <div className="bg-primary pt-10 pb-21"></div>
+      <Container fluid className="mt-n22 px-6">
+        <Row>
+          <Col lg={12} md={12} xs={12} className="mb-4">
+            <div className="d-flex justify-content-between align-items-center">
+              <h3 className="mb-0 text-dark">Items</h3>
+              <div>
+                <button
+                  onClick={handleDeleteAll}
+                  className="btn btn-danger me-2"
+                >
+                  <FaTrashAlt /> Delete All
+                </button>
+                <Link href="./item/add" className="btn btn-white">
+                  <FaPlusCircle /> Add Item
+                </Link>
+              </div>
+            </div>
+          </Col>
+        </Row>
+        <div className="card p-3 mt-4">
+          <input
+            type="text"
+            className="form-control mb-3"
+            placeholder="Search by name"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          {item.length > 0 ? (
+            <Box sx={{ height: 500, width: "100%" }}>
+              <DataGrid
+                rows={item}
+                columns={columns}
+                pageSize={5}
+                components={{ Toolbar: GridToolbar }}
+                getRowId={(row) => row.item_id}
+              />
+            </Box>
+          ) : (
+            <p>Loading Items...</p>
+          )}
+        </div>
+      </Container>
+      <ToastContainer />
+    </>
+  );
+}
