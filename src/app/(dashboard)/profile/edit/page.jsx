@@ -310,7 +310,8 @@ const Profile = () => {
                                         <Form.Control.Feedback type="invalid">{errors.image}</Form.Control.Feedback>
                                     </Form.Group>
                                 </Col>
-
+                                <input type="hidden" value={authUser.admission_year} name='admission_year' onChange={handleInputChange}/>
+                                <input type="hidden" value={authUser.role} name='role'/>
                                 <Col lg={12} className="mb-3 mt-4">
                                     <Button variant="primary" className="w-100" disabled={isLoading} type="submit">
                                         {isLoading ? <Spinner animation="border" size="sm" /> : "Update"}

@@ -162,12 +162,13 @@ const QuickMenu = () => {
                             </div>
                             <div className=" dropdown-divider mt-3 mb-2"></div>
                     </Dropdown.Item>
-                    <Dropdown.Item eventKey="2">
-                        <i className="fe fe-user me-2"></i> <Link href="/profile/view" className='text-dark'>View Profile</Link>
+                    <Dropdown.Item as={Link} href="/profile/view" eventKey="2" className="text-dark">
+                        <i className="fe fe-user me-2"></i> View Profile
                     </Dropdown.Item>
-                    <Dropdown.Item eventKey="3">
-                        <i className="fe fe-activity me-2"></i> <Link href="/profile/edit" className='text-dark'>Edit Profile</Link>
+                    <Dropdown.Item as={Link} href="/profile/edit" eventKey="3" className="text-dark">
+                        <i className="fe fe-activity me-2"></i> Edit Profile
                     </Dropdown.Item>
+
                     {/* <Dropdown.Item className="text-primary">
                         <i className="fe fe-star me-2"></i> Go Pro
                     </Dropdown.Item>
