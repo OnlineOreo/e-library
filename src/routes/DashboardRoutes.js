@@ -21,7 +21,7 @@ export const DashboardMenu = [
 	{
 		id: uuid(),
 		title: 'Library & Department',
-		icon: 'user',
+		icon: 'clipboard',
 		children: [
 			{ id: uuid(), link: '/library-department/institute', name: 'Institutes' },
 			{ id: uuid(), link: '/library-department/library', name: 'Library' },
@@ -42,22 +42,16 @@ export const DashboardMenu = [
 			{ id: uuid(), link: '/resources/publisher-package', name: 'Publisher package' },
 			{ id: uuid(), link: '/resources/publishers', name: 'Publishers' },
 			{ id: uuid(), link: '/resources/item', name: 'item' },
-			// { id: uuid(), link: '/pages/settings', name: 'Settings'},
-			// { id: uuid(), link: '/pages/billing', name: 'Billing' },
-			// { id: uuid(), link: '/pages/pricing', name: 'Pricing'},
-			// { id: uuid(), link: '/not-found', name: '404 Error' }
 		]
 	},	
-	// {
-	// 	id: uuid(),
-	// 	title: 'Authentication',
-	// 	icon: 'lock',
-	// 	children: [
-	// 		{ id: uuid(), link: '/authentication/sign-in', name: 'Sign In' },
-	// 		{ id: uuid(), link: '/authentication/sign-up', name: 'Sign Up' },
-	// 		{ id: uuid(), link: '/authentication/forget-password', name: 'Forget Password'}			
-	// 	]
-	// },
+	{
+		id: uuid(),
+		title: 'Configuration',
+		icon: 'lock',
+		children: [
+			{ id: uuid(), link: '/configuration/media', name: 'Media' },	
+		]
+	},
 	// {
 	// 	id: uuid(),
 	// 	title: 'Layouts',

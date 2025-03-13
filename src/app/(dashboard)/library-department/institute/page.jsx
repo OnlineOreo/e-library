@@ -58,6 +58,7 @@ const ViewInstitute = () => {
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!",
     }).then(async (result) => {
+      
       if (result.isConfirmed) {
           try {
             await axios.delete(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/institutes?institute_id=${params.id}`, {
