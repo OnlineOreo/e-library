@@ -50,6 +50,7 @@ export const DashboardMenu = [
 		icon: 'lock',
 		children: [
 			{ id: uuid(), link: '/configuration/media', name: 'Media' },	
+			{ id: uuid(), link: '/configuration/collection', name: 'Collection' },	
 		]
 	},
 	// {

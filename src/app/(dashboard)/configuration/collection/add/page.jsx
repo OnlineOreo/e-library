@@ -15,13 +15,12 @@ const AddConfigurationMeta = () => {
   const [errors, setErrors] = useState({});
 
   const [formData, setFormData] = useState({
-    media_name: "",
+    collection_name: "",
     image: null, // File should be null initially
     description: "",
   });
 
   const getToken = () => localStorage.getItem("access_token");
-
 
   const handleInputChange = (event) => {
     const { name, value, type, files } = event.target;
@@ -53,7 +52,7 @@ const AddConfigurationMeta = () => {
       });
 
       await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/configuration-media`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/configuration-collection`,
         formDataToSend, // Use FormData
         {
           headers: {
@@ -65,12 +64,12 @@ const AddConfigurationMeta = () => {
 
       Swal.fire({
         title: "Success!",
-        text: "Configuration meta added successfully!",
+        text: "Configuration collection added successfully!",
         icon: "success",
         confirmButtonText: "OK",
       });
 
-      setTimeout(() => router.push("/configuration/media"), 2000);
+      setTimeout(() => router.push("/configuration/collection"), 2000);
     } catch (error) {
       setErrors(error.response?.data || {});
       toast.error("Error adding meta!");
@@ -86,8 +85,8 @@ const AddConfigurationMeta = () => {
         <Row>
           <Col lg={12}>
             <div className="d-flex justify-content-between align-items-center">
-              <h3 className="mb-0 text-dark">Add Configuration Media</h3>
-              <Link href="../media" className="btn btn-white">
+              <h3 className="mb-0 text-dark">Add Configuration collection</h3>
+              <Link href="../collection" className="btn btn-white">
                 <FaMinusCircle /> Back
               </Link>
             </div>
@@ -98,17 +97,17 @@ const AddConfigurationMeta = () => {
             <Row>
               <Col lg={6} className="mb-3">
                 <Form.Group>
-                  <Form.Label>Media Name</Form.Label>
+                  <Form.Label>collection Name</Form.Label>
                   <Form.Control
                     type="text"
-                    name="media_name"
-                    value={formData.media_name}
+                    name="collection_name"
+                    value={formData.collection_name}
                     onChange={handleInputChange}
-                    placeholder="Enter media name"
-                    isInvalid={!!errors.media_name}
+                    placeholder="Enter collection name"
+                    isInvalid={!!errors.collection_name}
                   />
                   <Form.Control.Feedback type="invalid">
-                    {errors.media_name?.join(", ")}
+                    {errors.collection_name?.join(", ")}
                   </Form.Control.Feedback>
                 </Form.Group>
               </Col>
