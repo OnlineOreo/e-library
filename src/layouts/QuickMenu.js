@@ -1,7 +1,7 @@
 "use client";
 // import node module libraries
 import Link from 'next/link';
-import { Fragment } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import {
     Row,
@@ -13,6 +13,7 @@ import {
 
 import { useRouter } from "next/navigation";
 import { deleteCookie } from "cookies-next";
+import axios from 'axios';
 
 
 
@@ -26,6 +27,11 @@ import NotificationList from '../data/Notification';
 import useMounted from '@/hooks/useMounted';
 
 const QuickMenu = () => {
+    const [authUser, setAuthUser] = useState({
+        name: "",
+        role:"",
+        image:"",
+    });
 
     const router = useRouter();
     
@@ -40,6 +46,40 @@ const QuickMenu = () => {
     const isDesktop = useMediaQuery({
         query: '(min-width: 1224px)'
     })
+    const getToken = () => localStorage.getItem("access_token");
+    useEffect(() => {
+        loadAuthUser()
+    }, []); // Runs whenever authUser changes
+    
+    const loadAuthUser = async () => {
+        const token = getToken();
+        if (!token) {
+            errorToaster("Authentication required!");
+            return;
+        }
+        try {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/profile`, {
+                headers: { Authorization: `${token}` },
+            });
+            const authdata = response.data;
+            setAuthUser(authdata);
+            // console.log(authdata);
+            (response.data);
+        } catch (error) {
+            console.error("Axios Error:", error);
+            if (error.response) {
+                console.error("Response Error:", error.response.data);
+            } else if (error.request) {
+                console.error("Request Error: No response received");
+            } else {
+                console.error("Setup Error:", error.message);
+            }
+        }
+    };
+    
+
+
+    
 
     const Notifications = () => {
         return (
@@ -105,7 +145,7 @@ const QuickMenu = () => {
                     className="rounded-circle"
                     id="dropdownUser">
                     <div className="avatar avatar-md avatar-indicators avatar-online">
-                        <Image alt="avatar" src='/images/avatar/avatar-1.jpg' className="rounded-circle" />
+                        <Image alt="Verified" src={authUser?.image && authUser.image !== "" ? authUser.image : "/images/avatar/avatar-1.jpg"}  className="rounded-circle" width={200} height={200} />
                     </div>
                 </Dropdown.Toggle>
                 <Dropdown.Menu
@@ -116,23 +156,25 @@ const QuickMenu = () => {
                     >
                     <Dropdown.Item as="div" className="px-4 pb-0 pt-2" bsPrefix=' '>
                             <div className="lh-1 ">
-                                <h5 className="mb-1"> John E. Grainger</h5>
-                                <Link href="#" className="text-inherit fs-6">View my profile</Link>
+                                <h5 className="mb-1">{authUser.name}</h5>
+                                {/* <Link href="/profile/view" className="text-inherit fs-6">View my profile</Link> */}
+                                <h6>{authUser.role}</h6>
                             </div>
                             <div className=" dropdown-divider mt-3 mb-2"></div>
                     </Dropdown.Item>
-                    <Dropdown.Item eventKey="2">
-                        <i className="fe fe-user me-2"></i> Edit Profile
+                    <Dropdown.Item as={Link} href="/profile/view" eventKey="2" className="text-dark">
+                        <i className="fe fe-user me-2"></i> View Profile
                     </Dropdown.Item>
-                    <Dropdown.Item eventKey="3">
-                        <i className="fe fe-activity me-2"></i> Activity Log
+                    <Dropdown.Item as={Link} href="/profile/edit" eventKey="3" className="text-dark">
+                        <i className="fe fe-activity me-2"></i> Edit Profile
                     </Dropdown.Item>
-                    <Dropdown.Item className="text-primary">
+
+                    {/* <Dropdown.Item className="text-primary">
                         <i className="fe fe-star me-2"></i> Go Pro
                     </Dropdown.Item>
                     <Dropdown.Item >
                         <i className="fe fe-settings me-2"></i> Account Settings
-                    </Dropdown.Item>
+                    </Dropdown.Item> */}
                     <Dropdown.Item onClick={handleLogout}>
                         <i className="fe fe-power me-2"></i>Sign Out
                     </Dropdown.Item>
