@@ -5,16 +5,22 @@ import { Container, Col, Row } from "react-bootstrap";
 import axios from "axios";
 import { FaPlusCircle } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
 
 const Footer = () => {
   const [footerData, setFooterData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
-  const institute = "2ffdfed3-0da4-4867-bf85-";
+  const instituteId = useSelector((state) => state.institute.instituteId);
+  const status = useSelector((state) => state.institute.status);
 
   useEffect(() => {
+    if(instituteId){
     loadFooter();
-  }, []);
+    // console.log("institute_id",instituteId);
+    // console.log("status",status);
+    }
+  }, [instituteId]);
 
   const getToken = () => {
     if (typeof window !== "undefined") {
@@ -32,7 +38,7 @@ const Footer = () => {
 
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/footers?institute=${institute}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/footers?institute=${instituteId}`,
         { headers: { Authorization: `${token}` } }
       );
       if (response.status === 200 && response.data.length > 0) {

@@ -49,8 +49,12 @@ export const DashboardMenu = [
 		title: 'Configuration',
 		icon: 'lock',
 		children: [
-			{ id: uuid(), link: '/configuration/media', name: 'Media' },	
+			{ id: uuid(), link: '/configuration/categories', name: 'Categories' },	
 			{ id: uuid(), link: '/configuration/collection', name: 'Collection' },	
+			{ id: uuid(), link: '/configuration/media', name: 'Media' },	
+			{ id: uuid(), link: '/configuration/metas', name: 'Important Link' },	
+			{ id: uuid(), link: '/configuration/trending-books', name: 'Trending Books' },	
+			{ id: uuid(), link: '/configuration/footer', name: 'Footer' },	
 		]
 	},
 	// {
