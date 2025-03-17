@@ -54,7 +54,8 @@ export const DashboardMenu = [
 			{ id: uuid(), link: '/configuration/media', name: 'Media' },	
 			{ id: uuid(), link: '/configuration/metas', name: 'Important Link' },	
 			{ id: uuid(), link: '/configuration/trending-books', name: 'Trending Books' },	
-			{ id: uuid(), link: '/configuration/footer', name: 'Footer' },	
+			{ id: uuid(), link: '/configuration/footer', name: 'Footer' },
+			{ id: uuid(), link: '/configuration/dynamic-page', name: 'Dynamic Page' },	
 		]
 	},
 	// {
