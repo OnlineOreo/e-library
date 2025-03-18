@@ -16,19 +16,19 @@ const ViewLibrary = () => {
   const [library, setLibrary] = useState([]);
   const [filteredLibrary, setFilteredLibrary] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [token, setToken] = useState(null);
+
+  const getToken = () => {
+    const cookieString = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("access_token="));
+
+    return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+  };
+
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("access_token");
-    if (!storedToken) {
-      toast.error("Authentication required!");
-      router.push("/authentication/sign-in");
-    } else {
-      setToken(storedToken);
-    }
-  }, [router]);
+    const token = getToken()
 
-  useEffect(() => {
     if (!token) return;
     const loadLibrary = async () => {
       try {
@@ -46,7 +46,7 @@ const ViewLibrary = () => {
       }
     };
     loadLibrary();
-  }, [token]);
+  }, []);
 
   useEffect(() => {
     const filtered = library.filter((lib) =>
@@ -56,6 +56,9 @@ const ViewLibrary = () => {
   }, [searchQuery, library]);
 
   const handleDelete = async (params) => {
+
+    const token = getToken();
+
     if (!token || !params?.id) return;
 
     Swal.fire({
@@ -93,8 +96,8 @@ const ViewLibrary = () => {
     { field: "library_name", headerName: "Library Name", width: 150 },
     { field: "domain", headerName: "Domain", width: 200 },
     { field: "phone", headerName: "Phone", width: 150 },
-    { field: "address", headerName: "Address", width: 150 },
-    { field: "email", headerName: "Email", width: 150 },
+    // { field: "address", headerName: "Address", width: 150 },
+    { field: "email", headerName: "Email", width: 230 },
     {
       field: "action",
       headerName: "Action",
@@ -143,6 +146,7 @@ const ViewLibrary = () => {
               pageSize={5}
               components={{ Toolbar: GridToolbar }}
               getRowId={(row) => row.library_id}
+              columnVisibilityModel={{ library_id: false }}
             />
           </Box>
         </div>

@@ -16,7 +16,13 @@ const AddProgram = () => {
     const [formData, setFormData] = useState({ program_name: "", program_code: "", library: "" });
     const [libraries, setLibraries] = useState([]);
 
-    const getToken = () => localStorage.getItem("access_token");
+    const getToken = () => {
+        const cookieString = document.cookie
+          .split("; ")
+          .find((row) => row.startsWith("access_token="));
+    
+        return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+      };
 
     useEffect(() => {
         const fetchLibraries = async () => {
@@ -102,7 +108,7 @@ const AddProgram = () => {
                 <Row>
                     <Col lg={12}>
                         <div className="d-flex justify-content-between align-items-center">
-                            <h3 className="mb-0 text-white">Add Program</h3>
+                            <h3 className="mb-0 text-dark">Add Program</h3>
                             <Link href="../program" className="btn btn-white">  <FaMinusCircle /> Back</Link>
                         </div>
                     </Col>
@@ -149,7 +155,7 @@ const AddProgram = () => {
                             <Col lg={4} className="mb-3">
                                 <Form.Group controlId="formLibrary">
                                     <Form.Label>Select Library</Form.Label>
-                                    <Form.Control
+                                    <Form.Select
                                         as="select"
                                         name="library"
                                         value={formData.library}
@@ -162,7 +168,7 @@ const AddProgram = () => {
                                                 {library.library_name}
                                             </option>
                                         ))}
-                                    </Form.Control>
+                                    </Form.Select>
                                     {errors.library && (
                                         <Form.Control.Feedback type="invalid">
                                             {errors.library[0]}

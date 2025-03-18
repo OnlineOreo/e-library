@@ -12,16 +12,23 @@ import { FaMinusCircle } from "react-icons/fa";
 const AddLibrary = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [token, setToken] = useState(null);
   const [institutes, setInstitutes] = useState([]);
   const [errors, setErrors] = useState({});
 
+  const getToken = () => {
+    const cookieString = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("access_token="));
+  
+    return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+  };
+
   useEffect(() => {
-    setToken(localStorage.getItem("access_token"));
+    const token = getToken();
     axios
       .get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/institutes`, {
         headers: {
-          Authorization: localStorage.getItem("access_token"),
+          Authorization: token,
         },
       })
       .then((response) => {
@@ -54,6 +61,7 @@ const AddLibrary = () => {
   });
 
   const handleInputChange = (event) => {
+
     const { name, value } = event.target;
     setErrors((prev) => ({ ...prev, [name]: null }));
 
@@ -75,6 +83,7 @@ const AddLibrary = () => {
     event.preventDefault();
     setIsLoading(true);
     setErrors({});
+    const token = getToken();
 
     if (!token) {
       router.push("/authentication/sign-in");

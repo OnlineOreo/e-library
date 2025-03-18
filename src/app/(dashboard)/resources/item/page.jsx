@@ -23,10 +23,11 @@ export default function Item() {
   }, []);
 
   const getToken = () => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("access_token");
-    }
-    return null;
+    const cookieString = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("access_token="));
+    
+    return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
   const loadItem = async () => {
@@ -131,7 +132,6 @@ export default function Item() {
     { field: "place", headerName: "Place", width: 180 },
     { field: "year", headerName: "Year", width: 100 },
     { field: "ISBN", headerName: "ISBN", width: 100 },
-    { field: "language", headerName: "Language", width: 100 },
     {
       field: "action",
       headerName: "Action",

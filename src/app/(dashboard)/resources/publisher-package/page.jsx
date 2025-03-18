@@ -18,21 +18,24 @@ const ViewItemTypes = () => {
 
   const [publisherPkg, setPublisherPkg] = useState([]);
   const [search, setSearch] = useState("");
-  const [token, setToken] = useState(null);
+
+  const getToken = () => {
+    const cookieString = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("access_token="));
+    
+    return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+  };
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      setToken(localStorage.getItem("access_token"));
-    }
-  }, []);
-
-  useEffect(() => {
+    const token = getToken();
     if (token) {
       loadItemTypes();
     }
-  }, [token]);
+  }, []);
 
   const loadItemTypes = async () => {
+    const token = getToken();
     if (!token) {
       errorToaster("Authentication required!");
       router.push("/authentication/sign-in");

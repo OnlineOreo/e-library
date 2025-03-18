@@ -24,7 +24,13 @@ const AddInstitute = () => {
         }
     };
     
-    const getToken = () => localStorage.getItem("access_token");
+    const getToken = () => {
+        const cookieString = document.cookie
+          .split("; ")
+          .find((row) => row.startsWith("access_token="));
+    
+        return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+      };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -76,7 +82,7 @@ const AddInstitute = () => {
                 <Row>
                     <Col lg={12}>
                         <div className="d-flex justify-content-between align-items-center">
-                            <h3 className="mb-0 text-white">Add User Type</h3>
+                            <h3 className="mb-0 text-dark">Add User Type</h3>
                             <Link href="../user-type" className="btn btn-white">  <FaMinusCircle /> Back</Link>
                         </div>
                     </Col>

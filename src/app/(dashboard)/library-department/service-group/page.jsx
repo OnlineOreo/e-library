@@ -24,10 +24,11 @@ export default function ServiceGroup() {
   }, []);
 
   const getToken = () => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("access_token");
-    }
-    return null;
+    const cookieString = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("access_token="));
+
+    return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
   const loadServiceGroup = async () => {
@@ -90,8 +91,8 @@ export default function ServiceGroup() {
     .filter((inst) => inst.service_name.toLowerCase().includes(search.toLowerCase()));
 
   const columns = [
-    { field: "service_name", headerName: "Name", width: 300 },
-    { field: "created_at", headerName: "Created At", width: 300 },
+    { field: "service_name", headerName: "Name", width: 270 },
+    { field: "created_at", headerName: "Created At", width: 250 },
     { field: "updated_at", headerName: "Updated At", width: 250 },
     {
       field: "action",
@@ -144,7 +145,7 @@ export default function ServiceGroup() {
               />
             </Box>
           ) : (
-            <p>Loading Service Groups...</p>
+            <p>Data not found...</p>
           )}
         </div>
       </Container>

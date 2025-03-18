@@ -22,10 +22,11 @@ export default function Configurationmeta() {
   }, []);
 
   const getToken = () => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("access_token");
-    }
-    return null;
+    const cookieString = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("access_token="));
+
+    return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
   const loadMeta = async () => {

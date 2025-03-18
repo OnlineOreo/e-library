@@ -14,8 +14,15 @@ const EditLibrary = () => {
   const router = useRouter();
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(false);
-  const [token, setToken] = useState(null);
   const [institutes, setInstitutes] = useState([]);
+
+  const getToken = () => {
+    const cookieString = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("access_token="));
+  
+    return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+  };
 
   // Default form data
   const defaultFormData = {
@@ -40,16 +47,13 @@ const EditLibrary = () => {
   const [formData, setFormData] = useState(defaultFormData);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      setToken(localStorage.getItem("access_token"));
-    }
-
+    const token = getToken()
     const fetchInstitutes = async () => {
       try {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/institutes`,
           {
-            headers: { Authorization: localStorage.getItem("access_token") },
+            headers: { Authorization: token },
           }
         );
         setInstitutes(response.data || []);
@@ -65,7 +69,7 @@ const EditLibrary = () => {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/libraries?library_id=${id}`,
           {
-            headers: { Authorization: localStorage.getItem("access_token") },
+            headers: { Authorization: token },
           }
         );
 
@@ -111,6 +115,7 @@ const EditLibrary = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const token = getToken()
     setIsLoading(true);
 
     if (!token) {

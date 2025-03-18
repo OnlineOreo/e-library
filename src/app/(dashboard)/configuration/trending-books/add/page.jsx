@@ -22,7 +22,13 @@ export default function AddTrendingBook() {
     institute: "ebfd8df2-710f-437d-8d12-e25201813ca7", // Default institute ID
   });
 
-  const getToken = () => localStorage.getItem("access_token");
+  const getToken = () => {
+    const cookieString = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("access_token="));
+
+    return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+  };
 
   const handleChange = (e) => {
     setBook({ ...book, [e.target.name]: e.target.value });

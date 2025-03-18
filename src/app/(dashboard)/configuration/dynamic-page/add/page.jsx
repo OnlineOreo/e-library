@@ -22,7 +22,13 @@ const AddDynamicPage = () => {
     institute:'d82fc520-2536-4cc0-a744-3f6b9d20bc46'
   });
 
-  const getToken = () => localStorage.getItem("access_token");
+  const getToken = () => {
+    const cookieString = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("access_token="));
+
+    return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+  };
 
   const handleInputChange = (event) => {
     const { name, value, type, files } = event.target;

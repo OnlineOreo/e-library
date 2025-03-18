@@ -22,10 +22,18 @@ const EditInstitute = () => {
         }
     }, [id]);
 
+    const getToken = () => {
+        const cookieString = document.cookie
+          .split("; ")
+          .find((row) => row.startsWith("access_token="));
+    
+        return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+      };
+
     const fetchData = async () => {
         setIsLoading(true);
         try {
-            const token = localStorage.getItem("access_token");
+            const token = getToken()
             const response = await axios.get(
                 `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-types?user_type_id=${id}`,
                 {
@@ -55,7 +63,7 @@ const EditInstitute = () => {
         setIsLoading(true);
         setErrors({});
 
-        const token = localStorage.getItem("access_token");
+        const token = getToken();
         if (!token) {
             router.push("/authentication/sign-in");
             setIsLoading(false);

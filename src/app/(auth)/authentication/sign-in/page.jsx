@@ -34,15 +34,10 @@ const SignIn = () => {
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await response.json();
+      const data = await response.json(); 
 
       if (data.access_token) {
-        // Set cookies only in the client
-        // if (typeof window !== 'undefined') {
-          document.cookie = `access_token=${data.access_token}; path=/; max-age=${60 * 60 * 24}; secure=${process.env.NODE_ENV === 'production' ? 'true' : 'false'}; samesite=strict`;
-
-          localStorage.setItem('access_token', data.access_token);
-        // }
+          document.cookie = `access_token=${data.access_token}; path=/; max-age=${60 * 20}; secure=${process.env.NODE_ENV === 'production' ? 'true' : 'false'}; samesite=strict`;
       }
       
       if (response.ok) {
@@ -68,12 +63,12 @@ const SignIn = () => {
           {/* Card body */}
           <Card.Body className="p-6">
             <div className='mb-4' style={{ width: "100%", height: "100px", display:"flex",justifyContent:"center" }}>
-              <Image
+              {/* <Image
                 src=""
                 alt="Logo"
                 width={120}
                 height={100}
-              />
+              /> */}
             </div>
             <div className="mb-4"></div>
 

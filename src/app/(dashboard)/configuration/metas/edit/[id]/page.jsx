@@ -23,7 +23,13 @@ const EditConfigurationMeta = () => {
     description: "",
   });
 
-  const getToken = () => localStorage.getItem("access_token");
+  const getToken = () => {
+    const cookieString = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("access_token="));
+
+    return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+  };
 
   useEffect(() => {
     const fetchMeta = async () => {

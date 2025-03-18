@@ -29,10 +29,11 @@ const Department = () => {
   }, [isClient]);
 
   const getToken = () => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("access_token");
-    }
-    return null;
+    const cookieString = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("access_token="));
+
+    return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
   const loadCategories = async () => {
@@ -80,7 +81,7 @@ const Department = () => {
     { 
       field: "image", 
       headerName: "Image", 
-      width: 300,
+      width: 150,
       renderCell: (params) => (
         <img 
           src={params.value} 
@@ -89,7 +90,7 @@ const Department = () => {
         />
       ),
     },
-    { field: "description", headerName: "Description", width: 500 },
+    // { field: "description", headerName: "Description", width: 500 },
     {
       field: "action",
       headerName: "Action",
@@ -183,7 +184,7 @@ const Department = () => {
                   rows={filteredUsers}
                   columns={columns}
                   pageSize={5}
-                  columnVisibilityModel={{ description: false }}
+                  columnVisibilityModel={{ configuration_category_id: false }}
                 />
               )
             )}

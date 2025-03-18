@@ -27,11 +27,19 @@ const EditPublisher = () => {
 
     const [previewImage, setPreviewImage] = useState(null);
 
+    const getToken = () => {
+        const cookieString = document.cookie
+            .split("; ")
+            .find((row) => row.startsWith("access_token="));
+        
+        return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+      };
+
     useEffect(() => {
         const fetchPublisher = async () => {
             setIsLoading(true);
             try {
-                const token = localStorage.getItem("access_token");
+                const token = getToken();
                 if (!token) {
                     router.push("/authentication/sign-in");
                     return;
@@ -72,7 +80,7 @@ const EditPublisher = () => {
         setIsLoading(true);
         setErrors({});
         
-        const token = localStorage.getItem("access_token");
+        const token = getToken();
         if (!token) {
             router.push("/authentication/sign-in");
             setIsLoading(false);

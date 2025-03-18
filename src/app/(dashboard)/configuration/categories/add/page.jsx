@@ -49,7 +49,13 @@ const AddCategory = () => {
         });
     };
 
-    const getToken = () => localStorage.getItem("access_token");
+    const getToken = () => {
+        const cookieString = document.cookie
+          .split("; ")
+          .find((row) => row.startsWith("access_token="));
+    
+        return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+      };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -127,7 +133,7 @@ const AddCategory = () => {
                 <div className="card p-6 mt-5">
                     <Form onSubmit={handleSubmit}>
                         <Row className="justify-content-center">
-                            <Col lg={12} className="mb-5">
+                            <Col lg={6} className="mb-5">
                                 <Form.Group controlId="formName">
                                     <Form.Label>Category Name</Form.Label>
                                     <Form.Control
@@ -146,7 +152,7 @@ const AddCategory = () => {
                                 </Form.Group>
                             </Col>
 
-                            <Col lg={12} className="mb-3">
+                            <Col lg={6} className="mb-3">
                                 <Form.Group controlId="formFile">
                                     <Form.Label>Upload Image</Form.Label>
                                     <Form.Control 

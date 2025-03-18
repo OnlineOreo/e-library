@@ -13,15 +13,24 @@ export default function ShowLibrary() {
   const [library, setLibrary] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const getToken = () => {
+    const cookieString = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("access_token="));
+  
+    return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+  };
+
   useEffect(() => {
     if (!id) return;
+    const token = getToken()
 
     const fetchLibrary = async (id) => {
       try {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/libraries?library_id=${id}`,
           {
-            headers: { Authorization: localStorage.getItem("access_token") },
+            headers: { Authorization: token },
           }
         );
 

@@ -13,12 +13,8 @@ import Swal from "sweetalert2";
 import { FaPlusCircle } from "react-icons/fa";
 import moment from "moment";
 
-const ViewUserType = () => { const token = getToken();
-  if (!token) {
-    errorToaster("Authentication required!");
-    router.push("/authentication/sign-in");
-    return;
-  }
+const ViewUserType = () => { 
+
   const router = useRouter();
   const successToaster = (text) => toast(text);
   const errorToaster = (text) => toast.error(text);
@@ -27,10 +23,11 @@ const ViewUserType = () => { const token = getToken();
   const [search, setSearch] = useState("");
 
   const getToken = () => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("access_token");
-    }
-    return null;
+    const cookieString = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("access_token="));
+
+    return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
   useEffect(() => {
@@ -141,7 +138,7 @@ const ViewUserType = () => { const token = getToken();
         <Row>
           <Col lg={12} md={12} xs={12}>
             <div className="d-flex justify-content-between align-items-center">
-              <h3 className="mb-0 text-white">User Type</h3>
+              <h3 className="mb-0 text-dark">User Type</h3>
               <Link href="./user-type/add" className="btn btn-white">
                 <FaPlusCircle /> user type
               </Link>
@@ -168,7 +165,7 @@ const ViewUserType = () => { const token = getToken();
               />
             </Box>
           ) : (
-            <p>Loading user types...</p>
+            <p>Data not found...</p>
           )}
         </div>
       </Container>

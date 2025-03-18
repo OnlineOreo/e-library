@@ -21,10 +21,11 @@ const ViewProgram = () => {
   const [search, setSearch] = useState("");
 
   const getToken = () => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("access_token");
-    }
-    return null;
+    const cookieString = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("access_token="));
+
+    return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
   useEffect(() => {
@@ -129,7 +130,7 @@ const ViewProgram = () => {
         <Row>
           <Col lg={12} md={12} xs={12}>
             <div className="d-flex justify-content-between align-items-center">
-              <h3 className="mb-0 text-white">Program</h3>
+              <h3 className="mb-0 text-dark">Program</h3>
               <Link href="./program/add" className="btn btn-white">
                 <FaPlusCircle /> Program
               </Link>

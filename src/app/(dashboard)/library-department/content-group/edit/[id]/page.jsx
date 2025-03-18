@@ -6,6 +6,7 @@ import { useRouter, useParams } from "next/navigation";
 import { Container, Col, Row, Form, Button, Spinner } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
+import { FaMinusCircle } from "react-icons/fa";
 import Swal from "sweetalert2";
 
 const EditContentGroup = () => {
@@ -20,7 +21,13 @@ const EditContentGroup = () => {
         content_name: "",
     });
 
-    const getToken = () => localStorage.getItem("access_token");
+    const getToken = () => {
+        const cookieString = document.cookie
+          .split("; ")
+          .find((row) => row.startsWith("access_token="));
+    
+        return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+      };
 
     useEffect(() => {
         if (!id) return;
@@ -44,8 +51,6 @@ const EditContentGroup = () => {
                 setFormData({ content_name: response.data.content_name });
             } catch (error) {
                 if (error.response?.status === 401) {
-                    errorToaster("Session expired! Please login again.");
-                    localStorage.removeItem("access_token");
                     router.push("/authentication/sign-in");
                 } else {
                     errorToaster("Failed to fetch content group");
@@ -96,8 +101,6 @@ const EditContentGroup = () => {
             }, 2000);
         } catch (error) {
             if (error.response?.status === 401) {
-                errorToaster("Session expired! Please login again.");
-                localStorage.removeItem("access_token");
                 router.push("/authentication/sign-in");
             } else if (error.response?.data) {
                 setErrors(error.response.data);
@@ -116,8 +119,8 @@ const EditContentGroup = () => {
                 <Row>
                     <Col lg={12} md={12} xs={12}>
                         <div className="d-flex justify-content-between align-items-center">
-                            <h3 className="mb-0 text-white">Edit Content Group</h3>
-                            <Link href="/library-department/content-group" className="btn btn-white">Back</Link>
+                            <h3 className="mb-0 text-dark">Edit Content Group</h3>
+                            <Link href="/library-department/content-group" className="btn btn-white"><FaMinusCircle /> Back</Link>
                         </div>
                     </Col>
                 </Row>

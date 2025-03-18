@@ -36,7 +36,7 @@ const QuickMenu = () => {
     const router = useRouter();
     
     const handleLogout = () => {
-        deleteCookie("access_token"); 
+        deleteCookie("access_token");
         router.push("/authentication/sign-in");
     }
     

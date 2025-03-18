@@ -15,8 +15,16 @@ export default function EditServiceGroup() {
   const [serviceName, setServiceName] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const getToken = () => {
+    const cookieString = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("access_token="));
+
+    return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+  };
+
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
+    const token = getToken();
     if (id) {
       axios
         .get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/service-groups?sg_id=${id}`, {
@@ -30,7 +38,7 @@ export default function EditServiceGroup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const token = localStorage.getItem("access_token");
+    const token = getToken();
 
     try {
       await axios.put(

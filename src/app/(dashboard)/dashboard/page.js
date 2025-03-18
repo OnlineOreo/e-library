@@ -26,10 +26,6 @@ const Home = () => {
           .split("; ")
           .find((row) => row.startsWith("access_token="))
           ?.split("=")[1];
-    
-        // if (!token) {
-        //   router.push("/authentication/sign-in"); // Redirect if no token
-        // }
       }, []);
 
 

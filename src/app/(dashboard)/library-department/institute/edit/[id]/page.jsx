@@ -16,7 +16,13 @@ export default function EditInstituteComponent() {
 
   const { id } = useParams();
 
-  const getToken = () => localStorage.getItem("access_token");
+  const getToken = () => {
+    const cookieString = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("access_token="));
+  
+    return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+  };
 
   const getInstitute = async (id) => {
     const token = getToken();

@@ -18,6 +18,14 @@ const EditItemType = () => {
     const [errors, setErrors] = useState({});
     const [formData, setFormData] = useState({ type_name: "" });
 
+    const getToken = () => {
+        const cookieString = document.cookie
+            .split("; ")
+            .find((row) => row.startsWith("access_token="));
+        
+        return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+    };
+
     useEffect(() => {
         const fetchItemType = async () => {
             if (!itemTypeId) {
@@ -26,7 +34,7 @@ const EditItemType = () => {
             }
 
             setIsLoading(true);
-            const token = localStorage.getItem("access_token");
+            const token = getToken()
             if (!token) {
                 router.push("/authentication/sign-in");
                 return;
@@ -67,7 +75,7 @@ const EditItemType = () => {
         setIsLoading(true);
         setErrors({}); 
 
-        const token = localStorage.getItem("access_token");
+        const token = getToken();
         if (!token) {
             toast.error("Authentication required!");
             setIsLoading(false);

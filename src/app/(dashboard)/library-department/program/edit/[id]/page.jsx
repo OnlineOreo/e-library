@@ -18,7 +18,13 @@ const EditProgram = () => {
     const [formData, setFormData] = useState({ program_name: "", program_code: "", library: "" });
     const [libraries, setLibraries] = useState([]);
 
-    const getToken = () => localStorage.getItem("access_token");
+    const getToken = () => {
+        const cookieString = document.cookie
+          .split("; ")
+          .find((row) => row.startsWith("access_token="));
+    
+        return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+      };
 
     useEffect(() => {
         const fetchLibraries = async () => {
@@ -127,7 +133,7 @@ const EditProgram = () => {
                 <Row>
                     <Col lg={12}>
                         <div className="d-flex justify-content-between align-items-center">
-                            <h3 className="mb-0 text-white">Edit Program</h3>
+                            <h3 className="mb-0 text-dark">Edit Program</h3>
                             <Link href="../" className="btn btn-white">  <FaMinusCircle /> Back</Link>
                         </div>
                     </Col>

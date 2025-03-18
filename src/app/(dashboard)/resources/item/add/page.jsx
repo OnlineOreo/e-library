@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import Link from "next/link";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
-// import { Container, Form, Button } from "react-bootstrap";
 import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
 import { FaMinusCircle, FaPlusCircle } from "react-icons/fa";
@@ -26,15 +25,21 @@ export default function AddItem() {
     description: "",
     language: "",
     url: "",
-    tags: [],
+    tags: [""],
     mappings: {
-      package: [],
-      item_type: [],
+      package: [""],
+      item_type: [""],
     },
   });
 
-  const getToken = () =>
-    typeof window !== "undefined" ? localStorage.getItem("access_token") : null;
+  const getToken = () => {
+    const cookieString = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("access_token="));
+
+    return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+  };
+
   const token = getToken();
 
   useEffect(() => {
@@ -191,7 +196,7 @@ export default function AddItem() {
     <>
       <div className="bg-primary pt-10 pb-21"></div>
       <Container fluid className="mt-n22 px-6">
-        <Row>
+        <Row className="mb-3">
           <Col lg={12} md={12} xs={12} className="mb-4">
             <div className="d-flex justify-content-between align-items-center">
               <h3 className="mb-0 text-dark">Add Item</h3>
@@ -203,7 +208,7 @@ export default function AddItem() {
         </Row>
         <div className="card p-4">
           <Form onSubmit={handleSubmit}>
-            <Row>
+            <Row className="mb-3">
               <Col md={6}>
                 <Form.Group controlId="title">
                   <Form.Label>
@@ -215,6 +220,7 @@ export default function AddItem() {
                     value={formData.title}
                     onChange={handleChange}
                     isInvalid={Boolean(errors.title)}
+                    placeholder="Enter title"
                   />
                   {errors.title && (
                     <Form.Control.Feedback type="invalid">
@@ -234,6 +240,7 @@ export default function AddItem() {
                     value={formData.ISBN}
                     onChange={handleChange}
                     isInvalid={Boolean(errors.ISBN)}
+                    placeholder="Enter ISBN"
                   />
                   {errors.ISBN && (
                     <Form.Control.Feedback type="invalid">
@@ -243,7 +250,8 @@ export default function AddItem() {
                 </Form.Group>
               </Col>
             </Row>
-            <Row>
+
+            <Row className="mb-3">
               <Col md={6}>
                 <Form.Group controlId="ISSN">
                   <Form.Label>
@@ -255,6 +263,7 @@ export default function AddItem() {
                     value={formData.ISSN}
                     onChange={handleChange}
                     isInvalid={Boolean(errors.ISSN)}
+                    placeholder="Enter ISSN"
                   />
                   {errors.ISSN && (
                     <Form.Control.Feedback type="invalid">
@@ -266,7 +275,7 @@ export default function AddItem() {
               <Col md={6}>
                 <Form.Group controlId="place">
                   <Form.Label>
-                    place <span className="text-danger">*</span>
+                    Place <span className="text-danger">*</span>
                   </Form.Label>
                   <Form.Control
                     type="text"
@@ -274,6 +283,7 @@ export default function AddItem() {
                     value={formData.place}
                     onChange={handleChange}
                     isInvalid={Boolean(errors.place)}
+                    placeholder="Enter place"
                   />
                   {errors.place && (
                     <Form.Control.Feedback type="invalid">
@@ -283,7 +293,8 @@ export default function AddItem() {
                 </Form.Group>
               </Col>
             </Row>
-            <Row>
+
+            <Row className="mb-3">
               <Col md={6}>
                 <Form.Group controlId="language">
                   <Form.Label>
@@ -295,6 +306,7 @@ export default function AddItem() {
                     value={formData.language}
                     onChange={handleChange}
                     isInvalid={Boolean(errors.language)}
+                    placeholder="Enter language"
                   />
                   {errors.language && (
                     <Form.Control.Feedback type="invalid">
@@ -314,6 +326,7 @@ export default function AddItem() {
                     value={formData.url}
                     onChange={handleChange}
                     isInvalid={Boolean(errors.url)}
+                    placeholder="Enter URL"
                   />
                   {errors.url && (
                     <Form.Control.Feedback type="invalid">
@@ -324,7 +337,7 @@ export default function AddItem() {
               </Col>
             </Row>
 
-            <Row>
+            <Row className="mb-3">
               <Col md={6}>
                 <Form.Group controlId="author">
                   <Form.Label>
@@ -336,6 +349,7 @@ export default function AddItem() {
                     value={formData.author}
                     onChange={handleChange}
                     isInvalid={Boolean(errors.author)}
+                    placeholder="Enter author name"
                   />
                   {errors.author && (
                     <Form.Control.Feedback type="invalid">
@@ -355,6 +369,7 @@ export default function AddItem() {
                     value={formData.year}
                     onChange={handleChange}
                     isInvalid={Boolean(errors.year)}
+                    placeholder="Enter year"
                   />
                   {errors.year && (
                     <Form.Control.Feedback type="invalid">
@@ -365,7 +380,7 @@ export default function AddItem() {
               </Col>
             </Row>
 
-            <Form.Group controlId="description">
+            <Form.Group className="mb-3" controlId="description">
               <Form.Label>
                 Description <span className="text-danger">*</span>
               </Form.Label>
@@ -376,6 +391,7 @@ export default function AddItem() {
                 value={formData.description}
                 onChange={handleChange}
                 isInvalid={Boolean(errors.description)}
+                placeholder="Enter description"
               />
               {errors.description && (
                 <Form.Control.Feedback type="invalid">
@@ -384,33 +400,7 @@ export default function AddItem() {
               )}
             </Form.Group>
 
-            {/* <Form.Group controlId="itemTypes">
-  <Form.Label>Item Types</Form.Label>
-  {formData.item_type.map((type, index) => (
-    <div key={index} className="d-flex mb-2">
-      <Form.Control
-        as="select"
-        value={type}
-        onChange={(e) => handleItemTypeChange(index, e.target.value)}
-      >
-        <option value="">Select Item Type</option>
-        {itemTypes.map((itemType) => (
-          <option key={itemType.item_type_id} value={itemType.item_type_id}>
-            {itemType.type_name}
-          </option>
-        ))}
-      </Form.Control>
-      <Button variant="danger" onClick={() => removeItemType(index)} className="ms-2">
-        <FaMinusCircle />
-      </Button>
-    </div>
-  ))}
-  <Button variant="success" onClick={addItemType}>
-    <FaPlusCircle /> Add Item Type
-  </Button>
-</Form.Group> */}
-
-            <Form.Group controlId="tags">
+            <Form.Group controlId="tags" className="mb-3">
               <Form.Label>Tags</Form.Label>
               {formData.tags.map((tag, index) => (
                 <div key={index} className="d-flex mb-2">
@@ -418,9 +408,10 @@ export default function AddItem() {
                     type="text"
                     value={tag}
                     onChange={(e) => handleTagChange(index, e.target.value)}
+                    placeholder="Enter tag"
                   />
                   <Button
-                    variant="danger"
+                    variant="outline-danger"
                     onClick={() => removeTag(index)}
                     className="ms-2"
                   >
@@ -428,17 +419,17 @@ export default function AddItem() {
                   </Button>
                 </div>
               ))}
-              <Button variant="success" onClick={addTag}>
+              <Button variant="outline-success" onClick={addTag}>
                 <FaPlusCircle /> Add Tag
               </Button>
             </Form.Group>
 
-            <Row>
-              <Col md={6}>
-                <Form.Group>
+            <Row className="mb-3">
+              <Col md={12}>
+                <Form.Group className="mb-3">
                   <Form.Label>Mappings</Form.Label>
                   {formData.mappings.package.map((pkg, index) => (
-                    <div key={index} className="d-flex mb-2 align-items-center">
+                    <div key={index} className="d-flex mb-3 align-items-center">
                       <Form.Select
                         value={pkg}
                         onChange={(e) =>

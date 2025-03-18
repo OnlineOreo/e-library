@@ -9,8 +9,6 @@ import axios from 'axios';
 import Swal from "sweetalert2";
 import { FaMinusCircle } from "react-icons/fa";
 
-
-
 const AddContentGroup = () => { 
     const router = useRouter();
     const successToaster = (text) => toast(text);
@@ -30,7 +28,13 @@ const AddContentGroup = () => {
         }
     };
     
-    const getToken = () => localStorage.getItem("access_token");
+    const getToken = () => {
+        const cookieString = document.cookie
+          .split("; ")
+          .find((row) => row.startsWith("access_token="));
+    
+        return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+      };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -91,7 +95,7 @@ const AddContentGroup = () => {
                 <Row>
                     <Col lg={12} md={12} xs={12}>
                         <div className="d-flex justify-content-between align-items-center">
-                            <h3 className="mb-0 text-white">Add Content Group</h3>
+                            <h3 className="mb-0 text-dark">Add Content Group</h3>
                             <Link href="../content-group" className="btn btn-white"><FaMinusCircle /> Back</Link>
                         </div>
                     </Col>
