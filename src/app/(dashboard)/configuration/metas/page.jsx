@@ -9,23 +9,33 @@ import { FaEdit, FaTrashAlt, FaPlusCircle } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
+import { useSelector } from "react-redux";
+
 
 export default function Configurationmeta() {
   const router = useRouter();
   const [meta, setMeta] = useState([]);
   const [search, setSearch] = useState("");
+  const instituteId = useSelector((state) => state.institute.instituteId);
+
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      loadMeta();
+    if(instituteId){
+      if (typeof window !== "undefined") {
+        loadMeta();
+      }
     }
-  }, []);
+  }, [instituteId]);
 
   const getToken = () => {
     const cookieString = document.cookie
       .split("; ")
       .find((row) => row.startsWith("access_token="));
+<<<<<<< Updated upstream
 
+=======
+  
+>>>>>>> Stashed changes
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
@@ -38,7 +48,7 @@ export default function Configurationmeta() {
     }
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/configuration-meta`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/configuration-meta?institute_id=${instituteId}`,
         { headers: { Authorization: `${token}` } }
       );
       if (response.status === 200 && Array.isArray(response.data)) {

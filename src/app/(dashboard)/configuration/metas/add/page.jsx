@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { Container, Col, Row, Form, Button, Spinner } from "react-bootstrap";
@@ -8,6 +8,7 @@ import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
 import Link from "next/link";
 import { FaMinusCircle } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 const AddConfigurationMeta = () => {
   const router = useRouter();
@@ -15,8 +16,14 @@ const AddConfigurationMeta = () => {
   const [errors, setErrors] = useState({});
   const [imageFile, setImageFile] = useState(null);
 
+  const instituteId = useSelector((state) => state.institute.instituteId);
+
+  // if(instituteId){
+  //   console.log("ins_id",instituteId);
+  //  }
+
   const [formData, setFormData] = useState({
-    institute: "2ffdfed3-0da4-4867-bf85-d77fad72fa3e",
+    institute: instituteId,
     list: "",
     sub_list: "important link",
     link_url: "",
@@ -27,7 +34,11 @@ const AddConfigurationMeta = () => {
     const cookieString = document.cookie
       .split("; ")
       .find((row) => row.startsWith("access_token="));
+<<<<<<< Updated upstream
 
+=======
+  
+>>>>>>> Stashed changes
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
@@ -54,7 +65,7 @@ const AddConfigurationMeta = () => {
     }
 
     const formDataToSend = new FormData();
-    formDataToSend.append("institute", formData.institute);
+    formDataToSend.append("institute", instituteId);
     formDataToSend.append("list", formData.list);
     formDataToSend.append("sub_list", formData.sub_list);
     formDataToSend.append("link_url", formData.link_url);

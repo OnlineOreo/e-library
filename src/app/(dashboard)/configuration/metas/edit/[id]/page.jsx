@@ -8,6 +8,7 @@ import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
 import Link from "next/link";
 import { FaMinusCircle } from "react-icons/fa";
+// import { useSelector } from "react-redux";
 
 const EditConfigurationMeta = () => {
   const router = useRouter();
@@ -16,6 +17,7 @@ const EditConfigurationMeta = () => {
   const [errors, setErrors] = useState({});
   const [imageFile, setImageFile] = useState(null);
   const [existingImage, setExistingImage] = useState("");
+  // const instituteId = useSelector((state) => state.institute.instituteId);
 
   const [formData, setFormData] = useState({
     list: "",
@@ -27,7 +29,11 @@ const EditConfigurationMeta = () => {
     const cookieString = document.cookie
       .split("; ")
       .find((row) => row.startsWith("access_token="));
+<<<<<<< Updated upstream
 
+=======
+  
+>>>>>>> Stashed changes
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
@@ -46,6 +52,7 @@ const EditConfigurationMeta = () => {
           }
         );
         setFormData({
+          // institute:data.instituteId,
           list: data.list,
           link_url: data.link_url,
           description: data.description,
