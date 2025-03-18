@@ -9,17 +9,21 @@ import { FaEdit, FaTrashAlt, FaPlusCircle } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
+import { useSelector } from "react-redux";
 
 export default function TrendingBooks() {
   const router = useRouter();
   const [books, setBooks] = useState([]);
   const [search, setSearch] = useState("");
+  const instituteId = useSelector((state) => state.institute.instituteId);
 
   useEffect(() => {
+    if(instituteId){
     if (typeof window !== "undefined") {
       loadBooks();
     }
-  }, []);
+  }
+  }, [instituteId]);
 
   const getToken = () => {
     const cookieString = document.cookie
@@ -38,7 +42,7 @@ export default function TrendingBooks() {
     }
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/trending-books`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/trending-books?institute_id=${instituteId}`,
         { headers: { Authorization: `${token}` } }
       );
       if (response.status === 200 && Array.isArray(response.data)) {
