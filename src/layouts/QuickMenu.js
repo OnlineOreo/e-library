@@ -12,9 +12,7 @@ import {
 } from 'react-bootstrap';
 
 import { useRouter } from "next/navigation";
-import { deleteCookie } from "cookies-next";
 import axios from 'axios';
-
 
 
 // simple bar scrolling used for notification item scrolling
@@ -40,13 +38,20 @@ const QuickMenu = () => {
         router.push("/authentication/sign-in");
     }
     
-
     const hasMounted = useMounted();
     
     const isDesktop = useMediaQuery({
         query: '(min-width: 1224px)'
     })
-    const getToken = () => localStorage.getItem("access_token");
+    
+    const getToken = () => {
+        const cookieString = document.cookie
+            .split("; ")
+            .find((row) => row.startsWith("access_token="));
+        
+        return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+    };
+
     useEffect(() => {
         loadAuthUser()
     }, []); // Runs whenever authUser changes
@@ -63,17 +68,8 @@ const QuickMenu = () => {
             });
             const authdata = response.data;
             setAuthUser(authdata);
-            // console.log(authdata);
             (response.data);
         } catch (error) {
-            console.error("Axios Error:", error);
-            if (error.response) {
-                console.error("Response Error:", error.response.data);
-            } else if (error.request) {
-                console.error("Request Error: No response received");
-            } else {
-                console.error("Setup Error:", error.message);
-            }
         }
     };
     

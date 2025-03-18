@@ -7,12 +7,9 @@ const Version_01_01_00 = () => {
 		'styles/theme.scss'
 	]	
 	const UpdatedReactFiles = [
-		'widgets/dropfiles/DropFiles.js',
 		'widgets/form-select/FormSelect.js',
 		'widgets/highlight-code/HighlightCode.js',
 		'sub-components/dashboard/TasksPerformance.js',
-		'sub-components/settings/EmailSetting.js',
-		'sub-components/settings/GeneralSetting.js',
 		'routes/DashboardRoutes.js',
 		'data/code/ListgroupsCode.js',
 		'data/code/NavbarsCode.js',

@@ -11,7 +11,6 @@ import { FaEdit } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
 import { FaPlusCircle } from "react-icons/fa";
-import moment from "moment";
 
 const ViewItemTypes = () => {
   const router = useRouter();
@@ -96,11 +95,22 @@ const ViewItemTypes = () => {
 
   const formattedItemTypes = userType.map((inst) => ({
     ...inst,
-    created_at: inst.created_at ? moment(inst.created_at).format("MMMM D, YYYY, h:mm A") : "",
-    updated_at: inst.updated_at ? moment(inst.updated_at).format("MMMM D, YYYY, h:mm A") : "",
+    created_at: inst.created_at 
+      ? new Intl.DateTimeFormat("en-US", { 
+          month: "long", day: "numeric", year: "numeric", 
+          hour: "numeric", minute: "numeric", hour12: true 
+        }).format(new Date(inst.created_at)) 
+      : "",
+    updated_at: inst.updated_at 
+      ? new Intl.DateTimeFormat("en-US", { 
+          month: "long", day: "numeric", year: "numeric", 
+          hour: "numeric", minute: "numeric", hour12: true 
+        }).format(new Date(inst.updated_at)) 
+      : "",
   })).filter((inst) =>
     inst.type_name.toLowerCase().includes(search.toLowerCase())
   );
+  
 
   const columns = [
     { field: "item_type_id", headerName: "Id", width: 150 },

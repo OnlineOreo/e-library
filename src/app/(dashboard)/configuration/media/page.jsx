@@ -10,7 +10,6 @@ import { useRouter } from "next/navigation";
 import { FaEdit, FaPlusCircle } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
-import moment from "moment";
 import Image from "next/image";
 
 const ViewMedia = () => {
@@ -101,12 +100,6 @@ const ViewMedia = () => {
   const formattedMedia = media
     .map((inst) => ({
       ...inst,
-      created_at: inst.created_at
-        ? moment(inst.created_at).format("MMMM D, YYYY, h:mm A")
-        : "",
-      updated_at: inst.updated_at
-        ? moment(inst.updated_at).format("MMMM D, YYYY, h:mm A")
-        : "",
     }))
     .filter((inst) =>
       inst?.media_name?.toLowerCase().includes(search.toLowerCase())
