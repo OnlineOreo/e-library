@@ -8,14 +8,18 @@ import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
 import Link from "next/link";
 import { FaArrowLeft } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 export default function AddTrendingBook() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [file, setFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+
+  const instituteId = useSelector((state) => state.institute.instituteId);
   
   const [book, setBook] = useState({
+    institute: instituteId,
     book_title: "",
     url: "",
     description: "",
@@ -55,6 +59,7 @@ export default function AddTrendingBook() {
 
     try {
       const formData = new FormData();
+      formData.append("institute", instituteId);
       formData.append("book_title", book.book_title);
       formData.append("url", book.url);
       formData.append("description", book.description);
