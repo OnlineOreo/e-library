@@ -89,7 +89,6 @@ const Home = () => {
 
   const handleNext = () => {
     setStep(step + 1);
-    console.log(formData);
   };
 
   const handlePrevious = () => {
@@ -98,7 +97,7 @@ const Home = () => {
 
   const handleInputChange = (event) => {
     const { name, value, type, files } = event.target;
-
+ 
     if (type === "file") {
       setFormData({
         ...formData,
@@ -163,10 +162,10 @@ const Home = () => {
       );
 
         Swal.fire({
-            title: "Success!",
-            text: "User added successfully!",
-            icon: "success",
-            confirmButtonText: "OK",
+          title: "Success!",
+          text: "User added successfully!",
+          icon: "success",
+          confirmButtonText: "OK",
         });
           
         setFormData({
