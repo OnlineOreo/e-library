@@ -10,7 +10,6 @@ import { useRouter } from "next/navigation";
 import { FaEdit, FaPlusCircle } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
-import moment from "moment";
 
 export default function ServiceGroup() {
   const router = useRouter();
@@ -85,8 +84,6 @@ export default function ServiceGroup() {
   const formattedServiceGroup = serviceGroup
     .map((inst) => ({
       ...inst,
-      created_at: inst.created_at ? moment(inst.created_at).format("MMMM D, YYYY, h:mm A") : "",
-      updated_at: inst.updated_at ? moment(inst.updated_at).format("MMMM D, YYYY, h:mm A") : "",
     }))
     .filter((inst) => inst.service_name.toLowerCase().includes(search.toLowerCase()));
 

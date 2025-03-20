@@ -132,7 +132,7 @@ const AddLibrary = () => {
           mail_from_name: "",
         },
       });
-      setTimeout(() => router.push("../library"), 2000);
+      //setTimeout(() => router.push("../library"), 2000); 
     } catch (error) {
       setIsLoading(false);
       if (error.response && error.response.data) {
@@ -172,6 +172,7 @@ const AddLibrary = () => {
                       onChange={handleInputChange}
                       placeholder={`Enter ${field.replace("_", " ")}`}
                       isInvalid={!!errors[field]} 
+                      required
                     />
                     {errors[field] && errors[field].map((err, i) => (
                       <Form.Control.Feedback key={i} type="invalid">
@@ -192,6 +193,7 @@ const AddLibrary = () => {
                     value={formData.institute}
                     onChange={handleInputChange}
                     isInvalid={!!errors.institute}
+                    required
                   >
                     <option value="">Select Institute</option>
                     {institutes.map((inst) => (
@@ -225,6 +227,7 @@ const AddLibrary = () => {
                       onChange={handleInputChange}
                       placeholder={`Enter ${key.replace("_", " ")}`}
                       isInvalid={!!(errors.email_config && errors.email_config[key])}
+                      required
                     />
                     {errors.email_config && errors.email_config[key] && errors.email_config[key].map((err, i) => (
                       <Form.Control.Feedback key={i} type="invalid">
