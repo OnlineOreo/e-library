@@ -34,7 +34,7 @@ const QuickMenu = () => {
     const router = useRouter();
     
     const handleLogout = () => {
-        deleteCookie("access_token");
+        document.cookie = `access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
         router.push("/authentication/sign-in");
     }
     

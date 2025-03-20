@@ -10,7 +10,6 @@ import { useRouter } from "next/navigation";
 import { FaEdit, FaPlusCircle } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
-import moment from "moment";
 
 const ViewProgram = () => {
   const router = useRouter();
