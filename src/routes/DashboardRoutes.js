@@ -42,6 +42,7 @@ export const DashboardMenu = [
 			{ id: uuid(), link: '/resources/publisher-package', name: 'Publisher package' },
 			{ id: uuid(), link: '/resources/publishers', name: 'Publishers' },
 			{ id: uuid(), link: '/resources/item', name: 'item' },
+			{ id: uuid(), link: '/resources/news-clippings', name: 'News Clipping' },
 		]
 	},	
 	{
