@@ -12,7 +12,6 @@ import { useSelector } from "react-redux";
 
 const EditStaffRecommendation = () => {
     const router = useRouter();
-    const params = useParams();
     const { id } = useParams();
 
     const [isLoading, setIsLoading] = useState(false);
@@ -20,6 +19,7 @@ const EditStaffRecommendation = () => {
     const [items, setItems] = useState([]);
     const instituteId = useSelector((state) => state.institute.instituteId);
     const [imageFile, setImageFile] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
 
     const [formData, setFormData] = useState({
         institute: instituteId,
@@ -27,12 +27,22 @@ const EditStaffRecommendation = () => {
         article_type: "",
         url: "",
         description: "",
+        image: "", // For storing existing image
     });
 
     useEffect(() => {
         loadItemTypes();
         fetchStaffPick();
     }, []);
+
+    // Clean up URL.createObjectURL when component unmounts or image changes
+    useEffect(() => {
+        return () => {
+            if (imagePreview) {
+                URL.revokeObjectURL(imagePreview);
+            }
+        };
+    }, [imagePreview]);
 
     const getToken = () => {
         const cookieString = document.cookie
@@ -75,10 +85,10 @@ const EditStaffRecommendation = () => {
                 article_type: data.article_type,
                 url: data.url,
                 description: data.description,
+                image: data.image, // Store image URL from the backend
             });
         } catch (error) {
             toast.error("Failed to fetch staff recommendation");
-            // router.push("/configuration/staff-recommendation");
         }
     };
 
@@ -88,7 +98,12 @@ const EditStaffRecommendation = () => {
     };
 
     const handleFileChange = (event) => {
-        setImageFile(event.target.files[0]);
+        const file = event.target.files[0];
+        setImageFile(file);
+        if (file) {
+            const previewURL = URL.createObjectURL(file);
+            setImagePreview(previewURL);
+        }
     };
 
     const handleSubmit = async (event) => {
@@ -157,6 +172,7 @@ const EditStaffRecommendation = () => {
                         </div>
                     </Col>
                 </Row>
+
                 <div className="card p-6 mt-5">
                     <Form onSubmit={handleSubmit}>
                         <Row>
@@ -190,6 +206,22 @@ const EditStaffRecommendation = () => {
                                         {errors.image?.[0]}
                                     </Form.Control.Feedback>
                                 </Form.Group>
+
+                                <div className="avatar avatar-md mt-1">
+                                    <img
+                                        src={
+                                            imagePreview
+                                                ? imagePreview
+                                                : formData.image
+                                                    ? formData.image
+                                                    : "/default-image.jpg"
+                                        }
+                                        alt="Catalog Cover"
+                                        width={100}
+                                        height={100}
+                                        className="mb-2 rounded-circle"
+                                    />
+                                </div>
                             </Col>
                         </Row>
 
@@ -259,6 +291,7 @@ const EditStaffRecommendation = () => {
                         </Button>
                     </Form>
                 </div>
+
                 <ToastContainer />
             </Container>
         </>
