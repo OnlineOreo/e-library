@@ -57,6 +57,7 @@ export const DashboardMenu = [
 			{ id: uuid(), link: '/configuration/dynamic-page', name: 'Dynamic Page' },	
 			{ id: uuid(), link: '/configuration/footer', name: 'Footer' },	
 			{ id: uuid(), link: '/configuration/notice', name: 'Notices' },	
+			{ id: uuid(), link: '/configuration/harvest-data', name: 'Harvest Data' },	
 		]
 	},
 	// {
