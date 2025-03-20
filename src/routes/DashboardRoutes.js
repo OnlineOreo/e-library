@@ -59,6 +59,7 @@ export const DashboardMenu = [
 			{ id: uuid(), link: '/configuration/footer', name: 'Footer' },	
 			{ id: uuid(), link: '/configuration/notice', name: 'Notices' },	
 			{ id: uuid(), link: '/configuration/harvest-data', name: 'Harvest Data' },	
+			{ id: uuid(), link: '/configuration/staff-recommendation', name: 'Staff Pick' },	
 		]
 	},
 	// {
