@@ -44,12 +44,13 @@ export const DashboardMenu = [
 			{ id: uuid(), link: '/resources/item', name: 'item' },
 			{ id: uuid(), link: '/resources/news-clippings', name: 'News Clipping' },
 		]
-	},	
+	},
 	{
 		id: uuid(),
 		title: 'Configuration',
 		icon: 'lock',
 		children: [
+			{ id: uuid(), link: '/configuration/landing-page', name: 'Landing page' },	
 			{ id: uuid(), link: '/configuration/categories', name: 'Categories' },	
 			{ id: uuid(), link: '/configuration/collection', name: 'Collection' },	
 			{ id: uuid(), link: '/configuration/media', name: 'Media' },	

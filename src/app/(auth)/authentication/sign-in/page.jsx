@@ -37,7 +37,7 @@ const SignIn = () => {
       const data = await response.json(); 
 
       if (data.access_token) {
-          document.cookie = `access_token=${data.access_token}; path=/; max-age=${60 * 1000}; secure=${process.env.NODE_ENV === 'production' ? 'true' : 'false'}; samesite=strict`;
+          document.cookie = `access_token=${data.access_token}; path=/; max-age=${60 * 1000};`;
       }
       
       if (response.ok) {

@@ -132,7 +132,7 @@ const AddLibrary = () => {
           mail_from_name: "",
         },
       });
-      //setTimeout(() => router.push("../library"), 2000); 
+      setTimeout(() => router.push("../library"), 2000); 
     } catch (error) {
       setIsLoading(false);
       if (error.response && error.response.data) {
@@ -166,7 +166,7 @@ const AddLibrary = () => {
                     <Form.Label htmlFor={field}>{field.replace("_", " ").toUpperCase()}</Form.Label>
                     <Form.Control
                       id={field}
-                      type={field === "email" ? "email" : "text"}
+                      type={field === "email" ? "email" : field === "phone" ? "number" : "text"}
                       name={field}
                       value={formData[field]}
                       onChange={handleInputChange}

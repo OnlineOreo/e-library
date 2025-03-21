@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 // API URL
 // const API_URL = "http://192.168.1.160:8080/api/institute?sub_domain=asdfgbhn.com";
-const API_URL = "http://192.168.1.160:8080/api/institute?sub_domain=mriirs.libvertuua.com";
+const API_URL = "http://192.168.1.19:8000/api/institute?sub_domain=mriirs.libvirtuua.com";
 
 // Async thunk to fetch institute_id
 export const fetchInstituteId = createAsyncThunk("institute/fetchInstituteId", async () => {
