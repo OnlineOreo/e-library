@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { Container, Col, Row, Form, Button, Spinner } from "react-bootstrap";
@@ -16,7 +16,7 @@ const AddConfigurationMeta = () => {
 
   const [formData, setFormData] = useState({
     collection_name: "",
-    image: null, // File should be null initially
+    image: null,
     description: "",
   });
 
@@ -31,17 +31,41 @@ const AddConfigurationMeta = () => {
   const handleInputChange = (event) => {
     const { name, value, type, files } = event.target;
     if (type === "file") {
-      setFormData({ ...formData, [name]: files[0] }); // Store file correctly
+      setFormData({ ...formData, [name]: files[0] });
     } else {
       setFormData({ ...formData, [name]: value });
     }
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.collection_name.trim()) {
+      newErrors.collection_name = ["Collection name is required"];
+    }
+
+    if (!formData.image) {
+      newErrors.image = ["Image is required"];
+    }
+
+    if (!formData.description.trim()) {
+      newErrors.description = ["Description is required"];
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setIsLoading(true);
     setErrors({});
 
+    // Frontend validation check
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsLoading(true);
     const token = getToken();
     if (!token) {
       toast.error("Authentication required!");
@@ -51,7 +75,6 @@ const AddConfigurationMeta = () => {
     }
 
     try {
-      // Convert form data into FormData object for file upload
       const formDataToSend = new FormData();
       Object.entries(formData).forEach(([key, value]) => {
         formDataToSend.append(key, value);
@@ -59,11 +82,11 @@ const AddConfigurationMeta = () => {
 
       await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/configuration-collection`,
-        formDataToSend, // Use FormData
+        formDataToSend,
         {
           headers: {
             Authorization: token,
-            "Content-Type": "multipart/form-data", // Correct content type for file upload
+            "Content-Type": "multipart/form-data",
           },
         }
       );
@@ -78,7 +101,12 @@ const AddConfigurationMeta = () => {
       setTimeout(() => router.push("/configuration/collection"), 2000);
     } catch (error) {
       setErrors(error.response?.data || {});
-      toast.error("Error adding meta!");
+      Swal.fire({
+        title: "Error!",
+        text: "Something went wrong!",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -91,7 +119,7 @@ const AddConfigurationMeta = () => {
         <Row>
           <Col lg={12}>
             <div className="d-flex justify-content-between align-items-center">
-              <h3 className="mb-0 text-dark">Add Configuration collection</h3>
+              <h3 className="mb-0 text-dark">Add Configuration Collection</h3>
               <Link href="../collection" className="btn btn-white">
                 <FaMinusCircle /> Back
               </Link>
@@ -99,11 +127,11 @@ const AddConfigurationMeta = () => {
           </Col>
         </Row>
         <div className="card p-6 mt-5">
-          <Form onSubmit={handleSubmit}>
+          <Form onSubmit={handleSubmit} encType="multipart/form-data">
             <Row>
               <Col lg={6} className="mb-3">
                 <Form.Group>
-                  <Form.Label>collection Name</Form.Label>
+                  <Form.Label>Collection Name</Form.Label>
                   <Form.Control
                     type="text"
                     name="collection_name"
@@ -117,13 +145,14 @@ const AddConfigurationMeta = () => {
                   </Form.Control.Feedback>
                 </Form.Group>
               </Col>
+
               <Col lg={6} className="mb-3">
                 <Form.Group>
                   <Form.Label>Image</Form.Label>
                   <Form.Control
                     type="file"
                     name="image"
-                    onChange={handleInputChange} // Remove value
+                    onChange={handleInputChange}
                     isInvalid={!!errors.image}
                   />
                   <Form.Control.Feedback type="invalid">
@@ -131,6 +160,7 @@ const AddConfigurationMeta = () => {
                   </Form.Control.Feedback>
                 </Form.Group>
               </Col>
+
               <Col lg={12} className="mb-3">
                 <Form.Group>
                   <Form.Label>Description</Form.Label>
@@ -140,8 +170,8 @@ const AddConfigurationMeta = () => {
                     name="description"
                     value={formData.description}
                     onChange={handleInputChange}
-                    isInvalid={!!errors.description}
                     placeholder="Enter description"
+                    isInvalid={!!errors.description}
                   />
                   <Form.Control.Feedback type="invalid">
                     {errors.description?.join(", ")}
@@ -149,6 +179,7 @@ const AddConfigurationMeta = () => {
                 </Form.Group>
               </Col>
             </Row>
+
             <Button className="w-100" disabled={isLoading} type="submit">
               {isLoading ? <Spinner animation="border" size="sm" /> : "Submit"}
             </Button>

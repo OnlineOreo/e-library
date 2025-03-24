@@ -18,10 +18,6 @@ const AddConfigurationMeta = () => {
 
   const instituteId = useSelector((state) => state.institute.instituteId);
 
-  // if(instituteId){
-  //   console.log("ins_id",instituteId);
-  //  }
-
   const [formData, setFormData] = useState({
     institute: instituteId,
     list: "",
@@ -34,7 +30,6 @@ const AddConfigurationMeta = () => {
     const cookieString = document.cookie
       .split("; ")
       .find((row) => row.startsWith("access_token="));
-
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
@@ -47,10 +42,34 @@ const AddConfigurationMeta = () => {
     setImageFile(event.target.files[0]);
   };
 
+  // Simple URL validation
+  const isValidURL = (url) => {
+    const urlPattern = /^(https?:\/\/)?([\w\-]+\.)+[\w\-]+(\/[\w\-._~:/?#[\]@!$&'()*+,;=]*)?$/;
+    return urlPattern.test(url);
+  };
+
+  const validateForm = () => {
+    const validationErrors = {};
+
+    if (!formData.list.trim()) validationErrors.list = ["Link Name is required."];
+    if (!formData.link_url.trim()) validationErrors.link_url = ["Link URL is required."];
+    else if (!isValidURL(formData.link_url.trim())) validationErrors.link_url = ["Please enter a valid URL."];
+    if (!formData.description.trim()) validationErrors.description = ["Description is required."];
+
+    return validationErrors;
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsLoading(true);
     setErrors({});
+
+    const validationErrors = validateForm();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      setIsLoading(false);
+      return;
+    }
 
     const token = getToken();
     if (!token) {
@@ -66,10 +85,7 @@ const AddConfigurationMeta = () => {
     formDataToSend.append("sub_list", formData.sub_list);
     formDataToSend.append("link_url", formData.link_url);
     formDataToSend.append("description", formData.description);
-
-    if (imageFile) {
-      formDataToSend.append("image", imageFile);
-    }
+    if (imageFile) formDataToSend.append("image", imageFile);
 
     try {
       await axios.post(
@@ -131,7 +147,7 @@ const AddConfigurationMeta = () => {
                   </Form.Control.Feedback>
                 </Form.Group>
               </Col>
-           
+
               <Col lg={6} className="mb-3">
                 <Form.Group>
                   <Form.Label>Image Upload</Form.Label>
@@ -146,8 +162,9 @@ const AddConfigurationMeta = () => {
                   </Form.Control.Feedback>
                 </Form.Group>
               </Col>
-              </Row>
-              <Row>
+            </Row>
+
+            <Row>
               <Col lg={12} className="mb-3">
                 <Form.Group>
                   <Form.Label>Link URL</Form.Label>
@@ -164,6 +181,7 @@ const AddConfigurationMeta = () => {
                 </Form.Group>
               </Col>
             </Row>
+
             <Row>
               <Col lg={12} className="mb-3">
                 <Form.Group>
@@ -182,6 +200,7 @@ const AddConfigurationMeta = () => {
                 </Form.Group>
               </Col>
             </Row>
+
             <Button className="w-100" disabled={isLoading} type="submit">
               {isLoading ? <Spinner animation="border" size="sm" /> : "Submit"}
             </Button>

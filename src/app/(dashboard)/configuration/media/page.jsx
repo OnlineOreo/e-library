@@ -110,7 +110,7 @@ const ViewMedia = () => {
     {
       field: "image",
       headerName: "Image",
-      width: 100,
+      width: 200,
       renderCell: (params) => (
         <div className="avatar avatar-md">
           <Image
@@ -123,13 +123,13 @@ const ViewMedia = () => {
         </div>
       ),
     },
-    { field: "media_name", headerName: "Media Name", width: 200 },
-    { field: "description", headerName: "Description", width: 250 },
+    { field: "media_name", headerName: "Media Name", width: 300 },
+    { field: "description", headerName: "Description", width: 350 },
     { field: "created_at", headerName: "Created At", width: 200 },
     {
       field: "action",
       headerName: "Action",
-      width: 150,
+      width: 200,
       renderCell: (params) => (
         <div>
           <button

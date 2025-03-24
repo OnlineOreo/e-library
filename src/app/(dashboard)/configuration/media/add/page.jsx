@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { Container, Col, Row, Form, Button, Spinner } from "react-bootstrap";
@@ -13,10 +13,9 @@ const AddConfigurationMeta = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
-
   const [formData, setFormData] = useState({
     media_name: "",
-    image: null, // File should be null initially
+    image: null,
     description: "",
   });
 
@@ -24,24 +23,36 @@ const AddConfigurationMeta = () => {
     const cookieString = document.cookie
       .split("; ")
       .find((row) => row.startsWith("access_token="));
-
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
-
   const handleInputChange = (event) => {
     const { name, value, type, files } = event.target;
-    if (type === "file") {
-      setFormData({ ...formData, [name]: files[0] }); // Store file correctly
+    if (type === "file" && files.length > 0) {
+      setFormData({ ...formData, [name]: files[0] });
     } else {
-      setFormData({ ...formData, [name]: value });
+      setFormData({ ...formData, [name]: value });  
     }
+  };
+
+  // Frontend validation
+  const validate = () => {
+    const newErrors = {};
+    if (!formData.media_name.trim()) newErrors.media_name = ["Media name is required"];
+    if (!formData.description.trim()) newErrors.description = ["Description is required"];
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsLoading(true);
     setErrors({});
+
+    if (!validate()) {
+      setIsLoading(false);
+      return;
+    }
 
     const token = getToken();
     if (!token) {
@@ -52,26 +63,25 @@ const AddConfigurationMeta = () => {
     }
 
     try {
-      // Convert form data into FormData object for file upload
       const formDataToSend = new FormData();
       Object.entries(formData).forEach(([key, value]) => {
-        formDataToSend.append(key, value);
+        if (value) formDataToSend.append(key, value);
       });
 
       await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/configuration-media`,
-        formDataToSend, // Use FormData
+        formDataToSend,
         {
           headers: {
             Authorization: token,
-            "Content-Type": "multipart/form-data", // Correct content type for file upload
+            "Content-Type": "multipart/form-data",
           },
         }
       );
 
       Swal.fire({
         title: "Success!",
-        text: "Configuration meta added successfully!",
+        text: "Configuration media added successfully!",
         icon: "success",
         confirmButtonText: "OK",
       });
@@ -79,7 +89,7 @@ const AddConfigurationMeta = () => {
       setTimeout(() => router.push("/configuration/media"), 2000);
     } catch (error) {
       setErrors(error.response?.data || {});
-      toast.error("Error adding meta!");
+      toast.error("Error adding media!");
     } finally {
       setIsLoading(false);
     }
@@ -124,7 +134,7 @@ const AddConfigurationMeta = () => {
                   <Form.Control
                     type="file"
                     name="image"
-                    onChange={handleInputChange} // Remove value
+                    onChange={handleInputChange}
                     isInvalid={!!errors.image}
                   />
                   <Form.Control.Feedback type="invalid">

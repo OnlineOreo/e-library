@@ -15,22 +15,21 @@ export default function AddTrendingBook() {
   const [isLoading, setIsLoading] = useState(false);
   const [file, setFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [errors, setErrors] = useState({});
 
   const instituteId = useSelector((state) => state.institute.instituteId);
-  
+
   const [book, setBook] = useState({
     institute: instituteId,
     book_title: "",
     url: "",
     description: "",
-    institute: "ebfd8df2-710f-437d-8d12-e25201813ca7", // Default institute ID
   });
 
   const getToken = () => {
     const cookieString = document.cookie
       .split("; ")
       .find((row) => row.startsWith("access_token="));
-
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
@@ -39,16 +38,34 @@ export default function AddTrendingBook() {
   };
 
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setFile(file);
-      setImagePreview(URL.createObjectURL(file));
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+      setImagePreview(URL.createObjectURL(selectedFile));
     }
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!book.book_title.trim()) newErrors.book_title = "Book title is required.";
+    if (!book.url.trim()) newErrors.url = "URL is required.";
+    else if (!/^https?:\/\/[\w\-]+(\.[\w\-]+)+[/#?]?.*$/.test(book.url.trim()))
+      newErrors.url = "Enter a valid URL.";
+    if (!book.description.trim()) newErrors.description = "Description is required.";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+
+    if (!validateForm()) {
+      setIsLoading(false);
+      return;
+    }
 
     const token = getToken();
     if (!token) {
@@ -63,10 +80,7 @@ export default function AddTrendingBook() {
       formData.append("book_title", book.book_title);
       formData.append("url", book.url);
       formData.append("description", book.description);
-      formData.append("institute", book.institute);
-      if (file) {
-        formData.append("book_image", file);
-      }
+      if (file) formData.append("book_image", file);
 
       await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/trending-books`,
@@ -119,13 +133,31 @@ export default function AddTrendingBook() {
               <Col lg={6} className="mb-3">
                 <Form.Group>
                   <Form.Label>Book Title</Form.Label>
-                  <Form.Control type="text" name="book_title" value={book.book_title} onChange={handleChange} required />
+                  <Form.Control
+                    type="text"
+                    name="book_title"
+                    value={book.book_title}
+                    onChange={handleChange}
+                    isInvalid={!!errors.book_title}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.book_title}
+                  </Form.Control.Feedback>
                 </Form.Group>
               </Col>
               <Col lg={6} className="mb-3">
                 <Form.Group>
                   <Form.Label>URL</Form.Label>
-                  <Form.Control type="url" name="url" value={book.url} onChange={handleChange} required />
+                  <Form.Control
+                    type="url"
+                    name="url"
+                    value={book.url}
+                    onChange={handleChange}
+                    isInvalid={!!errors.url}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.url}
+                  </Form.Control.Feedback>
                 </Form.Group>
               </Col>
             </Row>
@@ -133,18 +165,37 @@ export default function AddTrendingBook() {
               <Col lg={12} className="mb-3">
                 <Form.Group>
                   <Form.Label>Description</Form.Label>
-                  <Form.Control as="textarea" rows={3} name="description" value={book.description} onChange={handleChange} required />
+                  <Form.Control
+                    as="textarea"
+                    rows={3}
+                    name="description"
+                    value={book.description}
+                    onChange={handleChange}
+                    isInvalid={!!errors.description}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.description}
+                  </Form.Control.Feedback>
                 </Form.Group>
               </Col>
             </Row>
             <Row>
               <Col lg={6} className="mb-3">
                 <Form.Group>
-                  <Form.Label>Book Cover</Form.Label>
-                  <Form.Control type="file" name="book_image" onChange={handleFileChange} accept="image/*" />
+                  <Form.Label>Book Cover (Optional)</Form.Label>
+                  <Form.Control
+                    type="file"
+                    name="book_image"
+                    onChange={handleFileChange}
+                    accept="image/*"
+                  />
                   {imagePreview && (
                     <div className="mt-2">
-                      <img src={imagePreview} alt="Preview" style={{ width: "100px", borderRadius: "5px" }} />
+                      <img
+                        src={imagePreview}
+                        alt="Preview"
+                        style={{ width: "100px", borderRadius: "5px" }}
+                      />
                     </div>
                   )}
                 </Form.Group>

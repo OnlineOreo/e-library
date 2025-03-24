@@ -91,11 +91,11 @@ export default function Configurationmeta() {
   const columns = [
     // { field: "configuration_meta_id", headerName: "ID", width: 250 },
     { field: "list", headerName: "Link name", width: 150 },
-    { field: "sub_list", headerName: "Sub List", width: 150 },
+    { field: "sub_list", headerName: "Sub List", width: 350 },
     {
       field: "image",
       headerName: "Image",
-      width: 150,
+      width: 350,
       renderCell: (params) =>
         params.value ? (
           <div className="avatar avatar-md">
@@ -110,7 +110,7 @@ export default function Configurationmeta() {
           "No Image"
         ),
     },
-    { field: "link_url", headerName: "URL", width: 250 },
+    { field: "link_url", headerName: "URL", width: 350 },
     // { field: "description", headerName: "Description", width: 250 },
     {
       field: "action",
@@ -139,7 +139,7 @@ export default function Configurationmeta() {
               <h3 className="mb-0 text-dark">Important Links</h3>
               <div>
                 <Link href="./metas/add" className="btn btn-white">
-                  <FaPlusCircle /> Add Meta
+                  <FaPlusCircle /> Add Links
                 </Link>
               </div>
             </div>

@@ -28,14 +28,11 @@ export default function EditBook() {
     const cookieString = document.cookie
       .split("; ")
       .find((row) => row.startsWith("access_token="));
-
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
   useEffect(() => {
-    if (id) {
-      loadBook();
-    }
+    if (id) loadBook();
   }, [id]);
 
   const loadBook = async () => {
@@ -65,11 +62,24 @@ export default function EditBook() {
     setFile(e.target.files[0]);
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+    if (!book.book_title.trim()) newErrors.book_title = "Book Title is required";
+    if (!book.url.trim()) newErrors.url = "URL is required";
+    else if (!/^https?:\/\/\S+$/i.test(book.url)) newErrors.url = "Enter a valid URL";
+    if (!book.description.trim()) newErrors.description = "Description is required";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
     setErrors({});
 
+    if (!validateForm()) return;
+
+    setIsLoading(true);
     const token = getToken();
     if (!token) {
       toast.error("Authentication required!");
@@ -83,10 +93,7 @@ export default function EditBook() {
       formData.append("book_title", book.book_title);
       formData.append("url", book.url);
       formData.append("description", book.description);
-      
-      if (file) {
-        formData.append("book_image", file); // Append new image if selected
-      }
+      if (file) formData.append("book_image", file);
 
       await axios.put(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/trending-books?trending_book_id=${id}`,
@@ -148,7 +155,7 @@ export default function EditBook() {
                     isInvalid={!!errors.book_title}
                   />
                   <Form.Control.Feedback type="invalid">
-                    {errors.book_title?.join(", ")}
+                    {errors.book_title}
                   </Form.Control.Feedback>
                 </Form.Group>
               </Col>
@@ -164,7 +171,7 @@ export default function EditBook() {
                     isInvalid={!!errors.url}
                   />
                   <Form.Control.Feedback type="invalid">
-                    {errors.url?.join(", ")}
+                    {errors.url}
                   </Form.Control.Feedback>
                 </Form.Group>
               </Col>
@@ -183,7 +190,7 @@ export default function EditBook() {
                     isInvalid={!!errors.description}
                   />
                   <Form.Control.Feedback type="invalid">
-                    {errors.description?.join(", ")}
+                    {errors.description}
                   </Form.Control.Feedback>
                 </Form.Group>
               </Col>
@@ -210,7 +217,7 @@ export default function EditBook() {
                     </div>
                   )}
                   <Form.Control.Feedback type="invalid">
-                    {errors.book_image?.join(", ")}
+                    {errors.book_image}
                   </Form.Control.Feedback>
                 </Form.Group>
               </Col>

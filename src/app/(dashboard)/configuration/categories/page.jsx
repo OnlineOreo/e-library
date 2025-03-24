@@ -81,7 +81,7 @@ const Department = () => {
     { 
       field: "image", 
       headerName: "Image", 
-      width: 150,
+      width: 250,
       renderCell: (params) => (
         <img 
           src={params.value} 
@@ -184,7 +184,7 @@ const Department = () => {
                   rows={filteredUsers}
                   columns={columns}
                   pageSize={5}
-                  columnVisibilityModel={{ configuration_category_id: false }}
+                  // columnVisibilityModel={{ configuration_category_id: false }}
                 />
               )
             )}
