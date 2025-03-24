@@ -19,6 +19,7 @@ const EditPublisher = () => {
 
     const [formData, setFormData] = useState({
         publisher_name: "",
+        publisher_id:"",
         web_url: "",
         image: "",
         address: "",
@@ -50,9 +51,17 @@ const EditPublisher = () => {
                 );
 
                 const { publisher_id , created_at, updated_at, ...filteredData } = response.data;
-                setFormData(filteredData);
+                setFormData({
+                    publisher_name: filteredData.publisher_name,
+                    web_url: filteredData.web_url,
+                    image: "",
+                    address: filteredData.address,
+                    redirect_url: filteredData.redirect_url,
+                });
 
                 setPreviewImage(filteredData.image);
+                // console.log(response.data);
+                
             } catch (error) {
                 errorToaster("Failed to fetch publisher data");
             }

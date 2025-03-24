@@ -88,12 +88,12 @@ export default function TrendingBooks() {
 
   const columns = [
     { field: "book_title", headerName: "Title", width: 200 },
-    { field: "url", headerName: "Url", width: 200 },
-    { field: "description", headerName: "Description", width: 200 },
+    { field: "url", headerName: "Url", width: 300 },
+    { field: "description", headerName: "Description", width: 300 },
     {
       field: "book_image",
       headerName: "Cover",
-      width: 150,
+      width:350,
       renderCell: (params) =>
         params.value ? (
           <img

@@ -14,7 +14,6 @@ const EditConfigurationMeta = () => {
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
-  const [institutes, setInstitutes] = useState([]);
   const [existingImage, setExistingImage] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
 
@@ -28,30 +27,10 @@ const EditConfigurationMeta = () => {
     const cookieString = document.cookie
       .split("; ")
       .find((row) => row.startsWith("access_token="));
-
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
   useEffect(() => {
-    const fetchInstitutes = async () => {
-      const token = getToken();
-      if (!token) {
-        router.push("/authentication/sign-in");
-        return;
-      }
-      try {
-        const { data } = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/institutes`,
-          {
-            headers: { Authorization: token },
-          }
-        );
-        setInstitutes(data);
-      } catch (error) {
-        toast.error("Failed to load institutes.");
-      }
-    };
-
     const fetchCollectionData = async () => {
       const token = getToken();
       if (!token) {
@@ -61,9 +40,7 @@ const EditConfigurationMeta = () => {
       try {
         const { data } = await axios.get(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/configuration-collection?configuration_collection_id=${id}`,
-          {
-            headers: { Authorization: token },
-          }
+          { headers: { Authorization: token } }
         );
         setFormData({
           collection_name: data.collection_name,
@@ -75,8 +52,6 @@ const EditConfigurationMeta = () => {
         toast.error("Failed to load collection data.");
       }
     };
-
-    fetchInstitutes();
     fetchCollectionData();
   }, [id]);
 
@@ -90,10 +65,24 @@ const EditConfigurationMeta = () => {
     }
   };
 
+  // Frontend validation
+  const validate = () => {
+    const newErrors = {};
+    if (!formData.collection_name.trim()) newErrors.collection_name = ["Collection name is required"];
+    if (!formData.description.trim()) newErrors.description = ["Description is required"];
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsLoading(true);
     setErrors({});
+
+    if (!validate()) {
+      setIsLoading(false);
+      return;
+    }
 
     const token = getToken();
     if (!token) {
@@ -143,7 +132,7 @@ const EditConfigurationMeta = () => {
         <Row>
           <Col lg={12}>
             <div className="d-flex justify-content-between align-items-center">
-              <h3 className="mb-0 text-dark">Edit Configuration collection</h3>
+              <h3 className="mb-0 text-dark">Edit Configuration Collection</h3>
               <Link href="../" className="btn btn-white">
                 <FaMinusCircle /> Back
               </Link>
@@ -155,7 +144,7 @@ const EditConfigurationMeta = () => {
             <Row>
               <Col lg={6} className="mb-3">
                 <Form.Group>
-                  <Form.Label>collection Name</Form.Label>
+                  <Form.Label>Collection Name</Form.Label>
                   <Form.Control
                     type="text"
                     name="collection_name"
@@ -172,7 +161,12 @@ const EditConfigurationMeta = () => {
               <Col lg={6} className="mb-3">
                 <Form.Group>
                   <Form.Label>Image</Form.Label>
-                  <Form.Control type="file" name="image" onChange={handleInputChange} isInvalid={!!errors.image} />
+                  <Form.Control
+                    type="file"
+                    name="image"
+                    onChange={handleInputChange}
+                    isInvalid={!!errors.image}
+                  />
                   {(previewImage || existingImage) && (
                     <div className="avatar avatar-md mt-1">
                       <img
@@ -184,7 +178,9 @@ const EditConfigurationMeta = () => {
                       />
                     </div>
                   )}
-                  <Form.Control.Feedback type="invalid">{errors.image?.join(", ")}</Form.Control.Feedback>
+                  <Form.Control.Feedback type="invalid">
+                    {errors.image?.join(", ")}
+                  </Form.Control.Feedback>
                 </Form.Group>
               </Col>
             </Row>

@@ -14,7 +14,6 @@ const EditConfigurationMeta = () => {
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
-  const [institutes, setInstitutes] = useState([]);
   const [existingImage, setExistingImage] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
 
@@ -24,11 +23,10 @@ const EditConfigurationMeta = () => {
     description: "",
   });
 
-   const getToken = () => {
+  const getToken = () => {
     const cookieString = document.cookie
       .split("; ")
       .find((row) => row.startsWith("access_token="));
-
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
@@ -42,9 +40,7 @@ const EditConfigurationMeta = () => {
       try {
         const { data } = await axios.get(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/institutes`,
-          {
-            headers: { Authorization: token },
-          }
+          { headers: { Authorization: token } }
         );
         setInstitutes(data);
       } catch (error) {
@@ -61,9 +57,7 @@ const EditConfigurationMeta = () => {
       try {
         const { data } = await axios.get(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/configuration-media?configuration_media_id=${id}`,
-          {
-            headers: { Authorization: token },
-          }
+          { headers: { Authorization: token } }
         );
         setFormData({
           media_name: data.media_name,
@@ -90,10 +84,31 @@ const EditConfigurationMeta = () => {
     }
   };
 
+  const validateForm = () => {
+    const validationErrors = {};
+    if (!formData.media_name.trim()) {
+      validationErrors.media_name = ["Media name is required."];
+    }
+    if (!formData.description.trim()) {
+      validationErrors.description = ["Description is required."];
+    }
+    if (formData.image && !formData.image.type.startsWith("image/")) {
+      validationErrors.image = ["Please upload a valid image file."];
+    }
+    setErrors(validationErrors);
+    return Object.keys(validationErrors).length === 0;
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsLoading(true);
     setErrors({});
+
+    // Validate form before submission
+    if (!validateForm()) {
+      setIsLoading(false);
+      return;
+    }
 
     const token = getToken();
     if (!token) {
@@ -130,7 +145,12 @@ const EditConfigurationMeta = () => {
       setTimeout(() => router.push("/configuration/media"), 2000);
     } catch (error) {
       setErrors(error.response?.data || {});
-      toast.error("Error updating meta!");
+      Swal.fire({
+        title: "Error!",
+        text: "Something went wrong!",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -172,7 +192,12 @@ const EditConfigurationMeta = () => {
               <Col lg={6} className="mb-3">
                 <Form.Group>
                   <Form.Label>Image</Form.Label>
-                  <Form.Control type="file" name="image" onChange={handleInputChange} isInvalid={!!errors.image} />
+                  <Form.Control
+                    type="file"
+                    name="image"
+                    onChange={handleInputChange}
+                    isInvalid={!!errors.image}
+                  />
                   {(previewImage || existingImage) && (
                     <div className="avatar avatar-md mt-1">
                       <img
@@ -184,7 +209,9 @@ const EditConfigurationMeta = () => {
                       />
                     </div>
                   )}
-                  <Form.Control.Feedback type="invalid">{errors.image?.join(", ")}</Form.Control.Feedback>
+                  <Form.Control.Feedback type="invalid">
+                    {errors.image?.join(", ")}
+                  </Form.Control.Feedback>
                 </Form.Group>
               </Col>
             </Row>

@@ -110,7 +110,7 @@ const ViewCollection = () => {
     {
       field: "image",
       headerName: "Image",
-      width: 100,
+      width: 200,
       renderCell: (params) => (
         <div className="avatar avatar-md">
           <Image
@@ -123,9 +123,9 @@ const ViewCollection = () => {
         </div>
       ),
     },
-    { field: "collection_name", headerName: "Collection Name", width: 200 },
-    { field: "description", headerName: "Description", width: 250 },
-    { field: "created_at", headerName: "Created At", width: 200 },
+    { field: "collection_name", headerName: "Collection Name", width: 300 },
+    { field: "description", headerName: "Description", width: 350 },
+    { field: "created_at", headerName: "Created At", width: 300 },
     {
       field: "action",
       headerName: "Action",
