@@ -1,3 +1,4 @@
+'use client'
 import React from "react";
 import MobileNav from "./MobileNav";
 import { FaUser } from "react-icons/fa";
@@ -6,12 +7,16 @@ import { IoChevronDown } from "react-icons/io5";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import SignIn from "./SignIn";
 
 const Navbar = () => {
+  const [show, setShow] = useState(false);
   const router = useRouter();
   const landingPageData = useSelector((state) => state.landingPageDataSlice);
   const publishersArray = landingPageData?.instituteId?.publishers;
   const [token, setToken] = useState(null);
+
+  const handleFilterSelect = () => {};
 
   const getToken = () => {
     const cookieString = document.cookie
@@ -28,7 +33,7 @@ const Navbar = () => {
   useEffect(() => {
     const token = getToken();
     setToken(token);
-  }, []);
+  }, [token]);
 
   const handlePublisherClick = (publisher) => {
     const token = getToken();
@@ -60,12 +65,12 @@ const Navbar = () => {
             <div className="container">
               <div className="header-wrap">
                 <div className="logo logo-width-1">
-                  <a href="/">
+                  <Link href="/">
                     <img
                       src="http://demo.libvirtuua.com:8000/storage/landing_page/elib_transparent_logo.png"
                       alt="App Icon"
                     />
-                  </a>
+                  </Link>
                 </div>
                 <div className="header-right">
                   <h6 className="nav-heading pt-1" style={{ color: "#6f6f6f" }}>
@@ -85,6 +90,7 @@ const Navbar = () => {
                         name="filter_type"
                         className="select-active"
                         value={"datacite_titles"}
+                        onChange={handleFilterSelect}
                       >
                         <option value="datacite_titles">Title</option>
                         <option value="datacite_creators">Author</option>
@@ -120,12 +126,12 @@ const Navbar = () => {
             <div className="container-xxl">
               <div className="header-wrap header-space-between position-relative">
                 <div className="logo logo-width-1 d-block d-lg-none">
-                  <a href="/">
+                  <Link href="/">
                     <img
                       src="http://demo.libvirtuua.com:8000/storage/landing_page/elib_transparent_logo.png"
                       alt="App Icon"
                     />
-                  </a>
+                  </Link>
                 </div>
                 <div className="d-flex justify-content-between w-100">
                   <div className="header-nav d-none d-lg-flex">
@@ -136,9 +142,9 @@ const Navbar = () => {
                           style={{ height: 35 }}
                         >
                           <li>
-                            <a className="nav-link nav-btn" href="/">
+                            <Link className="nav-link nav-btn" href="/">
                               Home
-                            </a>
+                            </Link>
                           </li>
                           <li>
                             <button className="nav-link dropdown-btn nav-btn">
@@ -162,32 +168,30 @@ const Navbar = () => {
                                   {landingPageData?.instituteId?.publishers.map(
                                     (publisher) => {
                                       return (
-                                        <>
-                                          <div
-                                            key={publisher.publisher_id}
-                                            className="nav publisher_nav"
+                                        <div
+                                          key={publisher.publisher_id}
+                                          className="nav publisher_nav"
+                                        >
+                                          <span
+                                            className="dropdown-link pe-auto one_line_ellipses"
+                                            style={{ cursor: "pointer" }}
+                                            onClick={() =>
+                                              handlePublisherClick(publisher)
+                                            }
                                           >
-                                            <span
-                                              className="dropdown-link pe-auto one_line_ellipses"
-                                              style={{ cursor: "pointer" }}
-                                              onClick={() =>
-                                                handlePublisherClick(publisher)
-                                              }
-                                            >
-                                              <img
-                                                src={publisher.image}
-                                                alt={publisher.image}
-                                                style={{
-                                                  width: 25,
-                                                  height: 25,
-                                                  objectFit: "contain",
-                                                  objectPosition: "center",
-                                                }}
-                                              />
-                                              {publisher.publisher_name}
-                                            </span>
-                                          </div>
-                                        </>
+                                            <img
+                                              src={publisher.image}
+                                              alt={publisher.image}
+                                              style={{
+                                                width: 25,
+                                                height: 25,
+                                                objectFit: "contain",
+                                                objectPosition: "center",
+                                              }}
+                                            />
+                                            {publisher.publisher_name}
+                                          </span>
+                                        </div>
                                       );
                                     }
                                   )}
@@ -196,90 +200,90 @@ const Navbar = () => {
                               <div className="a_to_z px-3 pb-3 mt-2">
                                 <div className="head mb-2">Search A To Z</div>
                                 <div className="d-flex flex-wrap gap-2">
-                                  <a href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=A">
+                                  <Link href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=A">
                                     <span>A</span>
-                                  </a>
-                                  <a href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=B">
+                                  </Link>
+                                  <Link href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=B">
                                     <span>B</span>
-                                  </a>
-                                  <a href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=C">
+                                  </Link>
+                                  <Link href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=C">
                                     <span>C</span>
-                                  </a>
-                                  <a href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=D">
+                                  </Link>
+                                  <Link href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=D">
                                     <span>D</span>
-                                  </a>
-                                  <a href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=E">
+                                  </Link>
+                                  <Link href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=E">
                                     <span>E</span>
-                                  </a>
-                                  <a href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=F">
+                                  </Link>
+                                  <Link href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=F">
                                     <span>F</span>
-                                  </a>
-                                  <a href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=G">
+                                  </Link>
+                                  <Link href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=G">
                                     <span>G</span>
-                                  </a>
-                                  <a href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=H">
+                                  </Link>
+                                  <Link href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=H">
                                     <span>H</span>
-                                  </a>
-                                  <a href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=I">
+                                  </Link>
+                                  <Link href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=I">
                                     <span>I</span>
-                                  </a>
-                                  <a href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=J">
+                                  </Link>
+                                  <Link href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=J">
                                     <span>J</span>
-                                  </a>
-                                  <a href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=K">
+                                  </Link>
+                                  <Link href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=K">
                                     <span>K</span>
-                                  </a>
-                                  <a href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=L">
+                                  </Link>
+                                  <Link href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=L">
                                     <span>L</span>
-                                  </a>
-                                  <a href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=M">
+                                  </Link>
+                                  <Link href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=M">
                                     <span>M</span>
-                                  </a>
-                                  <a href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=N">
+                                  </Link>
+                                  <Link href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=N">
                                     <span>N</span>
-                                  </a>
-                                  <a href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=O">
+                                  </Link>
+                                  <Link href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=O">
                                     <span>O</span>
-                                  </a>
-                                  <a href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=P">
+                                  </Link>
+                                  <Link href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=P">
                                     <span>P</span>
-                                  </a>
-                                  <a href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=Q">
+                                  </Link>
+                                  <Link href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=Q">
                                     <span>Q</span>
-                                  </a>
-                                  <a href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=R">
+                                  </Link>
+                                  <Link href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=R">
                                     <span>R</span>
-                                  </a>
-                                  <a href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=S">
+                                  </Link>
+                                  <Link href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=S">
                                     <span>S</span>
-                                  </a>
-                                  <a href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=T">
+                                  </Link>
+                                  <Link href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=T">
                                     <span>T</span>
-                                  </a>
-                                  <a href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=U">
+                                  </Link>
+                                  <Link href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=U">
                                     <span>U</span>
-                                  </a>
-                                  <a href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=V">
+                                  </Link>
+                                  <Link href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=V">
                                     <span>V</span>
-                                  </a>
-                                  <a href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=W">
+                                  </Link>
+                                  <Link href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=W">
                                     <span>W</span>
-                                  </a>
-                                  <a href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=X">
+                                  </Link>
+                                  <Link href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=X">
                                     <span>X</span>
-                                  </a>
-                                  <a href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=Y">
+                                  </Link>
+                                  <Link href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=Y">
                                     <span>Y</span>
-                                  </a>
-                                  <a href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=Z">
+                                  </Link>
+                                  <Link href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=Z">
                                     <span>Z</span>
-                                  </a>
-                                  <a
+                                  </Link>
+                                  <Link
                                     href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text="
                                     className="see_all_btn mt-1"
                                   >
                                     See All
-                                  </a>
+                                  </Link>
                                 </div>
                               </div>
                             </div>
@@ -301,31 +305,29 @@ const Navbar = () => {
                                 {landingPageData?.instituteId?.categories.map(
                                   (categories) => {
                                     return (
-                                      <>
-                                        <div
-                                          key={
-                                            categories.configuration_category_id
-                                          }
-                                          className="nav"
-                                          style={{ minWidth: "33%" }}
+                                      <div
+                                        key={
+                                          categories.configuration_category_id
+                                        }
+                                        className="nav"
+                                        style={{ minWidth: "33%" }}
+                                      >
+                                        <Link
+                                          className="dropdown-link"
+                                          href="#"
                                         >
-                                          <a
-                                            className="dropdown-link"
-                                            href="javascript:void(0)"
-                                          >
-                                            <img
-                                              src={categories.image}
-                                              alt={categories.image}
-                                              style={{
-                                                width: 25,
-                                                height: 25,
-                                                objectFit: "cover",
-                                              }}
-                                            />
-                                            {categories.category_name}
-                                          </a>
-                                        </div>
-                                      </>
+                                          <img
+                                            src={categories.image}
+                                            alt={categories.image}
+                                            style={{
+                                              width: 25,
+                                              height: 25,
+                                              objectFit: "cover",
+                                            }}
+                                          />
+                                          {categories.category_name}
+                                        </Link>
+                                      </div>
                                     );
                                   }
                                 )}
@@ -342,29 +344,27 @@ const Navbar = () => {
                                 {landingPageData?.instituteId?.medias.map(
                                   (media) => {
                                     return (
-                                      <>
-                                        <div
-                                          key={media.configuration_media_id}
-                                          className="nav"
-                                          style={{ minWidth: "33%" }}
+                                      <div
+                                        key={media.configuration_media_id}
+                                        className="nav"
+                                        style={{ minWidth: "33%" }}
+                                      >
+                                        <Link
+                                          className="dropdown-link"
+                                          href="#"
                                         >
-                                          <a
-                                            className="dropdown-link"
-                                            href="javascript:void(0)"
-                                          >
-                                            <img
-                                              src={media.image}
-                                              alt=""
-                                              style={{
-                                                width: 25,
-                                                height: 25,
-                                                objectFit: "cover",
-                                              }}
-                                            />
-                                            {media.media_name}
-                                          </a>
-                                        </div>
-                                      </>
+                                          <img
+                                            src={media.image}
+                                            alt=""
+                                            style={{
+                                              width: 25,
+                                              height: 25,
+                                              objectFit: "cover",
+                                            }}
+                                          />
+                                          {media.media_name}
+                                        </Link>
+                                      </div>
                                     );
                                   }
                                 )}
@@ -380,12 +380,12 @@ const Navbar = () => {
                       {token ? (
                         <>
                           <div>
-                            <a
+                            <Link
                               href="/dashboard"
                               className="mx-1 hover-underline"
                             >
                               Dashboard
-                            </a>
+                            </Link>
                           </div>
                           <div>
                             <button
@@ -398,14 +398,47 @@ const Navbar = () => {
                         </>
                       ) : (
                         <div>
-                          <a
-                            href="/authentication/sign-in"
+                          <button
+                            onClick={() => setShow(true)}
                             className="mx-1 hover-underline"
                           >
                             Sign In
-                          </a>
+                          </button>
                         </div>
                       )}
+                      {/* modal start */}
+                      <div
+                        className={`modal fade ${show ? "show d-block" : ""}`}
+                        tabIndex="-1"
+                      >
+                        <div className="modal-dialog">
+                          <div
+                            className="modal-content"
+                            style={{
+                              backgroundColor: "#ffffff00",
+                              border: "none",
+                            }}
+                          >
+                            <div className="modal-body position-relative">
+                              <button
+                                className="btn-close position-absolute fs-5"
+                                style={{ zIndex: "99", right: "20px" }}
+                                onClick={() => setShow(false)}
+                              ></button>
+                              <SignIn />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Modal Backdrop */}
+                      {show && (
+                        <div
+                          className="modal-backdrop fade show"
+                          onClick={() => setShow(false)}
+                        ></div>
+                      )}
+                      {/* modal end */}
 
                       <div className="header-action-icon-2 d-block d-lg-none">
                         <div className="burger-icon burger-icon-white">

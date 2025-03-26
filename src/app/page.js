@@ -32,7 +32,6 @@ export default function Home() {
   return (
     <div className={styles.page}>
       <div id="main_widget_section">
-        <Navbar />
         <Banner />
         <Publisher />
         <NoticeBoard />
@@ -41,7 +40,6 @@ export default function Home() {
         <StaffPick />
         <Download />
         <TopUser />
-        <Footer />
       </div>
     </div>
   );
