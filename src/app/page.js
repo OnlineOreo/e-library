@@ -43,9 +43,6 @@ export default function Home() {
         <TopUser />
         <Footer />
       </div>
-      <div>
-        <h3>Institute ID: {instituteId || "Loading..."}</h3>
-      </div>
     </div>
   );
 }

@@ -1,5 +1,4 @@
 'use client';
-// Import libraries
 import { Row, Col, Card, Form, Button } from 'react-bootstrap';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
@@ -25,7 +24,6 @@ const SignIn = () => {
     setIsLoading(true);
     
     try {
-
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/login`, {
         method: "POST",
         headers: {
@@ -34,10 +32,10 @@ const SignIn = () => {
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await response.json(); 
+      const data = await response.json();
 
       if (data.access_token) {
-          document.cookie = `access_token=${data.access_token}; path=/; max-age=${60 * 100}; secure=${process.env.NODE_ENV === 'production' ? 'true' : 'false'}; samesite=strict`;
+          document.cookie = `access_token=${data.access_token}; path=/; max-age=${60 * 100};`;
       }
       
       if (response.ok) {
