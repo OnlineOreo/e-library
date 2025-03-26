@@ -47,6 +47,15 @@ export const DashboardMenu = [
 	},
 	{
 		id: uuid(),
+		title: 'Notification',
+		icon: 'bell',
+		children: [	
+			{ id: uuid(), link: '/notification/email', name: 'E-Mail' },
+			{ id: uuid(), link: '/notification/send-emails', name: 'Send Mail' },
+		]
+	},
+	{
+		id: uuid(),
 		title: 'Configuration',
 		icon: 'lock',
 		children: [
