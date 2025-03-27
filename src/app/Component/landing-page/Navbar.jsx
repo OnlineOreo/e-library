@@ -162,7 +162,6 @@ const Navbar = () => {
                                   {landingPageData?.instituteId?.publishers.map(
                                     (publisher) => {
                                       return (
-                                        <>
                                           <div
                                             key={publisher.publisher_id}
                                             className="nav publisher_nav"
@@ -187,7 +186,6 @@ const Navbar = () => {
                                               {publisher.publisher_name}
                                             </span>
                                           </div>
-                                        </>
                                       );
                                     }
                                   )}
@@ -301,7 +299,6 @@ const Navbar = () => {
                                 {landingPageData?.instituteId?.categories.map(
                                   (categories) => {
                                     return (
-                                      <>
                                         <div
                                           key={
                                             categories.configuration_category_id
@@ -325,7 +322,6 @@ const Navbar = () => {
                                             {categories.category_name}
                                           </a>
                                         </div>
-                                      </>
                                     );
                                   }
                                 )}
@@ -342,7 +338,6 @@ const Navbar = () => {
                                 {landingPageData?.instituteId?.medias.map(
                                   (media) => {
                                     return (
-                                      <>
                                         <div
                                           key={media.configuration_media_id}
                                           className="nav"
@@ -364,7 +359,6 @@ const Navbar = () => {
                                             {media.media_name}
                                           </a>
                                         </div>
-                                      </>
                                     );
                                   }
                                 )}
