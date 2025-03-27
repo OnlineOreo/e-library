@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchInstituteId } from "../redux/slices/instituteSlice";
+import { fetchInstituteId } from "./../redux/slices/instituteSlice";
 import Image from "next/image";
 import styles from "./page.module.css";
 import Navbar from "./Component/landing-page/Navbar";
@@ -32,6 +32,7 @@ export default function Home() {
   return (
     <div className={styles.page}>
       <div id="main_widget_section">
+        <Navbar/>
         <Banner />
         <Publisher />
         <NoticeBoard />
@@ -40,6 +41,7 @@ export default function Home() {
         <StaffPick />
         <Download />
         <TopUser />
+        <Footer />
       </div>
     </div>
   );
