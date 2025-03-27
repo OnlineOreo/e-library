@@ -8,7 +8,7 @@ const API_URL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/institute?sub_domai
 export const fetchInstituteId = createAsyncThunk("institute/fetchInstituteId", async () => {
   const response = await fetch(API_URL);
   const data = await response.json();
-  return data.instituteId;
+  return data.institute;
 });
 
 const instituteSlice = createSlice({

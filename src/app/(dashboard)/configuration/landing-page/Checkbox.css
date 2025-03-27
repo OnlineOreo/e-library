@@ -1,8 +1,8 @@
-.checkbox-wrapper-46 input[type="checkbox"] {
-    display: none;
-    visibility: hidden;
-  }
-  
+
+.checkbox-wrapper-46{
+  display: flex;
+  gap: 8px;
+}
   .checkbox-wrapper-46 .cbx {
     margin: auto;
     -webkit-user-select: none;

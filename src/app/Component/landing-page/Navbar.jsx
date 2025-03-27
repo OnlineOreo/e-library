@@ -47,13 +47,11 @@ const Navbar = () => {
     if (publisher.publisher_name === "EBSCO Academic Collection") {
       url =
         "https://research-ebsco-com.mriirs.libvirtuua.com:8833/login.aspx?authtype=ip,uid&custid=ns193200&groupid=main&profile=ehost&defaultdb=bsh";
+        window.open(url + `&token=${token}`, "_blank");
     } else if (publisher.publisher_name === "Manupatra") {
       url =
         "https://www-manupatrafast-in.mriirs.libvirtuua.com:8833/LoginSwitch/ipRedirect.aspx";
-    }
-
-    if (url) {
-      window.open(url + `&token=${token}`, "_blank");
+        window.open(url + `?token=${token}`, "_blank");
     }
   };
 
@@ -388,12 +386,12 @@ const Navbar = () => {
                             </Link>
                           </div>
                           <div>
-                            <button
+                            <a
                               onClick={handleLogout}
                               className="mx-1 hover-underline"
                             >
                               Log Out
-                            </button>
+                            </a>
                           </div>
                         </>
                       ) : (

@@ -1,20 +1,13 @@
 "use client";
 
-import {
-  Col,
-  Row,
-  Card,
-  Tab,
-  Nav,
-  Container,
-  Spinner,
-  Button,
-  Form,
-} from "react-bootstrap";
+import { Col, Row, Card, Tab, Nav, Container, Spinner, Button, Form, } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import "./Checkbox.css";
+import { useSelector } from "react-redux";
+import Swal from "sweetalert2";
+
 
 const Badges = () => {
   const router = useRouter();
@@ -23,14 +16,15 @@ const Badges = () => {
   const [categoriesList, setCategoriesList] = useState([]);
   const [collectionList, setCollectionList] = useState([]);
   const [mediaList, setMediaList] = useState([]);
-  const [checkedModelList, setCheckedModelList] = useState([]);
+  const instituteId = useSelector((state) => state.institute.instituteId);
 
-  // Load data when component mounts
   useEffect(() => {
-    loadMenus();
-  }, []);
+    if (instituteId) {
+      loadMenus();
+    }
+  }, [instituteId]); // Added dependency array
+  
 
-  // Token from cookie
   const getToken = () => {
     const cookie = document.cookie
       .split("; ")
@@ -38,89 +32,96 @@ const Badges = () => {
     return cookie ? decodeURIComponent(cookie.split("=")[1]) : null;
   };
 
-  // Fetch all menus
   const loadMenus = async () => {
     const token = getToken();
-    if (!token) return router.push("/authentication/sign-in");
-
+    if (!token) {
+      router.push("/authentication/sign-in");
+      return;
+    }
+  
     try {
-      const headers = { Authorization: `${token}` };
-      const [publishers, categories, collections, media] = await Promise.all([
-        axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/publishers`,
-          { headers }
-        ),
-        axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/configuration-categories`,
-          { headers }
-        ),
-        axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/configuration-collection`,
-          { headers }
-        ),
-        axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/configuration-media`,
-          { headers }
-        ),
-      ]);
-
-      setPublisherList(publishers.data);
-      setCategoriesList(categories.data);
-      setCollectionList(collections.data);
-      setMediaList(media.data);
-      console.log("data-publishers",publishers.data);
-      console.log("data-categories",categories.data);
-      console.log("data-collections",collections.data);
-      console.log("data-media",media.data);
-      
+      const headers = { Authorization: ` ${token}` }; // Corrected header format
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/is-active-mapping?institute_id=${instituteId}`,
+        { headers }
+      );
+  
+      setPublisherList(response.data.publishers || []);
+      setCategoriesList(response.data.categories || []);
+      setCollectionList(response.data.collections || []);
+      setMediaList(response.data.media || []);
     } catch (error) {
       console.error("Axios Error:", error);
     }
   };
 
-  // Handle checkbox change
-  const handleCheckboxChange = (e) => {
+  const handleCheckboxChange = (e, boxName) => {
     const { value, checked } = e.target;
-    setCheckedModelList((prev) =>
-      checked ? [...prev, value] : prev.filter((id) => id !== value)
-    );
+  
+    const updateList = (prevList) =>
+      prevList.map((item) =>
+        item.id === value ? { ...item, is_active: checked } : item
+      );
+  
+    switch (boxName) {
+      case "publisher":
+        setPublisherList(updateList);
+        break;
+      case "category":
+        setCategoriesList(updateList);
+        break;
+      case "collection":
+        setCollectionList(updateList);
+        break;
+      case "media":
+        setMediaList(updateList);
+        break;
+      default:
+        break;
+    }
   };
+  
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const buildIds = (list, idKey) =>
-      list
-        .filter((item) => checkedModelList.includes(String(item[idKey])))
-        .map((item) => String(item[idKey]));
+    const activePublisherList = publisherList.filter(item => item.is_active).map(item => item.id);
+    const activeCategoriesList = categoriesList.filter(item => item.is_active).map(item => item.id);
+    const activeCollectionList = collectionList.filter(item => item.is_active).map(item => item.id);
+    const activeMediaIds = mediaList.filter(item => item.is_active).map(item => item.id);
 
-    const payload = {
-      publisher: { ids: buildIds(publisherList, "publisher_id") },
-      categories: { ids: buildIds(categoriesList, "configuration_category_id") },
-      collection: { ids: buildIds(collectionList, "configuration_collection_id") },
-      media: { ids: buildIds(mediaList, "configuration_media_id") },
+    const sataToSend = {
+      institute: instituteId,
+      active_json: {
+        publisher_ids: activePublisherList,
+        categories_ids: activeCategoriesList,
+        collection_ids: activeCollectionList,
+        media_ids: activeMediaIds,
+      }
     };
-
-    console.log("Final JSON Payload:", JSON.stringify(payload, null, 2));
-
     try {
       setIsLoading(true);
       const token = getToken();
-      const headers = { Authorization: `${token}` };
-
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/save-selections`,
-        payload,
+      const headers = { Authorization: `${token}` }; 
+  
+      await axios.put(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/is-active-mapping?institute=${instituteId}`, // Fixed incorrect variable reference
+        sataToSend,
         { headers }
       );
-      console.log("Response:", response.data);
+
+      Swal.fire({
+        title: "Success!",
+        text: "Updated successfully!",
+        icon: "success",
+        confirmButtonText: "OK",
+      });
+      
     } catch (error) {
       console.error("Submit Error:", error);
     } finally {
       setIsLoading(false);
     }
   };
-
   return (
     <Container fluid className="p-6">
       <Row>
@@ -159,32 +160,28 @@ const Badges = () => {
                           checklists={publisherList}
                           idKey="publisher_id"
                           nameKey="publisher_name"
-                          checkedModelList={checkedModelList}
-                          onChange={handleCheckboxChange}
+                          onChange={(e)=>handleCheckboxChange(e,'publisher')}
                         />
                         <CheckboxCard
                           title="Categories"
                           checklists={categoriesList}
                           idKey="configuration_category_id"
                           nameKey="category_name"
-                          checkedModelList={checkedModelList}
-                          onChange={handleCheckboxChange}
+                          onChange={(e)=>handleCheckboxChange(e,'category')}
                         />
                         <CheckboxCard
                           title="Collections"
                           checklists={collectionList}
                           idKey="configuration_collection_id"
                           nameKey="collection_name"
-                          checkedModelList={checkedModelList}
-                          onChange={handleCheckboxChange}
+                          onChange={(e)=>handleCheckboxChange(e,'collection')}
                         />
                         <CheckboxCard
                           title="Media"
                           checklists={mediaList}
                           idKey="configuration_media_id"
                           nameKey="media_name"
-                          checkedModelList={checkedModelList}
-                          onChange={handleCheckboxChange}
+                          onChange={(e)=>handleCheckboxChange(e,'media')}
                         />
                         <Button
                           className="w-100 mt-5"
@@ -210,13 +207,11 @@ const Badges = () => {
   );
 };
 
-// Reusable Checkbox Card Component
 const CheckboxCard = ({
   title,
   checklists,
   idKey,
   nameKey,
-  checkedModelList,
   onChange,
 }) => (
   <Col lg={3}>
@@ -226,7 +221,7 @@ const CheckboxCard = ({
       </Card.Body>
       <div className="p-2">
         {checklists.map((item, idx) => {
-          const itemId = String(item[idKey]);
+          const itemId = String(item.id);
           return (
             <div className="checkbox-wrapper-46 mb-2" key={idx}>
               <input
@@ -234,20 +229,13 @@ const CheckboxCard = ({
                 className="inp-cbx"
                 id={`cbx-${title}-${idx}`}
                 value={itemId}
-                checked={checkedModelList.includes(itemId)}
+                checked={item.is_active}
+                name={item.name}
                 onChange={onChange}
-                name={nameKey}
               />
-              <label className="cbx" htmlFor={`cbx-${title}-${idx}`}>
-                <span>
-                  <svg viewBox="0 0 12 10" height="10px" width="12px">
-                    <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
-                  </svg>
-                </span>
-                <span className="fs-5">{item[nameKey]}</span>
-              </label>
+              <label htmlFor={`cbx-${title}-${idx}`}>{item.name}</label>
             </div>
-          );
+          );          
         })}
       </div>
     </Card>
