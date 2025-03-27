@@ -1,10 +1,9 @@
-'use client'	
+'use client'
 // import node module libraries
 import { useState } from 'react';
 
 // import theme style scss file
 import '../styles/theme.scss';
-
 
 import NavbarTop from '@/layouts/navbars/NavbarTop';
 import NavbarVertical from '@/layouts/navbars/NavbarVertical';

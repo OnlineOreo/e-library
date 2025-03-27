@@ -168,30 +168,30 @@ const Navbar = () => {
                                   {landingPageData?.instituteId?.publishers.map(
                                     (publisher) => {
                                       return (
-                                        <div
-                                          key={publisher.publisher_id}
-                                          className="nav publisher_nav"
-                                        >
-                                          <span
-                                            className="dropdown-link pe-auto one_line_ellipses"
-                                            style={{ cursor: "pointer" }}
-                                            onClick={() =>
-                                              handlePublisherClick(publisher)
-                                            }
+                                          <div
+                                            key={publisher.publisher_id}
+                                            className="nav publisher_nav"
                                           >
-                                            <img
-                                              src={publisher.image}
-                                              alt={publisher.image}
-                                              style={{
-                                                width: 25,
-                                                height: 25,
-                                                objectFit: "contain",
-                                                objectPosition: "center",
-                                              }}
-                                            />
-                                            {publisher.publisher_name}
-                                          </span>
-                                        </div>
+                                            <span
+                                              className="dropdown-link pe-auto one_line_ellipses"
+                                              style={{ cursor: "pointer" }}
+                                              onClick={() =>
+                                                handlePublisherClick(publisher)
+                                              }
+                                            >
+                                              <img
+                                                src={publisher.image}
+                                                alt={publisher.image}
+                                                style={{
+                                                  width: 25,
+                                                  height: 25,
+                                                  objectFit: "contain",
+                                                  objectPosition: "center",
+                                                }}
+                                              />
+                                              {publisher.publisher_name}
+                                            </span>
+                                          </div>
                                       );
                                     }
                                   )}
@@ -305,29 +305,29 @@ const Navbar = () => {
                                 {landingPageData?.instituteId?.categories.map(
                                   (categories) => {
                                     return (
-                                      <div
-                                        key={
-                                          categories.configuration_category_id
-                                        }
-                                        className="nav"
-                                        style={{ minWidth: "33%" }}
-                                      >
-                                        <Link
-                                          className="dropdown-link"
-                                          href="#"
+                                        <div
+                                          key={
+                                            categories.configuration_category_id
+                                          }
+                                          className="nav"
+                                          style={{ minWidth: "33%" }}
                                         >
-                                          <img
-                                            src={categories.image}
-                                            alt={categories.image}
-                                            style={{
-                                              width: 25,
-                                              height: 25,
-                                              objectFit: "cover",
-                                            }}
-                                          />
-                                          {categories.category_name}
-                                        </Link>
-                                      </div>
+                                          <a
+                                            className="dropdown-link"
+                                            href="javascript:void(0)"
+                                          >
+                                            <img
+                                              src={categories.image}
+                                              alt={categories.image}
+                                              style={{
+                                                width: 25,
+                                                height: 25,
+                                                objectFit: "cover",
+                                              }}
+                                            />
+                                            {categories.category_name}
+                                          </a>
+                                        </div>
                                     );
                                   }
                                 )}
@@ -344,27 +344,27 @@ const Navbar = () => {
                                 {landingPageData?.instituteId?.medias.map(
                                   (media) => {
                                     return (
-                                      <div
-                                        key={media.configuration_media_id}
-                                        className="nav"
-                                        style={{ minWidth: "33%" }}
-                                      >
-                                        <Link
-                                          className="dropdown-link"
-                                          href="#"
+                                        <div
+                                          key={media.configuration_media_id}
+                                          className="nav"
+                                          style={{ minWidth: "33%" }}
                                         >
-                                          <img
-                                            src={media.image}
-                                            alt=""
-                                            style={{
-                                              width: 25,
-                                              height: 25,
-                                              objectFit: "cover",
-                                            }}
-                                          />
-                                          {media.media_name}
-                                        </Link>
-                                      </div>
+                                          <a
+                                            className="dropdown-link"
+                                            href="javascript:void(0)"
+                                          >
+                                            <img
+                                              src={media.image}
+                                              alt=""
+                                              style={{
+                                                width: 25,
+                                                height: 25,
+                                                objectFit: "cover",
+                                              }}
+                                            />
+                                            {media.media_name}
+                                          </a>
+                                        </div>
                                     );
                                   }
                                 )}
