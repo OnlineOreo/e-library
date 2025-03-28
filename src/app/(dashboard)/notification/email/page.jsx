@@ -1,15 +1,19 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { Form, Button, Container, Row, Col, Card } from 'react-bootstrap';
+import { Form, Button, Container, Row, Col, Card, Spinner } from 'react-bootstrap';
 import axios from 'axios';
 import Swal from "sweetalert2";
+import { useSelector } from "react-redux";
 
 export default function SendEmail() {
+
+    const [isLoading, setIsLoading] = useState(false);
     const [filterMethod, setFilterMethod] = useState('library');
     const [libraries, setLibraries] = useState([]);
     const [selectedLibraryId, setSelectedLibraryId] = useState('');
     const [departments, setDepartments] = useState([]);
     const [programs, setPrograms] = useState([]);
+    const instituteId = useSelector((state) => state.institute.instituteId);
 
     const getToken = () => {
         const cookieString = document.cookie
@@ -39,41 +43,49 @@ export default function SendEmail() {
     };
 
     const handleLibraryChange = (e) => {
+        console.log('handle library change called');
         const libId = e.target.value;
         setSelectedLibraryId(libId);
 
         const selectedLib = libraries.find(lib => lib.library_id === libId);
         setDepartments(selectedLib?.departments || []);
         setPrograms(selectedLib?.programs || []);
+        console.log('departments ', departments);
+        console.log('programs', programs);  
     };
+
 
     const handelSubmit = (e) => {
         e.preventDefault();
-    
+
+        setIsLoading(true);
+        
         const formData = new FormData(e.target);
+        formData.append("institute", instituteId);
         const filterMethod = formData.get('filterMethod');
         const library = formData.get('library');
-        const department = formData.get('department');
-        const program = formData.get('program');
-        const subject = formData.get('subject');
+        const title = formData.get('title');
         const content = formData.get('content');
-        const files = formData.getAll('file');
-    
+
+        const selectedDepartments = formData.getAll('departments[]');
+        formData.append('departments', JSON.stringify(selectedDepartments));
+
+        const selectedPrograms = formData.getAll('programs[]');
+        formData.append('programs', JSON.stringify(selectedPrograms));
+
         const payload = {
+            institute:instituteId,
             filterMethod,
             library,
-            department: filterMethod === 'department' ? department : null,
-            program: filterMethod === 'program' ? program : null,
-            subject,
+            title,
             content,
         };
     
         console.log('Payload:', payload);
-        console.log('Files:', files);
     
         const token = getToken();
     
-        axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/send-email`, formData, {
+        axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/sent-email`, formData, {
             headers: {
                 'Authorization': `${token}`,
                 'Content-Type': 'multipart/form-data',
@@ -83,10 +95,11 @@ export default function SendEmail() {
             console.log('Email Sent:', res.data);
             Swal.fire({
             title: "Success!",
-            text: "Library added successfully!",
+            text: "Mail Sent Successfully!",
             icon: "success",
             confirmButtonText: "OK",
             });
+            setIsLoading(false);
         })
         .catch((err) => {
             console.error('Error Sending Email:', err);
@@ -96,6 +109,7 @@ export default function SendEmail() {
                 icon: "error",
                 confirmButtonText: "OK",
                 });
+                setIsLoading(false);
         });
     };
     
@@ -122,6 +136,7 @@ export default function SendEmail() {
                                     label="By library"
                                     name="filterMethod"
                                     value="library"
+                                    id="byLibrary"
                                     checked={filterMethod === 'library'}
                                     onChange={(e) => setFilterMethod(e.target.value)}
                                 />
@@ -130,6 +145,7 @@ export default function SendEmail() {
                                     type="radio"
                                     label="By Department"
                                     name="filterMethod"
+                                    id="byDepartment"
                                     value="department"
                                     checked={filterMethod === 'department'}
                                     onChange={(e) => setFilterMethod(e.target.value)}
@@ -140,12 +156,13 @@ export default function SendEmail() {
                                     label="By Program"
                                     name="filterMethod"
                                     value="program"
+                                    id="byProgram"
                                     checked={filterMethod === 'program'}
                                     onChange={(e) => setFilterMethod(e.target.value)}
                                 />
                             </div>
                         </Form.Group>
-
+                        
                         <Form.Group className="mb-3">
                             <Form.Label className="fw-semibold">Library</Form.Label>
                             <Form.Select name='library' onChange={handleLibraryChange} value={selectedLibraryId}>
@@ -158,21 +175,21 @@ export default function SendEmail() {
                             </Form.Select>
                         </Form.Group>
 
-                        {departments.length > 0 && filterMethod == "department" && (
+                        {/* {filterMethod == "department" && (
                             <Form.Group className="mb-3">
                                 <Form.Label className="fw-semibold">Department</Form.Label>
                                 <Form.Select name='department'>
                                     <option value="">Select a Department</option>
                                     {departments.map((dept) => (
                                         <option key={dept.department_id} value={dept.department_id}>
-                                            {dept.department_name}
+                                            {dept.department_name} | {dept.department_id}
                                         </option>
                                     ))}
                                 </Form.Select>
                             </Form.Group>
-                        )}
-
-                        {programs.length > 0 && filterMethod == "program"  && (
+                        )} */}
+                        
+                        {/* {filterMethod == "program"  && (
                             <Form.Group className="mb-3">
                                 <Form.Label className="fw-semibold">Programs</Form.Label>
                                 <Form.Select name='program'>
@@ -184,11 +201,51 @@ export default function SendEmail() {
                                     ))}
                                 </Form.Select>
                             </Form.Group>
+                        )} */}
+
+                        {filterMethod == 'department' && (
+                            <Form.Group className="mb-3">
+                                {departments.length > 0 && (
+                                    <Form.Label className="fw-semibold">Departments</Form.Label>
+                                )}
+                                {departments.map((department, index) => {
+                                    return (
+                                        <Form.Check
+                                            key={index}  
+                                            type="checkbox"
+                                            label={department.department_name}
+                                            name="departments[]"  
+                                            value={department.department_id}  
+                                            id={department.department_id}
+                                        />
+                                    );
+                                })}
+                            </Form.Group>
+                        )}
+
+                        {filterMethod == 'program' && (
+                            <Form.Group className="mb-3">
+                                {programs.length > 0 && (
+                                    <Form.Label className="fw-semibold">Programs</Form.Label>
+                                )}
+                                {programs.map((program, index) => {
+                                        return (
+                                            <Form.Check 
+                                                key={index}
+                                                type="checkbox"
+                                                label={program.program_name}
+                                                name="programs[]"
+                                                value={program.program_id}
+                                                id={program.program_id}
+                                            />
+                                        )
+                                    })}
+                            </Form.Group>
                         )}
 
                         <Form.Group className="mb-3">
-                            <Form.Label className="fw-semibold">Email Subject:</Form.Label>
-                            <Form.Control type="text" name='subject' placeholder="Enter Email Subject" />
+                            <Form.Label className="fw-semibold">Email title:</Form.Label>
+                            <Form.Control type="text" name='title' placeholder="Enter Email title" />
                         </Form.Group>
 
                         <Form.Group className="mb-3">
@@ -196,13 +253,18 @@ export default function SendEmail() {
                             <Form.Control as="textarea" rows={5} name='content' placeholder="Enter Email Content" />
                         </Form.Group>
 
-                        <Form.Group className="mb-4">
+                        {/* <Form.Group className="mb-4">
                             <Form.Label className="fw-semibold">Attachments:</Form.Label>
                             <Form.Control type="file" multiple name='file' />
-                        </Form.Group>
+                        </Form.Group> */}
 
                         <Button variant="primary" type="submit" className="px-4 py-2">
-                            SEND EMAILS
+                        {" "}
+                        {isLoading ? (
+                            <Spinner animation="border" size="sm" />
+                        ) : (
+                            "SEND MAILS"
+                        )}{" "}
                         </Button>
                     </Form>
                 </Card>
