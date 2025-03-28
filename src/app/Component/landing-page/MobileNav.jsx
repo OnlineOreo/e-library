@@ -58,7 +58,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers "
@@ -78,7 +78,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/b9c49355-de94-4031-8f0c-bc47807c4899.png "
@@ -98,7 +98,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/pubs-logo-481x82-1523435513963.webp "
@@ -118,7 +118,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/AJOL_logo.png "
@@ -138,7 +138,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/aps-logo.svg "
@@ -158,7 +158,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/51434d70-5119-45bf-93ed-57e089e5826c.png "
@@ -178,7 +178,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/barandbench.avif "
@@ -198,7 +198,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/cmie_logo.gif "
@@ -218,7 +218,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/copernicus_log.png "
@@ -238,7 +238,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/corporate_law_adviser_logo.png "
@@ -258,7 +258,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/5cab568e-da6c-4319-96cf-a19909b025e9.png "
@@ -278,7 +278,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/06778b86-8a27-4608-9355-87709fff0d00.png "
@@ -298,7 +298,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/dovepress_logo.webp "
@@ -318,7 +318,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses pub_remote "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/c381fded-63b1-460d-a10d-e152d29c1568.jpeg "
@@ -338,7 +338,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/economic_outlook_logo.png "
@@ -358,7 +358,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/epw_research_foundation_logo.jpg "
@@ -378,7 +378,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/gar-logo.svg "
@@ -398,7 +398,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/cropped-HeinOnline-Logo-File.png "
@@ -418,7 +418,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/4e30f707-7565-4b4e-a639-05b02b530d5f.png "
@@ -438,7 +438,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/logo_glowne_1000.png "
@@ -458,7 +458,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/Indiastat.svg "
@@ -478,7 +478,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/jstor_logo.svg "
@@ -498,7 +498,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/jus_mundi_logo.svg "
@@ -518,7 +518,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/d4a07bef-b14f-4a94-8e11-321089152a85.png "
@@ -538,7 +538,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/b33c31f1-5d8e-4311-830d-3537be74a619.png "
@@ -558,7 +558,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/manupatra_logo.png "
@@ -578,7 +578,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/math_science_inet_logo.png "
@@ -598,7 +598,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/plogo_opil_mpil.png "
@@ -618,7 +618,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/nature.svg "
@@ -638,7 +638,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/76d13149-f341-485e-9472-0e7cd7bb8272.png "
@@ -658,7 +658,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/overton_logo_navy_2x-1.png "
@@ -678,7 +678,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/oxford-academic-logo.svg "
@@ -698,7 +698,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/oxford-academic-logo.svg "
@@ -718,7 +718,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/oxford-academic-logo.svg "
@@ -738,7 +738,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/a3e59d55-a865-4344-b853-882c8deb4810.png "
@@ -758,7 +758,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/03a723dc-56d7-4979-a376-74fe773fdaef.png "
@@ -778,7 +778,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/rsc-logo.png "
@@ -798,7 +798,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/sage-journals-logo.svg "
@@ -818,7 +818,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/scc-logo.png "
@@ -838,7 +838,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/science.svg "
@@ -858,7 +858,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/siam_logo.png "
@@ -878,7 +878,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/ssrn-logo.svg "
@@ -898,7 +898,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/Sabinet_logo.svg "
@@ -918,7 +918,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/logo-springerlink-39ee2a28d8.svg "
@@ -938,7 +938,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/taxmann-logo.webp "
@@ -958,7 +958,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/taxsutra-logo.png "
@@ -978,7 +978,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/6fef3ef9-4b26-4651-8bf8-a8dd4ac3353e.png "
@@ -998,7 +998,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/f7e1fbe5-3a2c-4fc3-9288-2e85d57c3739.png "
@@ -1018,7 +1018,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/world-scientificWSPC-LOGO-250-1541381839657.webp "
@@ -1038,7 +1038,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/e8650562-0822-414f-85d0-785ff2370212.jpeg "
@@ -1058,7 +1058,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/e8650562-0822-414f-85d0-785ff2370212.jpeg "
@@ -1078,7 +1078,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/e8650562-0822-414f-85d0-785ff2370212.jpeg "
@@ -1098,7 +1098,7 @@ const MobileNav = ()=> {
                       className="dropdown-link pe-auto one_line_ellipses  "
                       style={{ cursor: "pointer" }}
                       forward="/check-auth"
-                      onclick="window.open('/check-auth', '_blank')"
+                    onClick={() => window.open('/check-auth', '_blank')}
                     >
                       <img
                         src="http://mriirs.libvirtuua.com:8000/storage/publishers/e8650562-0822-414f-85d0-785ff2370212.jpeg "
