@@ -34,7 +34,7 @@ export default function Home() {
       <div id="main_widget_section">
         <Navbar/>
         <Banner />
-        <Publisher />
+        <Publisher /> 
         <NoticeBoard />
         <AboutUs />
         <TrendingBook />
