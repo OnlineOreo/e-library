@@ -314,6 +314,7 @@ export default function Header() {
           <Card>
             <Card.Body className="p-0">
               <h5 className="p-2 bg-dark text-white rounded-top-3">Logo</h5>
+              
               <Form>
                 <label htmlFor="photo-upload" className="custom-file-upload">
                   <div className="img-wrap img-upload">
