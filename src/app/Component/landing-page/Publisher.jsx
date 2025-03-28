@@ -1,173 +1,63 @@
 'use client'
-import { Autoplay, Pagination, Scrollbar, A11y } from 'swiper/modules';
-
+import { Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
-
-// Import Swiper styles
 import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import 'swiper/css/scrollbar';
+
+const publisherImages = [
+    "https://demo.libvirtuua.com/landingPageAsset/img/publisher8.webp",
+    "https://demo.libvirtuua.com/landingPageAsset/img/publisher7.webp",
+    "https://demo.libvirtuua.com/landingPageAsset/img/publisher6.jpg",
+    "https://demo.libvirtuua.com/landingPageAsset/img/publisher5.png",
+    "https://demo.libvirtuua.com/landingPageAsset/img/publisher4.jpg",
+    "https://demo.libvirtuua.com/landingPageAsset/img/publisher3.jpg",
+    "https://demo.libvirtuua.com/landingPageAsset/img/publisher2.jpg",
+    "https://demo.libvirtuua.com/landingPageAsset/img/publisher1.jpg"
+];
 
 export default function Publisher() {
     return (
-        <>
-            <div className="publisher-wrapper container py-5 pt-5 section"
-                id="publisher_section"
-                style={{ display: "block" }}
-            >
-                <h2
-                    className="mb-5 wow fadeInUp"
-                    id="publisher_heading"
-                    data-wow-delay="0.3s"
+        <div className="publisher-wrapper container py-5 pt-5 section" id="publisher_section" style={{ display: "block" }}>
+            <h2 className="mb-5 wow fadeInUp" id="publisher_heading" data-wow-delay="0.3s">
+                Publisher
+            </h2>
+            <div className="publish-carousel d-flex wow fadeInUp" data-wow-delay="0.5s">
+                <Swiper 
+                    modules={[Autoplay]} 
+                    spaceBetween={20} 
+                    loop={true} 
+                    autoplay={{ delay: 2000, disableOnInteraction: false }} 
+                    speed={1000}
+                    breakpoints={{
+                        320: { slidesPerView: 2 },
+                        480: { slidesPerView: 3 },
+                        768: { slidesPerView: 4 },
+                        1024: { slidesPerView: 5 },
+                        1200: { slidesPerView: 6 },
+                        1400: { slidesPerView: 7 }
+                    }}
+                    className='p-3'
                 >
-                    Publisher Collections
-                </h2>
-                <div className="publish-carousel d-flex wow fadeInUp" data-wow-delay="0.5s">
-
-
-                    <Swiper
-                        modules={[Autoplay]}
-                        spaceBetween={20}
-                        slidesPerView={7}
-                        loop={true}
-                        autoplay={{ autoplay: true }}
-                    >
-                        <SwiperSlide>
-
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <div className="publish-card">
-                                <div className="card-header">
+                    {publisherImages.map((image, index) => (
+                        <SwiperSlide key={index}>
+                            <div className="publish-card" style={{ width: "150px", height: "150px", boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)", borderRadius: "10px", backgroundColor: "#fff" }}>
+                                <div className="card-header" style={{ width: "100%", height: "100%" }}>
                                     <img
-                                        src="http://mriirs.libvirtuua.com:8000/landingPageAsset/img/publisher8.webp"
+                                        src={image}
                                         style={{
                                             width: "100%",
                                             height: "100%",
-                                            objectFit: "cover",
-                                            objectPosition: "conter",
-                                            borderRadius: 10
+                                            objectFit: "contain",
+                                            objectPosition: "center",
+                                            borderRadius: 10,
+                                            backgroundColor: "#fff"
                                         }}
                                     />
                                 </div>
                             </div>
                         </SwiperSlide>
-                        <SwiperSlide>
-                            <div className="publish-card">
-                                <div className="card-header">
-                                    <img
-                                        src="http://mriirs.libvirtuua.com:8000/landingPageAsset/img/publisher7.webp"
-                                        style={{
-                                            width: "100%",
-                                            height: "100%",
-                                            objectFit: "cover",
-                                            objectPosition: "conter",
-                                            borderRadius: 10
-                                        }}
-                                    />
-                                </div>
-                            </div>
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <div className="publish-card">
-                                <div className="card-header">
-                                    <img
-                                        src="http://mriirs.libvirtuua.com:8000/landingPageAsset/img/publisher6.jpg"
-                                        style={{
-                                            width: "100%",
-                                            height: "100%",
-                                            objectFit: "cover",
-                                            objectPosition: "conter",
-                                            borderRadius: 10
-                                        }}
-                                    />
-                                </div>
-                            </div>
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <div className="publish-card">
-                                <div className="card-header">
-                                    <img
-                                        src="http://mriirs.libvirtuua.com:8000/landingPageAsset/img/publisher5.png"
-                                        style={{
-                                            width: "100%",
-                                            height: "100%",
-                                            objectFit: "cover",
-                                            objectPosition: "conter",
-                                            borderRadius: 10
-                                        }}
-                                    />
-                                </div>
-                            </div>
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <div className="publish-card">
-                                <div className="card-header">
-                                    <img
-                                        src="http://mriirs.libvirtuua.com:8000/landingPageAsset/img/publisher4.jpg"
-                                        style={{
-                                            width: "100%",
-                                            height: "100%",
-                                            objectFit: "cover",
-                                            objectPosition: "conter",
-                                            borderRadius: 10
-                                        }}
-                                    />
-                                </div>
-                            </div>
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <div className="publish-card">
-                                <div className="card-header">
-                                    <img
-                                        src="http://mriirs.libvirtuua.com:8000/landingPageAsset/img/publisher3.png"
-                                        style={{
-                                            width: "100%",
-                                            height: "100%",
-                                            objectFit: "cover",
-                                            objectPosition: "conter",
-                                            borderRadius: 10
-                                        }}
-                                    />
-                                </div>
-                            </div>
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <div className="publish-card">
-                                <div className="card-header">
-                                    <img
-                                        src="http://mriirs.libvirtuua.com:8000/landingPageAsset/img/publisher2.jpg"
-                                        style={{
-                                            width: "100%",
-                                            height: "100%",
-                                            objectFit: "cover",
-                                            objectPosition: "conter",
-                                            borderRadius: 10
-                                        }}
-                                    />
-                                </div>
-                            </div>
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <div className="publish-card">
-                                <div className="card-header">
-                                    <img
-                                        src="http://mriirs.libvirtuua.com:8000/landingPageAsset/img/publisher1.jpg"
-                                        style={{
-                                            width: "100%",
-                                            height: "100%",
-                                            objectFit: "cover",
-                                            objectPosition: "conter",
-                                            borderRadius: 10
-                                        }}
-                                    />
-                                </div>
-                            </div>
-                        </SwiperSlide>
-                    </Swiper>
-                </div>
+                    ))}
+                </Swiper>
             </div>
-
-        </>
-    )
+        </div>
+    );
 }

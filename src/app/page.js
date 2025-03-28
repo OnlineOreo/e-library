@@ -17,6 +17,7 @@ import StaffPick from "./Component/landing-page/StaffPick";
 import Download from "./Component/landing-page/Download";
 import TopUser from "./Component/landing-page/TopUser";
 import Footer from "./Component/landing-page/Footer";
+import Headline from "./Component/landing-page/(Headlines)/Headline";
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -36,9 +37,10 @@ export default function Home() {
         <Banner />
         <Publisher />
         <NoticeBoard />
-        <AboutUs />
+        {/* <AboutUs /> */}
         <TrendingBook />
         <StaffPick />
+        <Headline/>
         <Download />
         <TopUser />
         <Footer />

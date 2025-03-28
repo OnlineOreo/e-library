@@ -10,6 +10,13 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 
+const topUsers = [
+    { name: "Dr. Arely Gusikowski", role: "admin", rank: "#1", initials: "AG" },
+    { name: "Mr. John Doe", role: "moderator", rank: "#2", initials: "JD" },
+    { name: "Ms. Jane Smith", role: "user", rank: "#3", initials: "JS" },
+    { name: "Dr. Robert Brown", role: "admin", rank: "#4", initials: "RB" }
+];
+
 export default function TopUser() {
     const swiperRef = useRef(null);
 
@@ -32,20 +39,20 @@ export default function TopUser() {
                         loop={true}
                         pagination={{ clickable: true }}
                         autoplay={{ delay: 3000, disableOnInteraction: false }}
-                        onSwiper={(swiper) => (swiperRef.current = swiper)} // Correctly assign swiper instance
+                        onSwiper={(swiper) => (swiperRef.current = swiper)}
                     >
-                        {[...Array(4)].map((_, index) => (
+                        {topUsers.map((user, index) => (
                             <SwiperSlide key={index}>
                                 <div className="testimonial-item rounded p-4">
                                     <div className="d-flex align-items-center mb-4">
                                         <div className="d-flex justify-content-center align-items-center bg-primary-gradient text-white rounded-circle"
                                             style={{ width: 85, height: 85, fontSize: 24, borderRadius: "50%" }}>
-                                            DA
+                                            {user.initials}
                                         </div>
                                         <div className="ms-4">
-                                            <h5 className="mb-1">Dr. Arely Gusikowski</h5>
-                                            <p className="mb-1">admin</p>
-                                            <p className="mb-1">Rank : #3</p>
+                                            <h5 className="mb-1">{user.name}</h5>
+                                            <p className="mb-1">{user.role}</p>
+                                            <p className="mb-1">Rank : {user.rank}</p>
                                         </div>
                                     </div>
                                 </div>

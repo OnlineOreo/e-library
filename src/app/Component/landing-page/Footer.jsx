@@ -17,7 +17,7 @@ export default function Footer() {
                         <div className="col-md-6 col-lg-4">
                             <h4 className="text-white">Developed By</h4>
                             <img
-                                src="http://mriirs.libvirtuua.com:8000/storage/landing_page/elib_transparent_logo.png"
+                                src="https://demo.libvirtuua.com/storage/landing_page/elib_transparent_logo.png"
                                 alt=""
                                 style={{ width: 100, height: 100 }}
                             />
