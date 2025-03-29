@@ -1,46 +1,67 @@
 "use client"
+import '../search.css'; 
 import { Container, Row, Col, Form, Card, Button, InputGroup, Nav } from 'react-bootstrap';
 import { PiBookOpenTextFill } from "react-icons/pi";
 import { BsFillGrid3X3GapFill } from "react-icons/bs";
 import { FaListUl } from "react-icons/fa6";
 // import { IoMdCloudDownload } from "react-icons/io";
 import { FaSearch, FaShareAlt, FaRegBookmark, FaFileDownload } from "react-icons/fa";
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import CatalogGridCard from '../components/CatalogGridCard';
+import CatalogListCard from '../components/CatalogListCard';
+
+
+import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
+import axios from "axios";
 
 // import Navbar from '../Component/landing-page/Navbar';
 
 
-import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
+export default function printCollection() {
+    const router = useRouter();
+    const instituteId = useSelector((state) => state.institute.instituteId);
+    const [gridView, setGridView] = useState(true);
 
-export default function LibraryPage() {
+    const getToken = () => {
+        const cookieString = document.cookie
+          .split("; ")
+          .find((row) => row.startsWith("access_token="));
+    
+        return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+      };
+
+      const loadPCollectionData = async () => {
+        const token = getToken();
+        if (!token) {
+          router.push("/authentication/sign-in");
+          return;
+        }
+    
+        try {
+          const response = await axios.get(
+            `http://5.135.139.104:8983/solr/Print-collection/select?indent=true&q.op=OR&q=datacite_titles%3A%22indian%20history%22&rows=15`,
+            { headers: { Authorization: `${token}` } }
+          );
+    
+          if (response.status === 200) {
+            console.log(response.data);
+          }
+        } catch (error) {
+          console.error("Axios Error:", error);
+        }
+      };
+    
+      useEffect(() => {
+        loadPCollectionData();
+      }, [router])
+    
+
+
     return (
         <>
-            {/* navbar start  */}
-            <Navbar expand="lg" className="bg-body-tertiary py-4">
-                <Container>
-                    <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand>
-                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                    <Navbar.Collapse id="basic-navbar-nav">
-                        <Nav className="me-auto">
-                            <Nav.Link href="#home">Home</Nav.Link>
-                            <Nav.Link href="#link">Link</Nav.Link>
-                            <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-                                <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                                <NavDropdown.Item href="#action/3.2">
-                                    Another action
-                                </NavDropdown.Item>
-                                <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-                                <NavDropdown.Divider />
-                                <NavDropdown.Item href="#action/3.4">
-                                    Separated link
-                                </NavDropdown.Item>
-                            </NavDropdown>
-                        </Nav>
-                    </Navbar.Collapse>
-                </Container>
-            </Navbar>
-            {/* navbar end  */}
-            <Container className="p-4 text-secondary">
+            <Container className="px-4 text-secondary">
                 <Row>
                     {/* Sidebar Filters */}
                     <Col md={3} className="px-0 border rounded bg-white">
@@ -154,61 +175,39 @@ export default function LibraryPage() {
                                         <Form.Control placeholder="Search..." />
                                         <Button variant="outline-secondary"><FaSearch /></Button>
                                     </InputGroup>
-                                    <BsFillGrid3X3GapFill size={40} className='border p-1 rounded mx-2' />
-                                    <FaListUl size={40} className='border p-1 rounded' />
+                                    <BsFillGrid3X3GapFill size={40} className={`border p-1 curser_pointer rounded mx-2 ${gridView === true ? "active_result_view" : ""}`} onClick={()=>{setGridView(true)}}/>
+                                    <FaListUl size={40} className={`border p-1 curser_pointer rounded ${gridView === false ? "active_result_view" : ""}`} onClick={()=>setGridView(false)}/>
                                 </div>
                             </Col>
                         </Row>
 
-                        <Row className='grid-card'>
+                        <Row id='grid-view' className={`grid-view ${gridView === false ? "d-none" : ""}`}>
                             {[...Array(6)].map((_, idx) => (
                                 <Col md={4} key={idx} className="mb-4">
-                                    <Card>
-                                        <div className="image text-center">
-                                            <PiBookOpenTextFill size={170} className='text-secondary' />
-                                        </div>
-                                        <Card.Body className='text-secondary'>
-                                            <div className='fw-bold'>Book Title</div>
-                                            <div>Author Name</div>
-                                            <div>2024</div>
-                                            <div className='d-flex my-3'>
-                                                <FaShareAlt size={20} className='me-3' />
-                                                <FaFileDownload size={20} className='me-3' />
-                                                <FaRegBookmark size={20} className='me-3' />
-                                            </div>
-                                            <div className="mt-2 d-flex">
-                                                <Button variant="success" className="me-2 w-50 py-2">READ</Button>
-                                                <Button variant="outline-secondary w-50 py-2">DETAILS</Button>
-                                            </div>
-                                        </Card.Body>
-                                    </Card>
+                                    <CatalogGridCard
+                                    datacite_title = "Book Title"
+                                    datacite_creators = "Shristi Sharma"
+                                    dc_date= "2017"
+                                    publisher= "XYZ Publications"
+                                    isbn="123-456-789"
+                                    genre="Fiction"
+                                    language= "English"
+                                   /> 
                                 </Col>
                             ))}
                         </Row>
-                        <Row className='grid-card'>
+                        <Row id='list-view' className={`list-view ${gridView === true ? "d-none" : ""}`}>
                             {[...Array(6)].map((_, idx) => (
                                 <Col md={12} key={idx} className="mb-4">
-                                    <Card>
-                                        <Row>
-                                            <Col md={3} className="image text-center">
-                                                <PiBookOpenTextFill size={170} className='text-secondary' />
-                                            </Col>
-                                            <Col md={9}>
-                                                <Card.Body className='text-secondary'>
-                                                    <div className='fw-bold'>Book Title</div>
-                                                    <div>Author Name</div>
-                                                    <div>2024</div>
-                                                    <div className="mt-3 d-flex align-items-center">
-                                                        <Button variant="success" className="me-2 py-2" style={{width:"100px"}}>READ</Button>
-                                                        <Button variant="outline-secondary py-2 mx-2" style={{width:"100px"}}>DETAILS</Button>
-                                                        <FaShareAlt size={20} className='me-3' />
-                                                        <FaFileDownload size={20} className='me-3' />
-                                                        <FaRegBookmark size={20} className='me-3' />
-                                                    </div>
-                                                </Card.Body>
-                                            </Col>
-                                        </Row>
-                                    </Card>
+                                    <CatalogListCard
+                                    datacite_title = "Book Title"
+                                    datacite_creators = "Shristi Sharma"
+                                    dc_date= "2017"
+                                    publisher= "XYZ Publications"
+                                    isbn="123-456-789"
+                                    genre="Fiction"
+                                    language= "English"
+                                    />
                                 </Col>
                             ))}
                         </Row>

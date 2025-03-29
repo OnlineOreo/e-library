@@ -1,0 +1,18 @@
+.active_result_view{
+    color: rgb(107, 60, 151);
+}
+
+.active_nav{
+    color: rgb(107, 60, 151);
+    border-bottom: 2px solid rgb(107, 60, 151);
+}
+
+.curser_pointer{
+    cursor:pointer;
+    padding-bottom: 2px;
+}
+.curser_pointer:hover{
+    color: rgb(107, 60, 151);
+    border-bottom: 2px solid rgb(107, 60, 151);
+    padding-bottom: 0px;
+}
