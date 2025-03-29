@@ -10,8 +10,8 @@ const CatalogGridCard = (props) => {
                 <PiBookOpenTextFill size={170} className='text-secondary' />
             </div>
             <Card.Body className='text-secondary'>
-                <div className='fw-bold'>{props.datacite_title}</div>
-                <div>{props.datacite_creators}</div>
+                <div className='fw-bold one_line_ellipses'>{props.datacite_title}</div>
+                <div className='one_line_ellipses'>{props.datacite_creators}</div>
                 <div>{props.dc_date}</div>
                 <div className='d-flex my-3'>
                     <FaShareAlt size={20} className='me-3' />
