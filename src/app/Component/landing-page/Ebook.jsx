@@ -1,23 +1,20 @@
-'use client'
 import React from 'react';
 import { Navigation, Autoplay, Pagination, Scrollbar, A11y } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { useSelector } from 'react-redux';
+
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 
-const bookImages = [
-    "https://demo.libvirtuua.com/storage/landing_page/1e1d274f-3bcf-4ca9-946a-d83a94ca95e9.jpg",
-    "https://demo.libvirtuua.com/storage/landing_page/06b6d62b-895f-4ab6-9425-f04a1142da96.webp",
-    "https://demo.libvirtuua.com/storage/landing_page/ef473acd-8c64-404a-bb0f-7aa2b4b4c277.png",
-    "https://demo.libvirtuua.com/storage/landing_page/bf0d80ea-29cf-4c0c-a83d-735eb31e0a2c.png",
-    "https://demo.libvirtuua.com/storage/landing_page/58d393d1-7744-43e4-b90e-c1c82b22ad53.jpg",
-    "https://demo.libvirtuua.com/storage/landing_page/e5f7b8f8-ffb2-414c-b9e5-617714b1f9a7.jpg",
-    "https://demo.libvirtuua.com/storage/landing_page/2ed4bdba-e68b-400f-9f33-94798330e2e1.png"
-];
-
 export default function Ebook({ toggle }) {
+    const landingPageData = useSelector((state) => state.landingPageDataSlice);
+    // change after fix from backend  - according to suraj bhaiya
+    const bookImages = landingPageData?.instituteId?.staff_picks
+    ?.filter(staff_pick => staff_pick.article_type === "f6a6ff3b-22d3-4a0c-bf16-df7d5b5283c5") // Filter only matching elements
+    ?.map(staff_pick => staff_pick.image) || []; // Extract images
+
     return (
         <div
             id="sp_ebook_div"

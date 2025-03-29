@@ -22,19 +22,21 @@ import Headline from "./Component/landing-page/(Headlines)/Headline";
 export default function Home() {
   const dispatch = useDispatch();
   const instituteId = useSelector((state) => state.institute.instituteId);
+  const landingPageData = useSelector((state) => state.landingPageDataSlice);
   const status = useSelector((state) => state.institute.status);
-
+  
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchInstituteId());
     }
   }, [dispatch, status]);
 
+
   return (
     <div className={styles.page}>
       <div id="main_widget_section">
         <Navbar/>
-        <Banner />
+        <Banner bannerData={landingPageData?.instituteId?.configurations[0]} />
         <Publisher /> 
         <NoticeBoard />
         {/* <AboutUs /> */}

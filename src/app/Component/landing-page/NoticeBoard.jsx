@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { Autoplay, Pagination, Scrollbar, A11y } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -19,6 +20,8 @@ const notices = [
 
 export default function NoticeBoard() {
     const swiperRef = useRef(null);
+    const landingPageData = useSelector((state) => state.landingPageDataSlice);
+    const notices = landingPageData?.instituteId?.notices
 
     return (
         <div className="container-xxl py-5 section" id="notice_section">
@@ -42,13 +45,15 @@ export default function NoticeBoard() {
                     autoplay={{ delay: 3000, disableOnInteraction: false }}
                     onSwiper={(swiper) => (swiperRef.current = swiper)}
                 >
-                    {notices.map((notice, index) => (
-                        <SwiperSlide key={index}>
-                            <div className="testimonial-item rounded p-4">
-                                <p className="mb-0">{notice}</p>
-                            </div>
-                        </SwiperSlide>
-                    ))}
+                    {notices?.length > 0 &&
+                        notices.map((notice, index) => (
+                            <SwiperSlide key={index}>
+                                <div className="testimonial-item rounded p-4">
+                                    <p className="mb-0">{notice.description}</p>
+                                </div>
+                            </SwiperSlide>
+                        ))
+                    }
                 </Swiper>
 
                 <div className="d-flex justify-content-center gap-4 mt-3">
