@@ -50,8 +50,8 @@ export const DashboardMenu = [
 		title: 'Notification',
 		icon: 'bell',
 		children: [	
-			{ id: uuid(), link: '/notification/email', name: 'E-Mail' },
-			{ id: uuid(), link: '/notification/send-emails', name: 'Send Mail' },
+			{ id: uuid(), link: '/notification/send-email', name: 'Send Email' },
+			{ id: uuid(), link: '/notification/emails-sent', name: 'Emails Sent' },
 		]
 	},
 	{

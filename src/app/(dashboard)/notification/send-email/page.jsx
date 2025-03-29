@@ -85,7 +85,7 @@ export default function SendEmail() {
     
         const token = getToken();
     
-        axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/sent-email`, formData, {
+        axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/emails`, formData, {
             headers: {
                 'Authorization': `${token}`,
                 'Content-Type': 'multipart/form-data',
