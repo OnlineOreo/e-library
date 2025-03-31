@@ -101,10 +101,10 @@ const ViewUserType = () => {
   );
 
   const columns = [
-    { field: "user_type_id", headerName: "Id", width: 150 },
-    { field: "type_name", headerName: "Name", width: 150 },
-    { field: "created_at", headerName: "Created At", width: 200 },
-    { field: "updated_at", headerName: "Updated At", width: 200 },
+    // { field: "user_type_id", headerName: "Id", width: 150 },
+    { field: "type_name", headerName: "Name", width: 250 },
+    { field: "created_at", headerName: "Created At", width: 250 },
+    { field: "updated_at", headerName: "Updated At", width: 250 },
     {
       field: "action",
       headerName: "Action",
