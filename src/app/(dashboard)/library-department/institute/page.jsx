@@ -74,8 +74,9 @@ const ViewInstitute = () => {
             Swal.fire("Deleted!", "Institute deleted successfully!", "success");
             setInstitutes((prev) => prev.filter(item => item.institute_id !== params.id));
           } catch (error) {
-            errorToaster("Something went wrong!");
-            console.log(error);
+            errorToaster(error?.response?.data?.error || "Something went wrong!");
+            errorToaster(error?.response?.data?.details || "Something went wrong!");
+            // console.log(error);
           }
       }
     });
@@ -96,15 +97,15 @@ const ViewInstitute = () => {
   );
 
   const columns = [
-    { field: "institute_id", headerName: "ID", width: 150 },
-    { field: "institute_name", headerName: "Institute Name", width: 150 },
-    { field: "email", headerName: "Email", width: 200 },
-    { field: "phone", headerName: "Phone", width: 150 },
-    { field: "domain", headerName: "Domain", width: 200 },
+    { field: "institute_id", headerName: "ID", flex: 1 },
+    { field: "institute_name", headerName: "Institute Name", flex: 2 },
+    { field: "email", headerName: "Email", flex: 2 },
+    { field: "phone", headerName: "Phone", flex: 1 },
+    { field: "domain", headerName: "Domain", flex: 1 },
     {
       field: "action",
       headerName: "Action",
-      width: 150,
+      flex: 1,
       renderCell: (params) => (
         <div>
           <button onClick={() => handleShow(params)} className="btn btn-secondary mx-2 btn-sm"><FaEye /></button>
@@ -114,6 +115,7 @@ const ViewInstitute = () => {
       ),
     },
   ];
+  
 
   return (
     <>

@@ -14,7 +14,7 @@ const AuthButtons = ({ token, handleLogout, show, setShow }) => {
             </Link>
           </div>
           <div>
-            <a onClick={handleLogout} className="mx-1 hover-underline">
+            <a onClick={handleLogout} style={{ cursor:'pointer' }} className="mx-1 hover-underline">
               Log Out
             </a>
           </div>
@@ -24,6 +24,7 @@ const AuthButtons = ({ token, handleLogout, show, setShow }) => {
           <div
             onClick={() => setShow(true)}
             className="mx-1 hover-underline"
+            style={{ cursor:'pointer' }}
           >
             Sign In
           </div>

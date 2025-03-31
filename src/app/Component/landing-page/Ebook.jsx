@@ -12,7 +12,7 @@ export default function Ebook({ toggle }) {
     const landingPageData = useSelector((state) => state.landingPageDataSlice);
     // change after fix from backend  - according to suraj bhaiya
     const bookImages = landingPageData?.instituteId?.staff_picks
-    ?.filter(staff_pick => staff_pick.article_type === "f6a6ff3b-22d3-4a0c-bf16-df7d5b5283c5") // Filter only matching elements
+    ?.filter(staff_pick => staff_pick.article_type_name === "e-news") // Filter only matching elements
     ?.map(staff_pick => staff_pick.image) || []; // Extract images
 
     return (

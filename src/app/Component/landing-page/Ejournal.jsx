@@ -11,9 +11,8 @@ import 'swiper/css/scrollbar';
 
 export default function Ejournal({ toggle }) {
     const landingPageData = useSelector((state) => state.landingPageDataSlice);
-    // change after fix from backend  - according to suraj bhaiya
     const ejournals = landingPageData?.instituteId?.staff_picks?.filter(staff_pick => 
-        staff_pick.article_type === "fffeab60-601a-4b64-9f8d-52fd27a1fefa"
+        staff_pick.article_type_name === "e-journal"
     ) || [];
 
     return (

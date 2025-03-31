@@ -44,7 +44,7 @@ export default function Footer() {
                             <a className="btn btn-link" href="#">
                                 About Library
                             </a>
-                            <a className="btn btn-link" href="/login">
+                            <a className="btn btn-link" href="#">
                                 Request an eResource
                             </a>
                             <a className="btn btn-link" href="#">

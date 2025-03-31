@@ -18,8 +18,6 @@ const Navbar = () => {
   // console.log(landingPageData)
   const [token, setToken] = useState(null);
 
-  
-
   const getToken = () => {
     const cookieString = document.cookie
       .split("; ")
@@ -74,11 +72,35 @@ const Navbar = () => {
     }
   ];
 
+  const [isSticky, setIsSticky] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setIsSticky(true);
+      } else {
+        setIsSticky(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <>
       <div className="container-fluid mt-2 bg-white p-0">
         <header className="header-area header-style-4 header-height-2">
-          <div className="header-middle sticky-bar header-middle-ptb-1 d-none d-lg-block">
+          <div className="header-middle sticky-top header-middle-ptb-1 d-none d-lg-block"
+           style={{
+              position: isSticky ? "fixed" : "relative",
+              top: 0,
+              width: "100%",
+              zIndex: 1000,
+              backgroundColor: "white",
+              boxShadow: isSticky ? "0px 2px 10px rgba(0, 0, 0, 0.1)" : "none",
+              transition: "all 0.3s ease-in-out",
+            }}>
             <div className="container">
               <div className="header-wrap">
                 <div className="logo logo-width-1">
@@ -89,6 +111,9 @@ const Navbar = () => {
                     />
                   </Link>
                 </div>
+                {/* <div className="" style={{ width: 200 }}>
+                  Welcome to LibVituUa
+                </div> */}
                 <div className="header-action-right" style={{ width: 600 }}>
                   <SearchBar />
                 </div>

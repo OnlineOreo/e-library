@@ -2535,3 +2535,9 @@ section.pt-150.pb-150 {
       margin-right: 30px;
   }
 }
+@media (max-width:576px){
+  .hero-header h2{
+    line-height: 1.4 !important;
+    font-size: 3em !important;
+  }
+}

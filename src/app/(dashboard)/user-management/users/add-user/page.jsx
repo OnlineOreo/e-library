@@ -7,6 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import { FaMinusCircle } from "react-icons/fa";
 import { ImCross } from "react-icons/im";
+import Swal from "sweetalert2";
 
 const Home = () => {
   const router = useRouter();
@@ -160,14 +161,13 @@ const Home = () => {
           },
         }
       );
-
+      if (response.status === 201) {
         Swal.fire({
           title: "Success!",
           text: "User added successfully!",
           icon: "success",
           confirmButtonText: "OK",
         });
-          
         setFormData({
           name: "",
           email: "",
@@ -181,6 +181,7 @@ const Home = () => {
           admission_year: "",
           mappings: [],
         });
+        }
         
         router.push("/user-management/users");
     } catch (error) {
@@ -354,7 +355,7 @@ const Home = () => {
                     <option value="STUDENT">Student</option>
                   </Form.Select>
                 </Form.Group>
-                <Form.Group className="mb-3" controlId="formImage">
+                {/* <Form.Group className="mb-3" controlId="formImage">
                   <Form.Label>Upload Image</Form.Label>
                   <Form.Control
                     type="file"
@@ -362,7 +363,7 @@ const Home = () => {
                     accept="image/*"
                     onChange={handleInputChange}
                   />
-                </Form.Group>
+                </Form.Group> */}
 
                 <Form.Group className="mb-3" controlId="formGender">
                   <Form.Label>Gender</Form.Label>
@@ -395,6 +396,7 @@ const Home = () => {
                     name="user_u_id"
                     value={formData.user_u_id}
                     onChange={handleInputChange}
+                    placeholder="Enter user unique ID"
                     required
                   />
                 </Form.Group>
@@ -421,6 +423,7 @@ const Home = () => {
                     name="admission_year"
                     value={formData.admission_year}
                     onChange={handleInputChange}
+                    placeholder="Enter admission year"
                     required
                   />
                 </Form.Group>
