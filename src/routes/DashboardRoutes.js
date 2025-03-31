@@ -56,6 +56,15 @@ export const DashboardMenu = [
 	},
 	{
 		id: uuid(),
+		title: 'Reports',
+		icon: 'bell',
+		children: [	
+			{ id: uuid(), link: '/reports/total-users', name: 'Total users' },
+			{ id: uuid(), link: '/reports/top-users', name: 'Top-users' },
+		]
+	},
+	{
+		id: uuid(),
 		title: 'Configuration',
 		icon: 'lock',
 		children: [
