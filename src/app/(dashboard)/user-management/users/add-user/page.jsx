@@ -29,7 +29,7 @@ const Home = () => {
     name: "",
     email: "",
     phone_number: "",
-    role: "STUDENT",
+    role: "",
     address:'',
     gender: "",
     user_u_id: "",
@@ -346,14 +346,14 @@ const Home = () => {
                   <Form.Label>Role</Form.Label>
                   <Form.Select
                     name="role"
-                    disabled
                     value={formData.role}
                     onChange={handleInputChange}
                     required
                   >
                     <option value="">Select Role</option>
-                    <option value="ADMIN">Admin</option>
                     <option value="STUDENT">Student</option>
+                    <option value="FACULTY">Faculty</option>
+                    <option value="STAFF">Staff</option>
                   </Form.Select>
                 </Form.Group>
                 {/* <Form.Group className="mb-3" controlId="formImage">

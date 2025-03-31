@@ -1,5 +1,5 @@
 // components/Navbar.js
-'use client'
+"use client";
 import React, { useEffect, useState } from "react";
 import MobileNav from "./MobileNav";
 import { useSelector } from "react-redux";
@@ -17,6 +17,13 @@ const Navbar = () => {
   // const logo = useSelector((state) => state.landingPageDataSlice);
   // console.log(landingPageData)
   const [token, setToken] = useState(null);
+
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  // Toggle mobile menu
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
 
   const getToken = () => {
     const cookieString = document.cookie
@@ -39,7 +46,7 @@ const Navbar = () => {
 
     const publisherUrls = {
       "EBSCO Academic Collection": `https://research-ebsco-com.mriirs.libvirtuua.com:8811/login.aspx?authtype=ip,uid&custid=ns193200&groupid=main&profile=ehost&defaultdb=bsh&token=${token}`,
-      "Manupatra": `https://www-manupatrafast-in.mriirs.libvirtuua.com:8811/LoginSwitch/ipRedirect.aspx?token=${token}`
+      Manupatra: `https://www-manupatrafast-in.mriirs.libvirtuua.com:8811/LoginSwitch/ipRedirect.aspx?token=${token}`,
     };
 
     if (publisherUrls[publisher.publisher_name]) {
@@ -54,22 +61,22 @@ const Navbar = () => {
 
   const navItems = [
     { type: "link", title: "Home", href: "/" },
-    { 
-      type: "dropdown", 
-      title: "eResources", 
+    {
+      type: "dropdown",
+      title: "eResources",
       items: landingPageData?.instituteId?.publishers || [],
-      isPublisher: true
+      isPublisher: true,
     },
-    { 
-      type: "dropdown", 
-      title: "Categories", 
-      items: landingPageData?.instituteId?.categories || [] 
+    {
+      type: "dropdown",
+      title: "Categories",
+      items: landingPageData?.instituteId?.categories || [],
     },
-    { 
-      type: "dropdown", 
-      title: "Media", 
-      items: landingPageData?.instituteId?.medias || [] 
-    }
+    {
+      type: "dropdown",
+      title: "Media",
+      items: landingPageData?.instituteId?.medias || [],
+    },
   ];
 
   const [isSticky, setIsSticky] = useState(false);
@@ -91,8 +98,9 @@ const Navbar = () => {
     <>
       <div className="container-fluid mt-2 bg-white p-0">
         <header className="header-area header-style-4 header-height-2">
-          <div className="header-middle sticky-top header-middle-ptb-1 d-none d-lg-block"
-           style={{
+          <div
+            className="header-middle sticky-top header-middle-ptb-1 d-none d-lg-block"
+            style={{
               position: isSticky ? "fixed" : "relative",
               top: 0,
               width: "100%",
@@ -100,13 +108,16 @@ const Navbar = () => {
               backgroundColor: "white",
               boxShadow: isSticky ? "0px 2px 10px rgba(0, 0, 0, 0.1)" : "none",
               transition: "all 0.3s ease-in-out",
-            }}>
+            }}
+          >
             <div className="container">
               <div className="header-wrap">
                 <div className="logo logo-width-1">
                   <Link href="/">
                     <img
-                      src={landingPageData?.instituteId?.configurations[0]?.logo}
+                      src={
+                        landingPageData?.instituteId?.configurations[0]?.logo
+                      }
                       alt="App Icon"
                     />
                   </Link>
@@ -126,7 +137,9 @@ const Navbar = () => {
                 <div className="logo logo-width-1 d-block d-lg-none">
                   <Link href="/">
                     <img
-                      src={landingPageData?.instituteId?.configurations[0]?.logo}
+                      src={
+                        landingPageData?.instituteId?.configurations[0]?.logo
+                      }
                       alt="App Icon"
                     />
                   </Link>
@@ -135,11 +148,17 @@ const Navbar = () => {
                   <div className="header-nav d-none d-lg-flex">
                     <div className="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block">
                       <nav className="menu">
-                        <ul className="menu-bar menu_bar_a navbar-nav" style={{ height: 35 }}>
+                        <ul
+                          className="menu-bar menu_bar_a navbar-nav"
+                          style={{ height: 35 }}
+                        >
                           {navItems.map((item, index) => (
                             <li key={index}>
                               {item.type === "link" ? (
-                                <Link className="nav-link nav-btn" href={item.href}>
+                                <Link
+                                  className="nav-link nav-btn"
+                                  href={item.href}
+                                >
                                   {item.title}
                                 </Link>
                               ) : (
@@ -158,14 +177,17 @@ const Navbar = () => {
                   </div>
                   <div className="header-action-right">
                     <div className="header-action-2">
-                      <AuthButtons 
-                        token={token} 
-                        handleLogout={handleLogout} 
-                        show={show} 
-                        setShow={setShow} 
+                      <AuthButtons
+                        token={token}
+                        handleLogout={handleLogout}
+                        show={show}
+                        setShow={setShow}
                       />
                       <div className="header-action-icon-2 d-block d-lg-none">
-                        <div className="burger-icon burger-icon-white">
+                        <div
+                          className="burger-icon burger-icon-white"
+                          onClick={toggleMenu}
+                        >
                           <span className="burger-icon-top" />
                           <span className="burger-icon-mid" />
                           <span className="burger-icon-bottom" />
@@ -179,7 +201,7 @@ const Navbar = () => {
           </div>
         </header>
       </div>
-      <MobileNav />
+      {/* <MobileNav menuOpen={menuOpen} toggleMenu={toggleMenu} /> */}
     </>
   );
 };
