@@ -4,7 +4,7 @@ import { Fragment, useState } from 'react';
 import { Col, Row, Card, Carousel, Image, Nav, Tab, Container } from 'react-bootstrap';
 
 // import widget/custom components
-import { HighlightCode }  from 'widgets';
+import { HighlightCode }  from '@/widgets';
 
 // import react code data file
 import {
@@ -15,7 +15,7 @@ import {
 	CrossfadeCode,
 	IndividualCode,
 	DarkVariantCode
-} from 'data/code/CarouselsCode';
+} from '@/data/code/CarouselsCode';
 
 const Carousels = () => {
 	const [index, setIndex] = useState(0);

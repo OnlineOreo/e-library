@@ -17,10 +17,10 @@ import {
 } from 'react-bootstrap';
 
 // import widget/custom components
-import { HighlightCode }  from 'widgets';
+import { HighlightCode }  from '@/widgets';
 
 // import hooks
-import useMounted from 'hooks/useMounted';
+import useMounted from '@/hooks/useMounted';
 
 // import react code data file
 import {
@@ -36,7 +36,7 @@ import {
 	DividersCode,
 	FormsCode1,
 	FormsCode2
-} from 'data/code/DropdownsCode';
+} from '@/data/code/DropdownsCode';
 
 const Dropdowns = () => {
 	const hasMounted = useMounted();

@@ -20,7 +20,7 @@ const CatalogGridCard = (props) => {
                 </div>
                 <div className="mt-2 d-flex">
                     <Button variant="success" className="me-2 w-50 py-2">READ</Button>
-                    <Button variant="outline-secondary w-50 py-2">DETAILS</Button>
+                    <Button variant="outline-secondary w-50 py-2" onClick={()=>{props.onShow();props.onSelect()}}>DETAILS</Button>
                 </div>
             </Card.Body>
         </Card>

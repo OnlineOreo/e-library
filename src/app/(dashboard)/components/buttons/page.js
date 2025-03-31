@@ -16,7 +16,7 @@ import {
 import { ShoppingBag } from 'react-feather';
 
 // import widget/custom components
-import { HighlightCode }  from 'widgets';
+import { HighlightCode }  from '@/widgets';
 
 // import react code data file
 import {
@@ -34,7 +34,7 @@ import {
 	ActiveStateCode,
 	DisabledStateCode,
 	ToggleStatesCode
-} from 'data/code/ButtonsCode';
+} from '@/data/code/ButtonsCode';
 
 const Buttons = () => {
 	return (

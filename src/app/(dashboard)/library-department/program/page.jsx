@@ -101,10 +101,10 @@ const ViewProgram = () => {
     .filter((inst) => inst.program_name.toLowerCase().includes(search.toLowerCase()));
 
   const columns = [
-    { field: "program_id", headerName: "Id", width: 150 },
-    { field: "program_name", headerName: "Program Name", width: 150 },
-    { field: "program_code", headerName: "Program Code", width: 200 },
-    { field: "library_name", headerName: "Library Name", width: 200 },
+    // { field: "program_id", headerName: "Id", width: 150 },
+    { field: "program_name", headerName: "Program Name", width: 250 },
+    { field: "program_code", headerName: "Program Code", width: 250 },
+    { field: "library_name", headerName: "Library Name", width: 250 },
     {
       field: "action",
       headerName: "Action",

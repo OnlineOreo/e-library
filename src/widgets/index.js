@@ -4,6 +4,7 @@ import FormSelect from '@/widgets/form-select/FormSelect';
 import PricingCard from '@/widgets/cards/PricingCard';
 import FeatureLeftTopIcon from '@/widgets/features/FeatureLeftTopIcon';
 import StatRightTopIcon from '@/widgets/stats/StatRightTopIcon';
+import HighlightCode from './highlight-code/HighlightCode';
 
 export {
    HighlightCode,

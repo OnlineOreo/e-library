@@ -40,9 +40,9 @@ export default function AddItem() {
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
-  const token = getToken();
-
+  
   useEffect(() => {
+    const token = getToken();
     const fetchData = async () => {
       try {
         const [itemTypesResponse, packagesResponse] = await Promise.all([
@@ -137,6 +137,8 @@ export default function AddItem() {
     e.preventDefault();
     setErrors({});
 
+    const token = getToken();
+    
     if (!token) {
       toast.error("Authentication required!");
       router.push("/authentication/sign-in");

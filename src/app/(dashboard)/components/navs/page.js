@@ -4,7 +4,7 @@ import { Fragment } from 'react';
 import { Col, Row, Card, Nav, Tabs, Tab, Container } from 'react-bootstrap';
 
 // import widget/custom components
-import { HighlightCode }  from 'widgets';
+import { HighlightCode }  from '@/widgets';
 
 // import react code data file
 import {
@@ -23,7 +23,7 @@ import {
 	NavsTabsCode,
 	NavsTabsPillsCode,
 	VerticalPillsCode
-} from 'data/code/NavsCode';
+} from '@/data/code/NavsCode';
 
 const Navs = () => {
 	return (

@@ -8,14 +8,14 @@ const AuthButtons = ({ token, handleLogout, show, setShow }) => {
     <>
       {token ? (
         <>
-          <div>
+          <div className="mx-2">
             <Link href="/dashboard" className="mx-1 hover-underline">
               Dashboard
             </Link>
           </div>
           <div>
-            <a onClick={handleLogout} style={{ cursor:'pointer' }} className="mx-1 hover-underline">
-              Log Out
+            <a onClick={handleLogout} className="mx-1 hover-underline cursor-pointer" style={{ cursor: "pointer" }}>
+              Logout
             </a>
           </div>
         </>
@@ -23,8 +23,8 @@ const AuthButtons = ({ token, handleLogout, show, setShow }) => {
         <div>
           <div
             onClick={() => setShow(true)}
-            className="mx-1 hover-underline"
-            style={{ cursor:'pointer' }}
+            className="mx-1 hover-underline cursor-pointer"
+            style={{ cursor: "pointer" }}
           >
             Sign In
           </div>

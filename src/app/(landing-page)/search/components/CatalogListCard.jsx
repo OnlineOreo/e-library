@@ -17,7 +17,7 @@ const CatalogListCard = (props) => {
                         <div>{props.dc_date}</div>
                         <div className="mt-3 d-flex align-items-center">
                             <Button variant="success" className="me-2 py-2" style={{ width: "100px" }}>READ</Button>
-                            <Button variant="outline-secondary py-2 mx-2" style={{ width: "100px" }}>DETAILS</Button>
+                            <Button variant="outline-secondary py-2 mx-2" style={{ width: "100px" }} onClick={()=>{props.onShow(); props.onSelect()}}>DETAILS</Button>
                             <FaShareAlt size={20} className='me-3' />
                             <FaFileDownload size={20} className='me-3' />
                             <FaRegBookmark size={20} className='me-3' />

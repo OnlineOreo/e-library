@@ -9,7 +9,7 @@ import {
 } from 'react-bootstrap-icons';
 
 // import widget/custom components
-import { HighlightCode }  from 'widgets';
+import { HighlightCode }  from '@/widgets';
 
 // import react code data file
 import {
@@ -18,7 +18,7 @@ import {
 	AdditionalAlert,
 	AlertWithIcon,
 	DismissingAlert
-} from 'data/code/AlertsCode';
+} from '@/data/code/AlertsCode';
 
 const Alerts = () => {
 	const AlertDismissible = () => {

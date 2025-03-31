@@ -5,6 +5,10 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Spinner from 'react-bootstrap/Spinner';
 import Image from 'next/image';
+import { useSelector } from "react-redux";
+
+import { useDispatch } from "react-redux";
+import { setUser } from "@/redux/slices/userSlice";
 
 const SignIn = () => {
   const router = useRouter();
@@ -13,40 +17,113 @@ const SignIn = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isClient, setIsClient] = useState(false);
+  const instituteId = useSelector((state) => state.institute.instituteId);
+  const [userRole, setUserRole] = useState("STUDENT");
 
   // Ensure this code only runs on the client
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  const handleSignIn = async (e) => {  
+    const getToken = () => {
+    const cookieString = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("access_token="));
+
+    return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+  };
+
+  const handleSignIn = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    
+  
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/login`, {
+      // Step 1: Login Request
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/login`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+          credentials: "include",
+        }
+      );
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        throw new Error(data.detail || "Login failed");
+      }
+  
+      // Step 2: Store Token in Cookie
+      document.cookie = `access_token=${data.access_token}; path=/; max-age=${
+        60 * 100
+      }; Secure; SameSite=None;`;
+  
+      const token = getToken();
+      if (!token) {
+        throw new Error("Token retrieval failed");
+      }
+  
+      // Step 3: Fetch User Profile
+      const userResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/profile`,
+        {
+          method: "GET",
+          headers: { Authorization: token, "Content-Type": "application/json" },
+        }
+      );
+  
+      if (!userResponse.ok) {
+        throw new Error("Failed to fetch user profile");
+      }
+  
+      const userData = await userResponse.json(); 
+      const userId = userData.id;
+      setUserRole(userData.role)
+      dispatch(setUser(userData));
+  
+      // Step 4: Get Device & Browser Info
+      const userAgent = navigator.userAgent;
+      let browserName = "Unknown Browser";
+  
+      if (userAgent.includes("Chrome")) browserName = "Chrome";
+      else if (userAgent.includes("Firefox")) browserName = "Firefox";
+      else if (userAgent.includes("Safari")) browserName = "Safari";
+      else if (userAgent.includes("Edge")) browserName = "Edge";
+      else if (userAgent.includes("Opera")) browserName = "Opera";
+  
+      let deviceType = /Mobi|Android|iPhone|iPad/i.test(userAgent)
+        ? "Mobile"
+        : "Desktop";
+  
+      // Step 5: Fetch IP Address
+      const ipResponse = await fetch("https://api64.ipify.org?format=json");
+      const ipData = await ipResponse.json();
+      const ipAddress = ipData.ip;
+  
+      // Step 6: Store User Session Data
+      await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-session`, {
         method: "POST",
         headers: {
+          Authorization: `${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        credentials: "include",
+        body: JSON.stringify({
+          institute: instituteId, 
+          user: userId, 
+          browser_name: browserName,
+          device_type: deviceType,
+          ip_address: ipAddress,
+        }),
       });
-
-      const data = await response.json();
-
-      if (data.access_token) {
-          document.cookie = `access_token=${data.access_token}; path=/; max-age=${60 * 100};`;
-      }
-      
-      if (response.ok) {
-        router.push('../dashboard');
-      } else {
-        setError(data.detail);
-        setIsLoading(false);
-      }
+  
+      // Step 7: Redirect to Dashboard
+       userRole === "STUDENT" ? router.push("/") : router.push("/dashboard");
     } catch (err) {
-      console.error('Login error:', err);
-      setError('Login failed. Something went wrong!');
+      console.error("Login error:", err);
+      setError(err.message || "Login failed. Something went wrong!");
       setIsLoading(false);
     }
   };
@@ -76,13 +153,13 @@ const SignIn = () => {
               {/* Email */}
               <Form.Group className="mb-3" controlId="email">
                 <Form.Label>Email</Form.Label>
-                <Form.Control type="email" name="email" onChange={(e) => setEmail(e.target.value)} value={email} placeholder="Enter address here" required />
+                <Form.Control type="email" name="email" onChange={(e) => setEmail(e.target.value)} value={email} placeholder="Email Address" required />
               </Form.Group>
 
               {/* Password */}
               <Form.Group className="mb-3" controlId="password">
                 <Form.Label>Password</Form.Label>
-                <Form.Control type="password" value={password} onChange={(e) => setPassword(e.target.value)} name="password" placeholder="**************" required />
+                <Form.Control type="password" value={password} onChange={(e) => setPassword(e.target.value)} name="password" placeholder="Password" required />
               </Form.Group>
 
               {/* Checkbox */}
