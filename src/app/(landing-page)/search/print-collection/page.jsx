@@ -1,6 +1,6 @@
 "use client"
-import '../search.css'; 
-import { Container, Row, Col, Form, Card, Button, InputGroup, Nav } from 'react-bootstrap';
+import '../search.css';
+import { Container, Row, Col, Form, Card, Button, InputGroup, Nav, Modal } from 'react-bootstrap';
 import { PiBookOpenTextFill } from "react-icons/pi";
 import { BsFillGrid3X3GapFill } from "react-icons/bs";
 import { FaListUl } from "react-icons/fa6";
@@ -8,15 +8,18 @@ import { FaListUl } from "react-icons/fa6";
 import { FaSearch, FaShareAlt, FaRegBookmark, FaFileDownload } from "react-icons/fa";
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import CatalogGridCard from '../components/CatalogGridCard';
-import CatalogListCard from '../components/CatalogListCard';
-
 
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
-// import Navbar from '../Component/landing-page/Navbar';
+import CatalogGridCard from '../components/CatalogGridCard';
+import CatalogListCard from '../components/CatalogListCard';
+import CatalogDetailModal from '../components/CatalogDetailModal';
+import GridViewSkelton from '../components/GridViewSkelton';
+
+
+
 
 
 export default function printCollection() {
@@ -25,20 +28,27 @@ export default function printCollection() {
     const [gridView, setGridView] = useState(true);
     const [results, setResults] = useState([]);
 
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
+    const [selectCatalog, setSelectCatalog] = useState(null);
+    const [isLoading, setIsLoading] = useState(true)
+
     const getToken = () => {
         const cookieString = document.cookie
-          .split("; ")
-          .find((row) => row.startsWith("access_token="));
-    
-        return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
-      };
+            .split("; ")
+            .find((row) => row.startsWith("access_token="));
 
-      const loadPCollectionData = async () => {
+        return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+    };
+
+    const loadPCollectionData = async () => {
         const token = getToken();
-        if (!token) {
-          router.push("/authentication/sign-in");
-          return;
-        }
+        // if (!token) {
+        //   router.push("/authentication/sign-in");
+        //   return;
+        // }
         const solrUrl = `http://5.135.139.104:8983/solr/Print-collection/select?indent=true&q.op=OR&q=datacite_titles%3A%22indian%20history%22&rows=15`;
         try {
             const response = await axios.get(`${solrUrl}`);
@@ -48,13 +58,15 @@ export default function printCollection() {
             console.log(results);
         } catch (error) {
             console.error("Axios Error:", error);
+        } finally {
+            setIsLoading(false)
         }
-      };
-    
-      useEffect(() => {
+    };
+
+    useEffect(() => {
         loadPCollectionData();
-      }, [router])
-    
+    }, [router])
+
 
 
     return (
@@ -162,7 +174,7 @@ export default function printCollection() {
                     </Col>
 
                     {/* Main Content */}
-                    <Col md={9}>
+                    <Col md={9} className='pe-0 ps-4'>
                         <Row className="mb-3">
                             <Col md={6}>
                                 <p>Showing <strong>268</strong> results for <strong>data</strong></p>
@@ -173,47 +185,68 @@ export default function printCollection() {
                                         <Form.Control placeholder="Search..." />
                                         <Button variant="outline-secondary"><FaSearch /></Button>
                                     </InputGroup>
-                                    <BsFillGrid3X3GapFill size={40} className={`border p-1 curser_pointer rounded mx-2 ${gridView === true ? "active_result_view" : ""}`} onClick={()=>{setGridView(true)}}/>
-                                    <FaListUl size={40} className={`border p-1 curser_pointer rounded ${gridView === false ? "active_result_view" : ""}`} onClick={()=>setGridView(false)}/>
+                                    <BsFillGrid3X3GapFill size={40} className={`border p-1 curser_pointer rounded mx-2 ${gridView === true ? "active_result_view" : ""}`} onClick={() => { setGridView(true) }} />
+                                    <FaListUl size={40} className={`border p-1 curser_pointer rounded ${gridView === false ? "active_result_view" : ""}`} onClick={() => setGridView(false)} />
                                 </div>
                             </Col>
                         </Row>
-
-                        <Row id='grid-view' className={`grid-view ${gridView === false ? "d-none" : ""}`}>
-                            {results.map((item) => (
-                                <Col md={4} key={item.id} className="mb-4">
-                                    <CatalogGridCard
-                                    id = {item.id}
-                                    datacite_title = {item.datacite_titles}
-                                    datacite_creators = {item.datacite_creators}
-                                    dc_date= {item.dc_date}
-                                    publisher= {item.dc_publishers?.[0] || "Unkown Publisher"}
-                                    subject = {item.datacite_subject?.[0]}
-                                    description= {item.description}
-                                    uploader = {item.uploader}
-                                    url = {item.url}
-                                   /> 
-                                </Col>
-                            ))}
-                        </Row>
-                        <Row id='list-view' className={`list-view ${gridView === true ? "d-none" : ""}`}>
-                            {[...Array(6)].map((_, idx) => (
-                                <Col md={12} key={idx} className="mb-4">
-                                    <CatalogListCard
-                                    datacite_title = "Book Title"
-                                    datacite_creators = "Shristi Sharma"
-                                    dc_date= "2017"
-                                    publisher= "XYZ Publications"
-                                    isbn="123-456-789"
-                                    genre="Fiction"
-                                    language= "English"
-                                    />
-                                </Col>
-                            ))}
-                        </Row>
+                        {gridView ? (
+                            <Row id='grid-view' className={`grid-view `}>
+                                {isLoading ? (
+                                    Array.from({ length: 6 }).map((_, index) => (
+                                        <Col md={4} key={index} className='mb-4'>
+                                           <GridViewSkelton/>
+                                        </Col>
+                                    ))
+                                ) : (
+                                    results.map((item) => (
+                                        <Col md={4} key={item.id} className="mb-4">
+                                            <CatalogGridCard
+                                                id={item.id}
+                                                datacite_title={item.datacite_titles}
+                                                datacite_creators={item.datacite_creators}
+                                                dc_date={item.dc_date}
+                                                publisher={item.dc_publishers?.[0] || "Unkown Publisher"}
+                                                subject={item.datacite_subject?.[0]}
+                                                description={item.description}
+                                                uploader={item.uploader}
+                                                url={item.url}
+                                                onShow={handleShow}
+                                                onSelect={() => setSelectCatalog(item)}
+                                            />
+                                        </Col>
+                                    )))}
+                            </Row>
+                        ) : (
+                            <Row id='list-view' className={`list-view`}>
+                                {results.map((item) => (
+                                    <Col md={12} key={item.id} className="mb-4">
+                                        <CatalogListCard
+                                            id={item.id}
+                                            datacite_title={item.datacite_titles}
+                                            datacite_creators={item.datacite_creators}
+                                            dc_date={item.dc_date}
+                                            publisher={item.dc_publishers?.[0] || "Unkown Publisher"}
+                                            subject={item.datacite_subject?.[0]}
+                                            description={item.description}
+                                            uploader={item.uploader}
+                                            url={item.url}
+                                            onShow={handleShow}
+                                            onSelect={() => setSelectCatalog(item)}
+                                        />
+                                    </Col>
+                                ))}
+                            </Row>
+                        )}
                     </Col>
                 </Row>
             </Container>
+
+            <CatalogDetailModal
+                modalShow={show}
+                handleClose={handleClose}
+                {...selectCatalog}
+            />
         </>
     );
 }
