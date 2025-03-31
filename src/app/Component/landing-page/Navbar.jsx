@@ -101,7 +101,7 @@ const Navbar = () => {
                 <div className="logo logo-width-1 d-block d-lg-none">
                   <Link href="/">
                     <img
-                      src="http://demo.libvirtuua.com:8000/storage/landing_page/elib_transparent_logo.png"
+                      src={landingPageData?.instituteId?.configurations[0]?.logo}
                       alt="App Icon"
                     />
                   </Link>

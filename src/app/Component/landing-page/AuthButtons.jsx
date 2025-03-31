@@ -1,4 +1,3 @@
-// components/AuthButtons.js
 'use client'
 import React from "react";
 import Link from "next/link";
@@ -30,7 +29,7 @@ const AuthButtons = ({ token, handleLogout, show, setShow }) => {
           </div>
         </div>
       )}
-      <div className={`modal fade ${show ? "show d-block" : ""}`} tabIndex="-1">
+      <div className={`modal fade ${show ? "show d-block" : ""}`} tabIndex="-1" style={{ backgroundColor:'#33333378' }} >
         <div className="modal-dialog">
           <div
             className="modal-content"

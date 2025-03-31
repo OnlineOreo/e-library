@@ -60,14 +60,14 @@ const SignIn = () => {
         <Card className="shadow">
           {/* Card body */}
           <Card.Body className="p-6">
-            <div className='mb-4' style={{ width: "100%", height: "100px", display:"flex",justifyContent:"center" }}>
-              {/* <Image
+            {/* <div className='mb-4' style={{ width: "100%", height: "100px", display:"flex",justifyContent:"center" }}>
+               <Image
                 src=""
                 alt="Logo"
                 width={120}
                 height={100}
-              /> */}
-            </div>
+              /> *
+            </div> */}
             <div className="mb-4"></div>
 
             {/* Form */}
@@ -86,12 +86,12 @@ const SignIn = () => {
               </Form.Group>
 
               {/* Checkbox */}
-              <div className="d-lg-flex justify-content-between align-items-center mb-4">
+              {/* <div className="d-lg-flex justify-content-between align-items-center mb-4">
                 <Form.Check type="checkbox" id="rememberme">
                   <Form.Check.Input type="checkbox" />
                   <Form.Check.Label>Remember me</Form.Check.Label>
                 </Form.Check>
-              </div>
+              </div> */}
 
               {/* Button */}
               <div className="d-grid">

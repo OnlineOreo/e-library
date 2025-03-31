@@ -35,7 +35,7 @@ const QuickMenu = () => {
     
     const handleLogout = () => {
         document.cookie = `access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
-        router.push("/authentication/sign-in");
+        router.push("/");
     }
     
     const hasMounted = useMounted();
@@ -103,7 +103,7 @@ const QuickMenu = () => {
     const QuickMenuDesktop = () => {
         return (
         <ListGroup as="ul" bsPrefix='navbar-nav' className="navbar-right-wrap ms-auto d-flex nav-top-wrap">
-            <Dropdown as="li" className="stopevent">
+            {/* <Dropdown as="li" className="stopevent">
                 <Dropdown.Toggle as="a"
                     bsPrefix=' '
                     id="dropdownNotification"
@@ -133,7 +133,7 @@ const QuickMenu = () => {
                         </div>
                     </Dropdown.Item>
                 </Dropdown.Menu>
-            </Dropdown>
+            </Dropdown> */}
             <Dropdown as="li" className="ms-2">
                 <Dropdown.Toggle
                     as="a"
