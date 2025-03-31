@@ -294,7 +294,6 @@ const EditUser = () => {
     }));
   };
 
-  console.log(library);
 
   return (
     <Fragment>
@@ -303,7 +302,7 @@ const EditUser = () => {
         <Row>
           <Col lg={12} md={12} xs={12}>
             <div className="d-flex justify-content-between align-items-center">
-              <h3 className="mb-0 text-dark">Add User</h3>
+              <h3 className="mb-0 text-dark">Edit User</h3>
               <Link href="../" className="btn btn-white">
                 <FaMinusCircle /> Back
               </Link>
@@ -380,7 +379,7 @@ const EditUser = () => {
                     <option value="STUDENT">Student</option>
                   </Form.Select>
                 </Form.Group>
-                <Form.Group className="mb-3" controlId="formImage">
+                {/* <Form.Group className="mb-3" controlId="formImage">
                   <Form.Label>Upload Image</Form.Label>
                   <Form.Control
                     type="file"
@@ -388,7 +387,7 @@ const EditUser = () => {
                     accept="image/*"
                     onChange={handleInputChange}
                   />
-                </Form.Group>
+                </Form.Group> */}
 
                 <Form.Group className="mb-3" controlId="formGender">
                   <Form.Label>Gender</Form.Label>
