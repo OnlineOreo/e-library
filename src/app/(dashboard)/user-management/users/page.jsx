@@ -9,12 +9,14 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { useRouter } from "next/navigation";
 import { FaPlusCircle , FaEdit } from "react-icons/fa";
 import Swal from "sweetalert2";
+import { useSelector } from "react-redux";
 
 const Home = () => {
   const router = useRouter();
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [searchText, setSearchText] = useState("");
+  const instituteId = useSelector((state) => state.institute.instituteId);
 
   const getToken = () => {
     const cookieString = document.cookie
@@ -33,7 +35,7 @@ const Home = () => {
     }
   
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users`, {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users?institute_id=${instituteId}`, {
         headers: { Authorization: `${token}` },
         method:'GET'
       });
