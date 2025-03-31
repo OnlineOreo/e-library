@@ -14,9 +14,11 @@ const Navbar = () => {
   const [show, setShow] = useState(false);
   const router = useRouter();
   const landingPageData = useSelector((state) => state.landingPageDataSlice);
+  // const logo = useSelector((state) => state.landingPageDataSlice);
+  // console.log(landingPageData)
   const [token, setToken] = useState(null);
 
-  const handleFilterSelect = () => {};
+  
 
   const getToken = () => {
     const cookieString = document.cookie
@@ -38,8 +40,8 @@ const Navbar = () => {
     }
 
     const publisherUrls = {
-      "EBSCO Academic Collection": `https://research-ebsco-com.mriirs.libvirtuua.com:8833/login.aspx?authtype=ip,uid&custid=ns193200&groupid=main&profile=ehost&defaultdb=bsh&token=${token}`,
-      "Manupatra": `https://www-manupatrafast-in.mriirs.libvirtuua.com:8833/LoginSwitch/ipRedirect.aspx?token=${token}`
+      "EBSCO Academic Collection": `https://research-ebsco-com.mriirs.libvirtuua.com:8811/login.aspx?authtype=ip,uid&custid=ns193200&groupid=main&profile=ehost&defaultdb=bsh&token=${token}`,
+      "Manupatra": `https://www-manupatrafast-in.mriirs.libvirtuua.com:8811/LoginSwitch/ipRedirect.aspx?token=${token}`
     };
 
     if (publisherUrls[publisher.publisher_name]) {
@@ -82,13 +84,13 @@ const Navbar = () => {
                 <div className="logo logo-width-1">
                   <Link href="/">
                     <img
-                      src="https://demo.libvirtuua.com/storage/landing_page/elib_transparent_logo.png"
+                      src={landingPageData?.instituteId?.configurations[0]?.logo}
                       alt="App Icon"
                     />
                   </Link>
                 </div>
                 <div className="header-action-right" style={{ width: 600 }}>
-                  <SearchBar handleFilterSelect={handleFilterSelect} />
+                  <SearchBar />
                 </div>
               </div>
             </div>

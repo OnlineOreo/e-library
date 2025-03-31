@@ -16,3 +16,8 @@
     border-bottom: 2px solid rgb(107, 60, 151);
     padding-bottom: 0px;
 }
+.one_line_ellipses{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

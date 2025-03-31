@@ -39,7 +39,7 @@ const AddConfigurationMeta = () => {
         }
         try {
             const response = await axios.get(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/item-types`,
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/item-types`,   
                 { headers: { Authorization: `${token}` } }
             );
             if (response.status === 200 && Array.isArray(response.data)) {
@@ -52,7 +52,7 @@ const AddConfigurationMeta = () => {
 
     const getToken = () => {
         const cookieString = document.cookie
-            .split("; ")
+            .split("; ")    
             .find((row) => row.startsWith("access_token="));
         return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
     };

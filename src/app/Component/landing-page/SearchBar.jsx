@@ -1,8 +1,12 @@
-// components/SearchBar.js
 'use client'
-import React from "react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
-const SearchBar = ({ handleFilterSelect }) => {
+const SearchBar = () => {
+  const router = useRouter();
+  const [filterType, setFilterType] = useState("datacite_titles");
+  const [searchText, setSearchText] = useState("");
+
   const filterOptions = [
     { value: "datacite_titles", label: "Title" },
     { value: "datacite_creators", label: "Author" },
@@ -16,23 +20,31 @@ const SearchBar = ({ handleFilterSelect }) => {
     { value: "datacite_titles", label: "A-Z Filter" }
   ];
 
+  const handleFilterSelect = (event) => {
+    setFilterType(event.target.value);
+  };
+
+  const handleSearchChange = (event) => {
+    setSearchText(event.target.value);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    router.push(`/search/print-collection?filter_type=${filterType}&search_text=${encodeURIComponent(searchText)}`);
+  };
+
   return (
-    <div className="search-style-2" >
-      <form
-        action="http://demo.libvirtuua.com:8000/search"
-        id="search_form"
-        method="GET"
-        className="d-flex w-100"
-      >
+    <div className="search-style-2">
+      <form id="search_form" className="d-flex w-100" onSubmit={handleSubmit}>
         <select
           id="filterType"
           name="filter_type"
           className="select-active"
-          value={"datacite_titles"}
+          value={filterType}
           onChange={handleFilterSelect}
         >
-          {filterOptions.map((option) => (
-            <option key={option.value} value={option.value}>
+          {filterOptions.map((option, index) => (
+            <option key={index} value={option.value}>
               {option.label}
             </option>
           ))}
@@ -42,12 +54,13 @@ const SearchBar = ({ handleFilterSelect }) => {
           id="searchInput"
           placeholder="Search with/without any keywords"
           name="search_text"
-          defaultValue=""
+          value={searchText}
+          onChange={handleSearchChange}
         />
         <button type="submit">
           <img
             src="https://wp.alithemes.com/html/evara/evara-frontend/assets/imgs/theme/icons/search.png"
-            alt=""
+            alt="Search"
           />
         </button>
       </form>

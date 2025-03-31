@@ -2,19 +2,13 @@
 import { Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
-
-const publisherImages = [
-    "https://demo.libvirtuua.com/landingPageAsset/img/publisher8.webp",
-    "https://demo.libvirtuua.com/landingPageAsset/img/publisher7.webp",
-    "https://demo.libvirtuua.com/landingPageAsset/img/publisher6.jpg",
-    "https://demo.libvirtuua.com/landingPageAsset/img/publisher5.png",
-    "https://demo.libvirtuua.com/landingPageAsset/img/publisher4.jpg",
-    "https://demo.libvirtuua.com/landingPageAsset/img/publisher3.jpg",
-    "https://demo.libvirtuua.com/landingPageAsset/img/publisher2.jpg",
-    "https://demo.libvirtuua.com/landingPageAsset/img/publisher1.jpg"
-];
+import { useSelector } from 'react-redux';
 
 export default function Publisher() {
+    const landingPageData = useSelector((state) => state.landingPageDataSlice);
+
+    const publisherImages = landingPageData?.instituteId?.publishers?.map(publisher => publisher.image) || [];
+    
     return (
         <div className="publisher-wrapper container py-5 pt-5 section" id="publisher_section" style={{ display: "block" }}>
             <h2 className="mb-5 wow fadeInUp" id="publisher_heading" data-wow-delay="0.3s">
@@ -37,7 +31,7 @@ export default function Publisher() {
                     }}
                     className='p-3'
                 >
-                    {publisherImages.map((image, index) => (
+                    {publisherImages && publisherImages.map((image, index) => (
                         <SwiperSlide key={index}>
                             <div className="publish-card" style={{ width: "150px", height: "150px", boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)", borderRadius: "10px", backgroundColor: "#fff" }}>
                                 <div className="card-header" style={{ width: "100%", height: "100%" }}>

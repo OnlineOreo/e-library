@@ -4,8 +4,11 @@ import { MdEmail } from "react-icons/md";
 import { FaPhoneAlt , FaTwitter , FaFacebookF  } from "react-icons/fa";
 import { FaLinkedinIn } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa6";
+import { useSelector } from "react-redux";
 
 export default function Footer() {
+    const landingPageData = useSelector((state) => state.landingPageDataSlice);
+    const footer = landingPageData?.instituteId?.footers[0]
     return (
         <>
             <div
@@ -17,12 +20,12 @@ export default function Footer() {
                         <div className="col-md-6 col-lg-4">
                             <h4 className="text-white">Developed By</h4>
                             <img
-                                src="https://demo.libvirtuua.com/storage/landing_page/elib_transparent_logo.png"
+                                src={landingPageData?.instituteId?.configurations[0]?.logo}
                                 alt=""
                                 style={{ width: 100, height: 100 }}
                             />
                             <p>Copyright 2016-25</p>
-                            <p>BestBook Buddies Technologies Pvt. Ltd.</p>
+                            <p>{footer?.address}</p>
                             <div className="d-flex gap-3">
                                 <a href="" style={{ fontSize: "1em", textDecoration: "underline" }}>
                                     Term of use
@@ -50,16 +53,17 @@ export default function Footer() {
                                 Submit Feedback
                             </a>
                             <div className="d-flex pt-2">
-                                <a className="btn btn-outline-light btn-social" href="#">
+                                <a className="btn btn-outline-light btn-social" href={footer?.x_url}>
                                 <FaTwitter />
                                 </a>
-                                <a className="btn btn-outline-light btn-social" href="#">
+                                <a className="btn btn-outline-light btn-social" href={footer?.fb_url}>
                                 <FaFacebookF />
                                 </a>
-                                <a className="btn btn-outline-light btn-social" href="#">
+                                <a className="btn btn-outline-light btn-social" href={footer?.insta_url}>
                                 <FaInstagram />
                                 </a>
-                                <a className="btn btn-outline-light btn-social" href="#">
+                                <a className="btn btn-outline-light btn-social" href={footer?.li_url
+                                }>
                                 <FaLinkedinIn />
                                 </a>
                             </div>
@@ -68,15 +72,15 @@ export default function Footer() {
                             <h4 className="text-white mb-4">Address</h4>
                             <p className="text-truncate">
                                 <FaMapMarkerAlt />
-                                Corp. Office, H - 17, LGF, Green Park Ext. , Delhi 110017, INDIA
+                                {footer?.address}
                             </p>
                             <p className="text-truncate">
                                 <FaPhoneAlt />
-                                +011 49849620
+                                {footer?.phone}
                             </p>
                             <p className="text-truncate">
                                 <MdEmail />
-                                info@bestbookbuddies.com
+                                {footer?.email}
                             </p>
                             <div className="mt-5">Visits : 3939</div>
                         </div>

@@ -23,6 +23,7 @@ export default function printCollection() {
     const router = useRouter();
     const instituteId = useSelector((state) => state.institute.instituteId);
     const [gridView, setGridView] = useState(true);
+    const [results, setResults] = useState([]);
 
     const getToken = () => {
         const cookieString = document.cookie
@@ -38,18 +39,15 @@ export default function printCollection() {
           router.push("/authentication/sign-in");
           return;
         }
-    
+        const solrUrl = `http://5.135.139.104:8983/solr/Print-collection/select?indent=true&q.op=OR&q=datacite_titles%3A%22indian%20history%22&rows=15`;
         try {
-          const response = await axios.get(
-            `http://5.135.139.104:8983/solr/Print-collection/select?indent=true&q.op=OR&q=datacite_titles%3A%22indian%20history%22&rows=15`,
-            { headers: { Authorization: `${token}` } }
-          );
-    
-          if (response.status === 200) {
-            console.log(response.data);
-          }
+            const response = await axios.get(`${solrUrl}`);
+            const solrJson = response.data.response
+            const results = solrJson.docs
+            setResults(results);
+            console.log(results);
         } catch (error) {
-          console.error("Axios Error:", error);
+            console.error("Axios Error:", error);
         }
       };
     
@@ -182,16 +180,18 @@ export default function printCollection() {
                         </Row>
 
                         <Row id='grid-view' className={`grid-view ${gridView === false ? "d-none" : ""}`}>
-                            {[...Array(6)].map((_, idx) => (
-                                <Col md={4} key={idx} className="mb-4">
+                            {results.map((item) => (
+                                <Col md={4} key={item.id} className="mb-4">
                                     <CatalogGridCard
-                                    datacite_title = "Book Title"
-                                    datacite_creators = "Shristi Sharma"
-                                    dc_date= "2017"
-                                    publisher= "XYZ Publications"
-                                    isbn="123-456-789"
-                                    genre="Fiction"
-                                    language= "English"
+                                    id = {item.id}
+                                    datacite_title = {item.datacite_titles}
+                                    datacite_creators = {item.datacite_creators}
+                                    dc_date= {item.dc_date}
+                                    publisher= {item.dc_publishers?.[0] || "Unkown Publisher"}
+                                    subject = {item.datacite_subject?.[0]}
+                                    description= {item.description}
+                                    uploader = {item.uploader}
+                                    url = {item.url}
                                    /> 
                                 </Col>
                             ))}
