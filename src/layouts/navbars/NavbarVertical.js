@@ -20,9 +20,10 @@ import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
 
 // import routes file
-import { DashboardMenu } from '@/routes/DashboardRoutes';
+import useDashboardMenu from '@/routes/DashboardRoutes';
 
 const NavbarVertical = (props) => {
+	const DashboardMenu = useDashboardMenu();
 	const location = usePathname ()
 	const CustomToggle = ({ children, eventKey, icon }) => {
 		const { activeEventKey } = useContext(AccordionContext);
