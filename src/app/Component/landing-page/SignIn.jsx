@@ -59,11 +59,11 @@ const SignIn = () => {
 
       document.cookie = `access_token=${data.access_token}; path=/; max-age=${60 * 100}; SameSite=Lax;`;
 
-      console.log("token",data.access_token);
+      // console.log("token",data.access_token);
       
       
       const token = getToken();
-      console.log("token_retrive",token);
+      // console.log("token_retrive",token);
       if (!token) {
         throw new Error("Token retrieval failed");
       }
@@ -86,7 +86,7 @@ const SignIn = () => {
       setUserRole(userData.role)
       dispatch(setUser(userData));
 
-      console.log("user role",userData.role);
+      // console.log("user role",userData.role);
       
   
       // Step 4: Get Device & Browser Info
@@ -126,8 +126,9 @@ const SignIn = () => {
       });
   
       // Step 7: Redirect to Dashboard
-      //  userRole == "STUDENT" ? router.push("/") : router.push("/dashboard");
-      router.push("/dashboard");
+      router.push(userData.role === "STUDENT" ? "/" : "/dashboard");
+
+      // router.push("/dashboard");
     } catch (err) {
       console.error("Login error:", err);
       setError(err.message || "Login failed. Something went wrong!");
@@ -141,9 +142,9 @@ const SignIn = () => {
     <Row className="align-items-center justify-content-center g-0">
       <Col xxl={12} lg={12} md={12} xs={12} className="py-8 py-xl-0">
         {/* Card */}
-        <Card className="shadow">
+        <Card className="shadow p-4">
           {/* Card body */}
-          <Card.Title>SignIN</Card.Title>
+          <Card.Title className="ms-3">SignIN{userRole}</Card.Title>
           <Card.Body className="p-6">
             {/* <div className='mb-4' style={{ width: "100%", height: "100px", display:"flex",justifyContent:"center" }}>
                <Image
@@ -165,7 +166,7 @@ const SignIn = () => {
               </Form.Group>
 
               {/* Password */}
-              <Form.Group className="mb-3" controlId="password">
+              <Form.Group className="mb-5" controlId="password">
                 <Form.Label>Password</Form.Label>
                 <Form.Control type="password" value={password} onChange={(e) => setPassword(e.target.value)} name="password" placeholder="Password" required />
               </Form.Group>
