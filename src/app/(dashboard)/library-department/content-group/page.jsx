@@ -97,10 +97,10 @@ const ViewContentGroup = () => {
   );
 
   const columns = [
-    { field: "cg_id", headerName: "ID", width: 150 },
-    { field: "content_name", headerName: "Content Name", width: 150 },
-    { field: "created_at", headerName: "Created At", width: 200 },
-    { field: "updated_at", headerName: "Updated At", width: 150 },
+    // { field: "cg_id", headerName: "ID", width: 150 },
+    { field: "content_name", headerName: "Content Name", width: 250 },
+    { field: "created_at", headerName: "Created At", width: 250 },
+    { field: "updated_at", headerName: "Updated At", width: 250 },
     {
       field: "action",
       headerName: "Action",

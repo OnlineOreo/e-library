@@ -170,12 +170,12 @@ export default function Item() {
             <div className="d-flex justify-content-between align-items-center">
               <h3 className="mb-0 text-dark">Items</h3>
               <div>
-                <button
+                {/* <button
                   onClick={handleDeleteAll}
                   className="btn btn-danger me-2"
                 >
                   <FaTrashAlt /> Delete All
-                </button>
+                </button> */}
                 <Link href="./item/add" className="btn btn-white">
                   <FaPlusCircle /> Add Item
                 </Link>
