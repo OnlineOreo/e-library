@@ -28,10 +28,10 @@ export const DashboardMenu = [
 			{ id: uuid(), link: '/library-department/institute', name: 'Institutes' },
 			{ id: uuid(), link: '/library-department/library', name: 'Library' },
 			{ id: uuid(), link: '/library-department/department', name: 'Department' },
-			{ id: uuid(), link: '/library-department/user-type', name: 'User type' },
+			{ id: uuid(), link: '/library-department/user-type', name: 'User Type' },
 			{ id: uuid(), link: '/library-department/content-group', name: 'Content Group' },
 			{ id: uuid(), link: '/library-department/program', name: 'Program' },
-			{ id: uuid(), link: '/library-department/service-group', name: 'servicegroup' },
+			{ id: uuid(), link: '/library-department/service-group', name: 'Service Group' },
 			
 		]
 	},

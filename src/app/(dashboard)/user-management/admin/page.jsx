@@ -18,6 +18,8 @@ const Home = () => {
   const [searchText, setSearchText] = useState("");
   const instituteId = useSelector((state) => state.institute.instituteId);
 
+  // console.log(instituteId)
+
   const getToken = () => {
     const cookieString = document.cookie
       .split("; ")
@@ -26,7 +28,7 @@ const Home = () => {
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
-  const loadUser = async () => {
+  const loadUser = async (instituteId) => {
     const token = getToken();
   
     if (!token) {
@@ -56,8 +58,10 @@ const Home = () => {
   };
 
   useEffect(() => {
-    loadUser();
-  }, []);
+    if (instituteId) {
+      loadUser(instituteId);
+    }
+  }, [instituteId]);
 
   const handleSearch = (event) => {
     const searchValue = event.target.value;
@@ -127,7 +131,7 @@ const Home = () => {
       width: 150,
       renderCell: (params) => (
         <>
-        <button onClick={() => handleEdit(params)} className="btn btn-primary mx-2 btn-sm"><FaEdit /></button>
+        {/* <button onClick={() => handleEdit(params)} className="btn btn-primary mx-2 btn-sm"><FaEdit /></button> */}
         <button onClick={() => handleDelete(params)} className="btn btn-danger btn-sm"><RiDeleteBin6Line /></button>
         </>
       ),
