@@ -4,7 +4,7 @@ import { Form, Card, Row, Col, Container, Button, Spinner } from 'react-bootstra
 import Link from 'next/link';
 import Image from "next/image";
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios from 'axios';0
 import Swal from "sweetalert2";
 
 const Profile = () => {
@@ -39,12 +39,12 @@ const Profile = () => {
     const validateForm = () => {
         let newErrors = {};
 
-        if (!authUser.name.trim()) newErrors.name = "Name is required";
-        if (!authUser.email.trim()) newErrors.email = "Email is required";
-        if (!authUser.phone_number.trim()) newErrors.phone_number = "Phone number is required";
-        if (!authUser.address.trim()) newErrors.address = "Address is required";
-        if (!authUser.gender.trim()) newErrors.gender = "Gender is required";
-        if (!authUser.image) newErrors.image = "Image is required";
+        // if (!authUser.name.trim()) newErrors.name = "Name is required";
+        // if (!authUser.email.trim()) newErrors.email = "Email is required";
+        // if (!authUser.phone_number.trim()) newErrors.phone_number = "Phone number is required";
+        // if (!authUser.address.trim()) newErrors.address = "Address is required";
+        // if (!authUser.gender.trim()) newErrors.gender = "Gender is required";
+        // if (!authUser.image) newErrors.image = "Image is required";
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0; // Returns true if no errors
@@ -121,6 +121,7 @@ const Profile = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        console.log('chala bhai')
 
         if (!validateForm()) {
             return;
@@ -140,9 +141,12 @@ const Profile = () => {
                     authUserData.append(key, value);
                 }
             } else if (key === "groups" || key === "user_permissions") {
-                if (value && value.trim() !== "") {
-                    authUserData.append(key, value);
-                }
+                console.log(typeof value)
+                return
+                // if (value && typeof value === "string" && value.trim() !== "") {
+                //     authUserData.append(key, value);
+                // }
+                
             } else {
                 authUserData.append(key, value);
             }
@@ -161,12 +165,16 @@ const Profile = () => {
             );
 
             if (response) {
+                setIsLoading(true);
                 Swal.fire({
                     title: "Success!",
                     text: "User Profile Updated!",
                     icon: "success",
                     confirmButtonText: "OK",
                 });
+                loadAuthUser();
+                setIsLoading(false)
+                // setTimeout(() => router.push('../profile/view'), 2000);
             }
         } catch (error) {
             setIsLoading(false);
