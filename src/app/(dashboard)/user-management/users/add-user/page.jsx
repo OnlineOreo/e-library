@@ -29,7 +29,7 @@ const Home = () => {
     name: "",
     email: "",
     phone_number: "",
-    role: "",
+    role: "STUDENT",
     address:'',
     gender: "",
     user_u_id: "",
@@ -346,6 +346,7 @@ const Home = () => {
                   <Form.Label>Role</Form.Label>
                   <Form.Select
                     name="role"
+                    disabled
                     value={formData.role}
                     onChange={handleInputChange}
                     required
