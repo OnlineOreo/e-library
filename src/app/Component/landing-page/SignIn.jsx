@@ -19,6 +19,7 @@ const SignIn = () => {
   const [isClient, setIsClient] = useState(false);
   const instituteId = useSelector((state) => state.institute.instituteId);
   const [userRole, setUserRole] = useState("STUDENT");
+  const dispatch = useDispatch();
 
   // Ensure this code only runs on the client
   useEffect(() => {
@@ -82,6 +83,9 @@ const SignIn = () => {
       const userId = userData.id;
       setUserRole(userData.role)
       dispatch(setUser(userData));
+
+      console.log("user role",userData.role);
+      
   
       // Step 4: Get Device & Browser Info
       const userAgent = navigator.userAgent;
@@ -120,7 +124,8 @@ const SignIn = () => {
       });
   
       // Step 7: Redirect to Dashboard
-       userRole === "STUDENT" ? router.push("/") : router.push("/dashboard");
+      //  userRole == "STUDENT" ? router.push("/") : router.push("/dashboard");
+      router.push("/dashboard");
     } catch (err) {
       console.error("Login error:", err);
       setError(err.message || "Login failed. Something went wrong!");
@@ -136,6 +141,7 @@ const SignIn = () => {
         {/* Card */}
         <Card className="shadow">
           {/* Card body */}
+          <Card.Title>SignIN</Card.Title>
           <Card.Body className="p-6">
             {/* <div className='mb-4' style={{ width: "100%", height: "100px", display:"flex",justifyContent:"center" }}>
                <Image
