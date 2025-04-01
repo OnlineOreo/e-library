@@ -46,26 +46,28 @@ export default function Home() {
         }}
       >
         <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Loading Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tenetur eaque consequatur repellat voluptas, similique maiores sequi quos facere aliquid reprehenderit nesciunt nobis? Corporis consequuntur eveniet animi, autem, ipsam facere mollitia reprehenderit ducimus commodi deleniti ratione impedit ad, molestias deserunt? Voluptate, cumque molestias sed, omnis neque magni doloribus, porro quod recusandae dignissimos similique quibusdam nobis enim? Voluptatibus sunt, ducimus molestiae nesciunt incidunt ab optio ullam corrupti maxime similique repellat accusamus dolor nulla facere, eveniet quas dolore sed. Eum ex, nihil soluta vero reiciendis dicta iure similique perspiciatis impedit id non, quibusdam ullam. Consequuntur, officiis? Cupiditate sit laboriosam quia nemo possimus nihil quaerat ea molestiae doloribus voluptatem deleniti eius voluptatibus iure pariatur unde molestias odio, culpa, sapiente a. Ipsa mollitia ex natus adipisci, maiores doloribus accusamus non sint consectetur porro quas ipsam tempora quia, nulla dolor saepe nesciunt unde ab, repudiandae earum similique quidem assumenda. Voluptates at omnis, deserunt aperiam, adipisci nostrum temporibus fugiat optio aliquid repellat illum, minima ipsa. Dolorum, nostrum aut temporibus ratione earum totam unde recusandae ullam impedit mollitia voluptatum molestias, nemo non repudiandae molestiae corporis veritatis? Aliquid tempore modi nihil, sint libero accusantium atque voluptates ipsam, hic exercitationem iste, consequuntur reprehenderit illum rerum eos aperiam tenetur nulla officiis....</span>
+          <span className="visually-hidden"></span>
         </div>
       </div>
     );
   }
+
+  const configData = landingPageData?.instituteId?.configurations[0]
 
 
   return (
     <div className={styles.page}>
       <div id="main_widget_section">
         <Navbar/>
-        <Banner bannerData={landingPageData?.instituteId?.configurations[0]} />
-        <Publisher /> 
-        <NoticeBoard />
+        <Banner bannerData={configData} />
+        <Publisher  /> 
+        <NoticeBoard bannerData={configData} />
         {/* <AboutUs /> */}
-        <TrendingBook />
+        <TrendingBook bannerData={configData} />
         <StaffPick />
         <Headline/>
-        <Download />
-        <TopUser />
+        <Download bannerData={configData} />
+        <TopUser bannerData={configData} />
         <Footer />
       </div>
     </div>

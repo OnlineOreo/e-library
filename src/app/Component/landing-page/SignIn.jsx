@@ -145,7 +145,7 @@ const SignIn = () => {
         <Card className="shadow p-4">
           {/* Card body */}
           {/* <Card.Title>SignIN</Card.Title> */}
-          <Card.Body className="p-6">
+          <Card.Body className="p-3">
             {/* <div className='mb-4' style={{ width: "100%", height: "100px", display:"flex",justifyContent:"center" }}>
                <Image
                 src=""

@@ -24,7 +24,7 @@ export default function NoticeBoard() {
     const notices = landingPageData?.instituteId?.notices
 
     return (
-        <div className="container-xxl py-5 section" id="notice_section">
+        <div className="container-xxl py-5 section" id="notice_section" >
             <div className="container py-5 px-lg-5">
                 <div className="text-center wow fadeInUp" data-wow-delay="0.1s">
                     <h2 className="mb-5" id="notice_heading">Notice Board</h2>

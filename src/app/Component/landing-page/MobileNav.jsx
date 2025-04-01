@@ -1,87 +1,101 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { FaAngleDown } from "react-icons/fa6";
+import { useSelector } from "react-redux";
 
 const MobileNav = ({ menuOpen, toggleMenu }) => {
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const [token, setToken] = useState(null);
+  
+  useEffect(() => {
+    const getToken = () => {
+      const cookieString = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("access_token="));
+        return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+      };
+    setToken(getToken());
+  }, []);
 
   const toggleDropdown = (menu) => {
     setActiveDropdown(activeDropdown === menu ? null : menu);
   };
 
+  const landingPageData = useSelector((state) => state.landingPageDataSlice);
+  
+  const bannerData = landingPageData?.instituteId?.configurations[0];
+  const publisherUrls = {
+    "EBSCO Academic Collection": `https://research-ebsco-com.mriirs.libvirtuua.com:8811/login.aspx?authtype=ip,uid&custid=ns193200&groupid=main&profile=ehost&defaultdb=bsh&token=${token}`,
+    Manupatra: `https://www-manupatrafast-in.mriirs.libvirtuua.com:8811/LoginSwitch/ipRedirect.aspx?token=${token}`,
+  };
+  
+  const sections = [
+    { key: "publishers", label: "Publishers", data: landingPageData?.instituteId?.publishers || [], field: "publisher_name" },
+    { key: "categories", label: "Categories", data: landingPageData?.instituteId?.categories || [], field: "category_name" },
+    { key: "media", label: "Media", data: landingPageData?.instituteId?.medias || [], field: "media_name" },
+    { key: "collections", label: "Collections", data: landingPageData?.instituteId?.collection || [], field: "collection_name" },
+  ];
+
   return (
     <div className={`offcanvas offcanvas-start ${menuOpen ? "show" : ""}`} tabIndex="-1">
-      <div className="offcanvas-header bg-primary text-white">
-        <h5 className="offcanvas-title">Menu</h5>
-        <button type="button" className="btn-close btn-close-white" onClick={toggleMenu}></button>
+      <div className="offcanvas-header text-white" style={{backgroundColor: bannerData?.color1}}>
+        <h5 className="offcanvas-title text-dark">LibVirtuUa</h5>
+        <button type="button" className="btn-close btn-close-dark" onClick={toggleMenu}></button>
       </div>
       <div className="offcanvas-body p-3">
         <ul className="list-unstyled">
           <li>
-            <Link href="/" className="nav-link px-3 py-2 d-block text-dark fw-semibold">
-              Home
+            <Link href="/" className="nav-link px-3 py-2 d-block text-dark fw-semibold text-decoration-underline">
+              Home 
             </Link>
           </li>
           <li>
             <button 
-              className="btn w-100 text-start px-3 py-2 d-block fw-semibold text-dark" 
+              className="btn w-100 text-start px-3 py-2 d-block fw-semibold text-dark text-decoration-underline" 
               onClick={() => toggleDropdown("resources")}
               style={{ background: "none", border: "none" }}
             >
-              eResources
+              eResources <FaAngleDown className="ms-1" />
             </button>
-            {activeDropdown === "resources" && (
+            {/* {activeDropdown === "resources" && (
               <ul className="list-unstyled ms-3">
                 <li>
                   <Link href="/check-auth" className="nav-link px-3 py-1 d-block text-muted">
                     Academic Journals
                   </Link>
                 </li>
-                <li>
-                  <Link href="/check-auth" className="nav-link px-3 py-1 d-block text-muted">
-                    Science Journals
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/mphil-theses" className="nav-link px-3 py-1 d-block text-muted">
-                    MPhil Theses
-                  </Link>
-                </li>
               </ul>
-            )}
+            )} */}
           </li>
-          <li>
-            <Link href="/about-library" className="nav-link px-3 py-2 d-block text-dark fw-semibold">
-              About Library
-            </Link>
-          </li>
-          <li>
-            <button 
-              className="btn w-100 text-start px-3 py-2 d-block fw-semibold text-dark" 
-              onClick={() => toggleDropdown("account")}
-              style={{ background: "none", border: "none" }}
-            >
-              Account
-            </button>
-            {activeDropdown === "account" && (
-              <ul className="list-unstyled ms-3">
-                <li>
-                  <Link href="/profile" className="nav-link px-3 py-1 d-block text-muted">
-                    Profile
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/user_saved_articles" className="nav-link px-3 py-1 d-block text-muted">
-                    Saved Articles
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/search_history" className="nav-link px-3 py-1 d-block text-muted">
-                    Search History
-                  </Link>
-                </li>
-              </ul>
-            )}
-          </li>
+          
+          {sections.map(({ key, label, data, field }) => (
+            data.length > 0 && (
+              <li key={key}>
+                <button 
+                  className="btn w-100 text-start px-3 py-2 d-block fw-semibold text-dark text-decoration-underline" 
+                  onClick={() => toggleDropdown(key)}
+                  style={{ background: "none", border: "none" }}
+                >
+                  {label} <FaAngleDown className="ms-1" /> 
+                </button>
+                {activeDropdown === key && (
+                  <ul className="list-unstyled ms-3">
+                    {data.map((item, index) => (
+                      <li key={index} className="px-3 py-1 text-muted">
+                        {publisherUrls[item[field]] ? (
+                          <a href={publisherUrls[item[field]]} target="_blank" rel="noopener noreferrer" className="text-muted">
+                            {item[field]}
+                          </a>
+                        ) : (
+                          item[field]
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            )
+          ))}
         </ul>
       </div>
     </div>

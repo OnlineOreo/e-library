@@ -77,6 +77,11 @@ const Navbar = () => {
       title: "Media",
       items: landingPageData?.instituteId?.medias || [],
     },
+    // {
+    //   type: "dropdown",
+    //   title: "Collection",
+    //   items: landingPageData?.instituteId?.collections || [],
+    // },
   ];
 
   const [isSticky, setIsSticky] = useState(false);
@@ -185,7 +190,7 @@ const Navbar = () => {
                       />
                       <div className="header-action-icon-2 d-block d-lg-none">
                         <div
-                          className="burger-icon burger-icon-white"
+                          className="burger-icon burger-icon-white ms-2"
                           onClick={toggleMenu}
                         >
                           <span className="burger-icon-top" />
@@ -201,7 +206,7 @@ const Navbar = () => {
           </div>
         </header>
       </div>
-      {/* <MobileNav menuOpen={menuOpen} toggleMenu={toggleMenu} /> */}
+      <MobileNav menuOpen={menuOpen} toggleMenu={toggleMenu} />
     </>
   );
 };

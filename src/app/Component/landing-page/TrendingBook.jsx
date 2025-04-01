@@ -10,14 +10,14 @@ import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 
 
-export default function TrendingBook() {
+export default function TrendingBook({bannerData}) {
     const landingPageData = useSelector((state) => state.landingPageDataSlice);
     const books = landingPageData?.instituteId?.trending_books?.map(trending_book => trending_book.book_image) || [];
     return (
         <div
             className="tranding-wrapper mt-5 container-xxl section py-5"
             id="tranding_books_section"
-            style={{ backgroundColor: "#7dd3d9" }}
+            style={{backgroundColor: bannerData?.color1}}
         >
             <h2
                 className="mb-5 text-center wow fadeInUp"
