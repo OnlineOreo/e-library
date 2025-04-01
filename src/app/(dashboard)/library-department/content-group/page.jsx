@@ -98,13 +98,13 @@ const ViewContentGroup = () => {
 
   const columns = [
     // { field: "cg_id", headerName: "ID", width: 150 },
-    { field: "content_name", headerName: "Content Name", width: 250 },
-    { field: "created_at", headerName: "Created At", width: 250 },
-    { field: "updated_at", headerName: "Updated At", width: 250 },
+    { field: "content_name", headerName: "Content Name", flex: 2},
+    { field: "created_at", headerName: "Created At", flex: 2},
+    { field: "updated_at", headerName: "Updated At", flex: 2},
     {
       field: "action",
       headerName: "Action",
-      width: 150,
+      flex: 2,
       renderCell: (params) => (
         <div>
           <button onClick={() => handleEdit(params)} className="btn btn-primary btn-sm"><FaEdit /></button>

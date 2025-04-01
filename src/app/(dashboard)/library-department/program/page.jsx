@@ -102,13 +102,13 @@ const ViewProgram = () => {
 
   const columns = [
     // { field: "program_id", headerName: "Id", width: 150 },
-    { field: "program_name", headerName: "Program Name", width: 250 },
-    { field: "program_code", headerName: "Program Code", width: 250 },
-    { field: "library_name", headerName: "Library Name", width: 250 },
+    { field: "program_name", headerName: "Program Name", flex: 2 },
+    { field: "program_code", headerName: "Program Code", flex: 2 },
+    { field: "library_name", headerName: "Library Name", flex: 2 },
     {
       field: "action",
       headerName: "Action",
-      width: 150,
+      flex: 2,
       renderCell: (params) => (
         <div>
           <button onClick={() => handleEdit(params)} className="btn btn-primary btn-sm">

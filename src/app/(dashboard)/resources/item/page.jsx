@@ -127,15 +127,15 @@ export default function Item() {
   };
 
   const columns = [
-    { field: "title", headerName: "Title", width: 180 },
-    { field: "author", headerName: "Author", width: 180 },
-    { field: "place", headerName: "Place", width: 180 },
-    { field: "year", headerName: "Year", width: 100 },
-    { field: "ISBN", headerName: "ISBN", width: 100 },
+    { field: "title", headerName: "Title", flex: 2 },
+    { field: "author", headerName: "Author", flex: 2 },
+    { field: "place", headerName: "Place", flex: 2 },
+    { field: "year", headerName: "Year", flex: 2 },
+    { field: "ISBN", headerName: "ISBN", flex: 2 },
     {
       field: "action",
       headerName: "Action",
-      width: 200,
+      flex: 2,
       renderCell: (params) => (
         <div>
           <button

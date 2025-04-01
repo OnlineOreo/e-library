@@ -100,13 +100,13 @@ const ViewItemTypes = () => {
   };
 
   const columns = [
-    { field: "package_name", headerName: "Package Name", width: 250 },
-    { field: "created_at", headerName: "Created At", width: 200 },
-    { field: "publisher", headerName: "Publisher", width: 200 },
+    { field: "package_name", headerName: "Package Name", flex: 2 },
+    { field: "created_at", headerName: "Created At", flex: 2 },
+    { field: "publisher", headerName: "Publisher", flex: 2 },
     {
       field: "action",
       headerName: "Action",
-      width: 200,
+      flex: 2,
       renderCell: (params) => (
         <div>
           <button onClick={() => handleShow(params)} className="btn btn-secondary btn-sm">

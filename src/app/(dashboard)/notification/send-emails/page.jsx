@@ -122,13 +122,13 @@ const sendEmails = () => {
         </div>
       ),
     },
-    { field: "media_name", headerName: "Media Name", width: 300 },
-    { field: "description", headerName: "Description", width: 350 },
-    { field: "created_at", headerName: "Created At", width: 200 },
+    { field: "media_name", headerName: "Media Name", flex: 2 },
+    { field: "description", headerName: "Description", flex: 2 },
+    { field: "created_at", headerName: "Created At", flex: 2 },
     {
       field: "action",
       headerName: "Action",
-      width: 200,
+      flex: 2,
       renderCell: (params) => (
         <div>
           <button

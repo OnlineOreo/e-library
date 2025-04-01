@@ -102,13 +102,13 @@ const ViewUserType = () => {
 
   const columns = [
     // { field: "user_type_id", headerName: "Id", width: 150 },
-    { field: "type_name", headerName: "Name", width: 250 },
-    { field: "created_at", headerName: "Created At", width: 250 },
-    { field: "updated_at", headerName: "Updated At", width: 250 },
+    { field: "type_name", headerName: "Name", flex: 2 },
+    { field: "created_at", headerName: "Created At", flex: 2 },
+    { field: "updated_at", headerName: "Updated At", flex: 2 },
     {
       field: "action",
       headerName: "Action",
-      width: 150,
+      flex: 2,
       renderCell: (params) => (
         <div>
           <button

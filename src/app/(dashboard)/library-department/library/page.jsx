@@ -93,16 +93,16 @@ const ViewLibrary = () => {
   const handleShow = (params) => router.push(`/library-department/library/show/${params.id}`);
 
   const columns = [
-    { field: "library_id", headerName: "ID", width: 150 },
-    { field: "library_name", headerName: "Library Name", width: 150 },
-    { field: "domain", headerName: "Domain", width: 200 },
-    { field: "phone", headerName: "Phone", width: 150 },
-    // { field: "address", headerName: "Address", width: 150 },
-    { field: "email", headerName: "Email", width: 230 },
+    { field: "library_id", headerName: "ID", flex: 2 },
+    { field: "library_name", headerName: "Library Name", flex: 1 },
+    { field: "domain", headerName: "Domain", flex: 1 },
+    { field: "phone", headerName: "Phone", flex: 1 },
+    // { field: "address", headerName: "Address", flex: 150 },
+    { field: "email", headerName: "Email", flex: 1 },
     {
       field: "action",
       headerName: "Action",
-      width: 150,
+      flex: 1,
       renderCell: (params) => (
         <div>
           <button onClick={() => handleShow(params)} className="btn mx-2 btn-secondary btn-sm">

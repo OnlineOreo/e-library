@@ -76,14 +76,14 @@ const Department = () => {
   };
 
   const columns = [
-    { field: "department_id", headerName: "User ID", width: 200 },
-    { field: "department_name", headerName: "Department Name", width: 300 },
-    { field: "department_code", headerName: "Department Code", width: 220 },
-    { field: "library_name", headerName: "Library", width: 200 },
+    { field: "department_id", headerName: "User ID", flex: 2 },
+    { field: "department_name", headerName: "Department Name", flex: 2 },
+    { field: "department_code", headerName: "Department Code", flex: 2 },
+    { field: "library_name", headerName: "Library", flex: 2 },
     {
       field: "action",
       headerName: "Action",
-      width: 200,
+      flex: 2,
       renderCell: (params) => (
         <div>
           <button onClick={() => handleEdit(params)} className="btn btn-primary btn-sm mx-2">

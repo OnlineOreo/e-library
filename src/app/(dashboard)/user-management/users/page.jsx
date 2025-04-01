@@ -116,16 +116,16 @@ const Home = () => {
 
 
   const columns = [
-    { field: "id", headerName: "User ID", width: 100 },
-    { field: "name", headerName: "Name", width: 150 },
-    { field: "email", headerName: "Email", width: 200 },
-    { field: "phone_number", headerName: "Number", width: 120 },
-    { field: "role", headerName: "Role", width: 150 },
-    { field: "designation", headerName: "Designation", width: 150 },
+    { field: "id", headerName: "User ID", flex: 2 },
+    { field: "name", headerName: "Name", flex: 2 },
+    { field: "email", headerName: "Email", flex: 2 },
+    { field: "phone_number", headerName: "Number", flex: 2 },
+    { field: "role", headerName: "Role", flex: 2 },
+    { field: "designation", headerName: "Designation", flex: 2 },
     {
       field: "action",
       headerName: "Action",
-      width: 150,
+      flex: 2,
       renderCell: (params) => (
         <>
         <button onClick={() => handleEdit(params)} className="btn btn-primary mx-2 btn-sm"><FaEdit /></button>

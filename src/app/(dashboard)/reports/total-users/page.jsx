@@ -67,11 +67,12 @@ const ViewReports = () => {
   .filter((report) => report.name?.toLowerCase().includes(search.toLowerCase()));
 
   const columns = [
-    { field: "id", headerName: "ID", width: 200 },
-    { field: "phone_number", headerName: "Phone", width: 150 },
-    { field: "email", headerName: "Email", width: 250 },
-    { field: "created_at", headerName: "Created At", width: 200 },
-    { field: "designation", headerName: "Designation", width: 200 },
+    { field: "id", headerName: "ID", flex:2},
+    { field: "name", headername: "Name", flex:2 },
+    { field: "phone_number", headerName: "Phone", flex:2 },
+    { field: "email", headerName: "Email", flex:2 },
+    { field: "created_at", headerName: "Created At", flex:2 },
+    { field: "designation", headerName: "Designation", flex:2 },
   ];
 
   return (

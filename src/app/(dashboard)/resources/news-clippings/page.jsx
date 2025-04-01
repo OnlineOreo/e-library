@@ -105,11 +105,11 @@ const NewsClipping = () => {
     );
 
   const columns = [
-    { field: "e_news_clip_id", headerName: "Id", width: 150 },
+    { field: "e_news_clip_id", headerName: "Id", flex: 2 },
     {
       field: "thumbnail",
       headerName: "Image",
-      width: 100,
+      flex: 2,
       renderCell: (params) => (
         <div className="avatar avatar-md">
           <Image
@@ -122,12 +122,12 @@ const NewsClipping = () => {
         </div>
       ),
     },
-    { field: "title", headerName: "Title", width: 150 },
-    { field: "url", headerName: "URL", width: 150 },
+    { field: "title", headerName: "Title", flex: 2 },
+    { field: "url", headerName: "URL", flex: 2 },
     {
       field: "attachment",
       headerName: "Attachment",
-      width: 150,
+      flex: 2,
       renderCell: (params) => (
         <div>
           <Link target="_blank" href={params.value}>View Attachment</Link>
@@ -138,7 +138,7 @@ const NewsClipping = () => {
     {
       field: "action",
       headerName: "Action",
-      width: 150,
+      flex: 2,
       renderCell: (params) => (
         <div>
           <button

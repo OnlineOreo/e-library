@@ -113,15 +113,15 @@ const ViewPublishers = () => {
             </div>
           ) 
       },
-      { field: "publisher_id", headerName: "Publisher ID", width: 150 },
-      { field: "publisher_name", headerName: "Publisher Name", width: 150 },
-      { field: "web_url", headerName: "Web URL", width: 200 },
-      { field: "address", headerName: "Address", width: 150 },
-      { field: "redirect_url", headerName: "Redirect URL", width: 150 },
+      { field: "publisher_id", headerName: "Publisher ID", flex: 2 },
+      { field: "publisher_name", headerName: "Publisher Name", flex: 2 },
+      { field: "web_url", headerName: "Web URL", flex: 2 },
+      { field: "address", headerName: "Address", flex: 2 },
+      { field: "redirect_url", headerName: "Redirect URL", flex: 2 },
       {
         field: "action",
         headerName: "Action",
-        width: 150,
+       flex: 2,
         renderCell: (params) => (
           <div>
             <button onClick={() => handleEdit(params)} className="btn btn-primary btn-sm"><FaEdit /></button>
