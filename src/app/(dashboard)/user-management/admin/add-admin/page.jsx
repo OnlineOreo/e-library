@@ -36,7 +36,7 @@ const Home = () => {
     name: "",
     email: "",
     phone_number: "",
-    role: "ADMIN",
+    role: "",
     address: "",
     gender: "",
   });
@@ -94,6 +94,8 @@ const Home = () => {
         formDataToSend.append(key, value);
       }
     });
+
+    formDataToSend.append('is_superuser', true);
 
     try {
       const response = await axios.post(
@@ -229,15 +231,14 @@ const Home = () => {
                 <Form.Group className="mb-3" controlId="formRole">
                   <Form.Label>Role</Form.Label>
                   <Form.Select
-                    disabled
                     name="role"
-                    value={"ADMIN"}
+                    value={formData.role}
                     onChange={handleInputChange}
                     required
                   >
-                    <option value="">Select Role</option>
-                    <option value="ADMIN">Admin</option>
-                    <option value="STUDENT">Student</option>
+                    <option value="">Select</option>
+                    <option value="ADMIN">Super Admin</option>
+                    <option value="INSTITUTE ADMIN">Institute Admin</option>
                   </Form.Select>
                 </Form.Group>
               </Col>

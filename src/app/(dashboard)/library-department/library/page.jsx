@@ -83,6 +83,7 @@ const ViewLibrary = () => {
           }
         } catch (error) {
           toast.error(error.response?.data?.error || "Something went wrong!");
+          toast.error(error.response?.data?.details || "Something went wrong!");
         }
       }
     });

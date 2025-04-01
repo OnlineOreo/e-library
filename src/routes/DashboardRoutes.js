@@ -1,10 +1,7 @@
 import { v4 as uuid } from 'uuid';
 import { useSelector } from "react-redux";
 
-export const useDashboardMenu = () => {
-    const user = useSelector((state) => state.user.user);
-
-    console.log("user details", user);
+export const DashboardMenu = ()=>{
 
     return [
         {
@@ -88,7 +85,7 @@ export const useDashboardMenu = () => {
                 { id: uuid(), link: '/configuration/staff-recommendation', name: 'Staff Pick' },
             ]
         }
-    ];
-};
+    ]};
 
-export default useDashboardMenu;
+export default DashboardMenu;
+

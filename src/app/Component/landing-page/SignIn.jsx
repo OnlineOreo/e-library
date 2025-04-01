@@ -63,7 +63,6 @@ const SignIn = () => {
       
       
       const token = getToken();
-      // console.log("token_retrive",token);
       if (!token) {
         throw new Error("Token retrieval failed");
       }
@@ -84,7 +83,8 @@ const SignIn = () => {
       const userData = await userResponse.json(); 
       const userId = userData.id;
       setUserRole(userData.role)
-      dispatch(setUser(userData));
+      document.cookie = `user_role=${userData.role}; path=/; max-age=${60 * 100}; SameSite=Lax;`;
+      // dispatch(setUser(userData));
 
       // console.log("user role",userData.role);
       
@@ -144,7 +144,7 @@ const SignIn = () => {
         {/* Card */}
         <Card className="shadow p-4">
           {/* Card body */}
-          <Card.Title className="ms-3">SignIN{userRole}</Card.Title>
+          {/* <Card.Title>SignIN</Card.Title> */}
           <Card.Body className="p-6">
             {/* <div className='mb-4' style={{ width: "100%", height: "100px", display:"flex",justifyContent:"center" }}>
                <Image
