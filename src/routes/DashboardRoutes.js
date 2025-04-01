@@ -1,5 +1,4 @@
 import { v4 as uuid } from 'uuid';
-import { useSelector } from "react-redux";
 
 export const DashboardMenu = [
 	{
@@ -184,15 +183,11 @@ export const DashboardMenu = [
 	// }
 ];
 
-    console.log("user details", user);
+    const userRole = getUserRole();
+    console.log("User Role:", userRole);
 
-    return [
-        {
-            id: uuid(),
-            title: 'Dashboard',
-            icon: 'home',
-            link: '/dashboard'
-        },
+    const menu = [
+        { id: uuid(), title: 'Dashboard', icon: 'home', link: '/dashboard' },
         {
             id: uuid(),
             title: 'User Management',
@@ -214,22 +209,37 @@ export const DashboardMenu = [
                 { id: uuid(), link: '/library-department/institute', name: 'Institutes' },
                 { id: uuid(), link: '/library-department/library', name: 'Library' },
                 { id: uuid(), link: '/library-department/department', name: 'Department' },
-                { id: uuid(), link: '/library-department/user-type', name: 'User type' },
+                { id: uuid(), link: '/library-department/user-type', name: 'User Type' },
                 { id: uuid(), link: '/library-department/content-group', name: 'Content Group' },
                 { id: uuid(), link: '/library-department/program', name: 'Program' },
-                { id: uuid(), link: '/library-department/service-group', name: 'servicegroup' },
+                { id: uuid(), link: '/library-department/service-group', name: 'Service Group' },
             ]
-        },
-        {
+        }
+    ];
+
+    if (userRole === "ADMIN") {
+        menu.push({
             id: uuid(),
             title: 'Resources',
             icon: 'layers',
             children: [
-                { id: uuid(), link: '/resources/item-types', name: 'Item types' },
-                { id: uuid(), link: '/resources/publisher-package', name: 'Publisher package' },
+                { id: uuid(), link: '/resources/item-types', name: 'Item Types' },
+                { id: uuid(), link: '/resources/publisher-package', name: 'Publisher Package' },
                 { id: uuid(), link: '/resources/publishers', name: 'Publishers' },
-                { id: uuid(), link: '/resources/item', name: 'item' },
+                { id: uuid(), link: '/resources/item', name: 'Item' },
                 { id: uuid(), link: '/resources/news-clippings', name: 'News Clipping' },
+            ]
+        });
+    }
+
+    menu.push(
+        {
+            id: uuid(),
+            title: 'Reports',
+            icon: 'bell',
+            children: [
+                { id: uuid(), link: '/reports/total-users', name: 'Total Users' },
+                { id: uuid(), link: '/reports/top-users', name: 'Top Users' },
             ]
         },
         {
@@ -240,34 +250,31 @@ export const DashboardMenu = [
                 { id: uuid(), link: '/notification/email', name: 'E-Mail' },
                 { id: uuid(), link: '/notification/send-emails', name: 'Send Mail' },
             ]
-        },
-        {
-            id: uuid(),
-            title: 'Reports',
-            icon: 'bell',
-            children: [
-                { id: uuid(), link: '/reports/total-users', name: 'Total users' },
-                { id: uuid(), link: '/reports/top-users', name: 'Top-users' },
-            ]
-        },
-        {
-            id: uuid(),
-            title: 'Configuration',
-            icon: 'lock',
-            children: [
-                { id: uuid(), link: '/configuration/landing-page', name: 'Landing page' },
-                { id: uuid(), link: '/configuration/categories', name: 'Categories' },
-                { id: uuid(), link: '/configuration/collection', name: 'Collection' },
-                { id: uuid(), link: '/configuration/media', name: 'Media' },
-                { id: uuid(), link: '/configuration/metas', name: 'Important Link' },
-                { id: uuid(), link: '/configuration/trending-books', name: 'Trending Books' },
-                { id: uuid(), link: '/configuration/dynamic-page', name: 'Dynamic Page' },
-                { id: uuid(), link: '/configuration/footer', name: 'Footer' },
-                { id: uuid(), link: '/configuration/notice', name: 'Notices' },
-                { id: uuid(), link: '/configuration/harvest-data', name: 'Harvest Data' },
-                { id: uuid(), link: '/configuration/staff-recommendation', name: 'Staff Pick' },
-            ]
         }
+    );
+
+    const configMenu = [
+        { id: uuid(), link: '/configuration/landing-page', name: 'Landing Page' },
+        { id: uuid(), link: '/configuration/metas', name: 'Important Link' },
+        { id: uuid(), link: '/configuration/trending-books', name: 'Trending Books' },
+        { id: uuid(), link: '/configuration/dynamic-page', name: 'Dynamic Page' },
+        { id: uuid(), link: '/configuration/footer', name: 'Footer' },
+        { id: uuid(), link: '/configuration/notice', name: 'Notices' },
+        { id: uuid(), link: '/configuration/harvest-data', name: 'Harvest Data' },
+        { id: uuid(), link: '/configuration/staff-recommendation', name: 'Staff Pick' },
     ];
+
+    if (userRole === "ADMIN") {
+        configMenu.unshift( // Add extra options at the beginning for ADMIN
+            { id: uuid(), link: '/configuration/categories', name: 'Categories' },
+            { id: uuid(), link: '/configuration/collection', name: 'Collection' },
+            { id: uuid(), link: '/configuration/media', name: 'Media' }
+        );
+    }
+
+    menu.push({ id: uuid(), title: 'Configuration', icon: 'lock', children: configMenu });
+
+    return menu;
+};
 
 export default useDashboardMenu;

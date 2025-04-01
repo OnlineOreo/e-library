@@ -4,15 +4,30 @@ import Link from "next/link";
 import SignIn from "./SignIn";
 
 const AuthButtons = ({ token, handleLogout, show, setShow }) => {
+  const getUserRole = () => {
+      if (typeof window !== "undefined") { 
+          const cookieString = document.cookie
+              .split("; ")
+              .find((row) => row.startsWith("user_role="));
+          return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+      }
+      return null;
+  };
+
+  const userRole = getUserRole();
+  // console.log("this",userRole);
+  
   return (
     <>
       {token ? (
         <>
+        { (userRole == "ADMIN" || userRole == "INSTITUTE ADMIN") &&(
           <div className="mx-2">
             <Link href="/dashboard" className="mx-1 hover-underline">
               Dashboard
             </Link>
           </div>
+        )}
           <div>
             <a onClick={handleLogout} className="mx-1 hover-underline cursor-pointer" style={{ cursor: "pointer" }}>
               Logout

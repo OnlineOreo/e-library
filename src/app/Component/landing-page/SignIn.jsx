@@ -83,7 +83,8 @@ const SignIn = () => {
       const userData = await userResponse.json(); 
       const userId = userData.id;
       setUserRole(userData.role)
-      dispatch(setUser(userData));
+      document.cookie = `user_role=${userData.role}; path=/; max-age=${60 * 100}; SameSite=Lax;`;
+      // dispatch(setUser(userData));
 
       // console.log("user role",userData.role);
       
