@@ -59,11 +59,10 @@ const SignIn = () => {
 
       document.cookie = `access_token=${data.access_token}; path=/; max-age=${60 * 100}; SameSite=Lax;`;
 
-      // console.log("token",data.access_token);
+      console.log("token",data.access_token);
       
       
       const token = getToken();
-      // console.log("token_retrive",token);
       if (!token) {
         throw new Error("Token retrieval failed");
       }
