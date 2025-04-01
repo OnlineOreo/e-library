@@ -59,7 +59,7 @@ const SignIn = () => {
 
       document.cookie = `access_token=${data.access_token}; path=/; max-age=${60 * 100}; SameSite=Lax;`;
 
-      console.log("token",data.access_token);
+      // console.log("token",data.access_token);
       
       
       const token = getToken();
