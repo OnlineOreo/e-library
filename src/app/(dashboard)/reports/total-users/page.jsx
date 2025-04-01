@@ -16,10 +16,8 @@ const ViewReports = () => {
 
   const [reports, setReports] = useState([]);
   const [search, setSearch] = useState("");
-  const [allUsers, setAllUsers] = useState(true);
-  const [allActiveUsers, setAllActiveUsers] = useState(true);
-  const [topUsers, setTopUsers] = useState(false);
-  
+  const [filter, setFilter] = useState("all_users");
+
   const instituteId = useSelector((state) => state.institute.instituteId);
 
   const getToken = () => {
@@ -33,7 +31,7 @@ const ViewReports = () => {
     if (instituteId) {
       loadReports();
     }
-  }, [instituteId, allUsers, allActiveUsers, topUsers]);
+  }, [instituteId, filter]);
 
   const loadReports = async () => {
     const token = getToken();
@@ -42,38 +40,38 @@ const ViewReports = () => {
       router.push("/authentication/sign-in");
       return;
     }
-
+  
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/reports?institute_id=${instituteId}&all_users=${allUsers}&all_active_users=${allActiveUsers}&top_users=${topUsers}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/reports?institute_id=${instituteId}&${filter}=true`,
         {
           headers: { Authorization: `${token}` },
         }
       );
-
+  
       if (response.status === 200) {
-        setReports([
-          ...(allUsers ? response.data.users : []),
-          ...(allActiveUsers ? response.data.active_users : []),
-          ...(topUsers ? response.data.top_users : [])
-        ]);
+        setReports(
+          filter === "all_users" ? response.data?.users || [] :
+          filter === "all_active_users" ? response.data?.active_users || [] :
+          filter === "top_users" ? response.data?.top_users || [] : []
+        );
       }
     } catch (error) {
       errorToaster("Failed to load reports.");
       setReports([]);
     }
   };
-
+  
   const formattedReports = reports
-    .map((report) => ({ ...report }))
-    .filter((report) => report.name?.toLowerCase().includes(search.toLowerCase()));
+  .map((report) => ({ ...report }))
+  .filter((report) => report.name?.toLowerCase().includes(search.toLowerCase()));
 
   const columns = [
-    { field: "name", headerName: "Name", width: 200 },
-    { field: "phone", headerName: "Phone", width: 150 },
-    { field: "address", headerName: "Address", width: 250 },
+    { field: "id", headerName: "ID", width: 200 },
+    { field: "phone_number", headerName: "Phone", width: 150 },
+    { field: "email", headerName: "Email", width: 250 },
     { field: "created_at", headerName: "Created At", width: 200 },
-    { field: "updated_at", headerName: "Updated At", width: 200 },
+    { field: "designation", headerName: "Designation", width: 200 },
   ];
 
   return (
@@ -85,28 +83,34 @@ const ViewReports = () => {
           <div className="mb-3">
             <label className="me-3">
               <input
-                type="checkbox"
-                checked={allUsers}
-                onChange={() => setAllUsers(!allUsers)}
+                type="radio"
+                name="reportFilter"
+                value="all_users"
+                checked={filter === "all_users"}
+                onChange={() => setFilter("all_users")}
               /> All Users
             </label>
             <label className="me-3">
               <input
-                type="checkbox"
-                checked={allActiveUsers}
-                onChange={() => setAllActiveUsers(!allActiveUsers)}
+                type="radio"
+                name="reportFilter"
+                value="all_active_users"
+                checked={filter === "all_active_users"}
+                onChange={() => setFilter("all_active_users")}
               /> Active Users
             </label>
             <label className="me-3">
               <input
-                type="checkbox"
-                checked={topUsers}
-                onChange={() => setTopUsers(!topUsers)}
+                type="radio"
+                name="reportFilter"
+                value="top_users"
+                checked={filter === "top_users"}
+                onChange={() => setFilter("top_users")}
               /> Top Users
             </label>
-            <button className="btn btn-primary ms-3" onClick={loadReports}>
-              Apply Filters
-            </button>
+            {/* <button className="btn btn-primary ms-3" onClick={loadReports}>
+              Apply Filter
+            </button> */}
           </div>
 
           {/* Search Input */}
@@ -122,11 +126,13 @@ const ViewReports = () => {
           {reports.length > 0 ? (
             <Box sx={{ height: 500, width: "100%" }}>
               <DataGrid
+                key={(row) => row.id}
                 rows={formattedReports}
                 columns={columns}
                 pageSize={5}
                 components={{ Toolbar: GridToolbar }}
-                getRowId={(row) => row.phone}
+                getRowId={(row) => row.id} 
+                columnVisibilityModel={{ id: false }}
               />
             </Box>
           ) : (
