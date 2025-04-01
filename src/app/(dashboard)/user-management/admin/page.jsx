@@ -37,7 +37,7 @@ const Home = () => {
     }
   
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users`, {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users?admin=true  `, {
         headers: { Authorization: `${token}` },
         method:'GET'
       });
@@ -58,10 +58,10 @@ const Home = () => {
   };
 
   useEffect(() => {
-    if (instituteId) {
-      loadUser(instituteId);
-    }
-  }, [instituteId]);
+    // if (instituteId) {
+    // }
+    loadUser();
+  }, []);
 
   const handleSearch = (event) => {
     const searchValue = event.target.value;

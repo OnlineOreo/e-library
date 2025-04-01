@@ -34,18 +34,23 @@ export default function TopUser() {
                         ref={swiperRef}
                         modules={[Autoplay, Pagination, Scrollbar, A11y]}
                         spaceBetween={50}
-                        slidesPerView={3}
+                        slidesPerView={1}  // Default for small screens
                         centeredSlides={true}
                         loop={true}
                         pagination={{ clickable: true }}
                         autoplay={{ delay: 3000, disableOnInteraction: false }}
+                        breakpoints={{
+                            768: {
+                                slidesPerView: 3, // Display 3 items on larger screens
+                            },
+                        }}
                         onSwiper={(swiper) => (swiperRef.current = swiper)}
                     >
                         {topUsers.map((user, index) => (
                             <SwiperSlide key={index}>
                                 <div className="testimonial-item rounded p-4">
                                     <div className="d-flex align-items-center mb-4">
-                                        <div className="d-flex justify-content-center align-items-center bg-primary-gradient text-white rounded-circle"
+                                        <div className="d-flex justify-content-center align-items-center text-white rounded-circle"
                                             style={{ width: 85, height: 85, fontSize: 24, borderRadius: "50%" }}>
                                             {user.initials}
                                         </div>

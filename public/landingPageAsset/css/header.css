@@ -2532,7 +2532,7 @@ section.pt-150.pb-150 {
 }
 @media (max-width:986px){
   .logo.logo-width-1{
-      margin-right: 30px;
+      margin-right: 175px;
   }
 }
 @media (max-width:576px){
@@ -2540,6 +2540,7 @@ section.pt-150.pb-150 {
     line-height: 1.4 !important;
     padding-top:10px;
     font-size: 1.4em !important;
+    margin-bottom: 10px;
   }
   .hero-header .container{
     padding: 0;

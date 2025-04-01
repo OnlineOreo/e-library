@@ -30,9 +30,9 @@ const screenshots = [
     "https://demo.libvirtuua.com/landingPageAsset/img/screenshot-5.png"
 ];
 
-export default function Download() {
+export default function Download({bannerData}) {
     return (
-        <div className="container-xxl py-5 section" id="download_section">
+        <div className="container-xxl py-5 section" id="download_section" style={{backgroundColor: bannerData?.color1}}>
             <div className="container py-5 px-lg-5">
                 <div className="row g-5 align-items-center">
                     <div className="col-lg-7 wow fadeInUp" data-wow-delay="0.3s">

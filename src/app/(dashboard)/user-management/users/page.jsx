@@ -26,7 +26,7 @@ const Home = () => {
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
-  const loadUser = async () => {
+  const loadUser = async (instituteId) => {
     const token = getToken();
   
     if (!token) {
@@ -56,8 +56,8 @@ const Home = () => {
   };
 
   useEffect(() => {
-    loadUser();
-  }, []);
+    loadUser(instituteId);
+  }, [instituteId]);
 
   const handleSearch = (event) => {
     const searchValue = event.target.value;
