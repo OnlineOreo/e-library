@@ -1,11 +1,19 @@
 'use client'
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSearchParams } from 'next/navigation';
 
 const SearchBar = () => {
   const router = useRouter();
-  const [filterType, setFilterType] = useState("datacite_titles");
-  const [searchText, setSearchText] = useState("");
+  const searchParams = useSearchParams()
+
+  const initialFilterType = searchParams.get('filter_type') || "datacite_titles";
+  const initialSearchText = searchParams.get('search_text') || "";
+
+
+  const [filterType, setFilterType] = useState(initialFilterType);
+  const [searchText, setSearchText] = useState(initialSearchText);
+
 
   const filterOptions = [
     { value: "datacite_titles", label: "Title" },
@@ -53,7 +61,7 @@ const SearchBar = () => {
           type="text"
           id="searchInput"
           placeholder="Search with/without any keywords"
-          name="search_text"
+          name="search_input"
           value={searchText}
           onChange={handleSearchChange}
         />

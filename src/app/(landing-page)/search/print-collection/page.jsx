@@ -17,6 +17,7 @@ import CatalogGridCard from '../components/CatalogGridCard';
 import CatalogListCard from '../components/CatalogListCard';
 import CatalogDetailModal from '../components/CatalogDetailModal';
 import GridViewSkelton from '../components/GridViewSkelton';
+import { useSearchParams } from 'next/navigation';
 
 
 
@@ -24,9 +25,11 @@ import GridViewSkelton from '../components/GridViewSkelton';
 
 export default function printCollection() {
     const router = useRouter();
+    const searchParams = useSearchParams()
     const instituteId = useSelector((state) => state.institute.instituteId);
     const [gridView, setGridView] = useState(true);
     const [results, setResults] = useState([]);
+    const [resultsCount, setResultsCount] = useState(0);
 
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
@@ -43,19 +46,20 @@ export default function printCollection() {
         return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
     };
 
+    const filter_type = searchParams.get('filter_type') || "datacite_titles";
+    const search_text = searchParams.get('search_text') || ""
+    console.log(filter_type,search_text);
+    
+
     const loadPCollectionData = async () => {
-        const token = getToken();
-        // if (!token) {
-        //   router.push("/authentication/sign-in");
-        //   return;
-        // }
-        const solrUrl = `http://5.135.139.104:8983/solr/Print-collection/select?indent=true&q.op=OR&q=datacite_titles%3A%22indian%20history%22&rows=15`;
+        const solrUrl = `http://5.135.139.104:8983/solr/Print-collection/select?indent=true&q.op=OR&q=${filter_type}%3A%22${search_text}%22&rows=15`;
         try {
             const response = await axios.get(`${solrUrl}`);
             const solrJson = response.data.response
             const results = solrJson.docs
+            setResultsCount(solrJson.numFound);
             setResults(results);
-            console.log(results);
+            console.log(solrJson);
         } catch (error) {
             console.error("Axios Error:", error);
         } finally {
@@ -177,7 +181,7 @@ export default function printCollection() {
                     <Col md={9} className='pe-0 ps-4'>
                         <Row className="mb-3">
                             <Col md={6}>
-                                <p>Showing <strong>268</strong> results for <strong>data</strong></p>
+                                <p>Showing <strong>{ resultsCount }</strong> results for <strong>data</strong></p>
                             </Col>
                             <Col md={6}>
                                 <div className="d-flex align-items-center">
