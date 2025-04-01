@@ -352,8 +352,9 @@ const Home = () => {
                     required
                   >
                     <option value="">Select Role</option>
-                    <option value="ADMIN">Admin</option>
                     <option value="STUDENT">Student</option>
+                    <option value="FACULTY">Faculty</option>
+                    <option value="STAFF">Staff</option>
                   </Form.Select>
                 </Form.Group>
                 {/* <Form.Group className="mb-3" controlId="formImage">
