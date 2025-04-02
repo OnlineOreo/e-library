@@ -50,6 +50,7 @@ const Navbar = () => {
     };
 
     if (publisherUrls[publisher.publisher_name]) {
+      console.log(publisherUrls[publisher.publisher_name])
       window.open(publisherUrls[publisher.publisher_name], "_blank");
     }
   };

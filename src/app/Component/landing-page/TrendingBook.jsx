@@ -53,7 +53,7 @@ export default function TrendingBook({bannerData}) {
                                                 alt={`Trending book ${index + 1}`} 
                                                 style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                                             />
-                                            <div className="effect" />
+                                            {/* <div className="effect" /> */}
                                             <div className="light" />
                                         </div>
                                     </div>

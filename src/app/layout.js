@@ -15,6 +15,11 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: "LibVirtuUa app",
   description: "Discovery search",
+  icons: {
+    icon: "/favicon.ico", 
+    apple: "/apple-touch-icon.png", 
+    shortcut: "/favicon-32x32.png", 
+  },
 };
 
 export default function RootLayout({ children }) {

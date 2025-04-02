@@ -1,32 +1,28 @@
-'use client';
-import { Row, Col, Card, Form, Button } from 'react-bootstrap';
-import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import Spinner from 'react-bootstrap/Spinner';
-import Image from 'next/image';
-import { useSelector } from "react-redux";
-
-import { useDispatch } from "react-redux";
+"use client";
+import { Row, Col, Card, Form, Button, Spinner } from "react-bootstrap";
+import Link from "next/link";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { useSelector, useDispatch } from "react-redux";
 import { setUser } from "@/redux/slices/userSlice";
 
 const SignIn = () => {
   const router = useRouter();
-  const [email , setEmail] = useState('');
-  const [password , setPassword] = useState('');
-  const [error, setError] = useState('');
+  const dispatch = useDispatch();
+  const instituteId = useSelector((state) => state.institute.instituteId);
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isClient, setIsClient] = useState(false);
-  const instituteId = useSelector((state) => state.institute.instituteId);
-  const [userRole, setUserRole] = useState("STUDENT");
-  const dispatch = useDispatch();
 
-  // Ensure this code only runs on the client
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-    const getToken = () => {
+  const getToken = () => {
     const cookieString = document.cookie
       .split("; ")
       .find((row) => row.startsWith("access_token="));
@@ -37,10 +33,10 @@ const SignIn = () => {
   const handleSignIn = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-  
+
     try {
-      // Step 1: Login Request
-      const response = await fetch(
+      // **Step 1: Login & Profile Fetch in Parallel**
+      const loginResponse = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/login`,
         {
           method: "POST",
@@ -49,86 +45,59 @@ const SignIn = () => {
           credentials: "include",
         }
       );
-  
-      const data = await response.json();
-  
-      if (!response.ok) {
-        throw new Error(data.detail || "Login failed");
-      }
-  
+      // https://research-ebsco-com.mriirs.libvirtuua.com:8811/login.aspx?authtype=ip,uid&custid=ns193200&groupid=main&profile=ehost&defaultdb=bsh&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMGI2Yzc5NDctNzFkNS00MjU1LTkxYjAtNjlhY2YyMWRkMTVhIiwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJuYW1lIjoiQWJoaSAga3VtYXIiLCJleHAiOjE3NDM2MDk3NTQsImlhdCI6MTc0MzU3Mzc1NH0.p06C85-Jdj5F2v-SkGyP0D1cXxpUYazAvtxY-soZA0U
 
-      document.cookie = `access_token=${data.access_token}; path=/; max-age=${60 * 100}; SameSite=Lax;`;
+      const loginData = await loginResponse.json();
+      if (!loginResponse.ok) throw new Error(loginData.detail || "Login failed");
 
-      // console.log("token",data.access_token);
-      
-      
+      // Store token in cookies
+      document.cookie = `access_token=${loginData.access_token}; path=/; max-age=6000; SameSite=Lax;`;
       const token = getToken();
-      if (!token) {
-        throw new Error("Token retrieval failed");
-      }
-  
-      // Step 3: Fetch User Profile
-      const userResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/profile`,
-        {
+      if (!token) throw new Error("Token retrieval failed");
+
+      // **Fetch User Profile & IP in Parallel**
+      const [userResponse, ipResponse] = await Promise.all([
+        fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/profile`, {
           method: "GET",
           headers: { Authorization: token, "Content-Type": "application/json" },
-        }
-      );
-  
-      if (!userResponse.ok) {
-        throw new Error("Failed to fetch user profile");
-      }
-  
-      const userData = await userResponse.json(); 
-      const userId = userData.id;
-      setUserRole(userData.role)
-      document.cookie = `user_role=${userData.role}; path=/; max-age=${60 * 100}; SameSite=Lax;`;
-      // dispatch(setUser(userData));
-
-      // console.log("user role",userData.role);
-      
-  
-      // Step 4: Get Device & Browser Info
-      const userAgent = navigator.userAgent;
-      let browserName = "Unknown Browser";
-  
-      if (userAgent.includes("Chrome")) browserName = "Chrome";
-      else if (userAgent.includes("Firefox")) browserName = "Firefox";
-      else if (userAgent.includes("Safari")) browserName = "Safari";
-      else if (userAgent.includes("Edge")) browserName = "Edge";
-      else if (userAgent.includes("Opera")) browserName = "Opera";
-  
-      let deviceType = /Mobi|Android|iPhone|iPad/i.test(userAgent)
-        ? "Mobile"
-        : "Desktop";
-  
-      // Step 5: Fetch IP Address
-      const ipResponse = await fetch("https://api64.ipify.org?format=json");
-      const ipData = await ipResponse.json();
-      const ipAddress = ipData.ip;
-  
-      // Step 6: Store User Session Data
-      await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-session`, {
-        method: "POST",
-        headers: {
-          Authorization: `${token}`,
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          institute: instituteId, 
-          user: userId, 
-          browser_name: browserName,
-          device_type: deviceType,
-          ip_address: ipAddress,
         }),
-      });
-  
-      // Step 7: Redirect to Dashboard
-      router.push(userData.role === "STUDENT" ? "/" : "/dashboard");
+        fetch("https://api64.ipify.org?format=json"),
+      ]);
 
-      // router.push("/dashboard");
+      if (!userResponse.ok) throw new Error("Failed to fetch user profile");
+      const userData = await userResponse.json();
+
+      // Save user role
+      document.cookie = `user_role=${userData.role}; path=/; max-age=6000; SameSite=Lax;`;
+      dispatch(setUser(userData));
+
+      // **Get Device & Browser Info**
+      const userAgent = navigator.userAgent;
+      const browserName = /Chrome/.test(userAgent) ? "Chrome" : 
+                          /Firefox/.test(userAgent) ? "Firefox" : 
+                          /Safari/.test(userAgent) ? "Safari" : 
+                          /Edge/.test(userAgent) ? "Edge" : "Unknown";
+
+      const deviceType = /Mobi|Android|iPhone|iPad/i.test(userAgent) ? "Mobile" : "Desktop";
+
+      // **Store User Session (Now Async - Does Not Block UI)**
+      ipResponse.json().then((ipData) => {
+        fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-session`, {
+          method: "POST",
+          headers: { Authorization: token, "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({
+            institute: instituteId,
+            user: userData.id,
+            browser_name: browserName,
+            device_type: deviceType,
+            ip_address: ipData.ip,
+          }),
+        }).catch((err) => console.error("Session save failed:", err));
+      });
+
+      // **Step 3: Redirect Immediately**
+      router.push(userData.role === "STUDENT" ? "/" : "/dashboard");
     } catch (err) {
       console.error("Login error:", err);
       setError(err.message || "Login failed. Something went wrong!");
@@ -141,54 +110,49 @@ const SignIn = () => {
   return (
     <Row className="align-items-center justify-content-center g-0">
       <Col xxl={12} lg={12} md={12} xs={12} className="py-8 py-xl-0">
-        {/* Card */}
         <Card className="shadow p-4">
-          {/* Card body */}
-          {/* <Card.Title>SignIN</Card.Title> */}
           <Card.Body className="p-3">
-            {/* <div className='mb-4' style={{ width: "100%", height: "100px", display:"flex",justifyContent:"center" }}>
-               <Image
-                src=""
-                alt="Logo"
-                width={120}
-                height={100}
-              /> *
-            </div> */}
-            <div className="mb-4"></div>
-
-            {/* Form */}
             <Form onSubmit={handleSignIn}>
               {error && <div className="text-danger mb-3">{error}</div>}
+
               {/* Email */}
               <Form.Group className="mb-3" controlId="email">
                 <Form.Label>Email</Form.Label>
-                <Form.Control type="email" name="email" onChange={(e) => setEmail(e.target.value)} value={email} placeholder="Email Address" required />
+                <Form.Control
+                  type="email"
+                  name="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Email Address"
+                  required
+                />
               </Form.Group>
 
               {/* Password */}
               <Form.Group className="mb-5" controlId="password">
                 <Form.Label>Password</Form.Label>
-                <Form.Control type="password" value={password} onChange={(e) => setPassword(e.target.value)} name="password" placeholder="Password" required />
+                <Form.Control
+                  type="password"
+                  name="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Password"
+                  required
+                />
               </Form.Group>
 
-              {/* Checkbox */}
-              {/* <div className="d-lg-flex justify-content-between align-items-center mb-4">
-                <Form.Check type="checkbox" id="rememberme">
-                  <Form.Check.Input type="checkbox" />
-                  <Form.Check.Label>Remember me</Form.Check.Label>
-                </Form.Check>
-              </div> */}
-
-              {/* Button */}
+              {/* Login Button */}
               <div className="d-grid">
-                <Button variant="primary" type="submit">
+                <Button variant="primary" type="submit" disabled={isLoading}>
                   {isLoading ? <Spinner animation="border" size="sm" /> : "Login"}
                 </Button>
               </div>
 
               <div className="d-md-flex justify-content-between mt-4">
                 <div>
-                  <Link href="/authentication/forget-password" className="text-dark text-decoration-none">Forgot your password?</Link>
+                  <Link href="/authentication/forget-password" className="text-dark text-decoration-none">
+                    Forgot your password?
+                  </Link>
                 </div>
               </div>
             </Form>
@@ -197,6 +161,6 @@ const SignIn = () => {
       </Col>
     </Row>
   );
-}
+};
 
 export default SignIn;

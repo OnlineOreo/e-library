@@ -9,8 +9,10 @@ import { FaMinusCircle } from "react-icons/fa";
 import { ImCross } from "react-icons/im";
 import Swal from "sweetalert2";
 
+
 const Home = () => {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const successToaster = (text) => toast(text);
   const errorToaster = (text) => toast.error(text);
 
@@ -29,7 +31,7 @@ const Home = () => {
     name: "",
     email: "",
     phone_number: "",
-    role: "STUDENT",
+    role: "",
     address:'',
     gender: "",
     user_u_id: "",
@@ -109,7 +111,7 @@ const Home = () => {
         ...formData,
         [name]: value,
       });
-      console.log(formData);
+      // console.log(formData);
     }
   };
 
@@ -123,6 +125,7 @@ const Home = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true)
     const token = getToken();
     if (!token) {
       errorToaster("Authentication required!");
@@ -181,21 +184,28 @@ const Home = () => {
           admission_year: "",
           mappings: [],
         });
+        setLoading(false)
         }
         
         router.push("/user-management/users");
     } catch (error) {
       const errorData = error.response?.data;
-      if (typeof errorData === "object") {  
+      if (typeof errorData === "object") {
         Object.keys(errorData).forEach((key) => {
-          const message = Array.isArray(errorData[key])
+          let message = Array.isArray(errorData[key])
             ? errorData[key].join(", ")
             : errorData[key];
-          errorToaster(`${message}`);
-        });
+          
+          if (message === "\"\" is not a valid choice.") {
+            message = `${key} cannot be empty or is invalid`;
+          }
+        
+          errorToaster(message);
+        });        
       } else {
         errorToaster(errorData.message || "Something went wrong!");
       }
+      setLoading(false)
     }
   };
 
@@ -346,7 +356,6 @@ const Home = () => {
                   <Form.Label>Role</Form.Label>
                   <Form.Select
                     name="role"
-                    disabled
                     value={formData.role}
                     onChange={handleInputChange}
                     required
@@ -618,8 +627,8 @@ const Home = () => {
               ) : ''}
               {
                 step == 4 && (
-                  <Button variant="primary" type="submit">
-                    Submit
+                  <Button variant="primary" type="submit" disabled={loading}>
+                    {loading ? "Adding..." : "Submit"}
                   </Button>
                 )
               }
