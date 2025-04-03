@@ -122,7 +122,7 @@ const Navbar = () => {
                   <Link href="/">
                     <img
                       src={
-                        landingPageData?.instituteId?.configurations[0]?.logo
+                        landingPageData?.instituteId?.configurations?.[0]?.logo || 'default'
                       }
                       alt="App Icon"
                     />
@@ -144,7 +144,7 @@ const Navbar = () => {
                   <Link href="/">
                     <img
                       src={
-                        landingPageData?.instituteId?.configurations[0]?.logo
+                        landingPageData?.instituteId?.configurations?.[0]?.logo || 'default'
                       }
                       alt="App Icon"
                     />

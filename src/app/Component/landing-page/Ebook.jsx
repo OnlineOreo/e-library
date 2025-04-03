@@ -1,3 +1,4 @@
+'use client'
 import React from 'react';
 import { Navigation, Autoplay, Pagination, Scrollbar, A11y } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -10,17 +11,16 @@ import 'swiper/css/scrollbar';
 
 export default function Ebook({ toggle }) {
     const landingPageData = useSelector((state) => state.landingPageDataSlice);
-    // change after fix from backend  - according to suraj bhaiya
     const bookImages = landingPageData?.instituteId?.staff_picks
-    ?.filter(staff_pick => staff_pick.article_type_name === "e-news") // Filter only matching elements
-    ?.map(staff_pick => staff_pick.image) || []; // Extract images
+    ?.filter(staff_pick => staff_pick.article_type_name === "e-news") 
+    ?.map(staff_pick => staff_pick.image) || [];
 
     return (
         <div
             id="sp_ebook_div"
             className={`book-wrapper wow fadeInUp ${toggle ? "d-block" : "d-none"}`}
             data-wow-delay="0.5s"
-            style={{ padding: '20px 0' }} // Added padding for better mobile spacing
+            style={{ padding: '20px 0' }}
         >
             <Swiper
                 modules={[Navigation, Pagination, Scrollbar, A11y, Autoplay]}
@@ -68,7 +68,7 @@ export default function Ebook({ toggle }) {
                                             style={{
                                                 width: 'auto',
                                                 height: '100%',
-                                                maxHeight: '300px', // Adjust as needed
+                                                maxHeight: '300px', 
                                                 objectFit: 'contain'
                                             }}
                                         />

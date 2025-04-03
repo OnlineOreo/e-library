@@ -4,15 +4,15 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import { useSelector } from 'react-redux';
 
-export default function Publisher() {
+export default function Publisher({headingName,bannerData}) {
     const landingPageData = useSelector((state) => state.landingPageDataSlice);
 
     const publisherImages = landingPageData?.instituteId?.publishers?.map(publisher => publisher.image) || [];
-    
+    console.log(publisherImages)
     return (
         <div className="publisher-wrapper container py-5 pt-5 section" id="publisher_section" style={{ display: "block" }}>
             <h2 className="mb-5 wow fadeInUp" id="publisher_heading" data-wow-delay="0.3s">
-                Publisher
+                {headingName}
             </h2>
             <div className="publish-carousel d-flex wow fadeInUp" data-wow-delay="0.5s">
                 <Swiper 

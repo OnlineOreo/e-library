@@ -18,7 +18,7 @@ const notices = [
     "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Error dolor explicabo, sit quis tenetur voluptatum, a laborum saepe eos ex quisquam ipsum est velit quam ad hic, iure corporis nostrum amet! Magnam, numquam consequuntur. Quae natus earum possimus quod maiores."
 ];
 
-export default function NoticeBoard() {
+export default function NoticeBoard({headingName}) {
     const swiperRef = useRef(null);
     const landingPageData = useSelector((state) => state.landingPageDataSlice);
     const notices = landingPageData?.instituteId?.notices
@@ -27,7 +27,7 @@ export default function NoticeBoard() {
         <div className="container-xxl py-5 section" id="notice_section" >
             <div className="container py-5 px-lg-5">
                 <div className="text-center wow fadeInUp" data-wow-delay="0.1s">
-                    <h2 className="mb-5" id="notice_heading">Notice Board</h2>
+                    <h2 className="mb-5" id="notice_heading">{headingName}</h2>
                 </div>
 
                 <Swiper

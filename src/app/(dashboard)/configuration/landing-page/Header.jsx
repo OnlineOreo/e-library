@@ -46,16 +46,19 @@ export default function Header() {
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
-  const LoadConfigData = async () => {
+  const LoadConfigData = async (instituteId) => {
     const token = getToken();
     if (!token) {
       router.push("/authentication/sign-in");
       return;
     }
+    if(!instituteId){
+      return
+    }
 
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/configurations`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/configurations?institute_id=${instituteId}`,
         {
           headers: { Authorization: `${token}` },
         }
@@ -96,8 +99,8 @@ export default function Header() {
   };
 
   useEffect(() => {
-    LoadConfigData();
-  }, []);
+    LoadConfigData(instituteId);
+  }, [instituteId]);
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -116,7 +119,7 @@ export default function Header() {
     const token = getToken();
     const formData = new FormData();
     formData.append("logo", logo);
-    formData.append("institute", instituteId);
+    formData.append("institute", instituteId);  
 
     try {
       const response = await axios.patch(
@@ -181,8 +184,8 @@ export default function Header() {
         LoadConfigData(); // Reload the logo after upload
       }
     } catch (error) {
-      console.error("Error updating logo:", error);
-      Swal.fire("Error", "Failed to update logo", "error");
+      console.error("Error updating eLibrary :", error);
+      Swal.fire("Error", "Failed to update eLibrary Configuration", "error");
     }
   };
 
@@ -612,7 +615,7 @@ export default function Header() {
                           rows={3}
                           name="firstQuote"
                           placeholder="Enter first quote"
-                          value={coverHeadlineData.firstQuote}
+                          value={coverHeadlineData.firstQuote || ''}
                           onChange={handleCoverHeadlineChange}
                         />
                       </Col>
@@ -627,7 +630,7 @@ export default function Header() {
                         <Form.Control
                           as="textarea"
                           name="subHeading"
-                          value={coverHeadlineData.subHeading}
+                          value={coverHeadlineData.subHeading || ''}
                           onChange={handleCoverHeadlineChange}
                           placeholder="Enter subheading"
                           rows={3} // Adjust the number of rows as needed
@@ -644,10 +647,10 @@ export default function Header() {
                       </Col>
                       <Col lg={6}>
                         <Form.Control
-                          type="text"
+                          type="number"
                           name="banner_font_size"
                           placeholder="Enter font size"
-                          value={coverHeadlineData.banner_font_size}
+                          value={coverHeadlineData.banner_font_size || ''}
                           onChange={handleCoverHeadlineChange}
                         />
                       </Col>
@@ -662,7 +665,7 @@ export default function Header() {
                         <Form.Control
                           type="color"
                           name="banner_font_color"
-                          value={coverHeadlineData.banner_font_color}
+                          value={coverHeadlineData.banner_font_color || ''}
                           onChange={handleCoverHeadlineChange}
                         />
                       </Col>
@@ -679,7 +682,7 @@ export default function Header() {
                         <Form.Control
                           type="color"
                           name="background_color"
-                          value={coverHeadlineData.background_color}
+                          value={coverHeadlineData.background_color || ''}
                           onChange={handleCoverHeadlineChange}
                         />
                       </Col>
@@ -696,7 +699,7 @@ export default function Header() {
                         <Form.Control
                           type="color"
                           name="banner_text_color"
-                          value={coverHeadlineData.banner_text_color}
+                          value={coverHeadlineData.banner_text_color || ''}
                           onChange={handleCoverHeadlineChange}
                         />
                       </Col>

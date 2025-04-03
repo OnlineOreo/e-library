@@ -4,7 +4,7 @@ import Ebook from './Ebook';
 import Ejournal from './Ejournal';
 import Video from './Video';
 
-export default function StaffPick() {
+export default function StaffPick({headingName}) {
     const [book, setBook] = useState(true)
     const [journal, setJournal] = useState(false)
     const [video, setVideo] = useState(false)
@@ -38,7 +38,7 @@ export default function StaffPick() {
                 data-wow-delay="0.3s"
                 style={{ letterSpacing: 1 }}
             >
-                Staff Pick
+                {headingName}
             </h2>
             <div
                 className="navtabs d-flex justify-content-evenly mx-auto bg-light p-3 mb-5 rounded"

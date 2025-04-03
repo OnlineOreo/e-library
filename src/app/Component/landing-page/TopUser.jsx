@@ -17,7 +17,7 @@ const topUsers = [
     { name: "Dr. Robert Brown", role: "admin", rank: "#4", initials: "RB" }
 ];
 
-export default function TopUser() {
+export default function TopUser({headingName}) {
     const swiperRef = useRef(null);
 
     return (
@@ -26,7 +26,7 @@ export default function TopUser() {
                 <div className="container py-5 px-lg-5">
                     <div className="text-center wow fadeInUp" data-wow-delay="0.1s">
                         <h2 className="mb-5" id="top_user_heading">
-                            Top User
+                            {headingName}
                         </h2>
                     </div>
 

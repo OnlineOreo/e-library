@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 
 const categories = ['Business', 'Technology', 'Health', 'Sports', 'Politics', 'Economy'];
 
-export default function Headline() {
+export default function Headline({headingName}) {
     const [activeTab, setActiveTab] = useState('Business');
     const [news, setNews] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -31,6 +31,7 @@ export default function Headline() {
     };
 
     return (
+<<<<<<< HEAD
         <div className="container py-5">
             <h2 className="text-center fw-bold mb-4">Headline</h2>
 
@@ -47,6 +48,33 @@ export default function Headline() {
                         </button>
                     ))}
                 </div>
+=======
+        <div className="containel-xxl py-5 section" style={{ display: "block" }} id="news_section2">
+            <h2 
+                className="mb-3 text-center wow fadeInUp" 
+                id="news_heading2" 
+                data-wow-delay="0.2s"
+                style={{
+                    visibility: "visible",
+                    animationDelay: "0.2s",
+                    animationName: "fadeInUp"
+                }}
+            >
+                {headingName}
+            </h2>
+            
+            <NewsTabs activeTab={activeTab} onTabChange={handleTabChange} />
+            
+            {renderNewsContent()}
+            
+            <div className="container d-flex justify-content-end mt-4">
+                <a 
+                    href={`https://demo.libvirtuua.com/search_news?news_category=${activeTab}`} 
+                    id="read_all_news"
+                >
+                    Read All News <i className="fas fa-long-arrow-alt-right mx-2" />
+                </a>
+>>>>>>> feature/add-widged
             </div>
 
             {/* Loading & Error Messages */}
