@@ -51,6 +51,7 @@ const Footer = () => {
       setIsLoading(false);
     }
   };
+  // console.log(footerData.footer_id)
 
   return (
     <Fragment>
@@ -60,15 +61,9 @@ const Footer = () => {
           <Col lg={12}>
             <div className="d-flex justify-content-between align-items-center">
               <h3 className="mb-0 text-dark">Personals and Social Details</h3>
-              {footerData?.footer_id ? (
                 <Link href={`/configuration/footer/edit/${footerData.footer_id}`} className="btn btn-white">
                   <FaPlusCircle /> Update Details
                 </Link>
-              ):(
-                <Link href={`/configuration/footer/edit/${footerData.footer_id}`} className="btn btn-white">
-                  <FaPlusCircle /> Add
-                </Link>
-              )}
             </div>
           </Col>
         </Row>

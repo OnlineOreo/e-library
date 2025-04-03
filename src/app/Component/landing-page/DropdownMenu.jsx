@@ -3,6 +3,7 @@
 import React from "react";
 import { IoChevronDown } from "react-icons/io5";
 import AZFilter from "./AZFilter";
+import Image from "next/image";
 
 const DropdownMenu = ({ 
   title, 
@@ -36,16 +37,21 @@ const DropdownMenu = ({
                       style={{ cursor: "pointer" }}
                       onClick={() => isPublisher && handlePublisherClick(item)}
                     >
-                      <img
+                      <Image
                         src={item.image}
                         alt={item.image}
                         style={{
-                          width: 25,
-                          height: 25,
                           objectFit: isPublisher ? "contain" : "cover",
                           objectPosition: "center",
                         }}
+                        width={25}
+                        height={25}
+                        onError={(e) => {
+                          e.target.src = "/images/avatar/navbar-default.jpeg";
+                          e.target.alt = "Image";
+                        }}
                       />
+
                       {item.publisher_name || item.category_name || item.media_name}
                     </span>
                   </div>

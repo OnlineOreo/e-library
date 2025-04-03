@@ -82,40 +82,38 @@ export default function Configurationmeta() {
           setMeta((prev) => prev.filter((item) => item.configuration_meta_id !== row.configuration_meta_id));
         } catch (error) {
           toast.error("Error deleting meta!");
-          console.error(error);
+          // console.error(error);
         }
       }
     });
   };
 
   const columns = [
-    // { field: "configuration_meta_id", headerName: "ID", width: 250 },
-    { field: "list", headerName: "Link name", width: 150 },
-    { field: "sub_list", headerName: "Sub List", width: 350 },
+    { field: "list", headerName: "Link name", flex: 1 },
+    { field: "sub_list", headerName: "Sub List", flex: 2 },
     {
       field: "image",
       headerName: "Image",
-      width: 350,
+      flex: 2,
       renderCell: (params) =>
         params.value ? (
           <div className="avatar avatar-md">
-          <img
-            src={params.value}
-            alt="Meta"
-            className="rounded-circle"
-            style={{ width: 50, height: 50, objectFit: "cover", borderRadius: "5px" }}
-          />
+            <img
+              src={params.value}
+              alt="Meta"
+              className="rounded-circle"
+              style={{ width: 50, height: 50, objectFit: "cover", borderRadius: "5px" }}
+            />
           </div>
         ) : (
           "No Image"
         ),
     },
-    { field: "link_url", headerName: "URL", width: 350 },
-    // { field: "description", headerName: "Description", width: 250 },
+    { field: "link_url", headerName: "URL", flex: 2 },
     {
       field: "action",
       headerName: "Action",
-      width: 200,
+      flex: 1,
       renderCell: (params) => (
         <div>
           <button onClick={() => handleEdit(params.row)} className="btn btn-primary btn-sm mx-1">
@@ -127,7 +125,8 @@ export default function Configurationmeta() {
         </div>
       ),
     },
-  ];
+];
+
 
   return (
     <>
