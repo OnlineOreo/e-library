@@ -36,6 +36,18 @@ const Department = () => {
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
+  const getUserRole = () => {
+      if (typeof window !== "undefined") { 
+          const cookieString = document.cookie
+              .split("; ")
+              .find((row) => row.startsWith("user_role="));
+          return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+      }
+      return null;
+  };
+
+  const userRole = getUserRole();
+
   const loadDepartment = async () => {
     const token = getToken();
     if (!token) {
@@ -89,9 +101,11 @@ const Department = () => {
           <button onClick={() => handleEdit(params)} className="btn btn-primary btn-sm mx-2">
             <FaEdit />
           </button>
+          { userRole === "ADMIN" && (
           <button onClick={() => deleteAction(params.id)} className="btn btn-danger btn-sm">
             <RiDeleteBin6Line />
           </button>
+          )}
         </div>
       ),
     },
@@ -146,9 +160,11 @@ const Department = () => {
           <Col lg={12} md={12} xs={12}>
             <div className="d-flex justify-content-between align-items-center">
               <h3 className="mb-0 text-dark">Department</h3>
+              { userRole  === "ADMIN" && (
               <Link href="/library-department/department/add" className="btn btn-white">
                 <FaPlusCircle /> Department
               </Link>
+              )}
             </div>
           </Col>
         </Row>

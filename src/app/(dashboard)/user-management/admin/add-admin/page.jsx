@@ -54,7 +54,7 @@ const Home = () => {
         ...formData,
         [name]: value,
       });
-      console.log(formData);
+      // console.log(formData);
     }
   };
 
@@ -78,7 +78,6 @@ const Home = () => {
 
     const formDataToSend = new FormData();
 
-    // Append all form fields
     Object.entries(formData).forEach(([key, value]) => {
       if (key === "image" && value instanceof File) {
         formDataToSend.append(key, value);
@@ -94,8 +93,11 @@ const Home = () => {
         formDataToSend.append(key, value);
       }
     });
-
-    formDataToSend.append('is_superuser', true);
+    
+    const isSuperUser = formData.role === "ADMIN";
+    formDataToSend.append("is_superuser", isSuperUser);
+    
+  
 
     try {
       const response = await axios.post(

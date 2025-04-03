@@ -35,6 +35,18 @@ const ViewContentGroup = () => {
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
+  const getUserRole = () => {
+      if (typeof window !== "undefined") { 
+          const cookieString = document.cookie
+              .split("; ")
+              .find((row) => row.startsWith("user_role="));
+          return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+      }
+      return null;
+  };
+
+  const userRole = getUserRole();
+
   const loadContentGroup = async () => {
     const token = getToken();
     if (!token) {
@@ -108,7 +120,9 @@ const ViewContentGroup = () => {
       renderCell: (params) => (
         <div>
           <button onClick={() => handleEdit(params)} className="btn btn-primary btn-sm"><FaEdit /></button>
+          { userRole === "ADMIN" && (
           <button onClick={() => handleDelete(params)} className="btn btn-danger mx-2 btn-sm"><RiDeleteBin6Line /></button>
+          )}
         </div>
       ),
     },
@@ -124,9 +138,11 @@ const ViewContentGroup = () => {
           <Col lg={12} md={12} xs={12}>
             <div className="d-flex justify-content-between align-items-center">
               <h3 className="mb-0 text-dark"> Content Group</h3>
+              { userRole === "ADMIN" && (
               <Link href="./content-group/add" className="btn btn-white">
                 <FaPlusCircle /> Content Group
               </Link>
+              )}
             </div>
           </Col>
         </Row>

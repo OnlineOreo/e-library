@@ -30,6 +30,18 @@ export default function ServiceGroup() {
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
+  const getUserRole = () => {
+      if (typeof window !== "undefined") { 
+          const cookieString = document.cookie
+              .split("; ")
+              .find((row) => row.startsWith("user_role="));
+          return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+      }
+      return null;
+  };
+
+  const userRole = getUserRole();
+
   const loadServiceGroup = async () => {
     const token = getToken();
     if (!token) {
@@ -100,9 +112,11 @@ export default function ServiceGroup() {
           <button onClick={() => handleEdit(params)} className="btn btn-primary btn-sm">
             <FaEdit />
           </button>
+          { userRole === "ADMIN" && (
           <button onClick={() => handleDelete(params)} className="btn btn-danger mx-2 btn-sm">
             <RiDeleteBin6Line />
           </button>
+          )}
         </div>
       ),
     },
@@ -116,9 +130,11 @@ export default function ServiceGroup() {
           <Col lg={12} md={12} xs={12} className="mb-4">
             <div className="d-flex justify-content-between align-items-center">
               <h3 className="mb-0 text-dark">Service Group</h3>
+              { userRole === "ADMIN" && (
               <Link href="./service-group/add" className="btn btn-white">
                 <FaPlusCircle /> Service Group
               </Link>
+              )}
             </div>
           </Col>
         </Row>

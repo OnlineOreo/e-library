@@ -12,7 +12,7 @@ export const useDashboardMenu = () => {
     };
 
     const userRole = getUserRole();
-    console.log("User Role:", userRole);
+    // console.log("User Role:", userRole);
 
     const menu = [
         { id: uuid(), title: 'Dashboard', icon: 'home', link: '/dashboard' },

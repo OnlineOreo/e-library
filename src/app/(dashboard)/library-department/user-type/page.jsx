@@ -29,6 +29,18 @@ const ViewUserType = () => {
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
+  const getUserRole = () => {
+      if (typeof window !== "undefined") { 
+          const cookieString = document.cookie
+              .split("; ")
+              .find((row) => row.startsWith("user_role="));
+          return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+      }
+      return null;
+  };
+
+  const userRole = getUserRole();
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       loadUserType();
@@ -117,12 +129,14 @@ const ViewUserType = () => {
           >
             <FaEdit />
           </button>
+          { userRole === "ADMIN" && (
           <button
             onClick={() => handleDelete(params)}
             className="btn btn-danger mx-2 btn-sm"
           >
             <RiDeleteBin6Line />
           </button>
+          )}
         </div>
       ),
     },
@@ -136,9 +150,11 @@ const ViewUserType = () => {
           <Col lg={12} md={12} xs={12}>
             <div className="d-flex justify-content-between align-items-center">
               <h3 className="mb-0 text-dark">User Type</h3>
+              { userRole === "ADMIN" && (
               <Link href="./user-type/add" className="btn btn-white">
                 <FaPlusCircle /> user type
               </Link>
+              )}
             </div>
           </Col>
         </Row>

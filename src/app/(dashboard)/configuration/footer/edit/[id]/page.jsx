@@ -90,56 +90,57 @@ const EditCategory = () => {
         return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
       };
 
-    const handleSubmit = async (event) => {
+      const handleSubmit = async (event) => {
         event.preventDefault();
         if (!validateForm()) {
             return;
         }
         setIsLoading(true);
-
+    
         const token = getToken();
         if (!token) {
             Swal.fire("Error", "Authentication required!", "error");
             setIsLoading(false);
             return;
         }
-
+    
         let formDataToSend = new FormData();
         Object.keys(formData).forEach((key) => {
             formDataToSend.append(key, formData[key]);
         });
-
+    
         try {
-            await axios.put(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/footers?footer_id=${formData.footer_id}`,
-                formDataToSend,
-                {
-                    headers: {
-                        Authorization: `${token}`,
-                    },
-                }
-            );
-
+            if (formData.footer_id) {
+                // Updating existing footer (PUT request)
+                await axios.put(
+                    `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/footers/${formData.footer_id}`,
+                    formDataToSend,
+                    {
+                        headers: {
+                            Authorization: `${token}`,
+                        },
+                    }
+                );
+            } else {
+                // Creating a new footer (POST request)
+                await axios.post(
+                    `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/footers`,
+                    formDataToSend,
+                    {
+                        headers: {
+                            Authorization: `${token}`,
+                        },
+                    }
+                );
+            }
+    
             Swal.fire({
                 title: "Success!",
-                text: "Footer Updated successfully!",
+                text: "Footer updated successfully!",
                 icon: "success",
                 confirmButtonText: "OK",
             });
-
-            setFormData({
-                footer_id: "",
-                address: "",
-                phone: "",
-                email: "",
-                fb_url: "",
-                x_url: "",
-                yt_url: "",
-                li_url: "",
-                insta_url: "",
-                page_content: "",
-            });
-
+    
             setTimeout(() => {
                 router.push("../");
             }, 2000);
@@ -153,6 +154,7 @@ const EditCategory = () => {
             setIsLoading(false);
         }
     };
+    
 
     return (
         <Fragment>
