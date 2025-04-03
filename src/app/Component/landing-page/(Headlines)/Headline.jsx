@@ -9,7 +9,7 @@ import EconomyNews from './EconomyNews';
 import NewsTabs from './NewsTabs';
 
 
-export default function Headline() {
+export default function Headline({headingName}) {
     const [activeTab, setActiveTab] = useState('Business');
 
     const handleTabChange = (tab) => {
@@ -47,7 +47,7 @@ export default function Headline() {
                     animationName: "fadeInUp"
                 }}
             >
-                Headline
+                {headingName}
             </h2>
             
             <NewsTabs activeTab={activeTab} onTabChange={handleTabChange} />

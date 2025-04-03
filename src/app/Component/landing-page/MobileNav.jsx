@@ -23,7 +23,7 @@ const MobileNav = ({ menuOpen, toggleMenu }) => {
 
   const landingPageData = useSelector((state) => state.landingPageDataSlice);
   
-  const bannerData = landingPageData?.instituteId?.configurations[0];
+  const bannerData = landingPageData?.instituteId?.configurations?.[0] || [];
   const publisherUrls = {
     "EBSCO Academic Collection": `https://research-ebsco-com.mriirs.libvirtuua.com:8811/login.aspx?authtype=ip,uid&custid=ns193200&groupid=main&profile=ehost&defaultdb=bsh&token=${token}`,
     Manupatra: `https://www-manupatrafast-in.mriirs.libvirtuua.com:8811/LoginSwitch/ipRedirect.aspx?token=${token}`,

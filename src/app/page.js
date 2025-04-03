@@ -1,17 +1,16 @@
 "use client";
 
-import { useEffect,useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchInstituteId } from "./../redux/slices/instituteSlice";
 import Image from "next/image";
 import styles from "./page.module.css";
 import Navbar from "./Component/landing-page/Navbar";
-import '../../public/landingPageAsset/css/style2.css';
-import '../../public/landingPageAsset/css/header.css';
+import "../../public/landingPageAsset/css/style2.css";
+import "../../public/landingPageAsset/css/header.css";
 import Banner from "./Component/landing-page/Banner";
 import Publisher from "./Component/landing-page/Publisher";
 import NoticeBoard from "./Component/landing-page/NoticeBoard";
-import AboutUs from "./Component/landing-page/AboutUs";
 import TrendingBook from "./Component/landing-page/TrendingBook";
 import StaffPick from "./Component/landing-page/StaffPick";
 import Download from "./Component/landing-page/Download";
@@ -21,20 +20,19 @@ import Headline from "./Component/landing-page/(Headlines)/Headline";
 
 export default function Home() {
   const dispatch = useDispatch();
-  const instituteId = useSelector((state) => state.institute.instituteId);
-  const landingPageData = useSelector((state) => state.landingPageDataSlice);
   const status = useSelector((state) => state.institute.status);
+  const landingPageData = useSelector((state) => state.landingPageDataSlice);
   const [loading, setLoading] = useState(true);
-  
+
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchInstituteId());
-    }else{
+    } else {
       setLoading(false);
     }
   }, [dispatch, status]);
 
-  if(loading){
+  if (loading) {
     return (
       <div
         style={{
@@ -52,22 +50,34 @@ export default function Home() {
     );
   }
 
-  const configData = landingPageData?.instituteId?.configurations[0]
+  // Fetch API Data
+  const configData = landingPageData?.instituteId?.configurations?.[0] || {};
+  const sectionOrder = configData.section_order || {};
 
+  // console.log(configData)
+
+  // Map of components with props, including NoticeBoard
+  const componentsMap = {
+    publisher: (heading_name) => <Publisher headingName={heading_name} bannerData={configData} />,
+    books: (heading_name) => <TrendingBook headingName={heading_name} bannerData={configData} />,
+    staff: (heading_name) => <StaffPick headingName={heading_name} bannerData={configData} />,
+    headline: (heading_name) => <Headline headingName={heading_name} bannerData={configData} />,
+    download: (heading_name) => <Download headingName={heading_name} bannerData={configData} />,
+    top_user: (heading_name) => <TopUser headingName={heading_name} bannerData={configData} />,
+    notice_board: (heading_name) => <NoticeBoard headingName={heading_name} bannerData={configData} />, // Added NoticeBoard
+  };
 
   return (
     <div className={styles.page}>
       <div id="main_widget_section">
-        <Navbar/>
+        <Navbar />
         <Banner bannerData={configData} />
-        <Publisher  /> 
-        <NoticeBoard bannerData={configData} />
-        {/* <AboutUs /> */}
-        <TrendingBook bannerData={configData} />
-        <StaffPick />
-        <Headline/>
-        <Download bannerData={configData} />
-        <TopUser bannerData={configData} />
+
+        {/* Render Components Dynamically Based on API Response */}
+        {Object.values(sectionOrder)
+          .filter((section) => section.active) // Only include active sections
+          .map((section) => componentsMap[section.id]?.(section.heading_name))}
+
         <Footer />
       </div>
     </div>

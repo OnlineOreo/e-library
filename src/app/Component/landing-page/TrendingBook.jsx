@@ -10,9 +10,10 @@ import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 
 
-export default function TrendingBook({bannerData}) {
+export default function TrendingBook({headingName,bannerData}) {
     const landingPageData = useSelector((state) => state.landingPageDataSlice);
     const books = landingPageData?.instituteId?.trending_books?.map(trending_book => trending_book.book_image) || [];
+    console.log(books)
     return (
         <div
             className="tranding-wrapper mt-5 container-xxl section py-5"
@@ -24,7 +25,7 @@ export default function TrendingBook({bannerData}) {
                 id="trending_books_heading"
                 data-wow-delay="0.3s"
             >
-                Trending Books
+                {headingName}
             </h2>
             <div className="book-wrapper wow fadeInUp" data-wow-delay="0.5s">
                 <Swiper

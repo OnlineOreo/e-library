@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 
 export default function Footer() {
     const landingPageData = useSelector((state) => state.landingPageDataSlice);
-    const footer = landingPageData?.instituteId?.footers[0]
+    const footer = landingPageData?.instituteId?.footers?.[0]
     return (
         <>
             <div
@@ -21,7 +21,7 @@ export default function Footer() {
                         <div className="col-md-6 col-lg-4">
                             <h4 className="text-white">Developed By</h4>
                             <img
-                                src={landingPageData?.instituteId?.configurations[0]?.logo}
+                                src={landingPageData?.instituteId?.configurations?.[0]?.logo || 'default'}
                                 alt=""
                                 style={{ width: 100, height: 100 }}
                             />

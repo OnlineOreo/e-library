@@ -25,7 +25,7 @@ const SearchBar = () => {
     { value: "resource_types", label: "Resource Type" },
     { value: "ISBN", label: "ISBN" },
     { value: "url", label: "URL" },
-    { value: "datacite_titles", label: "A-Z Filter" }
+    { value: "a-z-filter", label: "A-Z Filter" }
   ];
 
   const handleFilterSelect = (event) => {

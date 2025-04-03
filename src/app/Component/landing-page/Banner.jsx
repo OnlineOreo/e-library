@@ -7,11 +7,11 @@ export default function Banner({bannerData}) {
         <div className="container text-center w-50 px-sm-3">
           <h2 className="fw-bold text-dark fs-md-2 fs-lg-3" style={{ fontSize:bannerData?.cover_headline?.firstQuote || '' }} >
             {bannerData?.cover_headline?.firstQuote || ''}
-             {/* <span className="text-primary">LIBVIRTUUA</span> */}
+            {/* <span className="text-primary">LIBVIRTUUA</span> */}
           </h2>
           <p className="lead text-white fw-semibold px-1 px-sm-4 py-3 rounded-3 d-inline-block mt-3 shadow-sm" style={{backgroundColor: bannerData?.color2}}>
           {bannerData?.cover_headline?.subHeading || ''}
-         </p>
+          </p>
        </div>
       </div>
     </div>

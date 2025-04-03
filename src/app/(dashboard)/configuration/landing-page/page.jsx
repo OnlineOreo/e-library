@@ -4,6 +4,7 @@ import { Col, Row, Card, Tab, Nav, Container, Button, Form, } from "react-bootst
 import "./Checkbox.css";
 import Menu from "./Menu";
 import Header from "./Header";
+import Widget from "./Widget";
 
 const Badges = () => {
   return (
@@ -33,7 +34,7 @@ const Badges = () => {
                   </Tab.Pane>
 
                   <Tab.Pane eventKey="widget" className="p-4">
-                    <h1>Widget</h1>
+                    <Widget/>
                   </Tab.Pane>
 
                   <Tab.Pane eventKey="menu" className="p-4">
@@ -46,6 +47,7 @@ const Badges = () => {
         </Col>
       </Row>
     </Container>
+    
   );
 };
 
