@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { Container, Col, Row, Form, Button, Spinner } from "react-bootstrap";
@@ -8,19 +8,30 @@ import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
 import Link from "next/link";
 import { FaMinusCircle } from "react-icons/fa";
+import "suneditor/dist/css/suneditor.min.css"; // Import SunEditor styles
+import dynamic from "next/dynamic";
+import { useSelector } from "react-redux";
+
+// Dynamically import SunEditor to avoid SSR issues
+const SunEditor = dynamic(() => import("suneditor-react"), {
+  ssr: false,
+});
 
 const AddDynamicPage = () => {
-
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const instituteId = useSelector((state) => state.institute.instituteId);
 
   const [formData, setFormData] = useState({
     page_name: "",
     page_image: null,
-    page_content:'',
-    institute:'d82fc520-2536-4cc0-a744-3f6b9d20bc46'
+    page_content: "",
   });
+
+  useEffect(() => {
+      setFormData((prev) => ({ ...prev, institute: instituteId || "" }));
+    }, [instituteId]);
 
   const getToken = () => {
     const cookieString = document.cookie
@@ -33,13 +44,17 @@ const AddDynamicPage = () => {
   const handleInputChange = (event) => {
     const { name, value, type, files } = event.target;
     if (type === "file") {
-      setFormData({ ...formData, [name]: files[0] }); 
+      setFormData({ ...formData, [name]: files[0] });
     } else {
       setFormData({ ...formData, [name]: value });
     }
   };
 
-  const handleSubmit = async (event) => {
+  const handleContentChange = (content) => {
+    setFormData({ ...formData, page_content: content });
+  };
+
+  const handleSubmit = async (event,instituteId) => {
     event.preventDefault();
     setIsLoading(true);
     setErrors({});
@@ -56,7 +71,11 @@ const AddDynamicPage = () => {
       const formDataToSend = new FormData();
       Object.entries(formData).forEach(([key, value]) => {
         formDataToSend.append(key, value);
+        
       });
+
+      formDataToSend.append('institute', instituteId);
+
 
       await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dynamic-page`,
@@ -100,7 +119,7 @@ const AddDynamicPage = () => {
           </Col>
         </Row>
         <div className="card p-6 mt-5">
-          <Form onSubmit={handleSubmit}>
+          <Form onSubmit={(e)=>handleSubmit(e,instituteId)}>
             <Row>
               <Col lg={6} className="mb-3">
                 <Form.Group>
@@ -112,10 +131,10 @@ const AddDynamicPage = () => {
                     onChange={handleInputChange}
                     placeholder="Enter page name"
                     required
-                    isInvalid={!!errors.media_name}
+                    isInvalid={!!errors.page_name}
                   />
                   <Form.Control.Feedback type="invalid">
-                    {errors.media_name?.join(", ")}
+                    {errors.page_name?.join(", ")}
                   </Form.Control.Feedback>
                 </Form.Group>
               </Col>
@@ -137,18 +156,18 @@ const AddDynamicPage = () => {
               <Col lg={12} className="mb-3">
                 <Form.Group>
                   <Form.Label>Content</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    name="page_content"
-                    value={formData.page_content}
-                    onChange={handleInputChange}
-                    isInvalid={!!errors.page_content}
-                    placeholder="Enter page content"
+                  <SunEditor
+                    setContents={formData.page_content}
+                    onChange={handleContentChange}
+                    setOptions={{
+                      buttonList: [
+                        ["bold", "italic", "underline", "strike"],
+                        ["list", "align", "fontSize"],
+                        ["link", "image", "table"],
+                        ["fullScreen", "codeView"],
+                      ],
+                    }}
                   />
-                  <Form.Control.Feedback type="invalid">
-                    {errors.page_content?.join(", ")}
-                  </Form.Control.Feedback>
                 </Form.Group>
               </Col>
             </Row>
