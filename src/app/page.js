@@ -54,8 +54,6 @@ export default function Home() {
   const configData = landingPageData?.instituteId?.configurations?.[0] || {};
   const sectionOrder = configData.section_order || {};
 
-  // console.log(configData)
-
   // Map of components with props, including NoticeBoard
   const componentsMap = {
     publisher: (heading_name) => <Publisher headingName={heading_name} bannerData={configData} />,
@@ -76,7 +74,9 @@ export default function Home() {
         {/* Render Components Dynamically Based on API Response */}
         {Object.values(sectionOrder)
           .filter((section) => section.active) // Only include active sections
-          .map((section) => componentsMap[section.id]?.(section.heading_name))}
+          .map((section) => (
+            <div key={section.id}>{componentsMap[section.id]?.(section.heading_name)}</div>
+          ))}
 
         <Footer />
       </div>

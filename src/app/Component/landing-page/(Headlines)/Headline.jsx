@@ -31,24 +31,6 @@ export default function Headline({headingName}) {
     };
 
     return (
-<<<<<<< HEAD
-        <div className="container py-5">
-            <h2 className="text-center fw-bold mb-4">Headline</h2>
-
-            {/* Tabs */}
-            <div className="d-flex justify-content-center mb-4">
-                <div className="bg-light p-2 rounded-pill d-flex flex-wrap justify-content-center">
-                    {categories.map((category) => (
-                        <button
-                            key={category}
-                            className={`btn btn-sm mx-1 my-1 rounded-pill ${activeTab === category ? 'btn-primary text-white' : 'btn-light'}`}
-                            onClick={() => setActiveTab(category)}
-                        >
-                            {category}
-                        </button>
-                    ))}
-                </div>
-=======
         <div className="containel-xxl py-5 section" style={{ display: "block" }} id="news_section2">
             <h2 
                 className="mb-3 text-center wow fadeInUp" 
@@ -63,9 +45,9 @@ export default function Headline({headingName}) {
                 {headingName}
             </h2>
             
-            <NewsTabs activeTab={activeTab} onTabChange={handleTabChange} />
+            {/* <NewsTabs activeTab={activeTab} onTabChange={handleTabChange} /> */}
             
-            {renderNewsContent()}
+            {/* {renderNewsContent()} */}
             
             <div className="container d-flex justify-content-end mt-4">
                 <a 
@@ -74,7 +56,6 @@ export default function Headline({headingName}) {
                 >
                     Read All News <i className="fas fa-long-arrow-alt-right mx-2" />
                 </a>
->>>>>>> feature/add-widged
             </div>
 
             {/* Loading & Error Messages */}
