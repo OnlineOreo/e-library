@@ -54,7 +54,7 @@ export default function Video({ toggle }) {
                                 <span className="card__content__price text-muted mb-1">{video.price}</span>
                                 <h2 className="card__content__title h5 mb-2">{video.title}</h2>
                                 <span className="card__content__description small text-muted mb-3">{video.description}</span>
-                                <button className="card__content__buy btn btn-primary mt-auto">Add to Cart</button>
+                                <button className="card__content__buy btn btn-primary mt-auto">Watch</button>
                             </main>
                         </div>
                     </SwiperSlide>

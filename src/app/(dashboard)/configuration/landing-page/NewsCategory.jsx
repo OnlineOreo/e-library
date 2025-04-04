@@ -122,10 +122,10 @@ export default function NewsCategory() {
   };
 
   return (
-    <Row className="mt-5 justify-content-center">
+    <Row className="mt-5 justify-content-center user-select-none">
       <Col md={10}>
         <Card className="shadow border-0">
-          <Card.Header className="bg-primary text-white text-center py-3 rounded-top">
+          <Card.Header className="bg-dark text-white text-center py-3 rounded-top">
             <h5 className="mb-0 text-light">📰 Choose Your News Category</h5>
           </Card.Header>
           <Card.Body className="p-4">
@@ -144,6 +144,7 @@ export default function NewsCategory() {
                   <Col key={index} xs={12} sm={6} md={3}>
                     <Form.Check
                       type="checkbox"
+                      style={{ cursor:'pointer' }}
                       id={`category-${index}`}
                       label={category}
                       checked={selectedCategories.includes(category)}

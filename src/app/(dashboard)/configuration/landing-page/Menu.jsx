@@ -136,7 +136,7 @@ export default function Menu() {
   return (
     <>
       <Form onSubmit={handleSubmit}>
-        <Row className="p-4">
+        <Row className="p-4 user-select-none">
           <CheckboxCard
             title="Publishers"
             checklists={publisherList}

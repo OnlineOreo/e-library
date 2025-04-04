@@ -7,19 +7,17 @@ export default function Headline({ headingName, bannerData }) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    const categories = bannerData.news_category.split(",").map(cat => cat.trim()); // ✅ Trim spaces
+    const categories = bannerData.news_category.split(",").map(cat => cat.trim());
 
-    // ✅ Set the default activeTab only when the component mounts (not every render)
     useEffect(() => {
         if (!activeTab && categories.length > 0) {
-            setActiveTab(categories[0]);
+            setActiveTab(categories[0]); // ✅ Set trimmed category
         }
-    }, []); // ✅ Only runs on mount
+    }, []); 
 
-    // ✅ Fetch news whenever `activeTab` changes
     useEffect(() => {
         if (activeTab) {
-            fetchNews(activeTab);
+            fetchNews(activeTab.trim()); // ✅ Trim before API call
         }
     }, [activeTab]);
 
@@ -27,14 +25,15 @@ export default function Headline({ headingName, bannerData }) {
         setLoading(true);
         setError(null);
         try {
+            const trimmedCategory = category.trim().toLowerCase(); // ✅ Trimmed again for safety
             const response = await fetch(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/news?category=${category.toLowerCase()}`
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/news?category=${trimmedCategory}`
             );
             if (!response.ok) {
                 throw new Error("Failed to fetch news");
             }
             const data = await response.json();
-            setNews(data.slice(0, 9)); // ✅ Show only the first 9 records
+            setNews(data.slice(0, 9));
         } catch (err) {
             setError(err.message);
         } finally {
@@ -54,7 +53,7 @@ export default function Headline({ headingName, bannerData }) {
                             key={category}
                             className={`btn btn-sm mx-1 my-1 rounded-pill ${activeTab === category ? "btn-primary text-white" : "btn-light"
                                 }`}
-                            onClick={() => setActiveTab(category)} // ✅ Updates tab without reset
+                            onClick={() => setActiveTab(category.trim())} // ✅ Trim before setting
                         >
                             {category}
                         </button>
