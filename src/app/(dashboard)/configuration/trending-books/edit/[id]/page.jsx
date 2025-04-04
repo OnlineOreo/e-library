@@ -7,7 +7,7 @@ import { Container, Col, Row, Form, Button, Spinner } from "react-bootstrap";
 import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
 import Link from "next/link";
-import { FaArrowLeft } from "react-icons/fa";
+import { FaMinusCircle } from "react-icons/fa";
 
 export default function EditBook() {
   const router = useRouter();
@@ -136,7 +136,7 @@ export default function EditBook() {
             <div className="d-flex justify-content-between align-items-center">
               <h3 className="mb-0 text-dark">Edit Book</h3>
               <Link href="/configuration/trending-books" className="btn btn-white">
-                <FaArrowLeft /> Back
+                 <FaMinusCircle /> Back
               </Link>
             </div>
           </Col>

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Form, Button, Container, Row, Col, Card } from 'react-bootstrap';
 import axios from 'axios';
 import Swal from "sweetalert2";
+import { useSelector } from 'react-redux';
 
 export default function SendEmail() {
     const [filterMethod, setFilterMethod] = useState('library');
@@ -10,6 +11,8 @@ export default function SendEmail() {
     const [selectedLibraryId, setSelectedLibraryId] = useState('');
     const [departments, setDepartments] = useState([]);
     const [programs, setPrograms] = useState([]);
+
+    const instituteId = useSelector((state) => state.institute.instituteId);
 
     const getToken = () => {
         const cookieString = document.cookie
@@ -49,6 +52,7 @@ export default function SendEmail() {
 
     const handelSubmit = (e) => {
         e.preventDefault();
+
     
         const formData = new FormData(e.target);
         const filterMethod = formData.get('filterMethod');
@@ -68,12 +72,9 @@ export default function SendEmail() {
             content,
         };
     
-        console.log('Payload:', payload);
-        console.log('Files:', files);
-    
         const token = getToken();
     
-        axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/send-email`, formData, {
+        axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/send-email?institute_id=${instituteId}`, formData, {
             headers: {
                 'Authorization': `${token}`,
                 'Content-Type': 'multipart/form-data',

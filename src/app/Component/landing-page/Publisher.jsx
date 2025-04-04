@@ -5,9 +5,17 @@ import 'swiper/css';
 import { useSelector } from 'react-redux';
 
 export default function Publisher({headingName,bannerData}) {
-    const landingPageData = useSelector((state) => state.landingPageDataSlice);
 
-    const publisherImages = landingPageData?.instituteId?.publishers?.map(publisher => publisher.image) || [];
+    const publisherImages = [
+        '/images/publisher/publisher1.jpg',
+        '/images/publisher/publisher2.jpg',
+        '/images/publisher/publisher3.png',
+        '/images/publisher/publisher4.jpg',
+        '/images/publisher/publisher5.png',
+        '/images/publisher/publisher6.jpg',
+        '/images/publisher/publisher7.webp',
+        '/images/publisher/publisher8.webp',
+    ];
 
     return (
         <div className="publisher-wrapper container py-5 pt-5 section" id="publisher_section" style={{ display: "block" }}>

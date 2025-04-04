@@ -30,8 +30,8 @@ const AddDynamicPage = () => {
   });
 
   useEffect(() => {
-      setFormData((prev) => ({ ...prev, institute: instituteId || "" }));
-    }, [instituteId]);
+    setFormData((prev) => ({ ...prev, institute: instituteId || "" }));
+  }, [instituteId]);
 
   const getToken = () => {
     const cookieString = document.cookie
@@ -54,7 +54,7 @@ const AddDynamicPage = () => {
     setFormData({ ...formData, page_content: content });
   };
 
-  const handleSubmit = async (event,instituteId) => {
+  const handleSubmit = async (event, instituteId) => {
     event.preventDefault();
     setIsLoading(true);
     setErrors({});
@@ -71,11 +71,9 @@ const AddDynamicPage = () => {
       const formDataToSend = new FormData();
       Object.entries(formData).forEach(([key, value]) => {
         formDataToSend.append(key, value);
-        
       });
 
-      formDataToSend.append('institute', instituteId);
-
+      formDataToSend.append("institute", instituteId);
 
       await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dynamic-page`,
@@ -119,7 +117,7 @@ const AddDynamicPage = () => {
           </Col>
         </Row>
         <div className="card p-6 mt-5">
-          <Form onSubmit={(e)=>handleSubmit(e,instituteId)}>
+          <Form onSubmit={(e) => handleSubmit(e, instituteId)}>
             <Row>
               <Col lg={6} className="mb-3">
                 <Form.Group>
@@ -157,9 +155,11 @@ const AddDynamicPage = () => {
                 <Form.Group>
                   <Form.Label>Content</Form.Label>
                   <SunEditor
+                    style={{ minHeight: "250px" }} 
                     setContents={formData.page_content}
                     onChange={handleContentChange}
                     setOptions={{
+                      minHeight: "250px", 
                       buttonList: [
                         ["bold", "italic", "underline", "strike"],
                         ["list", "align", "fontSize"],

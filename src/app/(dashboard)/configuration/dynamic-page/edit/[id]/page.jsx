@@ -8,6 +8,14 @@ import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
 import Link from "next/link";
 import { FaMinusCircle } from "react-icons/fa";
+import "suneditor/dist/css/suneditor.min.css";
+import dynamic from "next/dynamic";
+import { useSelector } from "react-redux";
+
+// Dynamically import SunEditor to avoid SSR issues
+const SunEditor = dynamic(() => import("suneditor-react"), {
+  ssr: false,
+});
 
 const EditConfigurationMeta = () => {
   const router = useRouter();
@@ -68,7 +76,7 @@ const EditConfigurationMeta = () => {
         setFormData({
           page_name: data.page_name,
           page_image: null,
-          institute:'',
+          institute: '',
           page_content: data.page_content,
         });
         setExistingImage(data.page_image);
@@ -82,13 +90,20 @@ const EditConfigurationMeta = () => {
   }, [id]);
 
   const handleInputChange = (event) => {
+    if (!event || !event.target) return; // Prevents error if event is undefined
+
     const { name, value, type, files } = event.target;
+
     if (type === "file" && files.length > 0) {
-      setFormData({ ...formData, [name]: files[0] });
+      setFormData((prev) => ({ ...prev, [name]: files[0] }));
       setPreviewImage(URL.createObjectURL(files[0]));
     } else {
-      setFormData({ ...formData, [name]: value });
+      setFormData((prev) => ({ ...prev, [name]: value }));
     }
+  };
+
+  const handleEditorChange = (content) => {
+    setFormData((prev) => ({ ...prev, page_content: content }));
   };
 
   const handleSubmit = async (event) => {
@@ -144,7 +159,7 @@ const EditConfigurationMeta = () => {
         <Row>
           <Col lg={12}>
             <div className="d-flex justify-content-between align-items-center">
-              <h3 className="mb-0 text-dark">Edit Dynamic page</h3>
+              <h3 className="mb-0 text-dark">Edit Dynamic Page</h3>
               <Link href="../" className="btn btn-white">
                 <FaMinusCircle /> Back
               </Link>
@@ -156,7 +171,7 @@ const EditConfigurationMeta = () => {
             <Row>
               <Col lg={6} className="mb-3">
                 <Form.Group>
-                  <Form.Label>Page name</Form.Label>
+                  <Form.Label>Page Name</Form.Label>
                   <Form.Control
                     type="text"
                     name="page_name"
@@ -194,16 +209,20 @@ const EditConfigurationMeta = () => {
             <Row>
               <Col lg={12} className="mb-3">
                 <Form.Group>
-                  <Form.Label>Page content</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    name="page_content"
-                    value={formData.page_content}
-                    onChange={handleInputChange}
-                    isInvalid={!!errors.page_content}
-                    placeholder="Enter page content"
-                    required
+                  <Form.Label>Page Content</Form.Label>
+                  <SunEditor
+                    style={{ minHeight:'250px' }}
+                    setContents={formData.page_content}
+                    onChange={handleEditorChange} // Use correct function
+                    setOptions={{
+                      minHeight: "250px",
+                      buttonList: [
+                        ["bold", "italic", "underline", "strike"],
+                        ["list", "align", "fontSize"],
+                        ["link", "image", "table"],
+                        ["fullScreen", "codeView"],
+                      ],
+                    }}
                   />
                   <Form.Control.Feedback type="invalid">
                     {errors.page_content?.join(", ")}

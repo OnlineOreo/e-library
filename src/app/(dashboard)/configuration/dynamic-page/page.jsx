@@ -104,49 +104,44 @@ const ViewDynamicPages = () => {
       inst?.page_name?.toLowerCase().includes(search.toLowerCase())
     );
 
-  const columns = [
-    { field: "page_id", headerName: "Id", width: 150 },
-    {
-      field: "page_image",
-      headerName: "Image",
-      width: 100,
-      renderCell: (params) => (
-        <div className="avatar avatar-md">
-          <Image
-            src={params.value || ""}
-            alt="Publisher"
-            width={50}
-            height={50}
-            className="rounded-circle"
-          />
-        </div>
-      ),
-    },
-    { field: "page_name", headerName: "Page Name", width: 200 },
-    { field: "created_at", headerName: "Created At", width: 200 },
-    { field: "updated_at", headerName: "Updated At", width: 200 },
-    {
-      field: "action",
-      headerName: "Action",
-      width: 150,
-      renderCell: (params) => (
-        <div>
-          <button
-            onClick={() => handleEdit(params)}
-            className="btn btn-primary btn-sm"
-          >
-            <FaEdit />
-          </button>
-          <button
-            onClick={() => handleDelete(params)}
-            className="btn btn-danger mx-2 btn-sm"
-          >
-            <RiDeleteBin6Line />
-          </button>
-        </div>
-      ),
-    },
-  ];
+    const columns = [
+      { field: "page_id", headerName: "Id", flex: 1 }, 
+      {
+        field: "page_image",
+        headerName: "Image",
+        flex: 0.5, 
+        renderCell: (params) => (
+          <div className="avatar avatar-md">
+            <Image
+              src={params.value || ""}
+              alt="Publisher"
+              width={50}
+              height={50}
+              className="rounded-circle"
+            />
+          </div>
+        ),
+      },
+      { field: "page_name", headerName: "Page Name", flex: 2 },
+      { field: "created_at", headerName: "Created At", flex: 2 },
+      { field: "updated_at", headerName: "Updated At", flex: 2 },
+      {
+        field: "action",
+        headerName: "Action",
+        flex: 1,
+        renderCell: (params) => (
+          <div className="d-flex gap-2"> {/* Ensures spacing */}
+            <button onClick={() => handleEdit(params)} className="btn btn-primary btn-sm">
+              <FaEdit />
+            </button>
+            <button onClick={() => handleDelete(params)} className="btn btn-danger btn-sm">
+              <RiDeleteBin6Line />
+            </button>
+          </div>
+        ),
+      },
+    ];
+    
 
   return (
     <>

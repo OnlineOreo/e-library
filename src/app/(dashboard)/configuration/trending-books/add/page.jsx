@@ -7,8 +7,8 @@ import { Container, Col, Row, Form, Button, Spinner } from "react-bootstrap";
 import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
 import Link from "next/link";
-import { FaArrowLeft } from "react-icons/fa";
 import { useSelector } from "react-redux";
+import { FaMinusCircle } from "react-icons/fa";
 
 export default function AddTrendingBook() {
   const router = useRouter();
@@ -122,7 +122,7 @@ export default function AddTrendingBook() {
             <div className="d-flex justify-content-between align-items-center">
               <h3 className="mb-0 text-dark">Add Trending Book</h3>
               <Link href="/configuration/trending-books" className="btn btn-white">
-                <FaArrowLeft /> Back
+                <FaMinusCircle /> Back
               </Link>
             </div>
           </Col>
@@ -137,6 +137,7 @@ export default function AddTrendingBook() {
                     type="text"
                     name="book_title"
                     value={book.book_title}
+                    placeholder="Enter book title"
                     onChange={handleChange}
                     isInvalid={!!errors.book_title}
                   />
@@ -151,6 +152,7 @@ export default function AddTrendingBook() {
                   <Form.Control
                     type="url"
                     name="url"
+                    placeholder="Enter URL"
                     value={book.url}
                     onChange={handleChange}
                     isInvalid={!!errors.url}
@@ -166,6 +168,7 @@ export default function AddTrendingBook() {
                 <Form.Group>
                   <Form.Label>Description</Form.Label>
                   <Form.Control
+                  placeholder="Enter description"
                     as="textarea"
                     rows={3}
                     name="description"

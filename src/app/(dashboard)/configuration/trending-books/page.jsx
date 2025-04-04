@@ -87,13 +87,13 @@ export default function TrendingBooks() {
   };
 
   const columns = [
-    { field: "book_title", headerName: "Title", width: 200 },
-    { field: "url", headerName: "Url", width: 300 },
-    { field: "description", headerName: "Description", width: 300 },
+    { field: "book_title", headerName: "Title", flex: 2 },
+    { field: "url", headerName: "Url", flex: 3 }, 
+    { field: "description", headerName: "Description", flex: 3 },
     {
       field: "book_image",
       headerName: "Cover",
-      width:350,
+      flex: 1, 
       renderCell: (params) =>
         params.value ? (
           <img
@@ -108,19 +108,19 @@ export default function TrendingBooks() {
     {
       field: "action",
       headerName: "Action",
-      width: 200,
+      flex: 1,
       renderCell: (params) => (
-        <div>
-          <button onClick={() => handleEdit(params.row)} className="btn btn-primary btn-sm mx-1">
+        <div className="d-flex gap-2">
+          <button onClick={() => handleEdit(params.row)} className="btn btn-primary btn-sm">
             <FaEdit />
           </button>
-          <button onClick={() => handleDelete(params.row)} className="btn btn-danger btn-sm mx-1">
+          <button onClick={() => handleDelete(params.row)} className="btn btn-danger btn-sm">
             <FaTrashAlt />
           </button>
         </div>
       ),
     },
-  ];
+  ];  
 
   return (
     <>
