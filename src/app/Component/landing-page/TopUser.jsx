@@ -4,21 +4,26 @@ import { useRef } from "react";
 import { Autoplay, Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa"; 
+import { useSelector } from "react-redux";
 
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 
-const topUsers = [
+const defaultUsers = [
     { name: "Dr. Arely Gusikowski", role: "admin", rank: "#1", initials: "AG" },
     { name: "Mr. John Doe", role: "moderator", rank: "#2", initials: "JD" },
     { name: "Ms. Jane Smith", role: "user", rank: "#3", initials: "JS" },
     { name: "Dr. Robert Brown", role: "admin", rank: "#4", initials: "RB" }
 ];
 
-export default function TopUser({headingName}) {
+export default function TopUser({ headingName }) {
     const swiperRef = useRef(null);
+    const landingPageData = useSelector((state) => state.landingPageDataSlice);
+
+    // ✅ Keep the JSX unchanged, just fix the logic
+    const topUsers = landingPageData?.instituteId?.top_users?.length ? landingPageData.instituteId.top_users : defaultUsers;
 
     return (
         <>
@@ -34,14 +39,14 @@ export default function TopUser({headingName}) {
                         ref={swiperRef}
                         modules={[Autoplay, Pagination, Scrollbar, A11y]}
                         spaceBetween={50}
-                        slidesPerView={1}  // Default for small screens
+                        slidesPerView={1}
                         centeredSlides={true}
                         loop={true}
                         pagination={{ clickable: true }}
                         autoplay={{ delay: 3000, disableOnInteraction: false }}
                         breakpoints={{
                             768: {
-                                slidesPerView: 3, // Display 3 items on larger screens
+                                slidesPerView: 3,
                             },
                         }}
                         onSwiper={(swiper) => (swiperRef.current = swiper)}

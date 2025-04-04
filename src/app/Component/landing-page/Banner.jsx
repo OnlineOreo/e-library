@@ -18,7 +18,7 @@ export default function Banner({ bannerData }) {
               {bannerData?.cover_headline?.firstQuote || ''}
             </h2>
             <p className="lead text-white fw-semibold px-1 px-sm-4 py-3 rounded-3 d-inline-block mt-3 shadow-sm custom-banner">
-              {bannerData?.cover_headline?.subHeading || ''}
+              {bannerData?.cover_headline?.subHeadline || ''}
             </p>
           </div>
         </div>

@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchInstituteId } from "./../redux/slices/instituteSlice";
-import Image from "next/image";
 import styles from "./page.module.css";
 import Navbar from "./Component/landing-page/Navbar";
 import "../../public/landingPageAsset/css/style2.css";
@@ -24,13 +23,37 @@ export default function Home() {
   const landingPageData = useSelector((state) => state.landingPageDataSlice);
   const [loading, setLoading] = useState(true);
 
+  // Dispatch action once when the component mounts
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchInstituteId());
-    } else {
-      setLoading(false);
     }
   }, [dispatch, status]);
+
+  // Ensure loading state is updated properly
+  useEffect(() => {
+    if (status !== "idle") {
+      setLoading(false);
+    }
+  }, [status]);
+
+  // Fetch API Data
+  const configData = landingPageData?.instituteId?.configurations?.[0] || {};
+  const sectionOrder = configData?.section_order || {}; // <-- Avoid using useMemo for simple values
+
+  // Memoized components map
+  const componentsMap = useMemo(
+    () => ({
+      publisher: Publisher,
+      books: TrendingBook,
+      staff: StaffPick,
+      headline: Headline,
+      download: Download,
+      top_user: TopUser,
+      notice_board: NoticeBoard,
+    }),
+    []
+  );
 
   if (loading) {
     return (
@@ -50,23 +73,6 @@ export default function Home() {
     );
   }
 
-  // Fetch API Data
-  const configData = landingPageData?.instituteId?.configurations?.[0] || {};
-  const sectionOrder = configData.section_order || {};
-
-  // console.log(configData)
-
-  // Map of components with props, including NoticeBoard
-  const componentsMap = {
-    publisher: (heading_name) => <Publisher headingName={heading_name} bannerData={configData} />,
-    books: (heading_name) => <TrendingBook headingName={heading_name} bannerData={configData} />,
-    staff: (heading_name) => <StaffPick headingName={heading_name} bannerData={configData} />,
-    headline: (heading_name) => <Headline headingName={heading_name} bannerData={configData} />,
-    download: (heading_name) => <Download headingName={heading_name} bannerData={configData} />,
-    top_user: (heading_name) => <TopUser headingName={heading_name} bannerData={configData} />,
-    notice_board: (heading_name) => <NoticeBoard headingName={heading_name} bannerData={configData} />, // Added NoticeBoard
-  };
-
   return (
     <div className={styles.page}>
       <div id="main_widget_section">
@@ -76,7 +82,16 @@ export default function Home() {
         {/* Render Components Dynamically Based on API Response */}
         {Object.values(sectionOrder)
           .filter((section) => section.active) // Only include active sections
-          .map((section) => componentsMap[section.id]?.(section.heading_name))}
+          .map((section, index) => {
+            const Component = componentsMap[section.id];
+            return Component ? (
+              <Component
+                key={section.id || index} // Ensure a unique key
+                headingName={section.heading_name}
+                bannerData={configData}
+              />
+            ) : null;
+          })}
 
         <Footer />
       </div>
