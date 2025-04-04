@@ -180,7 +180,7 @@ const CheckboxCard = ({ title, checklists, idKey, nameKey, onChange }) => (
       <Card.Body className="p-0">
         <h5 className="p-2 bg-dark text-white rounded-top-3">{title}</h5>
       </Card.Body>
-      <div className="p-2">
+      <div className="p-2" style={{ maxHeight:'350px',overflow:'auto' }}>
         {checklists.map((item, idx) => {
           const itemId = String(item.id);
           return (

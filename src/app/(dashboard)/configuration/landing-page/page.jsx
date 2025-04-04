@@ -5,6 +5,7 @@ import "./Checkbox.css";
 import Menu from "./Menu";
 import Header from "./Header";
 import Widget from "./Widget";
+import NewsCategory from "./NewsCategory";
 
 const Badges = () => {
   return (
@@ -24,6 +25,9 @@ const Badges = () => {
                   <Nav.Item>
                     <Nav.Link eventKey="menu">Menu</Nav.Link>
                   </Nav.Item>
+                  <Nav.Item>
+                    <Nav.Link eventKey="news-category">News Category</Nav.Link>
+                  </Nav.Item>
                 </Nav>
               </Card.Header>
 
@@ -39,6 +43,9 @@ const Badges = () => {
 
                   <Tab.Pane eventKey="menu" className="p-4">
                     <Menu/>
+                  </Tab.Pane>
+                  <Tab.Pane eventKey="news-category" className="p-4">
+                    <NewsCategory/>
                   </Tab.Pane>
                 </Tab.Content>
               </Card.Body>

@@ -1,25 +1,37 @@
-'use client';
-import React, { useEffect, useState } from 'react';
+"use client";
+import React, { useEffect, useState } from "react";
 
-const categories = ['Business', 'Technology', 'Health', 'Sports', 'Politics', 'Economy'];
-
-export default function Headline({headingName}) {
-    const [activeTab, setActiveTab] = useState('Business');
+export default function Headline({ headingName, bannerData }) {
+    const [activeTab, setActiveTab] = useState(null);
     const [news, setNews] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
+    const categories = bannerData.news_category.split(",").map(cat => cat.trim()); // ✅ Trim spaces
+
+    // ✅ Set the default activeTab only when the component mounts (not every render)
     useEffect(() => {
-        fetchNews();
+        if (!activeTab && categories.length > 0) {
+            setActiveTab(categories[0]);
+        }
+    }, []); // ✅ Only runs on mount
+
+    // ✅ Fetch news whenever `activeTab` changes
+    useEffect(() => {
+        if (activeTab) {
+            fetchNews(activeTab);
+        }
     }, [activeTab]);
 
-    const fetchNews = async () => {
+    const fetchNews = async (category) => {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/news?category=${activeTab.toLowerCase()}`);
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/news?category=${category.toLowerCase()}`
+            );
             if (!response.ok) {
-                throw new Error('Failed to fetch news');
+                throw new Error("Failed to fetch news");
             }
             const data = await response.json();
             setNews(data.slice(0, 9)); // ✅ Show only the first 9 records
@@ -31,9 +43,8 @@ export default function Headline({headingName}) {
     };
 
     return (
-<<<<<<< HEAD
         <div className="container py-5">
-            <h2 className="text-center fw-bold mb-4">Headline</h2>
+            <h2 className="text-center fw-bold mb-4">{headingName}</h2>
 
             {/* Tabs */}
             <div className="d-flex justify-content-center mb-4">
@@ -41,40 +52,14 @@ export default function Headline({headingName}) {
                     {categories.map((category) => (
                         <button
                             key={category}
-                            className={`btn btn-sm mx-1 my-1 rounded-pill ${activeTab === category ? 'btn-primary text-white' : 'btn-light'}`}
-                            onClick={() => setActiveTab(category)}
+                            className={`btn btn-sm mx-1 my-1 rounded-pill ${activeTab === category ? "btn-primary text-white" : "btn-light"
+                                }`}
+                            onClick={() => setActiveTab(category)} // ✅ Updates tab without reset
                         >
                             {category}
                         </button>
                     ))}
                 </div>
-=======
-        <div className="containel-xxl py-5 section" style={{ display: "block" }} id="news_section2">
-            <h2 
-                className="mb-3 text-center wow fadeInUp" 
-                id="news_heading2" 
-                data-wow-delay="0.2s"
-                style={{
-                    visibility: "visible",
-                    animationDelay: "0.2s",
-                    animationName: "fadeInUp"
-                }}
-            >
-                {headingName}
-            </h2>
-            
-            <NewsTabs activeTab={activeTab} onTabChange={handleTabChange} />
-            
-            {renderNewsContent()}
-            
-            <div className="container d-flex justify-content-end mt-4">
-                <a 
-                    href={`https://demo.libvirtuua.com/search_news?news_category=${activeTab}`} 
-                    id="read_all_news"
-                >
-                    Read All News <i className="fas fa-long-arrow-alt-right mx-2" />
-                </a>
->>>>>>> feature/add-widged
             </div>
 
             {/* Loading & Error Messages */}
@@ -86,16 +71,16 @@ export default function Headline({headingName}) {
                 {!loading && !error && news.length > 0 ? (
                     news.map((item, index) => (
                         <div key={index} className="col-12 col-sm-6 col-md-4 mb-2">
-                            <div className="news-card position-relative overflow-hidden shadow-lg rounded-3">
+                            <div className="news-card position-relative overflow-hidden rounded-3">
                                 {/* Background Image */}
                                 <div
                                     className="news-image"
                                     style={{
                                         backgroundImage: `url(${item.thumbnail})`,
-                                        backgroundSize: 'cover',
-                                        backgroundPosition: 'center',
-                                        height: '250px',
-                                        filter: 'brightness(0.7)',
+                                        backgroundSize: "cover",
+                                        backgroundPosition: "center",
+                                        height: "250px",
+                                        filter: "brightness(0.7)",
                                     }}
                                 ></div>
 
@@ -120,6 +105,7 @@ export default function Headline({headingName}) {
                 ) : (
                     !loading && <p className="text-center text-muted">No news available.</p>
                 )}
+                
             </div>
 
             {/* Custom Styles */}
