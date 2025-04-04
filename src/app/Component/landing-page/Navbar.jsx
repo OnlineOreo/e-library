@@ -9,6 +9,7 @@ import { IoChevronDown } from "react-icons/io5";
 import SearchBar from "./SearchBar";
 import DropdownMenu from "./DropdownMenu";
 import AuthButtons from "./AuthButtons";
+import { Suspense } from "react";
 
 const Navbar = () => {
   const [show, setShow] = useState(false);
@@ -131,7 +132,9 @@ const Navbar = () => {
                   Welcome to LibVituUa
                 </div> */}
                 <div className="header-action-right" style={{ width: 600 }}>
+                <Suspense fallback={<div>Loading search...</div>}>
                   <SearchBar />
+                </Suspense>
                 </div>
               </div>
             </div>

@@ -17,7 +17,11 @@
     padding-bottom: 0px;
 }
 .one_line_ellipses{
+    display: block;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+.width-200{
+   width: 200px;
 }
