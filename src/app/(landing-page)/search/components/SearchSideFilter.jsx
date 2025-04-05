@@ -1,5 +1,4 @@
 "use client"
-import { width } from '@mui/system';
 import { useState, useEffect } from 'react';
 import { Form, Dropdown, Button } from 'react-bootstrap';
 
@@ -7,22 +6,54 @@ const SearchSideFilter = (props) => {
     const [dcPublisher, setDcPublisher] = useState(props.dc_publishers_string || []);
     const [dcCreators, setDcCreators] = useState(props.datacite_creators_string || []);
     const [dcDate, setDcDate] = useState(props.dc_date || []);
+    const [resourceTypes, setResourceType] = useState(props.dc_date || []);
 
     useEffect(() => {
         setDcPublisher(props.dc_publishers_string || []);
         setDcCreators(props.datacite_creators_string || []);
         setDcDate(props.dc_date || []);
+        setResourceType(props.resource_types || []);
     }, [props.dc_publishers_string, props.datacite_creators_string, props.dc_date]);
 
     const [searchTerm, setSearchTerm] = useState("");
-    const [showDropdown, setShowDropdown] = useState(false);
 
-    // Filter publishers based on search term
     const filteredPublishers = dcPublisher.filter(item =>
         item?.name?.toLowerCase().includes(searchTerm.toLowerCase())
     );
-
-
+    
+    const { onFilterChange } = props;
+    
+    const filterChange = () => {
+        const filterMap = {};
+      
+        const checkboxes = document.querySelectorAll('.thats_filter input[type="checkbox"]:checked');
+      
+        checkboxes.forEach((checkbox) => {
+          const label = checkbox.dataset.label;
+          const filterType = checkbox.dataset.filtertype;
+      
+          if (!filterMap[filterType]) {
+            filterMap[filterType] = [];
+          }
+          filterMap[filterType].push(label);
+        });
+      
+        const filterUrl = Object.entries(filterMap)
+          .map(([type, values]) => {
+            const joinedValues = values.map((v) => `"${v}"`).join(" OR ");
+            return `${encodeURIComponent(type)}%3A(${encodeURIComponent(joinedValues)})`;
+          })
+          .join("%20AND%20");
+      
+        // console.log("Filter Map:", filterMap);
+        // console.log("Filter URL:", filterUrl);
+        
+        if (typeof onFilterChange === "function") {
+            onFilterChange(filterUrl);
+        }
+      };
+      
+        
     return (
         <>
             <div className="text-center py-3 border-bottom bg-light">
@@ -37,11 +68,11 @@ const SearchSideFilter = (props) => {
                             <div className="d-flex justify-content-between align-items-center mb-2">
                                 <Form.Label className="fw-bold mb-0">Publishers</Form.Label>
                                 <Dropdown>
-                                    <Dropdown.Toggle as={"div"} id="dropdown-basic">
+                                    <Dropdown.Toggle as={"div"} id="dropdown-basic" className='curser_pointer text-success'>
                                         View All
                                     </Dropdown.Toggle>
 
-                                    <Dropdown.Menu>
+                                    <Dropdown.Menu className='shadow'>
                                         <div className="p-2 border-bottom">
                                             <Form.Control
                                                 type="text"
@@ -50,11 +81,10 @@ const SearchSideFilter = (props) => {
                                                 onChange={(e) => setSearchTerm(e.target.value)}
                                             />
                                         </div>
-
-                                        <div className="px-4 d-flex flex-column flex-wrap align-items-start gap-1"
+                                        <div className="px-2 pt-4 d-flex flex-column flex-wrap align-items-start gap-1"
                                             style={{ height: "40vh", width: "50vw", overflowY: "auto" }}>
                                             {filteredPublishers.map((item, index) => (
-                                                <div className="d-flex justify-content-between text-secondary"
+                                                <div className="d-flex justify-content-between text-secondary ms-4 thats_filter"
                                                     style={{ width: "300px", fontSize: "11pt" }}
                                                     key={index}>
                                                     <Form.Check
@@ -62,6 +92,9 @@ const SearchSideFilter = (props) => {
                                                         className='one_line_ellipses'
                                                         style={{ width: "90%" }}
                                                         label={item?.name || "Unknown"}
+                                                        data-filtertype="dc_publishers_string"
+                                                        data-label={item?.name || "Unknown"}
+                                                        onChange={filterChange} 
                                                     />
                                                     <span>({item?.count || 0})</span>
                                                 </div>
@@ -79,7 +112,12 @@ const SearchSideFilter = (props) => {
                             </div>
                             {dcPublisher.slice(0, 5).map((item, index) => (
                                 <div className="d-flex justify-content-between" key={index}>
-                                    <Form.Check type="checkbox" className='one_line_ellipses' style={{ width: "90%" }} label={item?.name || "Unknown"} />
+                                    <Form.Check type="checkbox" className='one_line_ellipses thats_filter' 
+                                    style={{ width: "90%" }} label={item?.name || "Unknown"} 
+                                    data-filtertype="dc_publishers_string"
+                                    data-label={item?.name || "Unknown"}
+                                    onChange={filterChange} 
+                                    />
                                     <span className="text-secondary">{item?.count || 0}</span>
                                 </div>
                             ))}
@@ -97,10 +135,17 @@ const SearchSideFilter = (props) => {
                         {/* Content */}
                         <Form.Group className="border-bottom p-3">
                             <Form.Label className="fw-bold mb-2">Content</Form.Label>
-                            <div className="d-flex justify-content-between">
-                                <Form.Check type="checkbox" label="Book" defaultChecked />
-                                <span className="text-secondary">268</span>
-                            </div>
+                            {resourceTypes.slice(0, 5).map((item, index) => (
+                                <div className="d-flex justify-content-between" key={index}>
+                                    <Form.Check type="checkbox" className='one_line_ellipses thats_filter' 
+                                    style={{ width: "90%" }} label={item?.name || "Unknown"} 
+                                    data-filtertype="resource_types"
+                                    data-label={item?.name || "Unknown"}
+                                    onChange={filterChange} 
+                                    />
+                                    <span className="text-secondary">{item?.count || 0}</span>
+                                </div>
+                            ))}
                         </Form.Group>
 
                         {/* Authors Filter */}
@@ -111,7 +156,12 @@ const SearchSideFilter = (props) => {
                             </div>
                             {dcCreators.slice(0, 5).map((item, index) => (
                                 <div className="d-flex justify-content-between" key={index}>
-                                    <Form.Check type="checkbox" label={item?.name || "Unknown"} />
+                                    <Form.Check type="checkbox" label={item?.name || "Unknown"} 
+                                    className='thats_filter'
+                                    data-filtertype="datacite_creators"
+                                    data-label={item?.name || "Unknown"}
+                                    onChange={filterChange} 
+                                    />
                                     <span className="text-secondary">{item?.count || 0}</span>
                                 </div>
                             ))}
@@ -125,7 +175,12 @@ const SearchSideFilter = (props) => {
                             </div>
                             {dcDate.slice(0, 5).map((item, index) => (
                                 <div className="d-flex justify-content-between" key={index}>
-                                    <Form.Check type="checkbox" label={item?.name || "Unknown"} />
+                                    <Form.Check type="checkbox" label={item?.name || "Unknown"} 
+                                    className='thats_filter'
+                                    data-filtertype="dc_date"
+                                    data-label={item?.name || "Unknown"}
+                                    onChange={filterChange} 
+                                    />
                                     <span className="text-secondary">{item?.count || 0}</span>
                                 </div>
                             ))}

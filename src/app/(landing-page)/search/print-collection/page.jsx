@@ -29,27 +29,6 @@ function PrintCollectionContent() {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    const loadPCollectionData = async () => {
-        const solrUrl = `http://5.135.139.104:8983/solr/Print-collection/select?indent=true&q.op=OR&q=${filterType}%3A%22${searchText}%22&rows=15`
-        try {
-            const response = await axios.get(solrUrl);
-            setResults(response.data.response.docs || []);
-            setResultsCount(response.data.response.numFound || 0);
-            const sideFilterFilters = `${filterType}%3A(${searchText})`
-            sideFilterAllData(sideFilterFilters)
-        } catch (error) {
-            console.error("Axios Error:", error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-
-    useEffect(() => {
-        if (!filterType || !searchText) return;
-        loadPCollectionData();
-    }, [filterType, searchText]);
-
     const sideFilterAllData = async (sideFilterFilters) => {
         const solrUrl = `http://5.135.139.104:8983/solr/Print-collection/select?indent=true&q=*:*&fq=${sideFilterFilters}&facet=true&facet.field=dc_publishers_string&facet.field=datacite_rights_string&facet.field=resource_types&facet.field=dc_date&facet.field=datacite_creators_string&facet.limit=1000&facet.sort=count`;
     
@@ -62,7 +41,7 @@ function PrintCollectionContent() {
                 results[facet] = combineFacetData(data.facet_counts?.facet_fields?.[facet] || []);
             });
     
-            // console.log("Formatted Data:", results);
+            console.log("Formatted Data:", results);
             setSidefilterResults(results);
         } catch (error) {
             console.error("Axios Error:", error);
@@ -82,13 +61,38 @@ function PrintCollectionContent() {
         
         return combined;
     };
+
+    const loadPCollectionData = async () => {
+        const solrUrl = `http://5.135.139.104:8983/solr/Print-collection/select?indent=true&q.op=OR&q=${filterType}%3A(${searchText})&rows=15`
+        try {
+            const response = await axios.get(solrUrl);
+            setResults(response.data.response.docs || []);
+            setResultsCount(response.data.response.numFound || 0);
+            const sideFilterFilters = `${filterType}%3A(${searchText})`
+            sideFilterAllData(sideFilterFilters)
+        } catch (error) {
+            console.error("Axios Error:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+
+    useEffect(() => {
+        if (!filterType || !searchText) return;
+        loadPCollectionData();
+    }, [filterType, searchText]);
+
+    const handelFilterChange = (filterUrl) =>{
+       console.log("new filter : ", filterUrl);    
+    }
     
 
     return (
         <Container className="px-4 text-secondary">
             <Row>
                 <Col md={3} className="px-0 border rounded bg-white">
-                    <SearchSideFilter {...sideFilterResults}/>
+                    <SearchSideFilter {...sideFilterResults} onFilterChange={handelFilterChange}/>
                 </Col>
                 <Col md={9} className='pe-0 ps-4'>
                     <Row className="mb-3">
@@ -103,12 +107,12 @@ function PrintCollectionContent() {
                                 </InputGroup>
                                 <BsFillGrid3X3GapFill
                                     size={40}
-                                    className={`border p-1 cursor-pointer rounded mx-2 ${gridView ? "active_result_view" : ""}`}
+                                    className={`border p-1 curser_pointer rounded mx-2 ${gridView ? "active_result_view" : ""}`}
                                     onClick={() => setGridView(true)}
                                 />
                                 <FaListUl
                                     size={40}
-                                    className={`border p-1 cursor-pointer rounded ${!gridView ? "active_result_view" : ""}`}
+                                    className={`border p-1 curser_pointer rounded ${!gridView ? "active_result_view" : ""}`}
                                     onClick={() => setGridView(false)}
                                 />
                             </div>

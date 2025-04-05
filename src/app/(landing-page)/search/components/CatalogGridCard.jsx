@@ -1,9 +1,13 @@
-import React from 'react'
-import { Card, Button} from 'react-bootstrap';
+import React, { useState } from 'react'
+import { Card, Button } from 'react-bootstrap';
 import { PiBookOpenTextFill } from "react-icons/pi";
-import { FaShareAlt, FaRegBookmark, FaFileDownload } from "react-icons/fa";
+import { FaShareAlt, FaRegBookmark, FaFileDownload, FaFacebookSquare, FaLinkedin, FaTwitterSquare } from "react-icons/fa";
+import { IoMail } from "react-icons/io5";
+import ShareButtonDropdown from './ShareButtonDropdown';
+
 
 const CatalogGridCard = (props) => {
+
     return (
         <Card>
             <div className="image text-center">
@@ -13,14 +17,29 @@ const CatalogGridCard = (props) => {
                 <div className='fw-bold one_line_ellipses'>{props.datacite_title}</div>
                 <div className='one_line_ellipses'>{props.datacite_creators}</div>
                 <div>{props.dc_date}</div>
-                <div className='d-flex my-3'>
-                    <FaShareAlt size={20} className='me-3' />
-                    <FaFileDownload size={20} className='me-3' />
-                    <FaRegBookmark size={20} className='me-3' />
-                </div>
+                <ShareButtonDropdown id={props.id} catalogType={"print-collection"} />
                 <div className="mt-2 d-flex">
-                    <Button variant="success" className="me-2 w-50 py-2">READ</Button>
-                    <Button variant="outline-secondary w-50 py-2" onClick={()=>{props.onShow();props.onSelect()}}>DETAILS</Button>
+                    <a
+                        href={props.url}
+                        className="me-2 w-50 py-2 btn btn-success"
+                        onClick={(e) => {
+                            e.preventDefault(); // prevent default link behavior
+
+                            const screenWidth = window.screen.width;
+                            const screenHeight = window.screen.height;
+
+                            const width = screenWidth / 2;
+                            const height = screenHeight;
+                            const left = screenWidth / 2;
+
+                            window.open(
+                                props.url,
+                                'targetWindow',
+                                `toolbar=no,location=no,menubar=no,scrollbars=yes,resizable=yes,width=${width},height=${height},left=${left},top=0`
+                            );
+                        }}
+                    >READ</a>
+                    <Button variant="outline-secondary w-50 py-2" onClick={() => { props.onShow(); props.onSelect() }}>DETAILS</Button>
                 </div>
             </Card.Body>
         </Card>

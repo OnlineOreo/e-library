@@ -7,15 +7,18 @@
     border-bottom: 2px solid rgb(107, 60, 151);
 }
 
-.curser_pointer{
-    cursor:pointer;
-    padding-bottom: 2px;
-}
-.curser_pointer:hover{
+.search_nav:hover{
     color: rgb(107, 60, 151);
     border-bottom: 2px solid rgb(107, 60, 151);
-    padding-bottom: 0px;
 }
+
+.curser_pointer{
+    cursor:pointer;
+}
+.curser_pointer:hover{
+    color: rgb(107, 60, 151);;
+}
+
 .one_line_ellipses{
     display: block;
     white-space: nowrap;
