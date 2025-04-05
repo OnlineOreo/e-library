@@ -15,8 +15,7 @@ import SearchSideFilter from '../components/SearchSideFilter';
 
 function PrintCollectionContent() {
     const searchParams = useSearchParams();
-    const filterType = searchParams.get("filter_type");
-    const searchText = searchParams.get("search_text");
+    const urlParams = searchParams.get("q");
 
     const [gridView, setGridView] = useState(true);
     const [results, setResults] = useState([]);
@@ -62,13 +61,11 @@ function PrintCollectionContent() {
         return combined;
     };
 
-    const loadPCollectionData = async () => {
-        const solrUrl = `http://5.135.139.104:8983/solr/Print-collection/select?indent=true&q.op=OR&q=${filterType}%3A(${searchText})&rows=15`
+    const loadPCollectionData = async (solrUrl, sideFilterFilters) => {
         try {
             const response = await axios.get(solrUrl);
             setResults(response.data.response.docs || []);
             setResultsCount(response.data.response.numFound || 0);
-            const sideFilterFilters = `${filterType}%3A(${searchText})`
             sideFilterAllData(sideFilterFilters)
         } catch (error) {
             console.error("Axios Error:", error);
@@ -79,25 +76,32 @@ function PrintCollectionContent() {
 
 
     useEffect(() => {
-        if (!filterType || !searchText) return;
-        loadPCollectionData();
-    }, [filterType, searchText]);
+        setIsLoading(true);
+        if (!urlParams) return;
+        const solrUrl = `http://5.135.139.104:8983/solr/Print-collection/select?indent=true&q.op=OR&q=${urlParams}&rows=15`
+        let sideFilterFilters = urlParams;
+        loadPCollectionData(solrUrl, sideFilterFilters);
+    }, [urlParams]);
 
-    const handelFilterChange = (filterUrl) =>{
-       console.log("new filter : ", filterUrl);    
-    }
+    // const handelFilterChange = (filterUrl) =>{
+    //     setIsLoading(true);
+    //     const filterSolrUrl = `http://5.135.139.104:8983/solr/Print-collection/select?indent=true&q.op=OR&q=${filterUrl}&rows=15`;
+    //     let sideFilterFilters = filterUrl;
+    //     loadPCollectionData(filterSolrUrl, sideFilterFilters); 
+    // //    console.log("new filter : ", filterSolrUrl);    
+    // }
     
 
     return (
         <Container className="px-4 text-secondary">
             <Row>
                 <Col md={3} className="px-0 border rounded bg-white">
-                    <SearchSideFilter {...sideFilterResults} onFilterChange={handelFilterChange}/>
+                    <SearchSideFilter {...sideFilterResults}/>
                 </Col>
                 <Col md={9} className='pe-0 ps-4'>
                     <Row className="mb-3">
                         <Col md={6}>
-                            <p>Showing <strong>{resultsCount}</strong> results for <strong>{searchText || "your query"}</strong></p>
+                            <p>Showing <strong>{resultsCount}</strong> results from data</p>
                         </Col>
                         <Col md={6}>
                             <div className="d-flex align-items-center">

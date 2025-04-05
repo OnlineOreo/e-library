@@ -23,15 +23,13 @@ const CatalogGridCard = (props) => {
                         href={props.url}
                         className="me-2 w-50 py-2 btn btn-success"
                         onClick={(e) => {
-                            e.preventDefault(); // prevent default link behavior
+                            e.preventDefault();
 
                             const screenWidth = window.screen.width;
                             const screenHeight = window.screen.height;
-
                             const width = screenWidth / 2;
                             const height = screenHeight;
                             const left = screenWidth / 2;
-
                             window.open(
                                 props.url,
                                 'targetWindow',
