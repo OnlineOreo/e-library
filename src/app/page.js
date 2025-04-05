@@ -16,6 +16,7 @@ import Download from "./Component/landing-page/Download";
 import TopUser from "./Component/landing-page/TopUser";
 import Footer from "./Component/landing-page/Footer";
 import Headline from "./Component/landing-page/(Headlines)/Headline";
+import { notFound } from 'next/navigation';
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -40,7 +41,10 @@ export default function Home() {
   // Fetch API Data
   const configData = landingPageData?.instituteId?.configurations?.[0] || {};
   const sectionOrder = configData?.section_order || {}; // <-- Avoid using useMemo for simple values
-
+  if (Object.keys(configData).length === 0) {
+    notFound();
+  }
+  
   // Memoized components map
   const componentsMap = useMemo(
     () => ({
