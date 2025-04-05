@@ -41,9 +41,9 @@ export default function Home() {
   // Fetch API Data
   const configData = landingPageData?.instituteId?.configurations?.[0] || {};
   const sectionOrder = configData?.section_order || {}; // <-- Avoid using useMemo for simple values
-  if (Object.keys(configData).length === 0) {
-    notFound();
-  }
+  // if (Object.keys(configData).length === 0) {
+  //   notFound();
+  // }
   
   // Memoized components map
   const componentsMap = useMemo(
@@ -97,7 +97,7 @@ export default function Home() {
             ) : null;
           })}
 
-        <Footer />
+        <Footer bannerData={configData} />
       </div>
     </div>
   );

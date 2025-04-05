@@ -32,16 +32,27 @@ const screenshots = [
 
 export default function Download({headingName,bannerData}) {
     return (
+        <>
+        <style jsx>{`
+            .custom-button {
+                background: linear-gradient(
+                to bottom right,
+                ${bannerData?.color1 || '#000'},
+                ${bannerData?.color2 || '#fff'}
+                );
+            }
+        `}</style>
+
         <div className="container-xxl py-5 section" id="download_section" style={{backgroundColor: bannerData?.color1}}>
             <div className="container py-5 px-lg-5">
                 <div className="row g-5 align-items-center">
                     <div className="col-lg-7 wow fadeInUp" data-wow-delay="0.3s">
-                        <h5 className="text-primary-gradient fw-medium" id="download_heading">{headingName}</h5>
+                        <h5 className=" fw-medium" id="download_heading">{headingName}</h5>
                         <h2 className="mb-4">Download The Latest Version Of Our App</h2>
                         <div className="row g-4">
                             {downloadLinks.map((link, index) => (
-                                <div key={index} className="col-sm-6 wow fadeIn" data-wow-delay={`${0.5 + index * 0.2}s`}>
-                                    <a href={link.href} className={`d-flex ${link.bgClass} rounded py-3 px-4`}>
+                                <div key={index} className="col-sm-6 wow fadeIn " data-wow-delay={`${0.5 + index * 0.2}s`}>
+                                    <a href={link.href} className={`d-flex ${link.bgClass} custom-button rounded py-3 px-4`}>
                                         <i className={link.iconClass} />
                                         <div className="ms-3">
                                             <p className="text-white mb-0">Available On</p>
@@ -73,5 +84,6 @@ export default function Download({headingName,bannerData}) {
                 </div>
             </div>
         </div>
+        </>
     );
 }

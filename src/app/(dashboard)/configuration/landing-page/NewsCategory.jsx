@@ -124,9 +124,9 @@ export default function NewsCategory() {
   return (
     <Row className="mt-5 justify-content-center user-select-none">
       <Col md={10}>
-        <Card className="shadow border-0">
+        <Card className="border-0">
           <Card.Header className="bg-dark text-white text-center py-3 rounded-top">
-            <h5 className="mb-0 text-light">📰 Choose Your News Category</h5>
+            <h5 className="mb-0 text-light">Choose Your News Category</h5>
           </Card.Header>
           <Card.Body className="p-4">
             <div className="text-center mb-3">

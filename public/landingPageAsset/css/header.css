@@ -2532,7 +2532,12 @@ section.pt-150.pb-150 {
 }
 @media (max-width:986px){
   .logo.logo-width-1{
-      margin-right: 175px;
+      margin-right: 500px;
+  }
+}
+@media (max-width:576px){
+  .logo.logo-width-1{
+      margin-right: 60px;
   }
 }
 @media (max-width:576px){

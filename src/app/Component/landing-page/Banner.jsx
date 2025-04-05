@@ -11,8 +11,8 @@ export default function Banner({ bannerData }) {
         }
       `}</style>
 
-      <div className="w-100 mt-3">
-        <div className="container-fluid hero-header text-white d-flex align-items-center justify-content-center min-vh-50 py-4" style={{ backgroundColor: bannerData?.color1 }}>
+      <div className="w-100 pt-3" style={{ backgroundColor: bannerData?.color1 }}>
+        <div className="container-fluid hero-header text-white d-flex align-items-center justify-content-center min-vh-50 py-4">
           <div className="container text-center w-50 px-sm-3">
             <h2 className="fw-bold text-dark fs-md-2 fs-lg-3">
               {bannerData?.cover_headline?.firstQuote || ''}

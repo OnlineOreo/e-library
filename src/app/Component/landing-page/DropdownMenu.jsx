@@ -31,7 +31,7 @@ const DropdownMenu = ({
             >
               <div className="nav_menu">
                 {items.map((item) => (
-                  <div key={item.publisher_id || item.configuration_category_id || item.configuration_media_id } className="nav publisher_nav">
+                  <div key={item.publisher_id || item.configuration_category_id || item.configuration_media_id || configuration_collection_id } className="nav publisher_nav">
                     <span
                       className="dropdown-link pe-auto one_line_ellipses"
                       style={{ cursor: "pointer" }}
@@ -52,7 +52,7 @@ const DropdownMenu = ({
                         }}
                       />
 
-                      {item.publisher_name || item.category_name || item.media_name}
+                      {item.publisher_name || item.category_name || item.media_name || item.collection_name}
                     </span>
                   </div>
                 ))}
@@ -72,7 +72,7 @@ const DropdownMenu = ({
           >
             {items.map((item) => (
               <div
-                key={item.publisher_id || item.configuration_category_id || item.configuration_media_id}
+                key={item.publisher_id || item.configuration_category_id || item.configuration_media_id || item.configuration_collection_id}
                 className="nav"
                 style={{ minWidth: "33%" }}
               >
@@ -86,7 +86,7 @@ const DropdownMenu = ({
                       objectFit: "cover",
                     }}
                   />
-                  {item.publisher_name || item.category_name || item.media_name}
+                  {item.publisher_name || item.category_name || item.media_name || item.collection_name}
                 </a>
               </div>
             ))}

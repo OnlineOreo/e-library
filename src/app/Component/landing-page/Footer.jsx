@@ -7,13 +7,19 @@ import { FaLinkedinIn } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 
-export default function Footer() {
+export default function Footer({bannerData}) {
     const landingPageData = useSelector((state) => state.landingPageDataSlice);
     const footer = landingPageData?.instituteId?.footers?.[0]
     return (
+        
         <>
+        <style jsx>{`
+        .custom-banner {
+          background-color: ${bannerData?.color2};
+        }
+      `}</style>
             <div
-                className="container-fluid bg-primary text-light footer wow fadeIn"
+                className="container-fluid text-light footer wow fadeIn custom-banner"
                 data-wow-delay="0.1s"
             >
                 <div className="container py-5 px-lg-5">

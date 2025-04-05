@@ -79,6 +79,11 @@ const Navbar = () => {
       title: "Media",
       items: landingPageData?.instituteId?.medias || [],
     },
+    {
+      type: "dropdown",
+      title: "Collection",
+      items: landingPageData?.instituteId?.collections || [],
+    },
     // {
     //   type: "dropdown",
     //   title: "Collection",

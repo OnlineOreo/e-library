@@ -11,19 +11,13 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 
-const notices = [
-    "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Animi magni magnam saepe autem aperiam, laboriosam commodi unde dolore dolores molestias ipsum illum tempore atque explicabo assumenda voluptatem similique vel enim sint nesciunt tempora, sequi fuga ad! Tenetur dolor quis explicabo.",
-    "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Fuga ducimus pariatur aspernatur libero fugit nostrum cum quia error ad a corporis amet asperiores at eos id nulla vel exercitationem, ipsum natus officia velit, illum dolore veniam vitae! Explicabo, deserunt voluptatum?",
-    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit, aliquam. Praesentium laudantium atque cum, iste corrupti incidunt error iure debitis cupiditate inventore dolorem quo aperiam a, reprehenderit necessitatibus nemo placeat reiciendis similique deserunt. Voluptatibus odio ducimus corporis, pariatur commodi dolores.",
-    "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Error dolor explicabo, sit quis tenetur voluptatum, a laborum saepe eos ex quisquam ipsum est velit quam ad hic, iure corporis nostrum amet! Magnam, numquam consequuntur. Quae natus earum possimus quod maiores."
-];
-
-export default function NoticeBoard({headingName}) {
+export default function NoticeBoard({headingName,bannerData}) {
     const swiperRef = useRef(null);
     const landingPageData = useSelector((state) => state.landingPageDataSlice);
     const notices = landingPageData?.instituteId?.notices
 
     return (
+        <>
         <div className="container-xxl py-5 section" id="notice_section" >
             <div className="container py-5 px-lg-5">
                 <div className="text-center wow fadeInUp" data-wow-delay="0.1s">
@@ -48,7 +42,7 @@ export default function NoticeBoard({headingName}) {
                     {notices?.length > 0 &&
                         notices.map((notice, index) => (
                             <SwiperSlide key={index}>
-                                <div className="testimonial-item rounded p-4">
+                                <div className="testimonial-item rounded p-4 gradient-bg">
                                     <p className="mb-0">{notice.description}</p>
                                 </div>
                             </SwiperSlide>
@@ -67,7 +61,11 @@ export default function NoticeBoard({headingName}) {
 
                 <style jsx>{`
                     .prev-btn, .next-btn {
-                        background-color: var(--secondary);
+                        background: linear-gradient(
+                        to bottom right,
+                        ${bannerData?.color1 || '#000'},
+                        ${bannerData?.color2 || '#fff'}
+                        );
                         color: white;
                         border: none;
                         padding: 10px 15px;
@@ -76,8 +74,16 @@ export default function NoticeBoard({headingName}) {
                         font-size: 18px;
                         margin: 5px;
                     }
+                    .gradient-bg {
+                        background: linear-gradient(
+                        to bottom right,
+                        ${bannerData?.color1 || '#000'},
+                        ${bannerData?.color2 || '#fff'}
+                        );
+                    }
                 `}</style>
             </div>
         </div>
+        </>
     );
 }

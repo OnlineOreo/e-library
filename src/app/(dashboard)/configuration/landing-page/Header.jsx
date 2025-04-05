@@ -31,7 +31,7 @@ export default function Header() {
 
   const [coverHeadlineData, setCoverHeadlineData] = useState({
     firstQuote: "",
-    subHeading: "",
+    subHeadline: "",
     banner_font_size: "",
     background_color: "",
     banner_font_color: "",
@@ -84,7 +84,7 @@ export default function Header() {
 
         setCoverHeadlineData({
           firstQuote: mainData.cover_headline.firstQuote,
-          subHeading: mainData.cover_headline.subHeading,
+          subHeadline: mainData.cover_headline.subHeadline,
           banner_font_size: mainData.cover_headline.banner_font_size,
           background_color: mainData.cover_headline.background_color,
           banner_font_color: mainData.cover_headline.banner_font_color,
@@ -387,7 +387,6 @@ export default function Header() {
                     </Row>
                   </Col>
 
-                  {/* Font Size */}
                   <Col lg={12} className="mt-2">
                     <Row>
                       <Col lg={4}>
@@ -405,8 +404,6 @@ export default function Header() {
                       </Col>
                     </Row>
                   </Col>
-
-                  {/* Font Weight */}
                   <Col lg={12} className="mt-2">
                     <Row>
                       <Col lg={5}>
@@ -432,8 +429,6 @@ export default function Header() {
                       </Col>
                     </Row>
                   </Col>
-
-                  {/* Font Color */}
                   <Col lg={12} className="mt-2">
                     <Row>
                       <Col lg={4}>
@@ -622,25 +617,24 @@ export default function Header() {
                     </Row>
                   </Col>
 
-                  {/* Subheading Font Size */}
+                  {/* subHeadline Font Size */}
                   <Col lg={12} className="mt-2">
                     <Row>
-                      <label>Subheading</label>
+                      <label>subHeadline</label>
                       <Col lg={12}>
                         <Form.Control
                           as="textarea"
-                          name="subHeading"
-                          value={coverHeadlineData.subHeading || ''}
+                          name="subHeadline"
+                          value={coverHeadlineData.subHeadline || ''}
                           onChange={handleCoverHeadlineChange}
-                          placeholder="Enter subheading"
+                          placeholder="Enter subHeadline"
                           rows={3} // Adjust the number of rows as needed
                         />
                       </Col>
                     </Row>
                   </Col>
 
-                  {/* Quote Font Color */}
-                  <Col lg={12} className="mt-2">
+                  {/* <Col lg={12} className="mt-2">
                     <Row>
                       <Col lg={6}>
                         <label>Font Size</label>
@@ -671,8 +665,6 @@ export default function Header() {
                       </Col>
                     </Row>
                   </Col>
-
-                  {/* Background Color */}
                   <Col lg={12} className="mt-2">
                     <Row>
                       <Col lg={6}>
@@ -688,8 +680,6 @@ export default function Header() {
                       </Col>
                     </Row>
                   </Col>
-
-                  {/* Paragraph Text Color */}
                   <Col lg={12} className="mt-2">
                     <Row>
                       <Col lg={6}>
@@ -704,7 +694,7 @@ export default function Header() {
                         />
                       </Col>
                     </Row>
-                  </Col>
+                  </Col> */}
                 </Row>
 
                 <Row className="justify-content-center">

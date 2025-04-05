@@ -30,7 +30,7 @@ export default function Headline({ headingName, bannerData }) {
                 `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/news?category=${trimmedCategory}`
             );
             if (!response.ok) {
-                throw new Error("Failed to fetch news");
+                throw new Error("");
             }
             const data = await response.json();
             setNews(data.slice(0, 9));

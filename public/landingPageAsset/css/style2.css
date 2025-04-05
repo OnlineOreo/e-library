@@ -831,11 +831,10 @@ a {
 /*** Footer ***/
 .footer {
     padding-top: 3rem;
-    background:
+    /* background:
         url(../img/bg-circle.png),
         url(../img/bg-triangle.png),
-        /* url(../img/bg-top.png), */
-        linear-gradient(to bottom right, var(--primary), var(--secondary));
+        linear-gradient(to bottom right, var(--primary), var(--secondary)); */
     background-position:
         left 0px bottom 0px,
         right 0px top 50%,

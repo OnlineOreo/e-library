@@ -134,9 +134,11 @@ const AddConfigurationMeta = () => {
             <Row>
               <Col lg={6} className="mb-3">
                 <Form.Group>
-                  <Form.Label>Link Name</Form.Label>
+                  <Form.Label htmlFor="name">Link Name</Form.Label>
                   <Form.Control
                     type="text"
+                    placeholder="Enter name"
+                    id="name"
                     name="list"
                     value={formData.list}
                     onChange={handleInputChange}
@@ -150,10 +152,11 @@ const AddConfigurationMeta = () => {
 
               <Col lg={6} className="mb-3">
                 <Form.Group>
-                  <Form.Label>Image Upload</Form.Label>
+                  <Form.Label htmlFor="image">Image Upload</Form.Label>
                   <Form.Control
                     type="file"
                     name="image"
+                    id="image"
                     onChange={handleFileChange}
                     isInvalid={!!errors.image}
                   />
@@ -167,10 +170,12 @@ const AddConfigurationMeta = () => {
             <Row>
               <Col lg={12} className="mb-3">
                 <Form.Group>
-                  <Form.Label>Link URL</Form.Label>
+                  <Form.Label htmlFor="url">Link URL</Form.Label>
                   <Form.Control
                     type="text"
+                    id="url"
                     name="link_url"
+                    placeholder="Enter URL"
                     value={formData.link_url}
                     onChange={handleInputChange}
                     isInvalid={!!errors.link_url}
@@ -185,10 +190,12 @@ const AddConfigurationMeta = () => {
             <Row>
               <Col lg={12} className="mb-3">
                 <Form.Group>
-                  <Form.Label>Description</Form.Label>
+                  <Form.Label htmlFor="desc">Description</Form.Label>
                   <Form.Control
                     as="textarea"
                     rows={3}
+                    id="desc"
+                    placeholder="Enter description"
                     name="description"
                     value={formData.description}
                     onChange={handleInputChange}
