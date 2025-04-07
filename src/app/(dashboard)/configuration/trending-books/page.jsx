@@ -42,7 +42,7 @@ export default function TrendingBooks() {
     }
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/trending-books?institute_id=${instituteId}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/trending-books?institute=${instituteId}`,
         { headers: { Authorization: `${token}` } }
       );
       if (response.status === 200 && Array.isArray(response.data)) {
