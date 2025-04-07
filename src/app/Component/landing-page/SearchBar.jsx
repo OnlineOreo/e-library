@@ -20,7 +20,7 @@ const SearchBar = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    router.push(`/search/print-collection?filter_type=${filterType}&search_text=${encodeURIComponent(searchText)}`);
+    router.push(`/search/print-collection?q=${filterType}%3A(${encodeURIComponent(searchText)})`);
   };
 
   return (
