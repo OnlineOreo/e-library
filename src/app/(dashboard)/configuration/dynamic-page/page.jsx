@@ -11,8 +11,10 @@ import { FaEdit, FaPlusCircle } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
 import Image from "next/image";
+import { useSelector } from "react-redux";
 
 const ViewDynamicPages = () => {
+  const instituteId = useSelector((state) => state.institute.instituteId);
   const router = useRouter();
   const successToaster = (text) => toast(text);
   const errorToaster = (text) => toast.error(text);
@@ -29,12 +31,12 @@ const ViewDynamicPages = () => {
   };
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      loadItemTypes();
+    if (typeof window !== "undefined" && instituteId) {
+      loadItemTypes(instituteId);
     }
-  }, []);
+  }, [instituteId]);
 
-  const loadItemTypes = async () => {
+  const loadItemTypes = async (instituteId) => {
     const token = getToken();
     if (!token) {
       errorToaster("Authentication required!");
@@ -44,7 +46,7 @@ const ViewDynamicPages = () => {
 
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dynamic-page`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dynamic-page?institute=${instituteId}`,
         {
           headers: { Authorization: `${token}` },
         }

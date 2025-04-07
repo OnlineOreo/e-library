@@ -8,9 +8,11 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { FaMinusCircle } from "react-icons/fa";
 import { useParams } from "next/navigation";
+import { useSelector } from "react-redux";
 
 const EditCategory = () => {
     const router = useRouter();
+    const instituteId = useSelector((state) => state.institute.instituteId);
 
     const [isLoading, setIsLoading] = useState(false);
     const [errors, setErrors] = useState({});
@@ -31,18 +33,18 @@ const EditCategory = () => {
     const { id } = useParams();
 
     useEffect(() => {
-        if (id) {
-            fitchDetails(id);
+        if (id && instituteId) {
+            fitchDetails(id , instituteId);
         }
-    }, [id]);
+    }, [id,instituteId]);
 
-    const fitchDetails = async (footer_id) => {
+    const fitchDetails = async (footer_id,instituteId) => {
         let token = getToken();
         // console.log("idiididiid" + footer_id);
 
         try {
             const response = await axios.get(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/footers?footer_id=${footer_id}`, {
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/footers?footer_id=${footer_id}&institute=${instituteId}`, {
                 headers: { Authorization: `${token}` },
             });
             setFormData(response.data);

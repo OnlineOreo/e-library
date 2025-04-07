@@ -40,9 +40,8 @@ const Footer = () => {
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/footers?institute=${instituteId}`,
         { headers: { Authorization: `${token}` } }
       );
-      if (response.status === 200 && response.data.length > 0) {
-        setFooterData(response.data[0]);
-        // console.log(response.data[0].footer_id);
+      if (response.status === 200) {
+        setFooterData(response.data);
         
       }
     } catch (error) {
