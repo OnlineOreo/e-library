@@ -11,6 +11,7 @@ import { FaEdit, FaPlusCircle } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
 import Image from "next/image";
+import { useSelector } from "react-redux";
 
 const sendEmails = () => {
   const router = useRouter();
@@ -18,7 +19,8 @@ const sendEmails = () => {
 
   const [emails, setEmails] = useState([]);
   const [search, setSearch] = useState("");
-
+  const instituteId = useSelector((state) => state.institute.instituteId);
+  console.log(instituteId);
   const getToken = () => {
     const cookieString = document.cookie
       .split("; ")
@@ -29,15 +31,17 @@ const sendEmails = () => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      loadAllEmails();
+      if(instituteId){
+        loadAllEmails(instituteId);
+      }
     }
-  }, []);
+  }, [instituteId]);
 
   useEffect(() => {
     console.log('updated emails:', emails);
   }, [emails]);
 
-  const loadAllEmails = async () => {
+  const loadAllEmails = async (instituteId) => {
     const token = getToken();
     if (!token) {
       errorToaster("Authentication required!");
@@ -46,8 +50,9 @@ const sendEmails = () => {
     }
 
     try {
+      console.log("redux institute Id",instituteId);
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/emails`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/emails-sent?institute_id=${instituteId}`,
         {
           headers: { Authorization: `${token}` },
         }
