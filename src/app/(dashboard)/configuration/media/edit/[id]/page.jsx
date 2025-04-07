@@ -31,23 +31,6 @@ const EditConfigurationMeta = () => {
   };
 
   useEffect(() => {
-    const fetchInstitutes = async () => {
-      const token = getToken();
-      if (!token) {
-        router.push("/authentication/sign-in");
-        return;
-      }
-      try {
-        const { data } = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/institutes`,
-          { headers: { Authorization: token } }
-        );
-        setInstitutes(data);
-      } catch (error) {
-        toast.error("Failed to load institutes.");
-      }
-    };
-
     const fetchMediaData = async () => {
       const token = getToken();
       if (!token) {
@@ -70,7 +53,6 @@ const EditConfigurationMeta = () => {
       }
     };
 
-    fetchInstitutes();
     fetchMediaData();
   }, [id]);
 

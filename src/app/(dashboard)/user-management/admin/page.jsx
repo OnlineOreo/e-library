@@ -126,17 +126,17 @@ const Home = () => {
     { field: "phone_number", headerName: "Number", flex: 2 },
     { field: "role", headerName: "Role", flex: 2 },
     { field: "designation", headerName: "Designation", flex: 2 },
-    {
-      field: "action",
-      headerName: "Action",
-      flex: 2,
-      renderCell: (params) => (
-        <>
-        {/* <button onClick={() => handleEdit(params)} className="btn btn-primary mx-2 btn-sm"><FaEdit /></button> */}
-        <button onClick={() => handleDelete(params)} className="btn btn-danger btn-sm"><RiDeleteBin6Line /></button>
-        </>
-      ),
-    },
+    // {
+    //   field: "action",
+    //   headerName: "Action",
+    //   flex: 2,
+    //   renderCell: (params) => (
+    //     <>
+    //     <button onClick={() => handleEdit(params)} className="btn btn-primary mx-2 btn-sm"><FaEdit /></button>
+    //     <button onClick={() => handleDelete(params)} className="btn btn-danger btn-sm"><RiDeleteBin6Line /></button>
+    //     </>
+    //   ),
+    // },
   ];
 
 

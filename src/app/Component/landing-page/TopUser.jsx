@@ -28,10 +28,10 @@ export default function TopUser({ headingName, bannerData }) {
   const swiperRef = useRef(null);
   const landingPageData = useSelector((state) => state.landingPageDataSlice);
 
-  // ✅ Keep the JSX unchanged, just fix the logic
-  const topUsers = landingPageData?.instituteId?.top_users?.length
-    ? landingPageData.instituteId.top_users
-    : defaultUsers;
+  const topUsers = landingPageData.instituteId?.top_users || [];
+
+  // 🔒 Do not render anything if no top users
+  if (!topUsers.length) return null;
 
   return (
     <>
@@ -85,7 +85,6 @@ export default function TopUser({ headingName, bannerData }) {
             ))}
           </Swiper>
 
-          {/* Navigation Buttons */}
           <div className="d-flex justify-content-center gap-4 mt-3">
             <button
               className="prev-btn"
@@ -118,7 +117,6 @@ export default function TopUser({ headingName, bannerData }) {
               margin: 5px;
             }
 
-            /* Add gradient to the active slide */
             :global(.swiper-slide-active .testimonial-item) {
               background: linear-gradient(
                 to bottom right,
@@ -133,3 +131,4 @@ export default function TopUser({ headingName, bannerData }) {
     </>
   );
 }
+

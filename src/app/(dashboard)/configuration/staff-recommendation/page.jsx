@@ -62,43 +62,55 @@ export default function Configurationmeta() {
 
 
     const columns = [
-        { field: "institute", headerName: "Institute", width: 250 },
-        { field: "article_type", headerName: "Article Type", width: 250 },
-        { field: "title", headerName: "Title", width: 350 },
+        { field: "institute", headerName: "Institute", flex: 2 },
+        { field: "article_type", headerName: "Article Type", flex: 2 },
+        { field: "title", headerName: "Title", flex: 3 },
         {
-            field: "image",
-            headerName: "Image",
-            width: 200,
-            renderCell: (params) =>
-                params.value ? (
-                    <div className="avatar avatar-md">
-                        <img
-                            src={params.value}
-                            alt="Meta"
-                            className="rounded-circle"
-                            style={{ width: 50, height: 50, objectFit: "cover", borderRadius: "5px" }}
-                        />
-                    </div>
-                ) : (
-                    "No Image"
-                ),
-        },
-        {
-            field: "action",
-            headerName: "Action",
-            width: 200,
-            renderCell: (params) => (
-                <div>
-                    <button onClick={() => handleEdit(params.id)} className="btn btn-primary btn-sm mx-1">
-                        <FaEdit />
-                    </button>
-                    <button onClick={() => handleDelete(params.id)} className="btn btn-danger btn-sm mx-1">
-                        <FaTrashAlt />
-                    </button>
-                </div>
+          field: "image",
+          headerName: "Image",
+          flex: 1,
+          renderCell: (params) =>
+            params.value ? (
+              <div className="avatar avatar-md">
+                <img
+                  src={params.value}
+                  alt="Meta"
+                  className="rounded-circle"
+                  style={{
+                    width: 50,
+                    height: 50,
+                    objectFit: "cover",
+                    borderRadius: "5px",
+                  }}
+                />
+              </div>
+            ) : (
+              "No Image"
             ),
         },
-    ];
+        {
+          field: "action",
+          headerName: "Action",
+          flex: 1,
+          renderCell: (params) => (
+            <div>
+              <button
+                onClick={() => handleEdit(params.id)}
+                className="btn btn-primary btn-sm mx-1"
+              >
+                <FaEdit />
+              </button>
+              <button
+                onClick={() => handleDelete(params.id)}
+                className="btn btn-danger btn-sm mx-1"
+              >
+                <FaTrashAlt />
+              </button>
+            </div>
+          ),
+        },
+      ];
+      
 
     const handleEdit = (staff_pick_id) => {
         router.push(`./staff-recommendation/edit/${staff_pick_id}`);

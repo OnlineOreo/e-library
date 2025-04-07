@@ -4,7 +4,7 @@ import { Form, Card, Row, Col, Container, Button, Spinner } from 'react-bootstra
 import Link from 'next/link';
 import Image from "next/image";
 import { useEffect, useState } from 'react';
-import axios from 'axios';0
+import axios from 'axios';
 import Swal from "sweetalert2";
 
 const Profile = () => {
@@ -38,29 +38,23 @@ const Profile = () => {
 
     const validateForm = () => {
         let newErrors = {};
-
-        // if (!authUser.name.trim()) newErrors.name = "Name is required";
-        // if (!authUser.email.trim()) newErrors.email = "Email is required";
-        // if (!authUser.phone_number.trim()) newErrors.phone_number = "Phone number is required";
-        // if (!authUser.address.trim()) newErrors.address = "Address is required";
-        // if (!authUser.gender.trim()) newErrors.gender = "Gender is required";
-        // if (!authUser.image) newErrors.image = "Image is required";
-
+        // (Optional) Add frontend validation here if needed
         setErrors(newErrors);
-        return Object.keys(newErrors).length === 0; // Returns true if no errors
+        return Object.keys(newErrors).length === 0;
     };
 
     const getToken = () => {
         const cookieString = document.cookie
-          .split("; ")
-          .find((row) => row.startsWith("access_token="));
-    
+            .split("; ")
+            .find((row) => row.startsWith("access_token="));
         return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
-      };
+    };
 
     useEffect(() => {
         loadAuthUser();
     }, []);
+
+    const cleanValue = (value) => (value === null || value === undefined ? "" : value);
 
     const loadAuthUser = async () => {
         const token = getToken();
@@ -72,17 +66,30 @@ const Profile = () => {
             const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/profile`, {
                 headers: { Authorization: `${token}` },
             });
-            setAuthUser(response.data);
+            setAuthUser({
+                name: cleanValue(response.data.name),
+                role: cleanValue(response.data.role),
+                email: cleanValue(response.data.email),
+                id: cleanValue(response.data.id),
+                image: cleanValue(response.data.image),
+                phone_number: cleanValue(response.data.phone_number),
+                date_joined: cleanValue(response.data.date_joined),
+                address: cleanValue(response.data.address),
+                designation: cleanValue(response.data.designation),
+                gender: cleanValue(response.data.gender),
+                admission_year: cleanValue(response.data.admission_year),
+            });
+
             setFormdata({
-                name: response.data.name,
-                role: response.data.role,
-                email: response.data.email,
-                image: response.data.image,
-                phone_number: response.data.phone_number,
-                address: response.data.address,
-                gender: response.data.gender,
-                admission_year: response.data.admission_year,
-            })
+                name: cleanValue(response.data.name),
+                role: cleanValue(response.data.role),
+                email: cleanValue(response.data.email),
+                image: cleanValue(response.data.image),
+                phone_number: cleanValue(response.data.phone_number),
+                address: cleanValue(response.data.address),
+                gender: cleanValue(response.data.gender),
+                admission_year: cleanValue(response.data.admission_year),
+            });
         } catch (error) {
             console.error("Axios Error:", error);
         }
@@ -122,19 +129,19 @@ const Profile = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         console.log('chala bhai')
-
+    
         if (!validateForm()) {
             return;
         }
-
+    
         let token = getToken();
         if (!token) {
             errorToaster("Authentication required!");
             return;
         }
-
+    
         let authUserData = new FormData();
-
+    
         Object.entries(formdata).forEach(([key, value]) => {
             if (key === "image") {
                 if (value instanceof File) {
@@ -142,16 +149,12 @@ const Profile = () => {
                 }
             } else if (key === "groups" || key === "user_permissions") {
                 console.log(typeof value)
-                return
-                // if (value && typeof value === "string" && value.trim() !== "") {
-                //     authUserData.append(key, value);
-                // }
-                
+                return;
             } else {
                 authUserData.append(key, value);
             }
         });
-
+    
         try {
             const response = await axios.put(
                 `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/profile`,
@@ -163,7 +166,7 @@ const Profile = () => {
                     },
                 }
             );
-
+    
             if (response) {
                 setIsLoading(true);
                 Swal.fire({
@@ -173,11 +176,40 @@ const Profile = () => {
                     confirmButtonText: "OK",
                 });
                 loadAuthUser();
-                setIsLoading(false)
-                // setTimeout(() => router.push('../profile/view'), 2000);
+                setIsLoading(false);
             }
         } catch (error) {
             setIsLoading(false);
+    
+            if (error.response && error.response.data) {
+                const errorData = error.response.data;
+                const formattedErrors = {};
+    
+                Object.entries(errorData).forEach(([key, value]) => {
+                    if (Array.isArray(value)) {
+                        const firstError = value[0];
+    
+                        if (
+                            typeof firstError === "string" &&
+                            firstError.includes('"" is not a valid choice')
+                        ) {
+                            formattedErrors[key] = `${key} is not a valid choice.`;
+                        } else if (
+                            typeof firstError === "string" &&
+                            firstError === "This field may not be blank."
+                        ) {
+                            formattedErrors[key] = `${key} may not be blank.`;
+                        } else {
+                            formattedErrors[key] = firstError;
+                        }
+                    } else {
+                        formattedErrors[key] = value;
+                    }
+                });
+    
+                setErrors(formattedErrors);
+            }
+    
             Swal.fire({
                 title: "Error!",
                 text: "Something went wrong!",
@@ -186,21 +218,19 @@ const Profile = () => {
             });
         }
     };
-
+    
 
     return (
         <Container fluid className="p-6">
             {/* Profile Header */}
             <Row className="align-items-center">
                 <Col xl={12} lg={12} md={12} xs={12}>
-                    {/* Background Image */}
                     <div className="pt-20 rounded-top"
                         style={{ backgroundImage: 'url(/images/background/profile-cover.jpg)', backgroundSize: 'cover', backgroundRepeat: 'no-repeat' }}
                     />
                     <div className="bg-white rounded-bottom smooth-shadow-sm">
                         <div className="d-flex align-items-center justify-content-between pt-4 pb-6 px-4">
                             <div className="d-flex align-items-center">
-                                {/* Profile Image */}
                                 <div className="avatar-xxl avatar-indicators avatar-online me-2 position-relative d-flex justify-content-end align-items-end mt-n10">
                                     <Image
                                         src={authUser.image !== "" ? authUser.image : "/images/avatar/avatar-1.jpg"}
@@ -213,9 +243,8 @@ const Profile = () => {
                                         <Image src="/images/svg/checked-mark.svg" alt="Verified" height={30} width={30} />
                                     </Link>
                                 </div>
-                                {/* User Info */}
                                 <div className="lh-1">
-                                    <h2 className="mb-0">{authUser.name || "User Name"}</h2>
+                                    <h2 className="mb-0">{authUser.name == "null" ? 'User' : authUser.name}</h2>
                                     <p className="mb-0 d-block">{authUser.email || "user@example.com"}</p>
                                 </div>
                             </div>
@@ -244,7 +273,7 @@ const Profile = () => {
                                         <Form.Control
                                             type="text"
                                             name="name"
-                                            value={authUser.name}
+                                            value={authUser.name == 'null' ? 'User' : authUser.name}
                                             onChange={handleInputChange}
                                             placeholder="Enter your name"
                                             isInvalid={!!errors.name}
@@ -290,7 +319,7 @@ const Profile = () => {
                                         <Form.Control
                                             type="text"
                                             name="address"
-                                            value={authUser.address}
+                                            value={authUser.address == 'null' ? '' : authUser.address}
                                             onChange={handleInputChange}
                                             placeholder="Enter Address"
                                             isInvalid={!!errors.address}
@@ -324,15 +353,22 @@ const Profile = () => {
                                         <Form.Control.Feedback type="invalid">{errors.image}</Form.Control.Feedback>
                                     </Form.Group>
                                 </Col>
-                                <input type="hidden" value={authUser.admission_year} name='admission_year' onChange={handleInputChange}/>
-                                <input type="hidden" value={authUser.role} name='role'/>
+
+                                <input type="hidden" value={authUser.admission_year} name='admission_year' onChange={handleInputChange} />
+                                <input type="hidden" value={authUser.role} name='role' />
+
+                                {errors.non_field_errors && (
+                                    <Col lg={12}>
+                                        <div className="text-danger mb-2">{errors.non_field_errors}</div>
+                                    </Col>
+                                )}
+
                                 <Col lg={12} className="mb-3 mt-4">
                                     <Button variant="primary" className="w-100" disabled={isLoading} type="submit">
                                         {isLoading ? <Spinner animation="border" size="sm" /> : "Update"}
                                     </Button>
                                 </Col>
                             </Row>
-
                         </Form>
                     </Card.Body>
                 </Card>

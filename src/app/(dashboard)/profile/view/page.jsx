@@ -84,7 +84,7 @@ const Profile = () => {
               </div>
               {/* text */}
               <div className="lh-1">
-                <h2 className="mb-0">{authUser.name}
+                <h2 className="mb-0">{authUser.name == "null" ? 'User' : authUser.name}
                   <Link href="#!" className="text-decoration-none" data-bs-toggle="tooltip" data-placement="top" title="" data-original-title="Beginner">
                   </Link>
                 </h2>
@@ -128,10 +128,10 @@ const Profile = () => {
         <Card>
             <Card.Body>
                 {/* card title */}
-                <Card.Title as="h4">About Me</Card.Title>
+                {/* <Card.Title as="h4">About Me</Card.Title>
                 <span className="text-uppercase fw-medium text-dark fs-5 ls-2">Bio</span>
                 <p className="mt-2 mb-6">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspen disse var ius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat.
-                </p>
+                </p> */}
                 <Row>
                     <Col xs={6} className="mb-5">
                         <h6 className="text-uppercase fs-5 ls-2">Role</h6>
@@ -146,17 +146,17 @@ const Profile = () => {
                         <h6 className="text-uppercase fs-5 ls-2">Phone </h6>
                         <p className="mb-0">{authUser.phone_number}</p>
                     </Col>
-                    <Col xs={6} className="mb-5">
+                    {/* <Col xs={6} className="mb-5">
                         <h6 className="text-uppercase fs-5 ls-2">Date of Birth </h6>
                         <p className="mb-0">{authUser.date_joined}</p>
-                    </Col>
+                    </Col> */}
                     <Col xs={6}>
                         <h6 className="text-uppercase fs-5 ls-2">Email </h6>
                         <p className="mb-0">{authUser.email}</p>
                     </Col>
                     <Col xs={6}>
-                        <h6 className="text-uppercase fs-5 ls-2">Location</h6>
-                        <p className="mb-0">{authUser.address}</p>
+                        <h6 className="text-uppercase fs-5 ls-2">Address</h6>
+                        <p className="mb-0">{authUser.address == 'null' ? '' : authUser.address}</p>
                     </Col>
                 </Row>
             </Card.Body>

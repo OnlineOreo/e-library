@@ -111,7 +111,7 @@ const NavbarVertical = (props) => {
 						if (menu.grouptitle) {
 							return (
 								<Card bsPrefix="nav-item" key={index}>
-									<div className="navbar-heading">{menu.title}</div>
+									<div className="navbar-heading fs-5">{menu.title}</div>
 								</Card>
 							);
 						} else if (menu.children) {

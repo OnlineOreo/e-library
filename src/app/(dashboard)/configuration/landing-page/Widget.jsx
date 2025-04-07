@@ -60,7 +60,7 @@ const SectionCard = ({ section, index, number, moveSection, updateSection, toggl
         style={{ width: "70px", height: "70px", zIndex: 1 }}
       >
         <div className="d-flex flex-column align-items-center">
-          <strong style={{ fontSize: "1.2rem" }}>{number}</strong>
+          {/* <strong style={{ fontSize: "1.2rem" }}>{number}</strong> */}
           <div className="d-flex flex-column gap-1 mt-1">
             <div className="bg-light rounded-pill" style={{ width: "20px", height: "4px" }}></div>
             <div className="bg-light rounded-pill" style={{ width: "20px", height: "4px" }}></div>

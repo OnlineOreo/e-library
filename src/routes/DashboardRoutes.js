@@ -28,8 +28,8 @@ export const useDashboardMenu = () => {
                 { id: uuid(), link: '/user-management/users/add-user', name: 'Add User' },
                 { id: uuid(), link: '/user-management/admin/add-admin', name: 'Add Admin' },
                 { id: uuid(), link: '/user-management/admin', name: 'Manage Admin' },
-                { id: uuid(), link: '/user-management/self-restriction', name: 'Self Restriction' },
-                { id: uuid(), link: '/user-management/domain-restriction', name: 'Domain Restriction' },
+                // { id: uuid(), link: '/user-management/self-restriction', name: 'Self Restriction' },
+                // { id: uuid(), link: '/user-management/domain-restriction', name: 'Domain Restriction' },
             ]
         })
     }else{
@@ -94,10 +94,10 @@ export const useDashboardMenu = () => {
         {
             id: uuid(),
             title: 'Reports',
-            icon: 'bell',
+            icon: 'layout',
             children: [
-                { id: uuid(), link: '/reports/total-users', name: 'Total Users' },
-                { id: uuid(), link: '/reports/top-users', name: 'Top Users' },
+                { id: uuid(), link: '/reports/total-users', name: 'User Report' },
+                // { id: uuid(), link: '/reports/top-users', name: 'Top Users' },
             ]
         },
         {
@@ -118,7 +118,7 @@ export const useDashboardMenu = () => {
         { id: uuid(), link: '/configuration/dynamic-page', name: 'Dynamic Page' },
         { id: uuid(), link: '/configuration/footer', name: 'Footer' },
         { id: uuid(), link: '/configuration/notice', name: 'Notices' },
-        { id: uuid(), link: '/configuration/harvest-data', name: 'Harvest Data' },
+        // { id: uuid(), link: '/configuration/harvest-data', name: 'Harvest Data' },
         { id: uuid(), link: '/configuration/staff-recommendation', name: 'Staff Pick' },
     ];
 

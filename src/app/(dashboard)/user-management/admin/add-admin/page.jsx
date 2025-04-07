@@ -32,6 +32,8 @@ const Home = () => {
   const [library, setLibrary] = useState([]);
   const [instituteId, setInstituteId] = useState("");
 
+  const [loading, setLoading] = useState(false);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -54,7 +56,6 @@ const Home = () => {
         ...formData,
         [name]: value,
       });
-      // console.log(formData);
     }
   };
 
@@ -68,13 +69,13 @@ const Home = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true);
     const token = getToken();
     if (!token) {
       errorToaster("Authentication required!");
+      setLoading(false);
       return;
     }
-
-    // const formDataToSend = formData;
 
     const formDataToSend = new FormData();
 
@@ -93,11 +94,9 @@ const Home = () => {
         formDataToSend.append(key, value);
       }
     });
-    
+
     const isSuperUser = formData.role === "ADMIN";
     formDataToSend.append("is_superuser", isSuperUser);
-    
-  
 
     try {
       const response = await axios.post(
@@ -125,9 +124,8 @@ const Home = () => {
           address: "",
           gender: "",
         });
+        router.push("/user-management/admin");
       }
-
-      router.push("/user-management/admin");
     } catch (error) {
       const errorData = error.response?.data;
       if (typeof errorData === "object") {
@@ -140,6 +138,8 @@ const Home = () => {
       } else {
         errorToaster(errorData.message || "Something went wrong!");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -149,7 +149,6 @@ const Home = () => {
     setFormData((prevFormData) => {
       const updatedFormData = { ...prevFormData };
 
-      // Update the specific mapping
       updatedFormData.mappings[index] = {
         ...updatedFormData.mappings[index],
         [name]: value,
@@ -267,17 +266,28 @@ const Home = () => {
             </Row>
 
             {/* <Form.Group className="mb-3" controlId="formImage">
-                  <Form.Label>Upload Image</Form.Label>
-                  <Form.Control
-                    type="file"
-                    name="image"
-                    accept="image/*"
-                    onChange={handleInputChange}
-                  />
-                </Form.Group> */}
+              <Form.Label>Upload Image</Form.Label>
+              <Form.Control
+                type="file"
+                name="image"
+                accept="image/*"
+                onChange={handleInputChange}
+              />
+            </Form.Group> */}
 
-            <Button variant="primary" className="w-100" type="submit">
-              Submit
+            <Button variant="primary" className="w-100" type="submit" disabled={loading}>
+              {loading ? (
+                <>
+                  <span
+                    className="spinner-border spinner-border-sm me-2"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
+                  Submitting...
+                </>
+              ) : (
+                "Submit"
+              )}
             </Button>
           </Form>
         </div>

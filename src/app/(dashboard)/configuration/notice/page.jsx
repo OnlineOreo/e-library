@@ -75,14 +75,14 @@ const Department = () => {
   
 
   const columns = [
-    { field: "notice_id", headerName: "Notice Id", width: 200 },
-    { field: "description", headerName: "Description", width: 500 },
+    { field: "notice_id", headerName: "Notice Id", flex: 1 },
+    { field: "description", headerName: "Description", flex: 2 },
     {
       field: "action",
       headerName: "Action",
-      width: 200,
+      flex: 1,
       renderCell: (params) => (
-        <div>
+        <div className="d-flex align-items-center mt-3">
           <button onClick={() => handleEdit(params)} className="btn btn-primary btn-sm mx-2">
             <FaEdit />
           </button>
@@ -93,6 +93,7 @@ const Department = () => {
       ),
     },
   ];
+  
   
 
   const deleteAction = async (notice_id) => {

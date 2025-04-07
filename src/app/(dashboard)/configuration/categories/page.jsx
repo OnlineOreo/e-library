@@ -9,6 +9,7 @@ import { DataGrid, GridToolbar, GridToolbarContainer, GridToolbarQuickFilter } f
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { FaEdit, FaPlusCircle } from "react-icons/fa";
 import Swal from "sweetalert2";
+import Image from "next/image";
 
 const Department = () => {
   const [users, setUsers] = useState([]);
@@ -76,25 +77,28 @@ const Department = () => {
   };
 
   const columns = [
-    { field: "configuration_category_id", headerName: "Contegory Id", width: 200 },
-    { field: "category_name", headerName: "Category Name", width: 500 },
+    { field: "configuration_category_id", headerName: "Category Id", flex: 1 },
+    { field: "category_name", headerName: "Category Name", flex: 2 },
     { 
       field: "image", 
       headerName: "Image", 
-      width: 250,
+      flex: 1,
       renderCell: (params) => (
-        <img 
-          src={params.value} 
-          alt="Category" 
-          style={{ width: 50, height: 50, objectFit: "cover", borderRadius: "5px" }} 
-        />
+        <div className="avatar avatar-md">
+          <Image
+            src={params.value} 
+            alt="Publisher"
+            width={50}
+            height={50}
+            className="rounded-circle"
+          />
+        </div>
       ),
     },
-    // { field: "description", headerName: "Description", width: 500 },
     {
       field: "action",
       headerName: "Action",
-      width: 200,
+      flex: 1,
       renderCell: (params) => (
         <div>
           <button onClick={() => handleEdit(params)} className="btn btn-primary btn-sm mx-2">
@@ -107,6 +111,7 @@ const Department = () => {
       ),
     },
   ];
+  
   
 
   const deleteAction = async (categoriesId) => {
@@ -184,7 +189,7 @@ const Department = () => {
                   rows={filteredUsers}
                   columns={columns}
                   pageSize={5}
-                  // columnVisibilityModel={{ configuration_category_id: false }}
+                  columnVisibilityModel={{ configuration_category_id: false }}
                 />
               )
             )}

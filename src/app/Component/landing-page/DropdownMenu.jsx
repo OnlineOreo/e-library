@@ -72,11 +72,11 @@ const DropdownMenu = ({
           >
             {items.map((item) => (
               <div
-                key={item.publisher_id || item.configuration_category_id || item.configuration_media_id || item.configuration_collection_id}
+                key={item.publisher_id || item.configuration_category_id || item.configuration_media_id || item.configuration_collection_id || item.configuration_meta_id}
                 className="nav"
                 style={{ minWidth: "33%" }}
               >
-                <a className="dropdown-link" href="javascript:void(0)">
+                <a className="dropdown-link" href="#">
                   <img
                     src={item.image}
                     alt=""
@@ -86,7 +86,7 @@ const DropdownMenu = ({
                       objectFit: "cover",
                     }}
                   />
-                  {item.publisher_name || item.category_name || item.media_name || item.collection_name}
+                  {item.publisher_name || item.category_name || item.media_name || item.collection_name || item.list}
                 </a>
               </div>
             ))}

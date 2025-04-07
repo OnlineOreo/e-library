@@ -102,12 +102,16 @@ export default function AddTrendingBook() {
 
       setTimeout(() => router.push("/configuration/trending-books"), 2000);
     } catch (error) {
-      Swal.fire({
-        title: "Failed to Add!",
-        text: "Something went wrong!",
-        icon: "error",
-        confirmButtonText: "OK",
-      });
+      if (error.response && error.response.data) {
+        const apiErrors = error.response.data;
+        const formattedErrors = {};
+    
+        Object.keys(apiErrors).forEach((field) => {
+          formattedErrors[field] = apiErrors[field][0]; 
+        });
+    
+        setErrors(formattedErrors);
+      }
     } finally {
       setIsLoading(false);
     }

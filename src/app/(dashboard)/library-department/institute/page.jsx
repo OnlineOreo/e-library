@@ -93,7 +93,9 @@ const ViewInstitute = () => {
   const filteredInstitutes = institutes.filter(inst =>
     inst.institute_name.toLowerCase().includes(search.toLowerCase()) ||
     inst.email.toLowerCase().includes(search.toLowerCase()) ||
-    inst.address.toLowerCase().includes(search.toLowerCase())
+    inst.address.toLowerCase().includes(search.toLowerCase()) ||
+    inst.domain.toLowerCase().includes(search.toLowerCase()) || 
+    inst.phone.toLowerCase().includes(search.toLowerCase())
   );
 
   const columns = [
@@ -136,7 +138,7 @@ const ViewInstitute = () => {
           <input
             type="text"
             className="form-control mb-3"
-            placeholder="Search by name, email or address..."
+            placeholder="Search by name, email or domain..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />

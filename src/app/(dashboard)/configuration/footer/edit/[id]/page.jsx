@@ -113,7 +113,7 @@ const EditCategory = () => {
             if (formData.footer_id) {
                 // Updating existing footer (PUT request)
                 await axios.put(
-                    `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/footers/${formData.footer_id}`,
+                    `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/footers?footer_id=${formData.footer_id}`,
                     formDataToSend,
                     {
                         headers: {
@@ -173,7 +173,7 @@ const EditCategory = () => {
                 <div className="card p-6 mt-5">
                     <Form onSubmit={handleSubmit}>
                         <Row className="justify-content-center">
-                            <Col lg={12} className="mb-3">
+                            <Col lg={6} className="mb-3">
                                 <Form.Group controlId="formAddress">
                                     <Form.Label>Address</Form.Label>
                                     <Form.Control
@@ -188,7 +188,7 @@ const EditCategory = () => {
                                 </Form.Group>
                             </Col>
 
-                            <Col lg={12} className="mb-3">
+                            <Col lg={6} className="mb-3">
                                 <Form.Group controlId="formPhone">
                                     <Form.Label>Phone</Form.Label>
                                     <Form.Control
@@ -203,7 +203,7 @@ const EditCategory = () => {
                                 </Form.Group>
                             </Col>
 
-                            <Col lg={12} className="mb-3">
+                            <Col lg={6} className="mb-3">
                                 <Form.Group controlId="formEmail">
                                     <Form.Label>Email</Form.Label>
                                     <Form.Control
@@ -219,7 +219,7 @@ const EditCategory = () => {
                             </Col>
 
                             {['fb_url', 'x_url', 'yt_url', 'li_url', 'insta_url'].map((field, index) => (
-                                <Col lg={12} className="mb-3" key={index}>
+                                <Col lg={6} className="mb-3" key={index}>
                                     <Form.Group controlId={`form${field}`}>
                                         <Form.Label>{field.replace("_", " ").toUpperCase()}</Form.Label>
                                         <Form.Control

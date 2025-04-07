@@ -51,7 +51,7 @@ const Navbar = () => {
     };
 
     if (publisherUrls[publisher.publisher_name]) {
-      console.log(publisherUrls[publisher.publisher_name])
+      console.log(publisherUrls[publisher.publisher_name]);
       window.open(publisherUrls[publisher.publisher_name], "_blank");
     }
   };
@@ -84,12 +84,25 @@ const Navbar = () => {
       title: "Collection",
       items: landingPageData?.instituteId?.collections || [],
     },
+    {
+      type: "dropdown",
+      items: landingPageData?.instituteId?.metas || [],
+      title: "Important Link",
+      href: "/",
+    },
     // {
     //   type: "dropdown",
     //   title: "Collection",
     //   items: landingPageData?.instituteId?.collections || [],
     // },
   ];
+
+  const visibleNavItems = navItems.filter((item) => {
+    if (item.type === "dropdown") {
+      return Array.isArray(item.items) && item.items.length > 0;
+    }
+    return true;
+  });
 
   const [isSticky, setIsSticky] = useState(false);
 
@@ -128,7 +141,8 @@ const Navbar = () => {
                   <Link href="/">
                     <img
                       src={
-                        landingPageData?.instituteId?.configurations?.[0]?.logo || 'default'
+                        landingPageData?.instituteId?.configurations?.[0]
+                          ?.logo || "default"
                       }
                       alt="App Icon"
                     />
@@ -138,9 +152,9 @@ const Navbar = () => {
                   Welcome to LibVituUa
                 </div> */}
                 <div className="header-action-right" style={{ width: 600 }}>
-                <Suspense fallback={<div>Loading search...</div>}>
-                  <SearchBar />
-                </Suspense>
+                  <Suspense fallback={<div>Loading search...</div>}>
+                    <SearchBar />
+                  </Suspense>
                 </div>
               </div>
             </div>
@@ -152,7 +166,8 @@ const Navbar = () => {
                   <Link href="/">
                     <img
                       src={
-                        landingPageData?.instituteId?.configurations?.[0]?.logo || 'default'
+                        landingPageData?.instituteId?.configurations?.[0]
+                          ?.logo || "default"
                       }
                       alt="App Icon"
                     />
@@ -163,10 +178,10 @@ const Navbar = () => {
                     <div className="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block">
                       <nav className="menu">
                         <ul
-                          className="menu-bar menu_bar_a navbar-nav"
+                          className="menu-bar menu_bar_a navbar-nav flex-row"
                           style={{ height: 35 }}
                         >
-                          {navItems.map((item, index) => (
+                          {visibleNavItems.map((item, index) => (
                             <li key={index}>
                               {item.type === "link" ? (
                                 <Link

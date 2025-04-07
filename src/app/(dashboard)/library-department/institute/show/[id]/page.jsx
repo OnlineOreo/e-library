@@ -1,149 +1,111 @@
-'use client'
+"use client";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { ListGroup, Col, Row, Card, Tab, Container, Spinner } from "react-bootstrap";
+import {
+  Col,
+  Row,
+  Card,
+  Container,
+  Spinner,
+  Button,
+} from "react-bootstrap";
 import Link from "next/link";
-import { FaMinusCircle } from "react-icons/fa";
+import { FaArrowLeft } from "react-icons/fa";
 import { useParams } from "next/navigation";
+import "./ShowInstitute.css"; // custom styles
 
 export default function ShowInstitute() {
-    const [isLoading, setIsLoading] = useState(true);
-    const [formData, setFormData] = useState({
-        institute_name: "",
-        email: "",
-        address: "",
-        phone: "",
-        domain: "",
-        sub_domain: "",
-    });
+  const [isLoading, setIsLoading] = useState(true);
+  const [formData, setFormData] = useState({
+    institute_name: "",
+    email: "",
+    address: "",
+    phone: "",
+    domain: "",
+    sub_domain: "",
+  });
 
-    const { id } = useParams();
+  const { id } = useParams();
 
-    const getToken = () => {
-        const cookieString = document.cookie
-          .split("; ")
-          .find((row) => row.startsWith("access_token="));
-      
-        return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
-      };
+  const getToken = () => {
+    const cookieString = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("access_token="));
+    return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+  };
 
-    const getInstitute = async (instituteId) => {
-        if (!instituteId) return;
-        console.log(instituteId)
+  const getInstitute = async (instituteId) => {
+    if (!instituteId) return;
+    setIsLoading(true);
+    const token = getToken();
 
-        setIsLoading(true);
-        const token = getToken();
-
-        try {
-            const response = await axios.get(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/institutes?institute_id=${instituteId}`,
-                {
-                    headers: { Authorization: `${token}` },
-                }
-            );
-
-            setFormData({
-                institute_name: response.data?.institute_name || "",
-                email: response.data?.email || "",
-                address: response.data?.address || "",
-                phone: response.data?.phone || "",
-                domain: response.data?.domain || "",
-                sub_domain: response.data?.sub_domain || "",
-            });
-
-        } catch (error) {
-            console.error("Error fetching institute:", error);
-        } finally {
-            setIsLoading(false);
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/institutes?institute_id=${instituteId}`,
+        {
+          headers: { Authorization: `${token}` },
         }
-    };
+      );
 
-    useEffect(() => {
-        if (id) {
-            getInstitute(id);
-        }
-    }, [id]);
+      setFormData({
+        institute_name: response.data?.institute_name || "",
+        email: response.data?.email || "",
+        address: response.data?.address || "",
+        phone: response.data?.phone || "",
+        domain: response.data?.domain || "",
+        sub_domain: response.data?.sub_domain || "",
+      });
+    } catch (error) {
+      console.error("Error fetching institute:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    const { institute_name, email, address, phone, domain, sub_domain } = formData;
+  useEffect(() => {
+    if (id) {
+      getInstitute(id);
+    }
+  }, [id]);
 
-    return (
-        <>
-            <div className="bg-primary pt-10 pb-21"></div>
-            <Container fluid className="mt-n22 px-6">
-                <Row>
-                    <Col lg={12} md={12} xs={12}>
-                        <div className="d-flex justify-content-between align-items-center">
-                            <h3 className="mb-0 text-dark">Show Institute</h3>
-                            <Link href="../" className="btn btn-white"><FaMinusCircle /> Back</Link>
-                        </div>
-                    </Col>
-                </Row>
+  const renderField = (label, value) => (
+    <div className="info-row mb-3">
+      <div className="info-label">{label}</div>
+      <div className="info-value">{value || "N/A"}</div>
+    </div>
+  );
 
-                <Row className="justify-content-center mt-4">
-                    <Col xl={8} lg={8} md={8} sm={12}>
-                        <Tab.Container id="tab-container-8" defaultActiveKey="design">
-                            <Card>
-                                <Card.Body className="p-0">
-                                    <Tab.Content>
-                                        <Tab.Pane eventKey="design" className="pb-4 p-4">
-                                            {isLoading ? (
-                                                <Spinner animation="border" size="sm" />
-                                            ) : (
-                                                <>
-                                                    {[institute_name, email].some(Boolean) && (
-                                                        <ListGroup horizontal>
-                                                            {institute_name && (
-                                                                <ListGroup.Item className="flex-fill">
-                                                                    {institute_name}
-                                                                </ListGroup.Item>
-                                                            )}
-                                                            {email && (
-                                                                <ListGroup.Item className="flex-fill">
-                                                                    {email}
-                                                                </ListGroup.Item>
-                                                            )}
-                                                        </ListGroup>
-                                                    )}
+  return (
+    <div className="show-institute-wrapper py-5">
+      <Container>
 
-                                                    {[address, phone].some(Boolean) && (
-                                                        <ListGroup horizontal className="mt-2">
-                                                            {address && (
-                                                                <ListGroup.Item className="flex-fill">
-                                                                    {address}
-                                                                </ListGroup.Item>
-                                                            )}
-                                                            {phone && (
-                                                                <ListGroup.Item className="flex-fill">
-                                                                    {phone}
-                                                                </ListGroup.Item>
-                                                            )}
-                                                        </ListGroup>
-                                                    )}
-
-                                                    {[domain, sub_domain].some(Boolean) && (
-                                                        <ListGroup horizontal className="mt-2">
-                                                            {domain && (
-                                                                <ListGroup.Item className="flex-fill">
-                                                                    {domain}
-                                                                </ListGroup.Item>
-                                                            )}
-                                                            {sub_domain && (
-                                                                <ListGroup.Item className="flex-fill">
-                                                                    {sub_domain}
-                                                                </ListGroup.Item>
-                                                            )}
-                                                        </ListGroup>
-                                                    )}
-                                                </>
-                                            )}
-                                        </Tab.Pane>
-                                    </Tab.Content>
-                                </Card.Body>
-                            </Card>
-                        </Tab.Container>
-                    </Col>
-                </Row>
-            </Container>
-        </>
-    );
+        {isLoading ? (
+          <div className="text-center py-5">
+            <Spinner animation="border" variant="primary" />
+          </div>
+        ) : (
+          <Row className="justify-content-center">
+            <Col md={8}>
+              <Card className="custom-card ">
+                <Card.Header className="custom-card-header d-flex justify-content-between  align-items-center">
+                  <span>Institute Information</span>
+                <Link href={'/library-department/institute'} className="btn btn-white">
+                <FaArrowLeft className="me-1" /> Back
+              </Link>
+                </Card.Header>
+                <Card.Body className="custom-card-body">
+                  {renderField("Institute Name", formData.institute_name)}
+                  {renderField("Email", formData.email)}
+                  {renderField("Phone", formData.phone)}
+                  {renderField("Address", formData.address)}
+                  {renderField("Domain", formData.domain)}
+                  {renderField("Subdomain", formData.sub_domain)}
+                </Card.Body>
+              </Card>
+            </Col>
+          </Row>
+        )}
+      </Container>
+    </div>
+  );
 }

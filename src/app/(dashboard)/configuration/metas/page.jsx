@@ -152,7 +152,6 @@ export default function Configurationmeta() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-          {meta.length > 0 ? (
             <Box sx={{ height: 500, width: "100%" }}>
               <DataGrid
                 rows={meta.filter((m) => m?.list?.toLowerCase().includes(search.toLowerCase()))}
@@ -162,9 +161,6 @@ export default function Configurationmeta() {
                 getRowId={(row) => row.configuration_meta_id} // Fixed row ID issue
               />
             </Box>
-          ) : (
-            <p>No meta configurations found.</p>
-          )}
         </div>
       </Container>
       <ToastContainer />

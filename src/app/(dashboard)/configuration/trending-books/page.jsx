@@ -110,7 +110,7 @@ export default function TrendingBooks() {
       headerName: "Action",
       flex: 1,
       renderCell: (params) => (
-        <div className="d-flex gap-2">
+        <div className="d-flex gap-2 mt-2">
           <button onClick={() => handleEdit(params.row)} className="btn btn-primary btn-sm">
             <FaEdit />
           </button>

@@ -1,0 +1,44 @@
+/* .show-institute-wrapper {
+    background-color: #f9fafb;
+    min-height: 100vh;
+  } */
+  
+  .custom-card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+  
+  .custom-card-header {
+    background-color: #333;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1.1rem;
+    border-radius: 12px 12px 0 0;
+  }
+  
+  .custom-card-body {
+    padding: 2rem;
+  }
+  
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #e9ecef;
+  }
+  
+  .info-label {
+    font-size: 0.95rem;
+    color: #6c757d;
+    flex: 0 0 40%;
+  }
+  
+  .info-value {
+    font-weight: 500;
+    flex: 0 0 55%;
+    text-align: right;
+  }
+  
