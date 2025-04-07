@@ -15,7 +15,6 @@ export default function SendEmail() {
     const [programs, setPrograms] = useState([]);
     const instituteId = useSelector((state) => state.institute.instituteId);
 
-    const instituteId = useSelector((state) => state.institute.instituteId);
 
     const getToken = () => {
         const cookieString = document.cookie
