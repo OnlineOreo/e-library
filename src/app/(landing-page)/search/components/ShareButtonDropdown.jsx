@@ -9,7 +9,7 @@ import {
 } from "react-icons/fa";
 import { IoMail } from "react-icons/io5";
 
-const ShareButtonDropdown = ({ id }) => {
+const ShareButtonDropdown = ({ id, catalogType }) => {
   const [shareDropdown, setShareDropdown] = useState(false);
   const containerRef = useRef(null);
 
@@ -38,22 +38,21 @@ const ShareButtonDropdown = ({ id }) => {
 
   return (
     <div
-      className="d-flex my-3"
+      className=""
       style={{ position: "relative" }}
       ref={containerRef}
     >
       {/* Share icon */}
       <FaShareAlt
         size={20}
-        className="me-3 cursor-pointer"
+        className="me-3 cursor_pointer"
         onClick={() => setShareDropdown((prev) => !prev)}
       />
 
       {/* Dropdown */}
       <div
-        className={`share_dropdown card p-3 transition-all position-absolute ${
-          shareDropdown ? "show" : "hide"
-        }`}
+        className={`share_dropdown card transition-all position-absolute ${shareDropdown ? "show" : "hide"
+          }`}
         style={{
           top: "150%",
           zIndex: 99,
@@ -61,11 +60,13 @@ const ShareButtonDropdown = ({ id }) => {
           minWidth: "200px",
         }}
       >
-        <div className="d-flex gap-3 text-secondary">
+        <div className="fw-bold border-bottom px-3 py-1">Share Catalog</div>
+        <div className="d-flex gap-3 px-3 py-2 text-secondary">
           <a
             href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`}
             target="_blank"
             rel="noopener noreferrer"
+            className="cursor_pointer"
           >
             <FaFacebookSquare size={20} className="cursor-pointer" />
           </a>
@@ -73,6 +74,7 @@ const ShareButtonDropdown = ({ id }) => {
             href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`}
             target="_blank"
             rel="noopener noreferrer"
+            className="cursor_pointer"
           >
             <FaLinkedin size={20} className="cursor-pointer" />
           </a>
@@ -80,6 +82,7 @@ const ShareButtonDropdown = ({ id }) => {
             href={`https://twitter.com/intent/tweet?url=${encodedUrl}&text=${text}`}
             target="_blank"
             rel="noopener noreferrer"
+              className="cursor_pointer"
           >
             <FaTwitterSquare size={20} className="cursor-pointer" />
           </a>
@@ -87,6 +90,7 @@ const ShareButtonDropdown = ({ id }) => {
             href={`https://mail.google.com/mail/?view=cm&fs=1&to=&su=${emailSubject}&body=${emailBody}`}
             target="_blank"
             rel="noopener noreferrer"
+            className="cursor_pointer"
           >
             <IoMail size={20} className="cursor-pointer" />
           </a>
@@ -94,8 +98,7 @@ const ShareButtonDropdown = ({ id }) => {
       </div>
 
       {/* Other Icons */}
-      <FaFileDownload size={20} className="me-3 cursor-pointer" />
-      <FaRegBookmark size={20} className="me-3 cursor-pointer" />
+
 
       {/* Animation styles */}
       <style jsx>{`
