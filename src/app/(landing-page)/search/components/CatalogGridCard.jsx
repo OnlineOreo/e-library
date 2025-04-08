@@ -22,7 +22,7 @@ const CatalogGridCard = (props) => {
             <Card.Body className='text-secondary'>
                 <div className='fw-bold one_line_ellipses'>{props.datacite_title}</div>
                 <div className='one_line_ellipses'>{props.datacite_creators}</div>
-                <div className='one_line_ellipses'>{props.dc_publishers || "N/A"}</div>
+                <div className='one_line_ellipses text-primary'>{props.publisher || "N/A"}</div>
                 <div>{props.dc_date}</div>
                 <div className='d-flex my-3'>
                 <ShareButtonDropdown id={props.id} catalogType={"Print-collection"} />

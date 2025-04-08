@@ -1,53 +1,88 @@
 "use client";
 
-import { useState } from 'react';
-import { Container, Row, Col, Form, Card, Button, InputGroup, Spinner } from 'react-bootstrap';
+import { Container, Row, Col, Button, Spinner, Form, InputGroup } from 'react-bootstrap';
+import { BsFillGrid3X3GapFill } from "react-icons/bs";
+import { FaListUl, FaSearch } from "react-icons/fa";
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from "next/navigation";
+
 import CatalogGridCard from '../components/CatalogGridCard';
+import CatalogListCard from '../components/CatalogListCard';
 import GridViewSkelton from '../components/GridViewSkelton';
 import SearchSideFilter from '../components/SearchSideFilter';
 import CatalogDetailModal from '../components/CatalogDetailModal';
-import CatalogListCard from '../components/CatalogListCard';
-import axios from 'axios';
+// Import the server action
+import { loadMoreResults } from '../print-collection/page';
 
-import { BsFillGrid3X3GapFill } from "react-icons/bs";
-import { FaListUl, FaSearch } from "react-icons/fa";
-import { useRouter, useSearchParams } from "next/navigation";
+export default function PrintCollectionContent({
+    initialResults,
+    initialResultsCount,
+    initialSideFilterResults,
+    searchQuery
+}) {
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const urlParams = searchParams.get("q");
 
-function PrintCollectionContent({ initialResults, initialCount, initialSideFilter, initialQuery }) {
-
-    const [results, setResults] = useState(initialResults);
-    const [resultsCount, setResultsCount] = useState(initialCount);
-    const [sideFilterResults] = useState(initialSideFilter);
-    const [isLoading, setIsLoading] = useState(false);
-    const [startIndex, setStartIndex] = useState(initialResults.length);
-    const [show, setShow] = useState(false);
-    const [selectCatalog, setSelectCatalog] = useState(null);
-
+    // Use state with initialization from props
     const [gridView, setGridView] = useState(true);
     const [searchWithinSearch, setSearchWithinSearch] = useState("")
+    const [results, setResults] = useState([]);
+    const [resultsCount, setResultsCount] = useState(0);
+    const [sideFilterResults, setSideFilterResults] = useState({});
+    const [show, setShow] = useState(false);
+    const [selectCatalog, setSelectCatalog] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [startIndex, setStartIndex] = useState(0);
+    const [isClient, setIsClient] = useState(false);
+
+    // Initialize state from props after hydration
+    useEffect(() => {
+        setIsClient(true);
+        setResults(initialResults || []);
+        setResultsCount(initialResultsCount || 0);
+        setSideFilterResults(initialSideFilterResults || {});
+        setStartIndex(initialResults?.length || 0);
+    }, [initialResults, initialResultsCount, initialSideFilterResults]);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
+    // Load more results using server action
     const handleLoadMore = async () => {
-        setIsLoading(true);
-        const nextStart = startIndex + 15;
-        setStartIndex(nextStart);
+        if (!urlParams) return;
 
-        const solrUrl = `${process.env.NEXT_PUBLIC_SOLR_BASE_URL}/solr/Print-collection/select?indent=true&q.op=OR&q=${initialQuery}&rows=15&start=${nextStart}`;
+        setIsLoading(true);
+        const nextStart = startIndex;
+
         try {
-            const response = await axios.get(solrUrl);
-            const docs = response.data.response.docs || [];
-            setResults(prev => [...prev, ...docs]);
-        } catch (err) {
-            console.error("Load More Error:", err);
+            // Call the server action instead of making direct API call
+            const data = await loadMoreResults(urlParams, nextStart);
+
+            const newDocs = data.results || [];
+
+            // Append new results to existing ones
+            setResults(prevResults => [...prevResults, ...newDocs]);
+            setStartIndex(nextStart + newDocs.length);
+
+        } catch (error) {
+            console.error("Load More Error:", error);
         } finally {
             setIsLoading(false);
         }
     };
 
+    // When URL params change, reset to the initial server-fetched data
+    useEffect(() => {
+        if (isClient && urlParams !== searchQuery) {
+            // If URL changed but we haven't received new props yet,
+            // reload the page to get new server data
+            router.refresh();
+        }
+    }, [urlParams, searchQuery, router, isClient]);
+
     const handelSearchWithinSearch = (e) => {
-        e.preventDefault();
+        e.preventDefault()
     }
 
     return (
@@ -84,9 +119,9 @@ function PrintCollectionContent({ initialResults, initialCount, initialSideFilte
                     </Row>
                     {gridView ? (
                         <Row id='grid-view' className={`grid-view`}>
-                            {isLoading ? (
+                            {(!isClient || (!results.length && !isLoading)) ? (
                                 Array.from({ length: 6 }).map((_, index) => (
-                                    <Col md={4} key={index} className='mb-4'>
+                                    <Col md={4} key={`initial-skeleton-${index}`} className='mb-4'>
                                         <GridViewSkelton />
                                     </Col>
                                 ))
@@ -109,40 +144,75 @@ function PrintCollectionContent({ initialResults, initialCount, initialSideFilte
                                     </Col>
                                 ))
                             )}
+                            {isLoading && isClient && (
+                                Array.from({ length: 3 }).map((_, index) => (
+                                    <Col md={4} key={`loading-skeleton-${index}`} className='mb-4'>
+                                        <GridViewSkelton />
+                                    </Col>
+                                ))
+                            )}
                         </Row>
                     ) : (
-                        <Row id='list-view' className={`list-view`}>
-                            {results.map((item) => (
-                                <Col md={12} key={item.id} className="mb-4">
-                                    <CatalogListCard
-                                        id={item.id}
-                                        datacite_title={item.datacite_titles}
-                                        datacite_creators={item.datacite_creators}
-                                        dc_date={item.dc_date}
-                                        publisher={item.dc_publishers?.[0] || "Unknown Publisher"}
-                                        subject={item.datacite_subject?.[0]}
-                                        description={item.description}
-                                        uploader={item.uploader}
-                                        url={item.url}
-                                        onShow={handleShow}
-                                        onSelect={() => setSelectCatalog(item)}
-                                    />
-                                </Col>
-                            ))}
+                        <Row id='grid-view' className={`grid-view`}>
+                            {(!isClient || (!results.length && !isLoading)) ? (
+                                Array.from({ length: 6 }).map((_, index) => (
+                                    <Col md={4} key={`initial-skeleton-${index}`} className='mb-4'>
+                                        <GridViewSkelton />
+                                    </Col>
+                                ))
+                            ) : (
+                                results.map((item) => (
+                                    <Col md={12} key={item.id} className="mb-4">
+                                        <CatalogListCard
+                                            id={item.id}
+                                            datacite_title={item.datacite_titles}
+                                            datacite_creators={item.datacite_creators}
+                                            dc_date={item.dc_date}
+                                            publisher={item.dc_publishers?.[0] || "Unknown Publisher"}
+                                            subject={item.datacite_subject?.[0]}
+                                            description={item.description}
+                                            uploader={item.uploader}
+                                            url={item.url}
+                                            onShow={handleShow}
+                                            onSelect={() => setSelectCatalog(item)}
+                                        />
+                                    </Col>
+                                ))
+                            )}
+                            {isLoading && isClient && (
+                                Array.from({ length: 3 }).map((_, index) => (
+                                    <Col md={4} key={`loading-skeleton-${index}`} className='mb-4'>
+                                        <GridViewSkelton />
+                                    </Col>
+                                ))
+                            )}
                         </Row>
                     )}
-                    <div className='d-flex justify-content-center mt-4'>
-                        {results.length < resultsCount && (
-                            <Button variant='success' style={{ width: "100%", padding: "10px" }} onClick={handleLoadMore} disabled={isLoading}>
-                                {isLoading ? (<Spinner animation="border" role="status"><span className="visually-hidden">Loading...</span></Spinner>) : "Load More"}
+                    <div className='d-flex justify-content-center'>
+                        {isClient && results.length > 0 && results.length < resultsCount && (
+                            <Button
+                                variant='success'
+                                style={{ width: "100%", padding: "10px" }}
+                                onClick={handleLoadMore}
+                                disabled={isLoading}
+                            >
+                                {isLoading ? (
+                                    <Spinner animation="border" role="status">
+                                        <span className="visually-hidden">Loading...</span>
+                                    </Spinner>
+                                ) : "Load More"}
                             </Button>
                         )}
                     </div>
                 </Col>
             </Row>
-            <CatalogDetailModal modalShow={show} handleClose={handleClose} {...selectCatalog} />
+            {isClient && (
+                <CatalogDetailModal
+                    modalShow={show}
+                    handleClose={handleClose}
+                    {...selectCatalog}
+                />
+            )}
         </Container>
     );
 }
-
-export default PrintCollectionContent;
