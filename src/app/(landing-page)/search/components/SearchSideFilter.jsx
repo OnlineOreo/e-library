@@ -13,6 +13,9 @@ const SearchSideFilter = (props) => {
     const searchParams = useSearchParams();
     const urlParams = searchParams.get("q");
 
+    console.log("url params : ",encodeURIComponent(urlParams));
+    
+
 
     const [showPDropdown, setShowPDropdown] = useState(false);
     const [showADropdown, setShowADropdown] = useState(false);
@@ -81,7 +84,7 @@ const SearchSideFilter = (props) => {
             ? `${encodedBaseQuery}%20AND%20${filterConditions}`
             : encodedBaseQuery;
 
-        console.log("Filter URL:", filterUrl);
+        console.log("Filter Change URL:", filterUrl);
 
         router.push(`/search/print-collection?q=${filterUrl}`);
     };
@@ -129,7 +132,7 @@ const SearchSideFilter = (props) => {
                                                     >
                                                         <Form.Check
                                                             type="checkbox"
-                                                            className="one_line_ellipses"
+                                                            className="one_line_ellipses thats_filter"
                                                             style={{ width: "90%" }}
                                                             label={item?.name || "Unknown"}
                                                             data-filtertype="dc_publishers_string"
@@ -225,7 +228,7 @@ const SearchSideFilter = (props) => {
                                             >
                                                 <Form.Check
                                                     type="checkbox"
-                                                    className="one_line_ellipses"
+                                                    className="one_line_ellipses thats_filter"
                                                     style={{ width: "90%" }}
                                                     label={item?.name || "Unknown"}
                                                     data-filtertype="datacite_creators_string"
@@ -253,7 +256,7 @@ const SearchSideFilter = (props) => {
                                 <div className="d-flex justify-content-between" key={index}>
                                     <Form.Check type="checkbox" label={item?.name || "Unknown"}
                                         className='thats_filter one_line_ellipses'
-                                        data-filtertype="datacite_creators"
+                                        data-filtertype="datacite_creators_string"
                                         data-label={item?.name || "Unknown"}
                                         onChange={filterChange}
                                     />
@@ -286,13 +289,13 @@ const SearchSideFilter = (props) => {
                                     >
                                         {filteredDates.map((item, index) => (
                                             <div
-                                                className="d-flex justify-content-between text-secondary ms-4 thats_filter"
+                                                className="d-flex justify-content-between text-secondary ms-4"
                                                 style={{ width: "300px", fontSize: "11pt" }}
                                                 key={index}
                                             >
                                                 <Form.Check
                                                     type="checkbox"
-                                                    className="one_line_ellipses"
+                                                    className="one_line_ellipses thats_filter"
                                                     style={{ width: "90%" }}
                                                     label={item?.name || "Unknown"}
                                                     data-filtertype="dc_date"
