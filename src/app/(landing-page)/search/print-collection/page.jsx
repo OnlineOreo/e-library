@@ -21,6 +21,9 @@ async function fetchPrintCollectionData(searchQuery, startIndex = 0) {
     // Main search results
     const solrUrl = `${process.env.NEXT_PUBLIC_SOLR_BASE_URL}/solr/Print-collection/select?indent=true&q.op=OR&q=${searchQuery}&rows=15&start=${startIndex}`;
     const response = await axios.get(solrUrl);
+
+    // console.log("solr url : ",solrUrl);
+    
     
     const docs = response.data.response.docs || [];
     const numFound = response.data.response.numFound || 0;
@@ -58,6 +61,9 @@ export async function loadMoreResults(searchQuery, startIndex) {
   try {
     const solrUrl = `${process.env.NEXT_PUBLIC_SOLR_BASE_URL}/solr/Print-collection/select?indent=true&q.op=OR&q=${searchQuery}&rows=15&start=${startIndex}`;
     const response = await axios.get(solrUrl);
+
+    // console.log("side solr url : ",solrUrl);
+    
     
     const docs = response.data.response.docs || [];
     const numFound = response.data.response.numFound || 0;
@@ -77,6 +83,9 @@ export default async function PrintCollectionPage({ searchParams }) {
   const searchQuery = searchParamsObj.q || "";
     
   const data = await fetchPrintCollectionData(searchQuery);
+
+  // console.log("side filter results : ",data.sideFilterResults);
+  
   
   return (
     <Suspense fallback={<div>Loading search results...</div>}>

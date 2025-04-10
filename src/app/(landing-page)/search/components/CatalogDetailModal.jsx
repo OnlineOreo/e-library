@@ -1,10 +1,11 @@
+"use client"
 import React from 'react'
 import { Container, Row, Col, Form, Card, Button, InputGroup, Nav, Modal } from 'react-bootstrap';
 
 const CatalogDetailModal = (props) => {
     return (
         <div>
-            <Modal show={props.modalShow} onHide={props.handleClose}>
+            <Modal show={props.modalShow} onHide={props.handleClose} size='lg'>
                 <Modal.Header closeButton>
                     <Modal.Title>Book Details</Modal.Title>
                 </Modal.Header>
