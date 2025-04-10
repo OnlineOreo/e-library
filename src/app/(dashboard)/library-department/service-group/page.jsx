@@ -31,13 +31,15 @@ export default function ServiceGroup() {
   };
 
   const getUserRole = () => {
-      if (typeof window !== "undefined") { 
-          const cookieString = document.cookie
-              .split("; ")
-              .find((row) => row.startsWith("user_role="));
-          return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
-      }
-      return null;
+    if (typeof window !== "undefined") {
+      const cookieString = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("user_role="));
+      return cookieString
+        ? decodeURIComponent(cookieString.split("=")[1])
+        : null;
+    }
+    return null;
   };
 
   const userRole = getUserRole();
@@ -80,7 +82,9 @@ export default function ServiceGroup() {
             { headers: { Authorization: `${token}` } }
           );
           Swal.fire("Deleted!", "Service Group has been deleted.", "success");
-          setServiceGroup((prev) => prev.filter((item) => item.sg_id !== params.id));
+          setServiceGroup((prev) =>
+            prev.filter((item) => item.sg_id !== params.id)
+          );
         } catch (error) {
           toast.error("Something went wrong!");
           console.error(error);
@@ -97,7 +101,9 @@ export default function ServiceGroup() {
     .map((inst) => ({
       ...inst,
     }))
-    .filter((inst) => inst.service_name.toLowerCase().includes(search.toLowerCase()));
+    .filter((inst) =>
+      inst.service_name.toLowerCase().includes(search.toLowerCase())
+    );
 
   const columns = [
     { field: "service_name", headerName: "Name", flex: 2 },
@@ -109,13 +115,19 @@ export default function ServiceGroup() {
       flex: 2,
       renderCell: (params) => (
         <div>
-          <button onClick={() => handleEdit(params)} className="btn btn-primary btn-sm">
+          <button
+            onClick={() => handleEdit(params)}
+            className="btn btn-primary btn-sm"
+          >
             <FaEdit />
           </button>
-          { userRole === "ADMIN" && (
-          <button onClick={() => handleDelete(params)} className="btn btn-danger mx-2 btn-sm">
-            <RiDeleteBin6Line />
-          </button>
+          {userRole === "ADMIN" && (
+            <button
+              onClick={() => handleDelete(params)}
+              className="btn btn-danger mx-2 btn-sm"
+            >
+              <RiDeleteBin6Line />
+            </button>
           )}
         </div>
       ),
@@ -130,10 +142,10 @@ export default function ServiceGroup() {
           <Col lg={12} md={12} xs={12} className="mb-4">
             <div className="d-flex justify-content-between align-items-center">
               <h3 className="mb-0 text-dark">Service Group</h3>
-              { userRole === "ADMIN" && (
-              <Link href="./service-group/add" className="btn btn-white">
-                <FaPlusCircle /> Service Group
-              </Link>
+              {userRole === "ADMIN" && (
+                <Link href="./service-group/add" className="btn btn-white">
+                  <FaPlusCircle /> Service Group
+                </Link>
               )}
             </div>
           </Col>
@@ -146,9 +158,8 @@ export default function ServiceGroup() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-
-          {serviceGroup.length > 0 ? (
-            <Box sx={{ height: 500, width: "100%" }}>
+          <Box sx={{ width: "100%", overflowX: "auto" }}>
+            <Box sx={{ minWidth: 800, height: 500 }}>
               <DataGrid
                 rows={formattedServiceGroup}
                 columns={columns}
@@ -157,9 +168,7 @@ export default function ServiceGroup() {
                 getRowId={(row) => row.sg_id}
               />
             </Box>
-          ) : (
-            <p>Data not found...</p>
-          )}
+          </Box>
         </div>
       </Container>
       <ToastContainer />

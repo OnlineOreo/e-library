@@ -12,8 +12,7 @@ import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
 import { FaPlusCircle } from "react-icons/fa";
 
-const ViewUserType = () => { 
-
+const ViewUserType = () => {
   const router = useRouter();
   const successToaster = (text) => toast(text);
   const errorToaster = (text) => toast.error(text);
@@ -30,13 +29,15 @@ const ViewUserType = () => {
   };
 
   const getUserRole = () => {
-      if (typeof window !== "undefined") { 
-          const cookieString = document.cookie
-              .split("; ")
-              .find((row) => row.startsWith("user_role="));
-          return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
-      }
-      return null;
+    if (typeof window !== "undefined") {
+      const cookieString = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("user_role="));
+      return cookieString
+        ? decodeURIComponent(cookieString.split("=")[1])
+        : null;
+    }
+    return null;
   };
 
   const userRole = getUserRole();
@@ -106,11 +107,13 @@ const ViewUserType = () => {
     router.push(`/library-department/user-type/edit/${params.id}`);
   };
 
-  const formattedUserType = userType.map((inst) => ({
-    ...inst,
-  })).filter((inst) =>
-    inst.type_name.toLowerCase().includes(search.toLowerCase())
-  );
+  const formattedUserType = userType
+    .map((inst) => ({
+      ...inst,
+    }))
+    .filter((inst) =>
+      inst.type_name.toLowerCase().includes(search.toLowerCase())
+    );
 
   const columns = [
     // { field: "user_type_id", headerName: "Id", width: 150 },
@@ -129,13 +132,13 @@ const ViewUserType = () => {
           >
             <FaEdit />
           </button>
-          { userRole === "ADMIN" && (
-          <button
-            onClick={() => handleDelete(params)}
-            className="btn btn-danger mx-2 btn-sm"
-          >
-            <RiDeleteBin6Line />
-          </button>
+          {userRole === "ADMIN" && (
+            <button
+              onClick={() => handleDelete(params)}
+              className="btn btn-danger mx-2 btn-sm"
+            >
+              <RiDeleteBin6Line />
+            </button>
           )}
         </div>
       ),
@@ -150,10 +153,10 @@ const ViewUserType = () => {
           <Col lg={12} md={12} xs={12}>
             <div className="d-flex justify-content-between align-items-center">
               <h3 className="mb-0 text-dark">User Type</h3>
-              { userRole === "ADMIN" && (
-              <Link href="./user-type/add" className="btn btn-white">
-                <FaPlusCircle /> user type
-              </Link>
+              {userRole === "ADMIN" && (
+                <Link href="./user-type/add" className="btn btn-white">
+                  <FaPlusCircle /> user type
+                </Link>
               )}
             </div>
           </Col>
@@ -166,9 +169,8 @@ const ViewUserType = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-
-          {userType.length > 0 ? (
-            <Box sx={{ height: 500, width: "100%" }}>
+          <Box sx={{ width: "100%", overflowX: "auto" }}>
+            <Box sx={{ minWidth: 800, height: 500 }}>
               <DataGrid
                 rows={formattedUserType}
                 columns={columns}
@@ -177,9 +179,7 @@ const ViewUserType = () => {
                 getRowId={(row) => row.user_type_id}
               />
             </Box>
-          ) : (
-            <p>Data not found...</p>
-          )}
+          </Box>
         </div>
       </Container>
       <ToastContainer />

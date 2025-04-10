@@ -28,16 +28,18 @@ const ViewProgram = () => {
   };
 
   const getUserRole = () => {
-      if (typeof window !== "undefined") { 
-          const cookieString = document.cookie
-              .split("; ")
-              .find((row) => row.startsWith("user_role="));
-          return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
-      }
-      return null;
+    if (typeof window !== "undefined") {
+      const cookieString = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("user_role="));
+      return cookieString
+        ? decodeURIComponent(cookieString.split("=")[1])
+        : null;
+    }
+    return null;
   };
 
-const userRole = getUserRole();
+  const userRole = getUserRole();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -94,7 +96,8 @@ const userRole = getUserRole();
           );
         } catch (error) {
           if (error.response && error.response.data) {
-            const errorMessage = error.response.data.error || "Something went wrong!";
+            const errorMessage =
+              error.response.data.error || "Something went wrong!";
             errorToaster(errorMessage);
           } else {
             errorToaster("Something went wrong!");
@@ -110,7 +113,9 @@ const userRole = getUserRole();
 
   const formattedUserType = userType
     .map((inst) => ({ ...inst }))
-    .filter((inst) => inst.program_name.toLowerCase().includes(search.toLowerCase()));
+    .filter((inst) =>
+      inst.program_name.toLowerCase().includes(search.toLowerCase())
+    );
 
   const columns = [
     // { field: "program_id", headerName: "Id", width: 150 },
@@ -123,13 +128,19 @@ const userRole = getUserRole();
       flex: 2,
       renderCell: (params) => (
         <div>
-          <button onClick={() => handleEdit(params)} className="btn btn-primary btn-sm">
+          <button
+            onClick={() => handleEdit(params)}
+            className="btn btn-primary btn-sm"
+          >
             <FaEdit />
           </button>
-          { userRole === "ADMIN" && (
-          <button onClick={() => handleDelete(params)} className="btn btn-danger mx-2 btn-sm">
-            <RiDeleteBin6Line />
-          </button>
+          {userRole === "ADMIN" && (
+            <button
+              onClick={() => handleDelete(params)}
+              className="btn btn-danger mx-2 btn-sm"
+            >
+              <RiDeleteBin6Line />
+            </button>
           )}
         </div>
       ),
@@ -144,10 +155,10 @@ const userRole = getUserRole();
           <Col lg={12} md={12} xs={12}>
             <div className="d-flex justify-content-between align-items-center">
               <h3 className="mb-0 text-dark">Program</h3>
-              { userRole === "ADMIN" && (
-              <Link href="./program/add" className="btn btn-white">
-                <FaPlusCircle /> Program
-              </Link>
+              {userRole === "ADMIN" && (
+                <Link href="./program/add" className="btn btn-white">
+                  <FaPlusCircle /> Program
+                </Link>
               )}
             </div>
           </Col>
@@ -160,8 +171,8 @@ const userRole = getUserRole();
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-          {userType.length > 0 ? (
-            <Box sx={{ height: 500, width: "100%" }}>
+          <Box sx={{ width: "100%", overflowX: "auto" }}>
+            <Box sx={{ minWidth: 800, height: 500 }}>
               <DataGrid
                 rows={formattedUserType}
                 columns={columns}
@@ -170,9 +181,7 @@ const userRole = getUserRole();
                 getRowId={(row) => row.program_id}
               />
             </Box>
-          ) : (
-            <p>No programs available</p>
-          )}
+          </Box>
         </div>
       </Container>
       <ToastContainer />

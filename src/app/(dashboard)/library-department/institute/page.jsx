@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Container, Col, Row } from "react-bootstrap";
@@ -7,8 +7,8 @@ import Box from "@mui/material/Box";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useRouter } from "next/navigation";
-import { FaEdit, FaEye , FaPlusCircle } from "react-icons/fa";
-import { ToastContainer, toast } from 'react-toastify';
+import { FaEdit, FaEye, FaPlusCircle } from "react-icons/fa";
+import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
 
 const ViewInstitute = () => {
@@ -23,10 +23,10 @@ const ViewInstitute = () => {
     const cookieString = document.cookie
       .split("; ")
       .find((row) => row.startsWith("access_token="));
-  
+
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
-  
+
   const loadUser = async () => {
     const token = getToken();
     if (!token) {
@@ -36,10 +36,13 @@ const ViewInstitute = () => {
     }
 
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/institutes`, {
-        headers: { Authorization: `${token}` },
-        method: 'GET'
-      });
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/institutes`,
+        {
+          headers: { Authorization: `${token}` },
+          method: "GET",
+        }
+      );
 
       if (response.status === 200) {
         setInstitutes(response.data);
@@ -64,20 +67,26 @@ const ViewInstitute = () => {
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!",
     }).then(async (result) => {
-      
       if (result.isConfirmed) {
-          try {
-            await axios.delete(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/institutes?institute_id=${params.id}`, {
+        try {
+          await axios.delete(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/institutes?institute_id=${params.id}`,
+            {
               headers: { Authorization: `${token}` },
-            });
+            }
+          );
 
-            Swal.fire("Deleted!", "Institute deleted successfully!", "success");
-            setInstitutes((prev) => prev.filter(item => item.institute_id !== params.id));
-          } catch (error) {
-            errorToaster(error?.response?.data?.error || "Something went wrong!");
-            errorToaster(error?.response?.data?.details || "Something went wrong!");
-            // console.log(error);
-          }
+          Swal.fire("Deleted!", "Institute deleted successfully!", "success");
+          setInstitutes((prev) =>
+            prev.filter((item) => item.institute_id !== params.id)
+          );
+        } catch (error) {
+          errorToaster(error?.response?.data?.error || "Something went wrong!");
+          errorToaster(
+            error?.response?.data?.details || "Something went wrong!"
+          );
+          // console.log(error);
+        }
       }
     });
   };
@@ -85,17 +94,18 @@ const ViewInstitute = () => {
   const handleEdit = (params) => {
     router.push(`./institute/edit/${params.id}`);
   };
-  
+
   const handleShow = (params) => {
     router.push(`./institute/show/${params.id}`);
   };
 
-  const filteredInstitutes = institutes.filter(inst =>
-    inst.institute_name.toLowerCase().includes(search.toLowerCase()) ||
-    inst.email.toLowerCase().includes(search.toLowerCase()) ||
-    inst.address.toLowerCase().includes(search.toLowerCase()) ||
-    inst.domain.toLowerCase().includes(search.toLowerCase()) || 
-    inst.phone.toLowerCase().includes(search.toLowerCase())
+  const filteredInstitutes = institutes.filter(
+    (inst) =>
+      inst.institute_name.toLowerCase().includes(search.toLowerCase()) ||
+      inst.email.toLowerCase().includes(search.toLowerCase()) ||
+      inst.address.toLowerCase().includes(search.toLowerCase()) ||
+      inst.domain.toLowerCase().includes(search.toLowerCase()) ||
+      inst.phone.toLowerCase().includes(search.toLowerCase())
   );
 
   const columns = [
@@ -110,14 +120,28 @@ const ViewInstitute = () => {
       flex: 1,
       renderCell: (params) => (
         <div>
-          <button onClick={() => handleShow(params)} className="btn btn-secondary mx-2 btn-sm"><FaEye /></button>
-          <button onClick={() => handleEdit(params)} className="btn btn-primary btn-sm"><FaEdit /></button>
-          <button onClick={() => handleDelete(params)} className="btn btn-danger mx-2 btn-sm"><RiDeleteBin6Line /></button>
+          <button
+            onClick={() => handleShow(params)}
+            className="btn btn-secondary mx-2 btn-sm"
+          >
+            <FaEye />
+          </button>
+          <button
+            onClick={() => handleEdit(params)}
+            className="btn btn-primary btn-sm"
+          >
+            <FaEdit />
+          </button>
+          <button
+            onClick={() => handleDelete(params)}
+            className="btn btn-danger mx-2 btn-sm"
+          >
+            <RiDeleteBin6Line />
+          </button>
         </div>
       ),
     },
   ];
-  
 
   return (
     <>
@@ -128,7 +152,7 @@ const ViewInstitute = () => {
             <div className="d-flex justify-content-between align-items-center">
               <h3 className="mb-0 text-dark">Manage Institute</h3>
               <Link href="./institute/add" className="btn btn-white">
-                 <FaPlusCircle /> Institute
+                <FaPlusCircle /> Institute
               </Link>
             </div>
           </Col>
@@ -142,15 +166,17 @@ const ViewInstitute = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-          <Box sx={{ height: 500, width: "100%" }}>
-            <DataGrid
-              rows={filteredInstitutes}
-              columns={columns}
-              pageSize={5}
-              components={{ Toolbar: GridToolbar }}
-              getRowId={(row) => row.institute_id} 
-              columnVisibilityModel={{ institute_id: false }}
-            />
+          <Box sx={{ width: "100%", overflowX: "auto" }}>
+            <Box sx={{ minWidth: 800, height: 500 }}>
+              <DataGrid
+                rows={filteredInstitutes}
+                columns={columns}
+                pageSize={5}
+                components={{ Toolbar: GridToolbar }}
+                getRowId={(row) => row.institute_id}
+                columnVisibilityModel={{ institute_id: false }}
+              />
+            </Box>
           </Box>
         </div>
       </Container>

@@ -77,11 +77,7 @@ const NewsClipping = () => {
               headers: { Authorization: `${token}` },
             }
           );
-          Swal.fire(
-            "Deleted!",
-            "News Clipping has been deleted.",
-            "success"
-          );
+          Swal.fire("Deleted!", "News Clipping has been deleted.", "success");
           setNewsClipping((prev) =>
             prev.filter((item) => item.e_news_clip_id !== params.id)
           );
@@ -130,7 +126,9 @@ const NewsClipping = () => {
       flex: 2,
       renderCell: (params) => (
         <div>
-          <Link target="_blank" href={params.value}>View Attachment</Link>
+          <Link target="_blank" href={params.value}>
+            View Attachment
+          </Link>
         </div>
       ),
     },
@@ -180,21 +178,18 @@ const NewsClipping = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-
-          {newsClipping.length > 0 ? (
-            <Box sx={{ height: 500, width: "100%" }}>
-              <DataGrid
-                rows={formattedNewsClipping}
-                columns={columns}
-                pageSize={5}
-                components={{ Toolbar: GridToolbar }}
-                getRowId={(row) => row.e_news_clip_id}
-                columnVisibilityModel={{ e_news_clip_id: false }}
-              />
+            <Box sx={{ width: "100%", overflowX: "auto" }}>
+              <Box sx={{ minWidth: "800px", height: 500 }}>
+                <DataGrid
+                  rows={formattedNewsClipping}
+                  columns={columns}
+                  pageSize={5}
+                  components={{ Toolbar: GridToolbar }}
+                  getRowId={(row) => row.e_news_clip_id}
+                  columnVisibilityModel={{ e_news_clip_id: false }}
+                />
+              </Box>
             </Box>
-          ) : (
-            <p>Don't have any data...</p>
-          )}
         </div>
       </Container>
       <ToastContainer />

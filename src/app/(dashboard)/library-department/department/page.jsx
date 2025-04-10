@@ -1,11 +1,16 @@
-'use client';
+"use client";
 import { Fragment, useEffect, useState } from "react";
 import Link from "next/link";
 import { Container, Col, Row } from "react-bootstrap";
 import axios from "axios";
 import Box from "@mui/material/Box";
 import { useRouter } from "next/navigation";
-import { DataGrid, GridToolbar, GridToolbarContainer, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridToolbar,
+  GridToolbarContainer,
+  GridToolbarQuickFilter,
+} from "@mui/x-data-grid";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { FaEdit, FaPlusCircle } from "react-icons/fa";
 import Swal from "sweetalert2";
@@ -14,7 +19,7 @@ const Department = () => {
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [searchText, setSearchText] = useState("");
-  const [isClient, setIsClient] = useState(false); 
+  const [isClient, setIsClient] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
@@ -37,13 +42,15 @@ const Department = () => {
   };
 
   const getUserRole = () => {
-      if (typeof window !== "undefined") { 
-          const cookieString = document.cookie
-              .split("; ")
-              .find((row) => row.startsWith("user_role="));
-          return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
-      }
-      return null;
+    if (typeof window !== "undefined") {
+      const cookieString = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("user_role="));
+      return cookieString
+        ? decodeURIComponent(cookieString.split("=")[1])
+        : null;
+    }
+    return null;
   };
 
   const userRole = getUserRole();
@@ -56,9 +63,12 @@ const Department = () => {
     }
 
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/departments`, {
-        headers: { Authorization: `${token}` },
-      });
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/departments`,
+        {
+          headers: { Authorization: `${token}` },
+        }
+      );
       if (response.status === 200) {
         setUsers(response.data);
         setFilteredUsers(response.data);
@@ -78,11 +88,12 @@ const Department = () => {
     } else {
       const lowerSearch = searchValue.toLowerCase();
       setFilteredUsers(
-        users.filter((user) =>
-          user.department_name.toLowerCase().includes(lowerSearch) ||
-          user.department_code.toLowerCase().includes(lowerSearch) ||
-          user.library.toLowerCase().includes(lowerSearch)
-        ) 
+        users.filter(
+          (user) =>
+            user.department_name.toLowerCase().includes(lowerSearch) ||
+            user.department_code.toLowerCase().includes(lowerSearch) ||
+            user.library.toLowerCase().includes(lowerSearch)
+        )
       );
     }
   };
@@ -98,13 +109,19 @@ const Department = () => {
       flex: 2,
       renderCell: (params) => (
         <div>
-          <button onClick={() => handleEdit(params)} className="btn btn-primary btn-sm mx-2">
+          <button
+            onClick={() => handleEdit(params)}
+            className="btn btn-primary btn-sm mx-2"
+          >
             <FaEdit />
           </button>
-          { userRole === "ADMIN" && (
-          <button onClick={() => deleteAction(params.id)} className="btn btn-danger btn-sm">
-            <RiDeleteBin6Line />
-          </button>
+          {userRole === "ADMIN" && (
+            <button
+              onClick={() => deleteAction(params.id)}
+              className="btn btn-danger btn-sm"
+            >
+              <RiDeleteBin6Line />
+            </button>
           )}
         </div>
       ),
@@ -123,13 +140,15 @@ const Department = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const token = getToken(); 
+          const token = getToken();
           await axios.delete(
             `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/departments?department_id=${departmentId}`,
             { headers: { Authorization: `${token}` } }
           );
-    
-          const updatedUsers = users.filter(user => user.department_id !== departmentId);
+
+          const updatedUsers = users.filter(
+            (user) => user.department_id !== departmentId
+          );
           setUsers(updatedUsers);
           setFilteredUsers(updatedUsers);
           Swal.fire("Deleted!", "Department has been deleted.", "success");
@@ -137,7 +156,7 @@ const Department = () => {
           console.error("Axios Error:", error);
           Swal.fire({
             icon: "warning",
-            title: "Delete Failed!",  
+            title: "Delete Failed!",
             text: error.error || "An error occurred while deleting.",
             position: "center",
             showConfirmButton: true,
@@ -145,7 +164,7 @@ const Department = () => {
           });
         }
       }
-    });    
+    });
   };
 
   const handleEdit = (params) => {
@@ -160,10 +179,13 @@ const Department = () => {
           <Col lg={12} md={12} xs={12}>
             <div className="d-flex justify-content-between align-items-center">
               <h3 className="mb-0 text-dark">Department</h3>
-              { userRole  === "ADMIN" && (
-              <Link href="/library-department/department/add" className="btn btn-white">
-                <FaPlusCircle /> Department
-              </Link>
+              {userRole === "ADMIN" && (
+                <Link
+                  href="/library-department/department/add"
+                  className="btn btn-white"
+                >
+                  <FaPlusCircle /> Department
+                </Link>
               )}
             </div>
           </Col>
@@ -176,20 +198,22 @@ const Department = () => {
             placeholder="Search..."
             className="form-control mb-3"
           />
-          <Box sx={{ height: 500, width: "100%" }}>
-            {isLoading ? (
-              <div>Loading...</div>
-            ) : (
-              isClient && (
-                <DataGrid
-                  getRowId={(row) => row.department_id}
-                  rows={filteredUsers}
-                  columns={columns}
-                  pageSize={5}
-                  columnVisibilityModel={{ department_id: false }}
-                />
-              )
-            )}
+          <Box sx={{ width: "100%", overflowX: "auto" }}>
+            <Box sx={{ minWidth: 800, height: 500 }}>
+              {isLoading ? (
+                <div>Loading...</div>
+              ) : (
+                isClient && (
+                  <DataGrid
+                    getRowId={(row) => row.department_id}
+                    rows={filteredUsers}
+                    columns={columns}
+                    pageSize={5}
+                    columnVisibilityModel={{ department_id: false }}
+                  />
+                )
+              )}
+            </Box>
           </Box>
         </div>
       </Container>

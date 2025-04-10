@@ -79,11 +79,7 @@ const ViewDynamicPages = () => {
               headers: { Authorization: `${token}` },
             }
           );
-          Swal.fire(
-            "Deleted!",
-            "Dynamic page has been deleted.",
-            "success"
-          );
+          Swal.fire("Deleted!", "Dynamic page has been deleted.", "success");
           setDynamicPage((prev) =>
             prev.filter((item) => item.page_id !== params.id)
           );
@@ -106,44 +102,51 @@ const ViewDynamicPages = () => {
       inst?.page_name?.toLowerCase().includes(search.toLowerCase())
     );
 
-    const columns = [
-      { field: "page_id", headerName: "Id", flex: 1 }, 
-      {
-        field: "page_image",
-        headerName: "Image",
-        flex: 0.5, 
-        renderCell: (params) => (
-          <div className="avatar avatar-md">
-            <Image
-              src={params.value || ""}
-              alt="Publisher"
-              width={50}
-              height={50}
-              className="rounded-circle"
-            />
-          </div>
-        ),
-      },
-      { field: "page_name", headerName: "Page Name", flex: 2 },
-      { field: "created_at", headerName: "Created At", flex: 2 },
-      { field: "updated_at", headerName: "Updated At", flex: 2 },
-      {
-        field: "action",
-        headerName: "Action",
-        flex: 1,
-        renderCell: (params) => (
-          <div className="d-flex gap-2"> {/* Ensures spacing */}
-            <button onClick={() => handleEdit(params)} className="btn btn-primary btn-sm">
-              <FaEdit />
-            </button>
-            <button onClick={() => handleDelete(params)} className="btn btn-danger btn-sm">
-              <RiDeleteBin6Line />
-            </button>
-          </div>
-        ),
-      },
-    ];
-    
+  const columns = [
+    { field: "page_id", headerName: "Id", flex: 1 },
+    {
+      field: "page_image",
+      headerName: "Image",
+      flex: 0.5,
+      renderCell: (params) => (
+        <div className="avatar avatar-md">
+          <Image
+            src={params.value || ""}
+            alt="Publisher"
+            width={50}
+            height={50}
+            className="rounded-circle"
+          />
+        </div>
+      ),
+    },
+    { field: "page_name", headerName: "Page Name", flex: 2 },
+    { field: "created_at", headerName: "Created At", flex: 2 },
+    { field: "updated_at", headerName: "Updated At", flex: 2 },
+    {
+      field: "action",
+      headerName: "Action",
+      flex: 1,
+      renderCell: (params) => (
+        <div className="d-flex gap-2">
+          {" "}
+          {/* Ensures spacing */}
+          <button
+            onClick={() => handleEdit(params)}
+            className="btn btn-primary btn-sm"
+          >
+            <FaEdit />
+          </button>
+          <button
+            onClick={() => handleDelete(params)}
+            className="btn btn-danger btn-sm"
+          >
+            <RiDeleteBin6Line />
+          </button>
+        </div>
+      ),
+    },
+  ];
 
   return (
     <>
@@ -167,9 +170,8 @@ const ViewDynamicPages = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-
-          {dynamicPage.length > 0 ? (
-            <Box sx={{ height: 500, width: "100%" }}>
+          <Box sx={{ width: "100%", overflowX: "auto" }}>
+            <Box sx={{ minWidth: 800, height: 500 }}>
               <DataGrid
                 rows={formattedDynamicPage}
                 columns={columns}
@@ -179,9 +181,7 @@ const ViewDynamicPages = () => {
                 columnVisibilityModel={{ page_id: false }}
               />
             </Box>
-          ) : (
-            <p>Don't have any data...</p>
-          )}
+          </Box>
         </div>
       </Container>
       <ToastContainer />

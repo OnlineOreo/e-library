@@ -26,20 +26,21 @@ const ViewLibrary = () => {
   };
 
   const getUserRole = () => {
-      if (typeof window !== "undefined") { 
-          const cookieString = document.cookie
-              .split("; ")
-              .find((row) => row.startsWith("user_role="));
-          return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
-      }
-      return null;
+    if (typeof window !== "undefined") {
+      const cookieString = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("user_role="));
+      return cookieString
+        ? decodeURIComponent(cookieString.split("=")[1])
+        : null;
+    }
+    return null;
   };
 
   const userRole = getUserRole();
 
-
   useEffect(() => {
-    const token = getToken()
+    const token = getToken();
 
     if (!token) return;
     const loadLibrary = async () => {
@@ -68,7 +69,6 @@ const ViewLibrary = () => {
   }, [searchQuery, library]);
 
   const handleDelete = async (params) => {
-
     const token = getToken();
 
     if (!token || !params?.id) return;
@@ -86,12 +86,19 @@ const ViewLibrary = () => {
         try {
           const response = await axios.delete(
             `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/libraries?library_id=${params.id}`,
-            { headers: { Authorization: token, "Content-Type": "application/json" } }
+            {
+              headers: {
+                Authorization: token,
+                "Content-Type": "application/json",
+              },
+            }
           );
 
           if (response.status === 200) {
             Swal.fire("Deleted!", "Library has been deleted.", "success");
-            setLibrary((prev) => prev.filter((item) => item.library_id !== S.id));
+            setLibrary((prev) =>
+              prev.filter((item) => item.library_id !== S.id)
+            );
           }
         } catch (error) {
           toast.error(error.response?.data?.error || "Something went wrong!");
@@ -101,8 +108,10 @@ const ViewLibrary = () => {
     });
   };
 
-  const handleEdit = (params) => router.push(`/library-department/library/edit/${params.id}`);
-  const handleShow = (params) => router.push(`/library-department/library/show/${params.id}`);
+  const handleEdit = (params) =>
+    router.push(`/library-department/library/edit/${params.id}`);
+  const handleShow = (params) =>
+    router.push(`/library-department/library/show/${params.id}`);
 
   const columns = [
     { field: "library_id", headerName: "ID", flex: 2 },
@@ -117,17 +126,26 @@ const ViewLibrary = () => {
       flex: 1,
       renderCell: (params) => (
         <div>
-          <button onClick={() => handleShow(params)} className="btn mx-2 btn-secondary btn-sm">
+          <button
+            onClick={() => handleShow(params)}
+            className="btn mx-2 btn-secondary btn-sm"
+          >
             <FaEye />
           </button>
-          <button onClick={() => handleEdit(params)} className="btn btn-primary btn-sm">
+          <button
+            onClick={() => handleEdit(params)}
+            className="btn btn-primary btn-sm"
+          >
             <FaEdit />
           </button>
-          {( userRole === "ADMIN") && (
-          <button onClick={() => handleDelete(params)} className="btn btn-danger mx-2 btn-sm">
-            <RiDeleteBin6Line />
-          </button>
-           )}
+          {userRole === "ADMIN" && (
+            <button
+              onClick={() => handleDelete(params)}
+              className="btn btn-danger mx-2 btn-sm"
+            >
+              <RiDeleteBin6Line />
+            </button>
+          )}
         </div>
       ),
     },
@@ -138,12 +156,17 @@ const ViewLibrary = () => {
       <div className="bg-primary pt-10 pb-21"></div>
       <Container fluid className="mt-n22 px-6">
         <Row>
-          <Col lg={12} md={12} xs={12} className="d-flex justify-content-between align-items-center">
+          <Col
+            lg={12}
+            md={12}
+            xs={12}
+            className="d-flex justify-content-between align-items-center"
+          >
             <h3 className="mb-0 text-dark">Manage Library</h3>
-            { userRole  === "ADMIN" && (
-            <Link href="./library/add" className="btn btn-white">
-              <FaPlusCircle /> Library
-            </Link>
+            {userRole === "ADMIN" && (
+              <Link href="./library/add" className="btn btn-white">
+                <FaPlusCircle /> Library
+              </Link>
             )}
           </Col>
         </Row>
@@ -156,15 +179,17 @@ const ViewLibrary = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-          <Box sx={{ height: 500, width: "100%" }}>
-            <DataGrid
-              rows={filteredLibrary}
-              columns={columns}
-              pageSize={5}
-              components={{ Toolbar: GridToolbar }}
-              getRowId={(row) => row.library_id}
-              columnVisibilityModel={{ library_id: false }}
-            />
+          <Box sx={{ width: "100%", overflowX: "auto" }}>
+            <Box sx={{ minWidth: 800, height: 500 }}>
+              <DataGrid
+                rows={filteredLibrary}
+                columns={columns}
+                pageSize={5}
+                components={{ Toolbar: GridToolbar }}
+                getRowId={(row) => row.library_id}
+                columnVisibilityModel={{ library_id: false }}
+              />
+            </Box>
           </Box>
         </div>
       </Container>

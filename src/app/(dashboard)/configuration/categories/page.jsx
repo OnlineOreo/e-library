@@ -1,11 +1,11 @@
-'use client';
+"use client";
 import { Fragment, useEffect, useState } from "react";
 import Link from "next/link";
 import { Container, Col, Row } from "react-bootstrap";
 import axios from "axios";
 import Box from "@mui/material/Box";
 import { useRouter } from "next/navigation";
-import { DataGrid, GridToolbar, GridToolbarContainer, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { FaEdit, FaPlusCircle } from "react-icons/fa";
 import Swal from "sweetalert2";
@@ -15,7 +15,7 @@ const Department = () => {
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [searchText, setSearchText] = useState("");
-  const [isClient, setIsClient] = useState(false); 
+  const [isClient, setIsClient] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
@@ -45,9 +45,12 @@ const Department = () => {
     }
 
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/configuration-categories`, {
-        headers: { Authorization: `${token}` },
-      });
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/configuration-categories`,
+        {
+          headers: { Authorization: `${token}` },
+        }
+      );
       if (response.status === 200) {
         setUsers(response.data);
         setFilteredUsers(response.data);
@@ -67,11 +70,10 @@ const Department = () => {
     } else {
       const lowerSearch = searchValue.toLowerCase();
       setFilteredUsers(
-        users.filter((user) =>
-          user.department_name.toLowerCase().includes(lowerSearch) ||
-          user.department_code.toLowerCase().includes(lowerSearch) ||
-          user.library.toLowerCase().includes(lowerSearch)
-        ) 
+        users.filter(
+          (user) =>
+            user.category_name.toLowerCase().includes(lowerSearch)
+        )
       );
     }
   };
@@ -79,14 +81,14 @@ const Department = () => {
   const columns = [
     { field: "configuration_category_id", headerName: "Category Id", flex: 1 },
     { field: "category_name", headerName: "Category Name", flex: 2 },
-    { 
-      field: "image", 
-      headerName: "Image", 
+    {
+      field: "image",
+      headerName: "Image",
       flex: 1,
       renderCell: (params) => (
         <div className="avatar avatar-md">
           <Image
-            src={params.value} 
+            src={params.value}
             alt="Publisher"
             width={50}
             height={50}
@@ -101,18 +103,22 @@ const Department = () => {
       flex: 1,
       renderCell: (params) => (
         <div>
-          <button onClick={() => handleEdit(params)} className="btn btn-primary btn-sm mx-2">
+          <button
+            onClick={() => handleEdit(params)}
+            className="btn btn-primary btn-sm mx-2"
+          >
             <FaEdit />
           </button>
-          <button onClick={() => deleteAction(params.id)} className="btn btn-danger btn-sm">
+          <button
+            onClick={() => deleteAction(params.id)}
+            className="btn btn-danger btn-sm"
+          >
             <RiDeleteBin6Line />
           </button>
         </div>
       ),
     },
   ];
-  
-  
 
   const deleteAction = async (categoriesId) => {
     Swal.fire({
@@ -126,13 +132,15 @@ const Department = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const token = getToken(); 
+          const token = getToken();
           await axios.delete(
             `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/configuration-categories?configuration_category_id=${categoriesId}`,
             { headers: { Authorization: `${token}` } }
           );
-    
-          const updatedUsers = users.filter(user => user.configuration_category_id !== categoriesId);
+
+          const updatedUsers = users.filter(
+            (user) => user.configuration_category_id !== categoriesId
+          );
           setUsers(updatedUsers);
           setFilteredUsers(updatedUsers);
           Swal.fire("Deleted!", "Category has been deleted.", "success");
@@ -140,7 +148,7 @@ const Department = () => {
           console.error("Axios Error:", error);
           Swal.fire({
             icon: "warning",
-            title: "Delete Failed!",  
+            title: "Delete Failed!",
             text: error.error || "An error occurred while deleting.",
             position: "center",
             showConfirmButton: true,
@@ -148,14 +156,12 @@ const Department = () => {
           });
         }
       }
-    });    
+    });
   };
 
   const handleEdit = (params) => {
     router.push(`/configuration/categories/edit/${params.id}`);
   };
-
-  
 
   return (
     <Fragment>
@@ -165,7 +171,10 @@ const Department = () => {
           <Col lg={12} md={12} xs={12}>
             <div className="d-flex justify-content-between align-items-center">
               <h3 className="mb-0 text-dark">Categories</h3>
-              <Link href="/configuration/categories/add" className="btn btn-white">
+              <Link
+                href="/configuration/categories/add"
+                className="btn btn-white"
+              >
                 <FaPlusCircle /> Add Categories
               </Link>
             </div>
@@ -179,20 +188,22 @@ const Department = () => {
             placeholder="Search..."
             className="form-control mb-3"
           />
-          <Box sx={{ height: 500, width: "100%" }}>
-            {isLoading ? (
-              <div>Loading...</div>
-            ) : (
-              isClient && (
-                <DataGrid
-                  getRowId={(row) => row.configuration_category_id}
-                  rows={filteredUsers}
-                  columns={columns}
-                  pageSize={5}
-                  columnVisibilityModel={{ configuration_category_id: false }}
-                />
-              )
-            )}
+          <Box sx={{ width: "100%", overflowX: "auto" }}>
+            <Box sx={{ minWidth: 800, height: 500 }}>
+              {isLoading ? (
+                <div>Loading...</div>
+              ) : (
+                isClient && (
+                  <DataGrid
+                    getRowId={(row) => row.configuration_category_id}
+                    rows={filteredUsers}
+                    columns={columns}
+                    pageSize={5}
+                    columnVisibilityModel={{ configuration_category_id: false }}
+                  />
+                )
+              )}
+            </Box>
           </Box>
         </div>
       </Container>

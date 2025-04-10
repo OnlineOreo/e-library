@@ -24,9 +24,9 @@ export default function Item() {
 
   const getToken = () => {
     const cookieString = document.cookie
-        .split("; ")
-        .find((row) => row.startsWith("access_token="));
-    
+      .split("; ")
+      .find((row) => row.startsWith("access_token="));
+
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
@@ -191,19 +191,17 @@ export default function Item() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-          {item.length > 0 ? (
-            <Box sx={{ height: 500, width: "100%" }}>
-              <DataGrid
-                rows={item}
-                columns={columns}
-                pageSize={5}
-                components={{ Toolbar: GridToolbar }}
-                getRowId={(row) => row.item_id}
-              />
+            <Box sx={{ width: "100%", overflowX: "auto" }}>
+              <Box sx={{ minWidth: "800px", height: 500 }}>
+                <DataGrid
+                  rows={item}
+                  columns={columns}
+                  pageSize={5}
+                  components={{ Toolbar: GridToolbar }}
+                  getRowId={(row) => row.item_id}
+                />
+              </Box>
             </Box>
-          ) : (
-            <p>Loading Items...</p>
-          )}
         </div>
       </Container>
       <ToastContainer />

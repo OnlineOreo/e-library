@@ -155,15 +155,18 @@ const ViewContentGroup = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-          <Box sx={{ height: 500, width: "100%" }}>
+          <Box sx={{ width: "100%", overflowX: "auto" }}>
+          <Box sx={{ minWidth: 800, height: 500 }}>
             <DataGrid
               rows={filteredContentGroup}
               columns={columns}
               pageSize={5}
               components={{ Toolbar: GridToolbar }}
-              getRowId={(row) => row.cg_id} 
+              getRowId={(row) => row.cg_id}
             />
           </Box>
+        </Box>
+
         </div>
       </Container>
       <ToastContainer />

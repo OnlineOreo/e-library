@@ -27,9 +27,5 @@ const StatRightTopIcon = props => {
     )
 }
 
-// Typechecking With PropTypes
-StatRightTopIcon.propTypes = {
-    info: PropTypes.any.isRequired
-};
 
 export default StatRightTopIcon

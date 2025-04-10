@@ -11,16 +11,14 @@ import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
 
-
 export default function Configurationmeta() {
   const router = useRouter();
   const [meta, setMeta] = useState([]);
   const [search, setSearch] = useState("");
   const instituteId = useSelector((state) => state.institute.instituteId);
 
-
   useEffect(() => {
-    if(instituteId){
+    if (instituteId) {
       if (typeof window !== "undefined") {
         loadMeta();
       }
@@ -78,8 +76,16 @@ export default function Configurationmeta() {
             `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/configuration-meta?configuration_meta_id=${row.configuration_meta_id}`,
             { headers: { Authorization: `${token}` } }
           );
-          Swal.fire("Deleted!", "Meta configuration has been deleted.", "success");
-          setMeta((prev) => prev.filter((item) => item.configuration_meta_id !== row.configuration_meta_id));
+          Swal.fire(
+            "Deleted!",
+            "Meta configuration has been deleted.",
+            "success"
+          );
+          setMeta((prev) =>
+            prev.filter(
+              (item) => item.configuration_meta_id !== row.configuration_meta_id
+            )
+          );
         } catch (error) {
           toast.error("Error deleting meta!");
           // console.error(error);
@@ -102,7 +108,12 @@ export default function Configurationmeta() {
               src={params.value}
               alt="Meta"
               className="rounded-circle"
-              style={{ width: 50, height: 50, objectFit: "cover", borderRadius: "5px" }}
+              style={{
+                width: 50,
+                height: 50,
+                objectFit: "cover",
+                borderRadius: "5px",
+              }}
             />
           </div>
         ) : (
@@ -116,17 +127,22 @@ export default function Configurationmeta() {
       flex: 1,
       renderCell: (params) => (
         <div>
-          <button onClick={() => handleEdit(params.row)} className="btn btn-primary btn-sm mx-1">
+          <button
+            onClick={() => handleEdit(params.row)}
+            className="btn btn-primary btn-sm mx-1"
+          >
             <FaEdit />
           </button>
-          <button onClick={() => handleDelete(params.row)} className="btn btn-danger btn-sm mx-1">
+          <button
+            onClick={() => handleDelete(params.row)}
+            className="btn btn-danger btn-sm mx-1"
+          >
             <FaTrashAlt />
           </button>
         </div>
       ),
     },
-];
-
+  ];
 
   return (
     <>
@@ -152,15 +168,19 @@ export default function Configurationmeta() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-            <Box sx={{ height: 500, width: "100%" }}>
+          <Box sx={{ width: "100%", overflowX: "auto" }}>
+            <Box sx={{ minWidth: 800, height: 500 }}>
               <DataGrid
-                rows={meta.filter((m) => m?.list?.toLowerCase().includes(search.toLowerCase()))}
+                rows={meta.filter((m) =>
+                  m?.list?.toLowerCase().includes(search.toLowerCase())
+                )}
                 columns={columns}
                 pageSize={5}
                 components={{ Toolbar: GridToolbar }}
-                getRowId={(row) => row.configuration_meta_id} // Fixed row ID issue
+                getRowId={(row) => row.configuration_meta_id}
               />
             </Box>
+          </Box>
         </div>
       </Container>
       <ToastContainer />

@@ -21,7 +21,7 @@ const ViewHarvestData = () => {
   const [search, setSearch] = useState("");
   const instituteId = useSelector((state) => state.institute.instituteId);
 
-//   console.log("Institute ID:", instituteId);
+  //   console.log("Institute ID:", instituteId);
 
   useEffect(() => {
     if (instituteId) {
@@ -64,7 +64,6 @@ const ViewHarvestData = () => {
   };
 
   const handleDelete = async (params) => {
-    
     const token = getToken();
     Swal.fire({
       title: "Are you sure?",
@@ -84,7 +83,9 @@ const ViewHarvestData = () => {
             }
           );
           Swal.fire("Deleted!", "Harvest data has been deleted.", "success");
-          setHarvestData((prev) => prev.filter((item) => item.harvest_id !== params.id));
+          setHarvestData((prev) =>
+            prev.filter((item) => item.harvest_id !== params.id)
+          );
         } catch (error) {
           console.error("Delete Error:", error);
           errorToaster("Something went wrong!");
@@ -94,7 +95,6 @@ const ViewHarvestData = () => {
   };
 
   const handleEdit = (params) => {
-    
     router.push(`/configuration/harvest-data/edit/${params.id}`);
   };
 
@@ -102,8 +102,8 @@ const ViewHarvestData = () => {
     .map((inst) => ({
       ...inst,
     }))
-    .filter((inst) =>
-      inst?.title?.toLowerCase().includes(search.toLowerCase()) // Updated to filter by title instead of name
+    .filter(
+      (inst) => inst?.title?.toLowerCase().includes(search.toLowerCase()) // Updated to filter by title instead of name
     );
 
   console.log("Formatted Data:", formattedData);
@@ -146,7 +146,10 @@ const ViewHarvestData = () => {
           <Col lg={12} md={12} xs={12}>
             <div className="d-flex justify-content-between align-items-center">
               <h3 className="mb-0 text-dark">Harvest Data</h3>
-              <Link href="/configuration/harvest-data/add" className="btn btn-white">
+              <Link
+                href="/configuration/harvest-data/add"
+                className="btn btn-white"
+              >
                 <FaPlusCircle /> Add Data
               </Link>
             </div>
@@ -161,8 +164,8 @@ const ViewHarvestData = () => {
             onChange={(e) => setSearch(e.target.value)}
           />
 
-          {formattedData.length > 0 ? (
-            <Box sx={{ height: 500, width: "100%" }}>
+          <Box sx={{ width: "100%", overflowX: "auto" }}>
+            <Box sx={{ minWidth: 800, height: 500 }}>
               <DataGrid
                 rows={formattedData}
                 columns={columns}
@@ -172,9 +175,7 @@ const ViewHarvestData = () => {
                 // columnVisibilityModel={{ id: false }}
               />
             </Box>
-          ) : (
-            <p>No data available...</p>
-          )}
+          </Box>
         </div>
       </Container>
       <ToastContainer />

@@ -18,11 +18,11 @@ export default function TrendingBooks() {
   const instituteId = useSelector((state) => state.institute.instituteId);
 
   useEffect(() => {
-    if(instituteId){
-    if (typeof window !== "undefined") {
-      loadBooks();
+    if (instituteId) {
+      if (typeof window !== "undefined") {
+        loadBooks();
+      }
     }
-  }
   }, [instituteId]);
 
   const getToken = () => {
@@ -77,7 +77,11 @@ export default function TrendingBooks() {
             { headers: { Authorization: `${token}` } }
           );
           Swal.fire("Deleted!", "Book has been deleted.", "success");
-          setBooks((prev) => prev.filter((item) => item.trending_book_id !== row.trending_book_id));
+          setBooks((prev) =>
+            prev.filter(
+              (item) => item.trending_book_id !== row.trending_book_id
+            )
+          );
         } catch (error) {
           toast.error("Error deleting book!");
           console.error(error);
@@ -88,18 +92,23 @@ export default function TrendingBooks() {
 
   const columns = [
     { field: "book_title", headerName: "Title", flex: 2 },
-    { field: "url", headerName: "Url", flex: 3 }, 
+    { field: "url", headerName: "Url", flex: 3 },
     { field: "description", headerName: "Description", flex: 3 },
     {
       field: "book_image",
       headerName: "Cover",
-      flex: 1, 
+      flex: 1,
       renderCell: (params) =>
         params.value ? (
           <img
             src={params.value}
             alt="Book Cover"
-            style={{ width: 50, height: 50, objectFit: "cover", borderRadius: "5px" }}
+            style={{
+              width: 50,
+              height: 50,
+              objectFit: "cover",
+              borderRadius: "5px",
+            }}
           />
         ) : (
           "No Image"
@@ -111,16 +120,22 @@ export default function TrendingBooks() {
       flex: 1,
       renderCell: (params) => (
         <div className="d-flex gap-2 mt-2">
-          <button onClick={() => handleEdit(params.row)} className="btn btn-primary btn-sm">
+          <button
+            onClick={() => handleEdit(params.row)}
+            className="btn btn-primary btn-sm"
+          >
             <FaEdit />
           </button>
-          <button onClick={() => handleDelete(params.row)} className="btn btn-danger btn-sm">
+          <button
+            onClick={() => handleDelete(params.row)}
+            className="btn btn-danger btn-sm"
+          >
             <FaTrashAlt />
           </button>
         </div>
       ),
     },
-  ];  
+  ];
 
   return (
     <>
@@ -146,19 +161,19 @@ export default function TrendingBooks() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-          {books.length > 0 ? (
-            <Box sx={{ height: 500, width: "100%" }}>
+          <Box sx={{ width: "100%", overflowX: "auto" }}>
+            <Box sx={{ minWidth: 800, height: 500 }}>
               <DataGrid
-                rows={books.filter((b) => b?.book_title?.toLowerCase().includes(search.toLowerCase()))}
+                rows={books.filter((b) =>
+                  b?.book_title?.toLowerCase().includes(search.toLowerCase())
+                )}
                 columns={columns}
                 pageSize={5}
                 components={{ Toolbar: GridToolbar }}
                 getRowId={(row) => row.trending_book_id}
               />
             </Box>
-          ) : (
-            <p>No trending books found.</p>
-          )}
+          </Box>
         </div>
       </Container>
       <ToastContainer />

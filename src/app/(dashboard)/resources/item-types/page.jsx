@@ -24,7 +24,7 @@ const ViewItemTypes = () => {
     const cookieString = document.cookie
       .split("; ")
       .find((row) => row.startsWith("access_token="));
-  
+
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
@@ -77,13 +77,22 @@ const ViewItemTypes = () => {
               headers: { Authorization: `${token}` },
             }
           );
-          Swal.fire("Deleted!", "User Type has been deleted.", "success");
+          Swal.fire("Deleted!", "Item Type has been deleted.", "success");
           setItemTypes((prev) =>
             prev.filter((item) => item.item_type_id !== params.id)
           );
         } catch (error) {
-          errorToaster("Something went wrong!");
-          console.log(error);
+          const apiError =
+            error?.response?.data?.error || "Something went wrong!";
+          const apiDetails = error?.response?.data?.details;
+
+          // Show error and details in separate toasts
+          errorToaster(apiError);
+          if (apiDetails) {
+            errorToaster(apiDetails);
+          }
+
+          console.log("Delete error:", error.response?.data || error);
         }
       }
     });
@@ -93,24 +102,33 @@ const ViewItemTypes = () => {
     router.push(`/resources/item-types/edit/${params.id}`);
   };
 
-  const formattedItemTypes = userType.map((inst) => ({
-    ...inst,
-    created_at: inst.created_at 
-      ? new Intl.DateTimeFormat("en-US", { 
-          month: "long", day: "numeric", year: "numeric", 
-          hour: "numeric", minute: "numeric", hour12: true 
-        }).format(new Date(inst.created_at)) 
-      : "",
-    updated_at: inst.updated_at 
-      ? new Intl.DateTimeFormat("en-US", { 
-          month: "long", day: "numeric", year: "numeric", 
-          hour: "numeric", minute: "numeric", hour12: true 
-        }).format(new Date(inst.updated_at)) 
-      : "",
-  })).filter((inst) =>
-    inst.type_name.toLowerCase().includes(search.toLowerCase())
-  );
-  
+  const formattedItemTypes = userType
+    .map((inst) => ({
+      ...inst,
+      created_at: inst.created_at
+        ? new Intl.DateTimeFormat("en-US", {
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            hour12: true,
+          }).format(new Date(inst.created_at))
+        : "",
+      updated_at: inst.updated_at
+        ? new Intl.DateTimeFormat("en-US", {
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            hour12: true,
+          }).format(new Date(inst.updated_at))
+        : "",
+    }))
+    .filter((inst) =>
+      inst.type_name.toLowerCase().includes(search.toLowerCase())
+    );
 
   const columns = [
     { field: "item_type_id", headerName: "Id", flex: 2 },
@@ -162,21 +180,18 @@ const ViewItemTypes = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-
-          {userType.length > 0 ? (
-            <Box sx={{ height: 500, width: "100%" }}>
-              <DataGrid
-                rows={formattedItemTypes}
-                columns={columns}
-                pageSize={5}
-                components={{ Toolbar: GridToolbar }}
-                getRowId={(row) => row.item_type_id}
-                columnVisibilityModel={{ item_type_id: false }}
-              />
+            <Box sx={{ width: "100%", overflowX: "auto" }}>
+              <Box sx={{ minWidth: "800px", height: 500 }}>
+                <DataGrid
+                  rows={formattedItemTypes}
+                  columns={columns}
+                  pageSize={5}
+                  components={{ Toolbar: GridToolbar }}
+                  getRowId={(row) => row.item_type_id}
+                  columnVisibilityModel={{ item_type_id: false }}
+                />
+              </Box>
             </Box>
-          ) : (
-            <p>Don't have any data...</p>
-          )}
         </div>
       </Container>
       <ToastContainer />

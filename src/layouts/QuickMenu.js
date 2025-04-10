@@ -28,6 +28,7 @@ const QuickMenu = () => {
 
   const handleLogout = () => {
     document.cookie = `access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+    document.cookie = `user_role=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
     router.push("/");
   };
 
@@ -241,7 +242,6 @@ const QuickMenu = () => {
             className="dropdown-menu dropdown-menu-end "
             align="end"
             aria-labelledby="dropdownUser"
-            show
           >
             <Dropdown.Item as="div" className="px-4 pb-0 pt-2" bsPrefix=" ">
               <div className="lh-1 ">

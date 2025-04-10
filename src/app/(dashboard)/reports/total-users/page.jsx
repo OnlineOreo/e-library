@@ -40,7 +40,7 @@ const ViewReports = () => {
       router.push("/authentication/sign-in");
       return;
     }
-  
+
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/reports?institute_id=${instituteId}&${filter}=true`,
@@ -48,12 +48,16 @@ const ViewReports = () => {
           headers: { Authorization: `${token}` },
         }
       );
-  
+
       if (response.status === 200) {
         setReports(
-          filter === "all_users" ? response.data?.users || [] :
-          filter === "all_active_users" ? response.data?.active_users || [] :
-          filter === "top_users" ? response.data?.top_users || [] : []
+          filter === "all_users"
+            ? response.data?.users || []
+            : filter === "all_active_users"
+            ? response.data?.active_users || []
+            : filter === "top_users"
+            ? response.data?.top_users || []
+            : []
         );
       }
     } catch (error) {
@@ -61,18 +65,20 @@ const ViewReports = () => {
       setReports([]);
     }
   };
-  
+
   const formattedReports = reports
-  .map((report) => ({ ...report }))
-  .filter((report) => report.name?.toLowerCase().includes(search.toLowerCase()));
+    .map((report) => ({ ...report }))
+    .filter((report) =>
+      report.name?.toLowerCase().includes(search.toLowerCase())
+    );
 
   const columns = [
-    { field: "id", headerName: "ID", flex:2},
-    { field: "name", headername: "Name", flex:2 },
-    { field: "phone_number", headerName: "Phone", flex:2 },
-    { field: "email", headerName: "Email", flex:2 },
-    { field: "created_at", headerName: "Created At", flex:2 },
-    { field: "designation", headerName: "Designation", flex:2 },
+    { field: "id", headerName: "ID", flex: 2 },
+    { field: "name", headername: "Name", flex: 2 },
+    { field: "phone_number", headerName: "Phone", flex: 2 },
+    { field: "email", headerName: "Email", flex: 2 },
+    { field: "created_at", headerName: "Created At", flex: 2 },
+    { field: "designation", headerName: "Designation", flex: 2 },
   ];
 
   return (
@@ -89,7 +95,8 @@ const ViewReports = () => {
                 value="all_users"
                 checked={filter === "all_users"}
                 onChange={() => setFilter("all_users")}
-              /> All Users
+              />{" "}
+              All Users
             </label>
             <label className="me-3">
               <input
@@ -98,7 +105,8 @@ const ViewReports = () => {
                 value="all_active_users"
                 checked={filter === "all_active_users"}
                 onChange={() => setFilter("all_active_users")}
-              /> Active Users
+              />{" "}
+              Active Users
             </label>
             <label className="me-3">
               <input
@@ -107,7 +115,8 @@ const ViewReports = () => {
                 value="top_users"
                 checked={filter === "top_users"}
                 onChange={() => setFilter("top_users")}
-              /> Top Users
+              />{" "}
+              Top Users
             </label>
             {/* <button className="btn btn-primary ms-3" onClick={loadReports}>
               Apply Filter
@@ -123,22 +132,18 @@ const ViewReports = () => {
             onChange={(e) => setSearch(e.target.value)}
           />
 
-          {/* Data Grid */}
-          {reports.length > 0 ? (
-            <Box sx={{ height: 500, width: "100%" }}>
+          <Box sx={{ width: "100%", overflowX: "auto" }}>
+            <Box sx={{ minWidth: 800, height: 500 }}>
               <DataGrid
-                key={(row) => row.id}
                 rows={formattedReports}
                 columns={columns}
                 pageSize={5}
                 components={{ Toolbar: GridToolbar }}
-                getRowId={(row) => row.id} 
+                getRowId={(row) => row.id}
                 columnVisibilityModel={{ id: false }}
               />
             </Box>
-          ) : (
-            <p>No reports available</p>
-          )}
+          </Box>
         </div>
       </Container>
       <ToastContainer />

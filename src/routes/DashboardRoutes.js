@@ -85,7 +85,6 @@ export const useDashboardMenu = () => {
                 { id: uuid(), link: '/resources/publisher-package', name: 'Publisher Package' },
                 { id: uuid(), link: '/resources/publishers', name: 'Publishers' },
                 { id: uuid(), link: '/resources/item', name: 'Item' },
-                { id: uuid(), link: '/resources/news-clippings', name: 'News Clipping' },
             ]
         });
     }
@@ -119,6 +118,7 @@ export const useDashboardMenu = () => {
         { id: uuid(), link: '/configuration/footer', name: 'Footer' },
         { id: uuid(), link: '/configuration/notice', name: 'Notices' },
         // { id: uuid(), link: '/configuration/harvest-data', name: 'Harvest Data' },
+        { id: uuid(), link: '/resources/news-clippings', name: 'News Clipping' },
         { id: uuid(), link: '/configuration/staff-recommendation', name: 'Staff Pick' },
     ];
 

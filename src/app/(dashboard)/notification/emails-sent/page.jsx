@@ -31,14 +31,14 @@ const sendEmails = () => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      if(instituteId){
+      if (instituteId) {
         loadAllEmails(instituteId);
       }
     }
   }, [instituteId]);
 
   useEffect(() => {
-    console.log('updated emails:', emails);
+    console.log("updated emails:", emails);
   }, [emails]);
 
   const loadAllEmails = async (instituteId) => {
@@ -50,7 +50,7 @@ const sendEmails = () => {
     }
 
     try {
-      console.log("redux institute Id",instituteId);
+      console.log("redux institute Id", instituteId);
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/emails-sent?institute_id=${instituteId}`,
         {
@@ -67,7 +67,7 @@ const sendEmails = () => {
     }
   };
 
-    // const handleDelete = async (params) => {
+  // const handleDelete = async (params) => {
   //   const token = getToken();
   //   Swal.fire({
   //     title: "Are you sure?",
@@ -117,9 +117,8 @@ const sendEmails = () => {
   const columns = [
     { field: "title", headerName: "Subject", width: 300 },
     { field: "content", headerName: "Content", width: 350 },
-    { field:"bulk_email_type", headerName: "Bulk Email Type", width: 350 },
+    { field: "bulk_email_type", headerName: "Bulk Email Type", width: 350 },
     { field: "created_at", headerName: "Sent At", width: 200 },
-    
   ];
 
   return (
@@ -144,9 +143,8 @@ const sendEmails = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-
-          {emails.length > 0 ? (
-            <Box sx={{ height: 500, width: "100%" }}>
+          <Box sx={{ width: "100%", overflowX: "auto" }}>
+            <Box sx={{ minWidth: 800, height: 500 }}>
               <DataGrid
                 rows={emails}
                 columns={columns}
@@ -156,9 +154,7 @@ const sendEmails = () => {
                 columnVisibilityModel={{ configuration_emails_id: false }}
               />
             </Box>
-          ) : (
-            <p>Don't have any data...</p>
-          )}
+          </Box>
         </div>
       </Container>
       <ToastContainer />

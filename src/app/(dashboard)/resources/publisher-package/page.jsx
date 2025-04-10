@@ -7,7 +7,7 @@ import Box from "@mui/material/Box";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useRouter } from "next/navigation";
-import { FaEdit , FaEye, FaPlusCircle } from "react-icons/fa";
+import { FaEdit, FaEye, FaPlusCircle } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
 
@@ -21,9 +21,9 @@ const ViewItemTypes = () => {
 
   const getToken = () => {
     const cookieString = document.cookie
-        .split("; ")
-        .find((row) => row.startsWith("access_token="));
-    
+      .split("; ")
+      .find((row) => row.startsWith("access_token="));
+
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
@@ -71,18 +71,22 @@ const ViewItemTypes = () => {
       if (result.isConfirmed) {
         try {
           var deleteMappingIdArr = [];
-          params.row.mappings.forEach(element => {
+          params.row.mappings.forEach((element) => {
             deleteMappingIdArr.push(element.publisher_package_mapping_id);
           });
-          var deleteMappingParam = deleteMappingIdArr.join(',');
+          var deleteMappingParam = deleteMappingIdArr.join(",");
           await axios.delete(
             `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/publisher-packages?package_id=${params.id}&mapping_ids=${deleteMappingParam}&delete_all=True`,
             {
               headers: { Authorization: `${token}` },
             }
           );
-          Swal.fire("Deleted!", "Publisher package has been deleted.", "success");
-          setPublisherPkg((prev) => 
+          Swal.fire(
+            "Deleted!",
+            "Publisher package has been deleted.",
+            "success"
+          );
+          setPublisherPkg((prev) =>
             prev.filter((item) => item.package_id !== params.id)
           );
         } catch (error) {
@@ -109,13 +113,22 @@ const ViewItemTypes = () => {
       flex: 2,
       renderCell: (params) => (
         <div>
-          <button onClick={() => handleShow(params)} className="btn btn-secondary btn-sm">
+          <button
+            onClick={() => handleShow(params)}
+            className="btn btn-secondary btn-sm"
+          >
             <FaEye />
           </button>
-          <button onClick={() => handleEdit(params)} className="btn btn-primary mx-2 btn-sm">
+          <button
+            onClick={() => handleEdit(params)}
+            className="btn btn-primary mx-2 btn-sm"
+          >
             <FaEdit />
           </button>
-          <button onClick={() => handleDelete(params)} className="btn btn-danger mx-2 btn-sm">
+          <button
+            onClick={() => handleDelete(params)}
+            className="btn btn-danger mx-2 btn-sm"
+          >
             <RiDeleteBin6Line />
           </button>
         </div>
@@ -151,20 +164,17 @@ const ViewItemTypes = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-
-          {formattedItemTypes.length > 0 ? (
-            <Box sx={{ height: 500, width: "100%" }}>
-              <DataGrid
-                rows={formattedItemTypes}
-                columns={columns}
-                pageSize={5}
-                components={{ Toolbar: GridToolbar }}
-                getRowId={(row) => row.id}
-              />
+            <Box sx={{ width: "100%", overflowX: "auto" }}>
+              <Box sx={{ minWidth: "800px", height: 500 }}>
+                <DataGrid
+                  rows={formattedItemTypes}
+                  columns={columns}
+                  pageSize={5}
+                  components={{ Toolbar: GridToolbar }}
+                  getRowId={(row) => row.id}
+                />
+              </Box>
             </Box>
-          ) : (
-            <p>No data available...</p>
-          )}
         </div>
       </Container>
       <ToastContainer />

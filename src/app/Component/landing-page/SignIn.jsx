@@ -3,7 +3,6 @@ import { Row, Col, Card, Form, Button, Spinner } from "react-bootstrap";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { useSelector, useDispatch } from "react-redux";
 import { setUser } from "@/redux/slices/userSlice";
 
@@ -35,9 +34,9 @@ const SignIn = () => {
     setIsLoading(true);
 
     try {
-      // **Step 1: Login & Profile Fetch in Parallel**
+      // Step 1: Login
       const loginResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/login`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/login?sub_domain=mriirs.libvirtuua.com`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -45,17 +44,16 @@ const SignIn = () => {
           credentials: "include",
         }
       );
-      // https://research-ebsco-com.mriirs.libvirtuua.com:8811/login.aspx?authtype=ip,uid&custid=ns193200&groupid=main&profile=ehost&defaultdb=bsh&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMGI2Yzc5NDctNzFkNS00MjU1LTkxYjAtNjlhY2YyMWRkMTVhIiwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJuYW1lIjoiQWJoaSAga3VtYXIiLCJleHAiOjE3NDM2MDk3NTQsImlhdCI6MTc0MzU3Mzc1NH0.p06C85-Jdj5F2v-SkGyP0D1cXxpUYazAvtxY-soZA0U
 
       const loginData = await loginResponse.json();
       if (!loginResponse.ok) throw new Error(loginData.detail || "Login failed");
-
+      
       // Store token in cookies
       document.cookie = `access_token=${loginData.access_token}; path=/; max-age=6000; SameSite=Lax;`;
       const token = getToken();
       if (!token) throw new Error("Token retrieval failed");
 
-      // **Fetch User Profile & IP in Parallel**
+      // Fetch User Profile & IP in Parallel
       const [userResponse, ipResponse] = await Promise.all([
         fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/profile`, {
           method: "GET",
@@ -67,24 +65,34 @@ const SignIn = () => {
       if (!userResponse.ok) throw new Error("Failed to fetch user profile");
       const userData = await userResponse.json();
 
-      // Save user role
+      // Save user role in cookie and redux
       document.cookie = `user_role=${userData.role}; path=/; max-age=6000; SameSite=Lax;`;
       dispatch(setUser(userData));
 
-      // **Get Device & Browser Info**
+      // Get device & browser info
       const userAgent = navigator.userAgent;
-      const browserName = /Chrome/.test(userAgent) ? "Chrome" : 
-                          /Firefox/.test(userAgent) ? "Firefox" : 
-                          /Safari/.test(userAgent) ? "Safari" : 
-                          /Edge/.test(userAgent) ? "Edge" : "Unknown";
+      const browserName = /Chrome/.test(userAgent)
+        ? "Chrome"
+        : /Firefox/.test(userAgent)
+        ? "Firefox"
+        : /Safari/.test(userAgent)
+        ? "Safari"
+        : /Edge/.test(userAgent)
+        ? "Edge"
+        : "Unknown";
 
-      const deviceType = /Mobi|Android|iPhone|iPad/i.test(userAgent) ? "Mobile" : "Desktop";
+      const deviceType = /Mobi|Android|iPhone|iPad/i.test(userAgent)
+        ? "Mobile"
+        : "Desktop";
 
-      // **Store User Session (Now Async - Does Not Block UI)**
+      // Save session in background
       ipResponse.json().then((ipData) => {
         fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-session`, {
           method: "POST",
-          headers: { Authorization: token, "Content-Type": "application/json" },
+          headers: {
+            Authorization: token,
+            "Content-Type": "application/json",
+          },
           credentials: "include",
           body: JSON.stringify({
             institute: instituteId,
@@ -96,7 +104,7 @@ const SignIn = () => {
         }).catch((err) => console.error("Session save failed:", err));
       });
 
-      // **Step 3: Redirect Immediately**
+      // Redirect based on role
       router.push(userData.role === "STUDENT" ? "/" : "/dashboard");
     } catch (err) {
       console.error("Login error:", err);
@@ -141,7 +149,7 @@ const SignIn = () => {
                 />
               </Form.Group>
 
-              {/* Login Button */}
+              {/* Submit Button */}
               <div className="d-grid">
                 <Button variant="primary" type="submit" disabled={isLoading}>
                   {isLoading ? <Spinner animation="border" size="sm" /> : "Login"}

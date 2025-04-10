@@ -1,11 +1,16 @@
-'use client';
+"use client";
 import { Fragment, useEffect, useState } from "react";
 import Link from "next/link";
 import { Container, Col, Row } from "react-bootstrap";
 import axios from "axios";
 import Box from "@mui/material/Box";
 import { useRouter } from "next/navigation";
-import { DataGrid, GridToolbar, GridToolbarContainer, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridToolbar,
+  GridToolbarContainer,
+  GridToolbarQuickFilter,
+} from "@mui/x-data-grid";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { FaEdit, FaPlusCircle } from "react-icons/fa";
 import Swal from "sweetalert2";
@@ -20,10 +25,9 @@ const Department = () => {
 
   const instituteId = useSelector((state) => state.institute.instituteId);
 
-
   useEffect(() => {
-    if(instituteId){
-        loadNotices();
+    if (instituteId) {
+      loadNotices();
     }
   }, [instituteId]);
 
@@ -43,12 +47,15 @@ const Department = () => {
     }
 
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/notices?institute=${instituteId}`, {
-        headers: { Authorization: `${token}` },
-      });
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/notices?institute=${instituteId}`,
+        {
+          headers: { Authorization: `${token}` },
+        }
+      );
       if (response.status === 200) {
         setNotices(response.data);
-        setFilteredNotices(response.data); 
+        setFilteredNotices(response.data);
       }
     } catch (error) {
       console.error("Axios Error:", error);
@@ -60,19 +67,19 @@ const Department = () => {
   const handleSearch = (event) => {
     const searchValue = event.target.value;
     setSearchText(searchValue);
-  
+
     if (searchValue === "") {
       setFilteredNotices(notices);
     } else {
       const lowerSearch = searchValue.toLowerCase();
-      const filtered = notices.filter((notice) =>
-        notice.description.toLowerCase().includes(lowerSearch) ||
-        String(notice.notice_id).toLowerCase().includes(lowerSearch)
+      const filtered = notices.filter(
+        (notice) =>
+          notice.description.toLowerCase().includes(lowerSearch) ||
+          String(notice.notice_id).toLowerCase().includes(lowerSearch)
       );
       setFilteredNotices(filtered);
     }
   };
-  
 
   const columns = [
     { field: "notice_id", headerName: "Notice Id", flex: 1 },
@@ -83,18 +90,22 @@ const Department = () => {
       flex: 1,
       renderCell: (params) => (
         <div className="d-flex align-items-center mt-3">
-          <button onClick={() => handleEdit(params)} className="btn btn-primary btn-sm mx-2">
+          <button
+            onClick={() => handleEdit(params)}
+            className="btn btn-primary btn-sm mx-2"
+          >
             <FaEdit />
           </button>
-          <button onClick={() => deleteAction(params.id)} className="btn btn-danger btn-sm">
+          <button
+            onClick={() => deleteAction(params.id)}
+            className="btn btn-danger btn-sm"
+          >
             <RiDeleteBin6Line />
           </button>
         </div>
       ),
     },
   ];
-  
-  
 
   const deleteAction = async (notice_id) => {
     const token = getToken();
@@ -115,18 +126,16 @@ const Department = () => {
               headers: { Authorization: `${token}` },
             }
           );
-          Swal.fire(
-            "Deleted!",
-            "Notices has been deleted.",
-            "success"
-          );
+          Swal.fire("Deleted!", "Notices has been deleted.", "success");
           loadNotices();
         } catch (error) {
           console.log(error);
           Swal.fire({
             icon: "warning",
             title: "Delete Failed!",
-            text: error.response?.data?.message || "An error occurred while deleting.",
+            text:
+              error.response?.data?.message ||
+              "An error occurred while deleting.",
             position: "center",
             showConfirmButton: true,
             timer: 3000,
@@ -135,13 +144,10 @@ const Department = () => {
       }
     });
   };
-  
 
   const handleEdit = (params) => {
     router.push(`/configuration/notice/edit/${params.id}`);
   };
-
-  
 
   return (
     <Fragment>
@@ -165,18 +171,19 @@ const Department = () => {
             placeholder="Search..."
             className="form-control mb-3"
           />
-          <Box sx={{ height: 500, width: "100%" }}>
-            {isLoading ? (
-              <div>Loading...</div>
-            ) : ((
+          <Box sx={{ width: "100%", overflowX: "auto" }}>
+            <Box sx={{ minWidth: 800, height: 500 }}>
+              {isLoading ? (
+                <div>Loading...</div>
+              ) : (
                 <DataGrid
                   getRowId={(row) => row.notice_id}
                   rows={filteredNotices}
                   columns={columns}
                   pageSize={5}
                 />
-              )
-            )}
+              )}
+            </Box>
           </Box>
         </div>
       </Container>

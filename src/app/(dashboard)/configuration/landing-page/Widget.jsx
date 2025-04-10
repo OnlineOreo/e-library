@@ -89,7 +89,7 @@ const SectionCard = ({ section, index, number, moveSection, updateSection, toggl
           </label>
         </div>
       </div>
-
+        
       {/* Edit/Save Button */}
       <button className="btn btn-light" onClick={() => setIsEditing(!isEditing)} style={{ zIndex: 1 }}>
         {isEditing ? <FaSave onClick={handleSave} /> : <FaRegEdit />}
@@ -148,6 +148,25 @@ export default function Widget() {
     });
   };
 
+
+  // const updateSection = (id, newName) => {
+  //   const updatedSections = sections.map((s) =>
+  //     s.id === id ? { ...s, heading_name: newName } : s
+  //   );
+  //   setSections(updatedSections);
+  //   saveSectionsOrder(updatedSections);
+  // };
+  
+
+  // const toggleVisibility = (id) => {
+  //   const updatedSections = sections.map((s) =>
+  //     s.id === id ? { ...s, active: !s.active } : s
+  //   );
+  //   setSections(updatedSections);
+  //   saveSectionsOrder(updatedSections);
+  // };
+
+  // old code
   const updateSection = (id, newName) => {
     setSections((prev) => {
       const updatedSections = prev.map((s) =>

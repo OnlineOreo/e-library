@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import { Fragment, useEffect, useState } from "react";
 import Link from "next/link";
 import { Container, Col, Row } from "react-bootstrap";
@@ -7,7 +7,7 @@ import Box from "@mui/material/Box";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useRouter } from "next/navigation";
-import { FaPlusCircle , FaEdit } from "react-icons/fa";
+import { FaPlusCircle, FaEdit } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
 
@@ -24,24 +24,27 @@ const Home = () => {
     const cookieString = document.cookie
       .split("; ")
       .find((row) => row.startsWith("access_token="));
-  
+
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
   const loadUser = async (instituteId) => {
     const token = getToken();
-  
+
     if (!token) {
       router.push("/authentication/sign-in");
       return;
     }
-  
+
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users?admin=true  `, {
-        headers: { Authorization: `${token}` },
-        method:'GET'
-      });
-      
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users?admin=true  `,
+        {
+          headers: { Authorization: `${token}` },
+          method: "GET",
+        }
+      );
+
       if (response.status === 200) {
         setUsers(response.data);
         setFilteredUsers(response.data);
@@ -71,9 +74,7 @@ const Home = () => {
     } else {
       const lowerSearch = searchValue.toLowerCase();
       setFilteredUsers(
-        users.filter((user) =>
-          user?.name?.toLowerCase().includes(lowerSearch)
-        ) 
+        users.filter((user) => user?.name?.toLowerCase().includes(lowerSearch))
       );
     }
   };
@@ -92,10 +93,10 @@ const Home = () => {
       if (result.isConfirmed) {
         try {
           var deleteMappingIdArr = [];
-          params.row.mappings.forEach(element => {
+          params.row.mappings.forEach((element) => {
             deleteMappingIdArr.push(element.user_mapping_id);
           });
-          var deleteMappingParam = deleteMappingIdArr.join(',');
+          var deleteMappingParam = deleteMappingIdArr.join(",");
           await axios.delete(
             `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users?user_id=${params.id}&mapping_ids=${deleteMappingParam}&delete_all=True`,
             {
@@ -104,9 +105,10 @@ const Home = () => {
           );
 
           Swal.fire("Deleted!", "User has been deleted.", "success");
-          setFilteredUsers((prev) => prev.filter((item) => item.id !== params.id));
+          setFilteredUsers((prev) =>
+            prev.filter((item) => item.id !== params.id)
+          );
           setUsers((prev) => prev.filter((item) => item.id !== params.id));
-          
         } catch (error) {
           console.log(error);
         }
@@ -117,7 +119,6 @@ const Home = () => {
   const handleEdit = (params) => {
     router.push(`/user-management/users/edit/${params.id}`);
   };
-
 
   const columns = [
     { field: "id", headerName: "User ID", flex: 2 },
@@ -139,7 +140,6 @@ const Home = () => {
     // },
   ];
 
-
   return (
     <Fragment>
       <div className="bg-primary pt-10 pb-21"></div>
@@ -149,13 +149,13 @@ const Home = () => {
             <div className="d-flex justify-content-between align-items-center">
               <h3 className="mb-0 text-dark">Manage Admin</h3>
               <Link href="./admin/add-admin" className="btn btn-white">
-                <FaPlusCircle />  New Admin
+                <FaPlusCircle /> New Admin
               </Link>
             </div>
           </Col>
         </Row>
         <div className="card p-3 mt-4">
-        <input
+          <input
             type="text"
             value={searchText}
             onChange={handleSearch}

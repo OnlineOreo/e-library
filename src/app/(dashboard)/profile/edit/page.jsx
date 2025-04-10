@@ -128,8 +128,8 @@ const Profile = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log('chala bhai')
-    
+        setIsLoading(true);
+
         if (!validateForm()) {
             return;
         }
@@ -188,7 +188,6 @@ const Profile = () => {
                 Object.entries(errorData).forEach(([key, value]) => {
                     if (Array.isArray(value)) {
                         const firstError = value[0];
-    
                         if (
                             typeof firstError === "string" &&
                             firstError.includes('"" is not a valid choice')

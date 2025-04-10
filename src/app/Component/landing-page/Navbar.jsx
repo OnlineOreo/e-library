@@ -36,6 +36,7 @@ const Navbar = () => {
   const handleLogout = () => {
     setToken(null);
     document.cookie = `access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+    document.cookie = `user_role=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
   };
 
   const handlePublisherClick = (publisher) => {

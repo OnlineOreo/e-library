@@ -15,7 +15,6 @@ const AuthButtons = ({ token, handleLogout, show, setShow }) => {
   };
 
   const userRole = getUserRole();
-  // console.log("this",userRole);
   
   return (
     <>

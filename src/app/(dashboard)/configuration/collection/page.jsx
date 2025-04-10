@@ -83,7 +83,9 @@ const ViewCollection = () => {
             "success"
           );
           setCollection((prev) =>
-            prev.filter((item) => item.configuration_collection_id !== params.id)
+            prev.filter(
+              (item) => item.configuration_collection_id !== params.id
+            )
           );
         } catch (error) {
           errorToaster("Something went wrong!");
@@ -105,50 +107,49 @@ const ViewCollection = () => {
       inst?.collection_name?.toLowerCase().includes(search.toLowerCase())
     );
 
-    const columns = [
-      { field: "configuration_collection_id", headerName: "Id", flex: 1 },
-      {
-        field: "image",
-        headerName: "Image",
-        flex: 1,
-        renderCell: (params) => (
-          <div className="avatar avatar-md">
-            <Image
-              src={params.value || ""}
-              alt="Publisher"
-              width={50}
-              height={50}
-              className="rounded-circle"
-            />
-          </div>
-        ),
-      },
-      { field: "collection_name", headerName: "Collection Name", flex: 2 },
-      { field: "description", headerName: "Description", flex: 2 },
-      { field: "created_at", headerName: "Created At", flex: 2 },
-      {
-        field: "action",
-        headerName: "Action",
-        flex: 1,
-        renderCell: (params) => (
-          <div>
-            <button
-              onClick={() => handleEdit(params)}
-              className="btn btn-primary btn-sm"
-            >
-              <FaEdit />
-            </button>
-            <button
-              onClick={() => handleDelete(params)}
-              className="btn btn-danger mx-2 btn-sm"
-            >
-              <RiDeleteBin6Line />
-            </button>
-          </div>
-        ),
-      },
-    ];
-    
+  const columns = [
+    { field: "configuration_collection_id", headerName: "Id", flex: 1 },
+    {
+      field: "image",
+      headerName: "Image",
+      flex: 1,
+      renderCell: (params) => (
+        <div className="avatar avatar-md">
+          <Image
+            src={params.value || ""}
+            alt="Publisher"
+            width={50}
+            height={50}
+            className="rounded-circle"
+          />
+        </div>
+      ),
+    },
+    { field: "collection_name", headerName: "Collection Name", flex: 2 },
+    { field: "description", headerName: "Description", flex: 2 },
+    { field: "created_at", headerName: "Created At", flex: 2 },
+    {
+      field: "action",
+      headerName: "Action",
+      flex: 1,
+      renderCell: (params) => (
+        <div>
+          <button
+            onClick={() => handleEdit(params)}
+            className="btn btn-primary btn-sm"
+          >
+            <FaEdit />
+          </button>
+          <button
+            onClick={() => handleDelete(params)}
+            className="btn btn-danger mx-2 btn-sm"
+          >
+            <RiDeleteBin6Line />
+          </button>
+        </div>
+      ),
+    },
+  ];
 
   return (
     <>
@@ -172,9 +173,8 @@ const ViewCollection = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-
-          {collection.length > 0 ? (
-            <Box sx={{ height: 500, width: "100%" }}>
+          <Box sx={{ width: "100%", overflowX: "auto" }}>
+            <Box sx={{ minWidth: 800, height: 500 }}>
               <DataGrid
                 rows={formattedCollection}
                 columns={columns}
@@ -184,9 +184,7 @@ const ViewCollection = () => {
                 columnVisibilityModel={{ configuration_collection_id: false }}
               />
             </Box>
-          ) : (
-            <p>Don't have any data...</p>
-          )}
+          </Box>
         </div>
       </Container>
       <ToastContainer />
