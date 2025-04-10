@@ -21,7 +21,7 @@ export default function Configurationmeta() {
   useEffect(() => {
     if (instituteId) {
       if (typeof window !== "undefined") {
-        loadStaffPick();
+        loadStaffPick(instituteId);
       }
     }
   }, [instituteId]);
@@ -34,7 +34,7 @@ export default function Configurationmeta() {
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
-  const loadStaffPick = async () => {
+  const loadStaffPick = async (instituteId) => {
     const token = getToken();
     if (!token) {
       toast.error("Authentication required!");
@@ -43,7 +43,7 @@ export default function Configurationmeta() {
     }
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/staff-picks`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/staff-picks?institute_id=${instituteId}`,
         { headers: { Authorization: `${token}` } }
       );
       if (response.status === 200 && Array.isArray(response.data)) {

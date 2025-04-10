@@ -1,8 +1,27 @@
+import { useEffect, useState } from "react";
 import { Card, Col, Row } from "react-bootstrap";
 import { Briefcase } from 'react-feather';
 import { ListTask , People , Bullseye } from "react-bootstrap-icons";
+import axios from "axios";
 
 const DashboardOverview = () => {
+  const [reportCounts, setReportCounts] = useState(null);
+
+  useEffect(() => {
+    const fetchReportCounts = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/reports-count`
+        );
+        setReportCounts(response.data);
+      } catch (error) {
+        console.error("Error fetching report counts:", error);
+      }
+    };
+
+    fetchReportCounts();
+  }, []);
+
   const DashboardCardData = [
     {
       id: 1,

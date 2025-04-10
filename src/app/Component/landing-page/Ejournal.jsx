@@ -12,7 +12,7 @@ import 'swiper/css/scrollbar';
 export default function Ejournal({ toggle }) {
     const landingPageData = useSelector((state) => state.landingPageDataSlice);
     const ejournals = landingPageData?.instituteId?.staff_picks?.filter(staff_pick => 
-        staff_pick.article_type_name === "e-journal"
+        staff_pick.article_type_name?.toLowerCase() === "journals"
     ) || [];
 
     return (
@@ -22,11 +22,27 @@ export default function Ejournal({ toggle }) {
         >
             <Swiper
                 modules={[Navigation, Pagination, Scrollbar, A11y, Autoplay]}
-                spaceBetween={15}
-                slidesPerView={5}
+                spaceBetween={10}
                 loop={true}
                 autoplay={{ Autoplay: false }}
                 navigation
+                breakpoints={{
+                    0: {
+                        slidesPerView: 1,
+                    },
+                    576: {
+                        slidesPerView: 2,
+                    },
+                    768: {
+                        slidesPerView: 3,
+                    },
+                    992: {
+                        slidesPerView: 4,
+                    },
+                    1200: {
+                        slidesPerView: 6,
+                    },
+                }}
             >
                 {ejournals.map((journal, index) => (
                     <SwiperSlide key={index}>
@@ -34,20 +50,18 @@ export default function Ejournal({ toggle }) {
                             <div className="card-image">
                                 <img src={journal.image} alt={journal.title} />
                             </div>
-                            <div className="card-content d-flex flex-column align-items-center">
-                                <h4 className="pt-2">{journal.title}</h4>
+                            <div className="card-content d-flex flex-column align-items-center text-center">
+                                <h4 className="pt-2">
+                                    <a
+                                        href={journal.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-decoration-none text-dark"
+                                    >
+                                        {journal.title}
+                                    </a>
+                                </h4>
                                 <h5>{journal.description}</h5>
-                                <ul className="social-icons d-flex justify-content-center">
-                                    <li>
-                                        <a href="#"><span className="fab fa-facebook" /></a>
-                                    </li>
-                                    <li>
-                                        <a href="#"><span className="fab fa-twitter" /></a>
-                                    </li>
-                                    <li>
-                                        <a href="#"><span className="fab fa-instagram" /></a>
-                                    </li>
-                                </ul>
                             </div>
                         </div>
                     </SwiperSlide>

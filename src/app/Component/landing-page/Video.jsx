@@ -3,25 +3,24 @@ import React from 'react';
 import { FaPlay } from "react-icons/fa";
 import { Navigation, Autoplay, Pagination, Scrollbar, A11y } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { useSelector } from 'react-redux';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 
-const videos = [
-    {
-        id: 1,
-        title: "Discover How To Draw",
-        price: "10.99$",
-        description: "62 Hours of Video & Full Access",
-        image: "https://images.unsplash.com/photo-1500964757637-c85e8a162699?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=778&q=80"
-    },
-    {   id: 2, title: "Mastering Digital Art", price: "12.99$", description: "50 Hours of Video & Full Access", image: "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=800&q=80" },
-    {   id: 3, title: "Creative Sketching Techniques", price: "15.99$", description: "70 Hours of Video & Full Access", image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80" },
-    {   id: 4, title: "Watercolor Masterclass", price: "9.99$", description: "40 Hours of Video & Full Access", image: "https://images.unsplash.com/photo-1494698853255-d84e7d4a6fe8?auto=format&fit=crop&w=800&q=80" },
-];
-
 export default function Video({ toggle }) {
+    const landingPageData = useSelector((state) => state.landingPageDataSlice);
+    const videos = landingPageData?.instituteId?.staff_picks?.filter(staff_pick => 
+        staff_pick.article_type_name?.toLowerCase() === "video"
+    ) || [];
+
+    const handleWatchClick = (url) => {
+        if (url) {
+            window.open(url, '_blank');
+        }
+    };
+
     return (
         <div id="sp_video_div" className={`book-wrapper fadeInUp ${toggle ? "d-block" : "d-none"}`}>
             <Swiper
@@ -33,7 +32,7 @@ export default function Video({ toggle }) {
                 navigation
             >
                 {videos.map((video) => (
-                    <SwiperSlide key={video.id} className="h-auto">
+                    <SwiperSlide key={video.staff_pick_id} className="h-auto">
                         <div className="card h-100 d-flex flex-column">
                             <header className="card__header ratio ratio-16x9 bg-dark position-relative overflow-hidden flex-grow-0" style={{
                                 background: `linear-gradient(to top, #00000063, #0006), url(${video.image})`,
@@ -51,10 +50,14 @@ export default function Video({ toggle }) {
                                 </span>
                             </header>
                             <main className="card__content p-3 d-flex flex-column flex-grow-1">
-                                <span className="card__content__price text-muted mb-1">{video.price}</span>
-                                <h2 className="card__content__title h5 mb-2">{video.title}</h2>
+                                <h3 className="card__content__title h5 mb-2">{video.title}</h3>
                                 <span className="card__content__description small text-muted mb-3">{video.description}</span>
-                                <button className="card__content__buy btn btn-primary mt-auto">Watch</button>
+                                <button
+                                    className="card__content__buy btn btn-primary mt-auto"
+                                    onClick={() => handleWatchClick(video.url)}
+                                >
+                                    Watch
+                                </button>
                             </main>
                         </div>
                     </SwiperSlide>

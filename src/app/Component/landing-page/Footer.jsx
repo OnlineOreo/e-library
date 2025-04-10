@@ -11,7 +11,6 @@ export default function Footer({bannerData}) {
     const landingPageData = useSelector((state) => state.landingPageDataSlice);
     const footer = landingPageData?.instituteId?.footers?.[0]
     return (
-        
         <>
         <style jsx>{`
         .custom-banner {
@@ -78,15 +77,15 @@ export default function Footer({bannerData}) {
                         <div className="col-md-6 col-lg-4">
                             <h4 className="text-white mb-4">Address</h4>
                             <p className="text-truncate">
-                                <FaMapMarkerAlt />
+                                <FaMapMarkerAlt className="me-2" />
                                 {footer?.address}
                             </p>
                             <p className="text-truncate">
-                                <FaPhoneAlt />
+                                <FaPhoneAlt className="me-2" />
                                 {footer?.phone}
                             </p>
                             <p className="text-truncate">
-                                <MdEmail />
+                                <MdEmail className="me-2" />
                                 {footer?.email}
                             </p>
                             <div className="mt-5">Visits : 3939</div>

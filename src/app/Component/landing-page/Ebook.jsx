@@ -12,7 +12,7 @@ import 'swiper/css/scrollbar';
 export default function Ebook({ toggle }) {
     const landingPageData = useSelector((state) => state.landingPageDataSlice);
     const bookImages = landingPageData?.instituteId?.staff_picks
-    ?.filter(staff_pick => staff_pick.article_type_name === "e-news") 
+    ?.filter(staff_pick => staff_pick.article_type_name.toLowerCase() === "e-books") 
     ?.map(staff_pick => staff_pick.image) || [];
 
     return (
@@ -72,7 +72,7 @@ export default function Ebook({ toggle }) {
                                                 objectFit: 'contain'
                                             }}
                                         />
-                                        <div className="effect" />
+                                        {/* <div className="effect" /> */}
                                         <div className="light" />
                                     </div>
                                 </div>
