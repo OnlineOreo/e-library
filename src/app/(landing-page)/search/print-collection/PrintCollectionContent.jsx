@@ -20,7 +20,7 @@ export default function PrintCollectionContent({
     initialSideFilterResults,
     searchQuery
 }) {
-    const router = useRouter();
+    const Router = useRouter();
     const searchParams = useSearchParams();
     const urlParams = searchParams.get("q");
 
@@ -77,19 +77,22 @@ export default function PrintCollectionContent({
         if (isClient && urlParams !== searchQuery) {
             // If URL changed but we haven't received new props yet,
             // reload the page to get new server data
-            router.refresh();
+            Router.refresh();
         }
-    }, [urlParams, searchQuery, router, isClient]);
+    }, [urlParams, searchQuery, Router, isClient]);
 
     const handelSearchWithinSearch = (e) => {
         e.preventDefault()
+        const searchText = searchWithinSearch;
+        // console.log(searchText);
+        Router.push(`?q=${urlParams}%20AND%20datacite_titles%3A(${searchText})`);
     }
 
     return (
         <Container className="px-4 text-secondary">
             <Row>
-                <Col md={3} className="px-0 border rounded bg-white">
-                    <SearchSideFilter {...sideFilterResults} />
+                <Col md={3} className="px-0 bg-white">
+                    <SearchSideFilter {...sideFilterResults} catalogCore={"print-collection"} />
                 </Col>
                 <Col md={9} className='pe-0 ps-4'>
                     <Row className="mb-3">
@@ -119,13 +122,13 @@ export default function PrintCollectionContent({
                     </Row>
                     {gridView ? (
                         <Row id='grid-view' className={`grid-view`}>
-                            {(!isClient || (!results.length && !isLoading)) ? (
+                            {!isClient || (!results.length && !isLoading) ? (
                                 Array.from({ length: 6 }).map((_, index) => (
                                     <Col md={4} key={`initial-skeleton-${index}`} className='mb-4'>
                                         <GridViewSkelton />
                                     </Col>
                                 ))
-                            ) : (
+                            ) : results.length > 0 ? (
                                 results.map((item) => (
                                     <Col md={4} key={item.id} className="mb-4">
                                         <CatalogGridCard
@@ -143,6 +146,10 @@ export default function PrintCollectionContent({
                                         />
                                     </Col>
                                 ))
+                            ) : (
+                                <Col md={12} className="text-center text-muted py-5">
+                                    <h5>No data found.</h5>
+                                </Col>
                             )}
                             {isLoading && isClient && (
                                 Array.from({ length: 3 }).map((_, index) => (
@@ -188,7 +195,7 @@ export default function PrintCollectionContent({
                             )}
                         </Row>
                     )}
-                    <div className='d-flex justify-content-center'>
+                    <div className='d-flex justify-content-center my-5'>
                         {isClient && results.length > 0 && results.length < resultsCount && (
                             <Button
                                 variant='success'

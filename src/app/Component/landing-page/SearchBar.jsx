@@ -10,13 +10,22 @@ const SearchBar = () => {
   const [filterType, setFilterType] = useState("datacite_titles");
   const [searchText, setSearchText] = useState("");
 
-  useEffect(() => {
-    const type = searchParams.get("filter_type") || "datacite_titles";
-    const text = searchParams.get("search_text") || "";
 
+  useEffect(() => {
+  // const searchParams = new URLSearchParams(window.location.search);
+  const fullQuery = decodeURIComponent(searchParams.get("q") || "");
+
+  const baseMatch = fullQuery.match(/^([a-zA-Z0-9_]+):\(([^)]+)\)/);
+
+  if (baseMatch) {
+    const type = baseMatch[1];
+    const text = baseMatch[2]; 
+    // console.log("type:", type);
+    // console.log("text:", text);
     setFilterType(type);
     setSearchText(text);
-  }, [searchParams]); // Runs when searchParams change
+  }
+  }, [searchParams]);
 
   const handleSubmit = (event) => {
     event.preventDefault();

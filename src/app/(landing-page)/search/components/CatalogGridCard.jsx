@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+"use client"
+import React, { useState, useEffect } from 'react'
 import { Card, Button } from 'react-bootstrap';
 import { PiBookOpenTextFill } from "react-icons/pi";
 import { FaShareAlt, FaRegBookmark, FaFileDownload, FaFacebookSquare, FaLinkedin, FaTwitterSquare } from "react-icons/fa";
@@ -11,6 +12,49 @@ import { GiBookmarklet } from "react-icons/gi";
 
 
 const CatalogGridCard = (props) => {
+    const getToken = () => {
+        const cookieString = document.cookie
+          .split("; ")
+          .find((row) => row.startsWith("access_token="));
+    
+        return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+    };
+
+    const getUserRole = () => {
+        if (typeof window !== "undefined") { 
+            const cookieString = document.cookie
+                .split("; ")
+                .find((row) => row.startsWith("user_id="));
+            return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+        }
+        return null;
+    };
+
+    
+
+    const loadSavedCatalog = async () => {
+        const token = getToken();
+        if (!token) {
+            console.error("Authentication required!");
+            return;
+        }
+        const userId = getUserRole();
+        console.log("user_id", userId);
+        try {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-saved-article?user=${userId}`, {
+                headers: { Authorization: `${token}` },
+            });
+            console.log("user data : ", response.data);
+
+        } catch (error) {
+            console.error(error)
+        }
+
+    }
+
+    useEffect(() => {
+        loadSavedCatalog();
+    }, [])
 
     return (
         <Card>
@@ -25,9 +69,9 @@ const CatalogGridCard = (props) => {
                 <div className='one_line_ellipses text-primary'>{props.publisher || "N/A"}</div>
                 <div>{props.dc_date}</div>
                 <div className='d-flex my-3'>
-                <ShareButtonDropdown id={props.id} catalogType={"Print-collection"} />
-                <CitationDownload id={props.id} catalogType={"Print-collection"}/>
-                <BookmarkCatalog id={props.id} catalogType={"Print-collection"}/>
+                    <ShareButtonDropdown id={props.id} catalogType={"Print-collection"} />
+                    <CitationDownload id={props.id} catalogType={"Print-collection"} />
+                    <BookmarkCatalog id={props.id} catalogType={"Print-collection"} />
                 </div>
                 <div className="mt-2 d-flex">
                     <a
