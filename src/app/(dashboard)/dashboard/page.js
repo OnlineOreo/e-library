@@ -1,20 +1,10 @@
 'use client'
 import { Fragment } from "react";
 import { Container, Col, Row } from 'react-bootstrap';
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 import DashboardCard from "@/app/Component/dashboard/DashboardCard";
 import Link from "next/link";
 
 const Home = () => {
-    const router = useRouter();
-    useEffect(() => {
-        const token = document.cookie
-          .split("; ")
-          .find((row) => row.startsWith("access_token="))
-          ?.split("=")[1];
-      }, []);
-
     return (
         <Fragment>
             <div className="bg-primary pt-10 pb-21"></div>
@@ -31,13 +21,6 @@ const Home = () => {
                         </div>
                     </Col>
                     <DashboardCard />
-                </Row>
-                <ActiveProjects />
-                <Row className="my-6">
-                    <Col xl={4} lg={12} md={12} xs={12} className="mb-6 mb-xl-0">
-                    </Col>
-                    <Col xl={8} lg={12} md={12} xs={12}>
-                    </Col>
                 </Row>
             </Container>
         </Fragment>

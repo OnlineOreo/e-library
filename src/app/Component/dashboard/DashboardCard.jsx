@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Card, Col, Row } from "react-bootstrap";
 import { Briefcase } from 'react-feather';
-import { ListTask , People , Bullseye } from "react-bootstrap-icons";
+import { ListTask, People, Bullseye, PersonCheck, Stack, Subtract } from "react-bootstrap-icons";
 import axios from "axios";
 
 const DashboardOverview = () => {
@@ -9,9 +9,19 @@ const DashboardOverview = () => {
 
   useEffect(() => {
     const fetchReportCounts = async () => {
+      const token = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("access_token="))
+        ?.split("=")[1];
+
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/reports-count`
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/reports-count`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
         );
         setReportCounts(response.data);
       } catch (error) {
@@ -25,51 +35,64 @@ const DashboardOverview = () => {
   const DashboardCardData = [
     {
       id: 1,
-      title: "Closed Task",
-      value: 18,
-      icon: <Briefcase size={18} />,
-      statInfo: '<span className="text-dark me-2">2</span> Completed',
+      title: "Total Users",
+      value: reportCounts?.total_users ?? "-",
+      icon: <People size={18} />,
     },
     {
       id: 2,
-      title: "Active Task",
-      value: 132,
-      icon: <ListTask size={18} />,
-      statInfo: '<span className="text-dark me-2">28</span> Completed',
+      title: "Mobile Users",
+      value: reportCounts?.mobile_users ?? "-",
+      icon: <Briefcase size={18} />,
     },
     {
       id: 3,
-      title: "Teams",
-      value: 12,
-      icon: <People size={18} />,
-      statInfo: '<span className="text-dark me-2">1</span> Completed',
+      title: "Desktop Users",
+      value: reportCounts?.desktop_users ?? "-",
+      icon: <ListTask size={18} />,
     },
     {
       id: 4,
-      title: "Productivity",
-      value: "76%",
+      title: "Inactive Users",
+      value: reportCounts?.inactive_users ?? "-",
       icon: <Bullseye size={18} />,
-      statInfo: '<span className="text-dark me-2">5%</span> Completed',
+    },
+    {
+      id: 5,
+      title: "Verified Users",
+      value: reportCounts?.verified_users ?? "-",
+      icon: <PersonCheck size={18} />,
+    },
+    {
+      id: 6,
+      title: "Today Loggedin user",
+      value: reportCounts?.today_logged_in_users ?? "-",
+      icon: <Stack size={18} />,
+    },
+    {
+      id: 7,
+      title: "Total Publishers",
+      value: reportCounts?.total_publishers ?? "-",
+      icon: <Subtract size={18} />,
     },
   ];
 
   return (
-    <Row>
+    <Row className="justify-content-center">
       {DashboardCardData.map((item, index) => (
-        <Col xl={3} lg={6} md={12} xs={12} className="mt-6" key={index}>
-          <Card>
+        <Col xl={3} lg={4} md={6} xs={12} className="mt-4" key={index}>
+          <Card className="h-100">
             <Card.Body>
               <div className="d-flex justify-content-between align-items-center mb-3">
                 <div>
-                  <h4 className="mb-0">{item.title}</h4>
+                  <h5 className="mb-0">{item.title}</h5>
                 </div>
                 <div className="icon-shape icon-md bg-light-primary text-primary rounded-2">
                   {item.icon}
                 </div>
               </div>
               <div>
-                <h3 className="fw-normal">{item.value}</h3>
-                {/* <p className="mb-0" dangerouslySetInnerHTML={{ __html: item.statInfo }}></p> */}
+                <h3 className="fw-bold">{item.value}</h3>
               </div>
             </Card.Body>
           </Card>
