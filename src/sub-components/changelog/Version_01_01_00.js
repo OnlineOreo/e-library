@@ -9,7 +9,6 @@ const Version_01_01_00 = () => {
 	const UpdatedReactFiles = [
 		'widgets/form-select/FormSelect.js',
 		'widgets/highlight-code/HighlightCode.js',
-		'sub-components/dashboard/TasksPerformance.js',
 		'routes/DashboardRoutes.js',
 		'data/code/ListgroupsCode.js',
 		'data/code/NavbarsCode.js',

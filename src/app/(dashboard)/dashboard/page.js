@@ -4,11 +4,7 @@ import { Container, Col, Row } from 'react-bootstrap';
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import DashboardCard from "@/app/Component/dashboard/DashboardCard";
-
-import { ActiveProjects, Teams, 
-    TasksPerformance 
-} from "@/sub-components";
-
+import Link from "next/link";
 
 const Home = () => {
     const router = useRouter();
@@ -28,7 +24,8 @@ const Home = () => {
                         <div>
                             <div className="d-flex justify-content-between align-items-center">
                                 <div className="mb-2 mb-lg-0">
-                                    <h3 className="mb-0 text-dark">Dashboard</h3>
+                                    <h3 className="mb-0 text-dark">Dashboard  </h3>
+                                    <Link href="/logs">View Logs</Link>
                                 </div>
                             </div>
                         </div>
@@ -38,10 +35,8 @@ const Home = () => {
                 <ActiveProjects />
                 <Row className="my-6">
                     <Col xl={4} lg={12} md={12} xs={12} className="mb-6 mb-xl-0">
-                        <TasksPerformance />
                     </Col>
                     <Col xl={8} lg={12} md={12} xs={12}>
-                        <Teams />
                     </Col>
                 </Row>
             </Container>

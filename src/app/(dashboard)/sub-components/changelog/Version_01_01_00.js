@@ -10,7 +10,6 @@ const Version_01_01_00 = () => {
 		'widgets/dropfiles/DropFiles.js',
 		'widgets/form-select/FormSelect.js',
 		'widgets/highlight-code/HighlightCode.js',
-		'sub-components/dashboard/TasksPerformance.js',
 		'sub-components/settings/EmailSetting.js',
 		'sub-components/settings/GeneralSetting.js',
 		'routes/DashboardRoutes.js',
