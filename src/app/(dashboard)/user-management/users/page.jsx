@@ -7,6 +7,7 @@ import Box from "@mui/material/Box";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useRouter } from "next/navigation";
+import { BiBarChart } from "react-icons/bi";
 import { FaPlusCircle, FaEdit } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
@@ -48,13 +49,6 @@ const Home = () => {
         setFilteredUsers(response.data);
       }
     } catch (error) {
-      if (error.response) {
-        console.error("Response Error:", error.response.data);
-      } else if (error.request) {
-        console.error("Request Error: No response received");
-      } else {
-        console.error("Setup Error:", error.message);
-      }
     }
   };
 
@@ -116,13 +110,29 @@ const Home = () => {
     router.push(`/user-management/users/edit/${params.id}`);
   };
 
+  const handleLogs = (params) => {
+    router.push(`/user-management/users/logs/${params.id}`);
+  }; 
+
   const columns = [
     { field: "id", headerName: "User ID", flex: 2 },
     { field: "name", headerName: "Name", flex: 2 },
     { field: "email", headerName: "Email", flex: 2 },
     { field: "phone_number", headerName: "Number", flex: 2 },
     { field: "role", headerName: "Role", flex: 2 },
-    { field: "designation", headerName: "Designation", flex: 2 },
+    {
+      field: "logs",
+      headerName: "Logs",
+      flex: 1,
+      renderCell: (params) => (
+        <button
+          onClick={() => handleLogs(params.row)}
+          className="btn btn-warning fs-4 mx-2 btn-sm"
+        >
+          <BiBarChart />
+        </button>
+      ),
+    },
     {
       field: "action",
       headerName: "Action",
@@ -130,13 +140,13 @@ const Home = () => {
       renderCell: (params) => (
         <>
           <button
-            onClick={() => handleEdit(params)}
+            onClick={() => handleEdit(params.row)} // 👈 pass actual row data
             className="btn btn-primary mx-2 btn-sm"
           >
             <FaEdit />
           </button>
           <button
-            onClick={() => handleDelete(params)}
+            onClick={() => handleDelete(params.row)} // 👈 pass actual row data
             className="btn btn-danger btn-sm"
           >
             <RiDeleteBin6Line />
@@ -145,7 +155,6 @@ const Home = () => {
       ),
     },
   ];
-
   return (
     <Fragment>
       <div className="bg-primary pt-10 pb-21"></div>

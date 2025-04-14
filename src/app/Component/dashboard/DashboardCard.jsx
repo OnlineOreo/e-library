@@ -3,12 +3,14 @@ import { Card, Col, Row } from "react-bootstrap";
 import { Briefcase } from 'react-feather';
 import { ListTask, People, Bullseye, PersonCheck, Stack, Subtract } from "react-bootstrap-icons";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 const DashboardOverview = () => {
   const [reportCounts, setReportCounts] = useState(null);
+  const instituteId = useSelector((state) => state.institute.instituteId);
 
   useEffect(() => {
-    const fetchReportCounts = async () => {
+    const fetchReportCounts = async (instituteId) => {
       const token = document.cookie
         .split("; ")
         .find((row) => row.startsWith("access_token="))
@@ -16,7 +18,7 @@ const DashboardOverview = () => {
 
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/reports-count`,
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/reports-count?institute_id=${instituteId}`,
           {
             headers: {
               Authorization: token,
@@ -29,8 +31,10 @@ const DashboardOverview = () => {
       }
     };
 
-    fetchReportCounts();
-  }, []);
+    if(instituteId){
+      fetchReportCounts(instituteId);
+    }
+  }, [instituteId]);
 
   const DashboardCardData = [
     {
@@ -59,18 +63,24 @@ const DashboardOverview = () => {
     },
     {
       id: 5,
+      title: "Active Users",
+      value: reportCounts?.active_users ?? "-",
+      icon: <Bullseye size={18} />,
+    },
+    {
+      id: 5,
       title: "Verified Users",
       value: reportCounts?.verified_users ?? "-",
       icon: <PersonCheck size={18} />,
     },
     {
-      id: 6,
+      id: 7,
       title: "Today Loggedin user",
       value: reportCounts?.today_logged_in_users ?? "-",
       icon: <Stack size={18} />,
     },
     {
-      id: 7,
+      id: 8,
       title: "Total Publishers",
       value: reportCounts?.total_publishers ?? "-",
       icon: <Subtract size={18} />,
