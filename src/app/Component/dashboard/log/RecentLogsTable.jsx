@@ -21,7 +21,8 @@ function getPathStats(logs) {
 
     // Key is full path with method (for counting)
     const key = `${method} ${fullPath}`;
-    const basePath = fullPath.split("?")[0]; // For label
+    // const basePath = fullPath.split("?")[0]; // For label
+    const basePath = fullPath; // For label
 
     if (!stats[key]) {
       stats[key] = {

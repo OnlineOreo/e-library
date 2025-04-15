@@ -4,12 +4,13 @@ import React, { useEffect, useState } from "react";
 import MobileNav from "./MobileNav";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { IoChevronDown } from "react-icons/io5";
+import Link from "next/link";
 import SearchBar from "./SearchBar";
 import DropdownMenu from "./DropdownMenu";
 import AuthButtons from "./AuthButtons";
 import { Suspense } from "react";
+import { LuSlidersHorizontal } from "react-icons/lu";
 
 const Navbar = () => {
   const [show, setShow] = useState(false);
@@ -91,11 +92,6 @@ const Navbar = () => {
       title: "Important Link",
       href: "/",
     },
-    // {
-    //   type: "dropdown",
-    //   title: "Collection",
-    //   items: landingPageData?.instituteId?.collections || [],
-    // },
   ];
 
   const visibleNavItems = navItems.filter((item) => {
@@ -156,6 +152,9 @@ const Navbar = () => {
                   <Suspense fallback={<div>Loading search...</div>}>
                     <SearchBar />
                   </Suspense>
+                  <Link href="/advance-search" title="Advance search" className="fs-2 ps-4 text-dark">
+                    <LuSlidersHorizontal />
+                  </Link>
                 </div>
               </div>
             </div>
@@ -173,7 +172,7 @@ const Navbar = () => {
                       alt="App Icon"
                     />
                   </Link>
-                </div>
+                </div> 
                 <div className="d-flex justify-content-between w-100">
                   <div className="header-nav d-none d-lg-flex">
                     <div className="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block">
