@@ -1,7 +1,7 @@
 "use client";
 import { Fragment, useEffect, useState } from "react";
 import Link from "next/link";
-import { Container, Col, Row } from "react-bootstrap";
+import { Container, Col, Row, Modal, Button } from "react-bootstrap";
 import axios from "axios";
 import Box from "@mui/material/Box";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
@@ -11,6 +11,7 @@ import { BiBarChart } from "react-icons/bi";
 import { FaPlusCircle, FaEdit } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
+import ImportUser from "./ImportUser";
 
 const Home = () => {
   const router = useRouter();
@@ -18,6 +19,10 @@ const Home = () => {
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [searchText, setSearchText] = useState("");
   const instituteId = useSelector((state) => state.institute.instituteId);
+  const [showImportModal, setShowImportModal] = useState(false);
+
+  const handleOpenModal = () => setShowImportModal(true);
+  const handleCloseModal = () => setShowImportModal(false);
 
   const getToken = () => {
     const cookieString = document.cookie
@@ -48,8 +53,7 @@ const Home = () => {
         setUsers(response.data);
         setFilteredUsers(response.data);
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -112,7 +116,7 @@ const Home = () => {
 
   const handleLogs = (params) => {
     router.push(`/user-management/users/logs/${params.id}`);
-  }; 
+  };
 
   const columns = [
     { field: "id", headerName: "User ID", flex: 2 },
@@ -163,9 +167,18 @@ const Home = () => {
           <Col lg={12} md={12} xs={12}>
             <div className="d-flex justify-content-between align-items-center">
               <h3 className="mb-0 text-dark">Manage User</h3>
-              <Link href="./users/add-user" className="btn btn-white">
-                <FaPlusCircle /> New User
-              </Link>
+              <div>
+                {/* <Button
+                  variant="white"
+                  onClick={handleOpenModal}
+                  className="me-2"
+                >
+                  <FaPlusCircle /> Import User
+                </Button> */}
+                <Link href="./users/add-user" className="btn btn-white">
+                  <FaPlusCircle /> New User
+                </Link>
+              </div>
             </div>
           </Col>
         </Row>
@@ -191,6 +204,15 @@ const Home = () => {
           </Box>
         </div>
       </Container>
+      {/* Modal with ImportPublisher */}
+      <Modal show={showImportModal} onHide={handleCloseModal} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Import Publisher</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <ImportUser />
+        </Modal.Body>
+      </Modal>
     </Fragment>
   );
 };

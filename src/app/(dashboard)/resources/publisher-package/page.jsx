@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Container, Col, Row } from "react-bootstrap";
+import { Container, Col, Row, Modal, Button } from "react-bootstrap";
 import axios from "axios";
 import Box from "@mui/material/Box";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { FaEdit, FaEye, FaPlusCircle } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
+import ImportPublisherPackage from "./ImportPublisherPackage";
 
 const ViewItemTypes = () => {
   const router = useRouter();
@@ -18,6 +19,11 @@ const ViewItemTypes = () => {
 
   const [publisherPkg, setPublisherPkg] = useState([]);
   const [search, setSearch] = useState("");
+
+  const [showImportModal, setShowImportModal] = useState(false);
+
+  const handleOpenModal = () => setShowImportModal(true);
+  const handleCloseModal = () => setShowImportModal(false);
 
   const getToken = () => {
     const cookieString = document.cookie
@@ -150,9 +156,18 @@ const ViewItemTypes = () => {
           <Col lg={12} md={12} xs={12}>
             <div className="d-flex justify-content-between align-items-center">
               <h3 className="mb-0 text-dark">Publisher Packages</h3>
-              <Link href="./publisher-package/add" className="btn btn-white">
-                <FaPlusCircle /> Publisher Package
-              </Link>
+              <div>
+                {/* <Button
+                  variant="white"
+                  onClick={handleOpenModal}
+                  className="me-2"
+                >
+                  <FaPlusCircle /> Import Publisher Package
+                </Button> */}
+                <Link href="./publisher-package/add" className="btn btn-white">
+                  <FaPlusCircle /> Publisher Package
+                </Link>
+              </div>
             </div>
           </Col>
         </Row>
@@ -164,19 +179,29 @@ const ViewItemTypes = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-            <Box sx={{ width: "100%", overflowX: "auto" }}>
-              <Box sx={{ minWidth: "800px", height: 500 }}>
-                <DataGrid
-                  rows={formattedItemTypes}
-                  columns={columns}
-                  pageSize={5}
-                  components={{ Toolbar: GridToolbar }}
-                  getRowId={(row) => row.id}
-                />
-              </Box>
+          <Box sx={{ width: "100%", overflowX: "auto" }}>
+            <Box sx={{ minWidth: "800px", height: 500 }}>
+              <DataGrid
+                rows={formattedItemTypes}
+                columns={columns}
+                pageSize={5}
+                components={{ Toolbar: GridToolbar }}
+                getRowId={(row) => row.id}
+              />
             </Box>
+          </Box>
         </div>
       </Container>
+      {/* Modal with ImportPublisher */}
+      <Modal show={showImportModal} onHide={handleCloseModal} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Import Publisher Package</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <ImportPublisherPackage />
+        </Modal.Body>
+      </Modal>
+
       <ToastContainer />
     </>
   );

@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Container, Col, Row } from "react-bootstrap";
+import { Container, Col, Row, Modal, Button } from "react-bootstrap";
 import axios from "axios";
 import Box from "@mui/material/Box";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
@@ -10,14 +10,22 @@ import { useRouter } from "next/navigation";
 import { FaEdit, FaPlusCircle } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
+import ImportProgram from "./ImportProgram";
+import { useSelector } from "react-redux";
 
 const ViewProgram = () => {
   const router = useRouter();
   const successToaster = (text) => toast.success(text);
   const errorToaster = (text) => toast.error(text);
+  const instituteId = useSelector((state) => state.institute.instituteId);
 
   const [userType, setUserType] = useState([]);
   const [search, setSearch] = useState("");
+
+  const [showImportModal, setShowImportModal] = useState(false);
+
+  const handleOpenModal = () => setShowImportModal(true);
+  const handleCloseModal = () => setShowImportModal(false);
 
   const getToken = () => {
     const cookieString = document.cookie
@@ -42,12 +50,12 @@ const ViewProgram = () => {
   const userRole = getUserRole();
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      loadProgram();
+    if (typeof window !== "undefined" && instituteId) {
+      loadProgram(instituteId);
     }
-  }, []);
+  }, [instituteId]);
 
-  const loadProgram = async () => {
+  const loadProgram = async (instituteId) => {
     const token = getToken();
     if (!token) {
       errorToaster("Authentication required!");
@@ -57,7 +65,7 @@ const ViewProgram = () => {
 
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/programs`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/programs?institute_id=${instituteId}`,
         {
           headers: { Authorization: `${token}` },
         }
@@ -155,11 +163,20 @@ const ViewProgram = () => {
           <Col lg={12} md={12} xs={12}>
             <div className="d-flex justify-content-between align-items-center">
               <h3 className="mb-0 text-dark">Program</h3>
-              {userRole === "ADMIN" && (
-                <Link href="./program/add" className="btn btn-white">
-                  <FaPlusCircle /> Program
-                </Link>
-              )}
+              <div>
+                {/* <Button
+                  variant="white"
+                  onClick={handleOpenModal}
+                  className="me-2"
+                >
+                  <FaPlusCircle /> Import Program
+                </Button> */}
+                {userRole === "ADMIN" && (
+                  <Link href="./program/add" className="btn btn-white">
+                    <FaPlusCircle /> Program
+                  </Link>
+                )}
+              </div>
             </div>
           </Col>
         </Row>
@@ -184,6 +201,15 @@ const ViewProgram = () => {
           </Box>
         </div>
       </Container>
+      {/* Modal with ImportPublisher */}
+      <Modal show={showImportModal} onHide={handleCloseModal} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Import Program</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <ImportProgram />
+        </Modal.Body>
+      </Modal>
       <ToastContainer />
     </>
   );

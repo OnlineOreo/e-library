@@ -10,17 +10,20 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { FaEdit, FaEye, FaPlusCircle } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
+import { useSelector } from "react-redux";
 
 const ViewLibrary = () => {
   const router = useRouter();
   const [library, setLibrary] = useState([]);
   const [filteredLibrary, setFilteredLibrary] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const instituteId = useSelector((state) => state.institute.instituteId);
 
   const getToken = () => {
     const cookieString = document.cookie
       .split("; ")
       .find((row) => row.startsWith("access_token="));
+
 
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
@@ -43,10 +46,10 @@ const ViewLibrary = () => {
     const token = getToken();
 
     if (!token) return;
-    const loadLibrary = async () => {
+    const loadLibrary = async (instituteId) => {
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/libraries`,
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/libraries?institute_id=${instituteId}`,
           { headers: { Authorization: token } }
         );
         if (response.status === 200) {
@@ -58,8 +61,10 @@ const ViewLibrary = () => {
         toast.error("Error loading libraries.");
       }
     };
-    loadLibrary();
-  }, []);
+    if(instituteId){
+      loadLibrary(instituteId);
+    }
+  }, [instituteId]);
 
   useEffect(() => {
     const filtered = library.filter((lib) =>

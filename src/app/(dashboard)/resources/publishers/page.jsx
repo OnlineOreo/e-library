@@ -163,9 +163,9 @@ const ViewPublishers = () => {
             <div className="d-flex justify-content-between align-items-center">
               <h3 className="mb-0 text-dark">Publishers</h3>
               <div>
-                <Button variant="white" onClick={handleOpenModal} className="me-2">
+                {/* <Button variant="white" onClick={handleOpenModal} className="me-2">
                 <FaPlusCircle /> Import Publisher
-                </Button>
+                </Button> */}
                 <Link href="./publishers/add" className="btn btn-white">
                   <FaPlusCircle /> Publisher
                 </Link>

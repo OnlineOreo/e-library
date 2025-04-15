@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Container, Col, Row } from "react-bootstrap";
+import { Container, Col, Row, Modal , Button} from "react-bootstrap";
 import axios from "axios";
 import Box from "@mui/material/Box";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
@@ -10,11 +10,17 @@ import { FaEdit, FaPlusCircle, FaEye, FaTrashAlt } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
+import ImportBulkItems from "./ImportBulkItems";
 
 export default function Item() {
   const router = useRouter();
   const [item, setItem] = useState([]);
   const [search, setSearch] = useState("");
+
+  const [showImportModal, setShowImportModal] = useState(false);
+
+  const handleOpenModal = () => setShowImportModal(true);
+  const handleCloseModal = () => setShowImportModal(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -170,12 +176,13 @@ export default function Item() {
             <div className="d-flex justify-content-between align-items-center">
               <h3 className="mb-0 text-dark">Items</h3>
               <div>
-                {/* <button
-                  onClick={handleDeleteAll}
-                  className="btn btn-danger me-2"
+                {/* <Button
+                  variant="white"
+                  onClick={handleOpenModal}
+                  className="me-2"
                 >
-                  <FaTrashAlt /> Delete All
-                </button> */}
+                  <FaPlusCircle /> Import Items
+                </Button> */}
                 <Link href="./item/add" className="btn btn-white">
                   <FaPlusCircle /> Add Item
                 </Link>
@@ -191,19 +198,27 @@ export default function Item() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-            <Box sx={{ width: "100%", overflowX: "auto" }}>
-              <Box sx={{ minWidth: "800px", height: 500 }}>
-                <DataGrid
-                  rows={item}
-                  columns={columns}
-                  pageSize={5}
-                  components={{ Toolbar: GridToolbar }}
-                  getRowId={(row) => row.item_id}
-                />
-              </Box>
+          <Box sx={{ width: "100%", overflowX: "auto" }}>
+            <Box sx={{ minWidth: "800px", height: 500 }}>
+              <DataGrid
+                rows={item}
+                columns={columns}
+                pageSize={5}
+                components={{ Toolbar: GridToolbar }}
+                getRowId={(row) => row.item_id}
+              />
             </Box>
+          </Box>
         </div>
       </Container>
+      <Modal show={showImportModal} onHide={handleCloseModal} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Import Items</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <ImportBulkItems />
+        </Modal.Body>
+      </Modal>
       <ToastContainer />
     </>
   );

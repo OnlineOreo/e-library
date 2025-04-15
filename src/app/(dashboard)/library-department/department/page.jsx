@@ -14,6 +14,7 @@ import {
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { FaEdit, FaPlusCircle } from "react-icons/fa";
 import Swal from "sweetalert2";
+import { useSelector } from "react-redux";
 
 const Department = () => {
   const [users, setUsers] = useState([]);
@@ -22,16 +23,17 @@ const Department = () => {
   const [isClient, setIsClient] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+  const instituteId = useSelector((state) => state.institute.instituteId);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
   useEffect(() => {
-    if (isClient) {
-      loadDepartment();
+    if (isClient && instituteId) {
+      loadDepartment(instituteId);
     }
-  }, [isClient]);
+  }, [isClient,instituteId]);
 
   const getToken = () => {
     const cookieString = document.cookie
@@ -55,7 +57,7 @@ const Department = () => {
 
   const userRole = getUserRole();
 
-  const loadDepartment = async () => {
+  const loadDepartment = async (instituteId) => {
     const token = getToken();
     if (!token) {
       router.push("/authentication/sign-in");
@@ -64,7 +66,7 @@ const Department = () => {
 
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/departments`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/departments?institute_id=${instituteId}`,
         {
           headers: { Authorization: `${token}` },
         }
