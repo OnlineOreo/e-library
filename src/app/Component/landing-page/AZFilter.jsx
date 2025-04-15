@@ -12,13 +12,13 @@ const AZFilter = () => {
         {letters.map((letter) => (
           <Link 
             key={letter} 
-            href={`http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text=${letter}`}
+            href={`/search/print-collection?q=datacite_titles_string%3A${letter}*`}
           >
             <span>{letter}</span>
           </Link>
         ))}
         <Link
-          href="http://demo.libvirtuua.com:8000/aToZ_Filter?filter_type=datacite_titles&first_text="
+          href="/search/print-collection?q=*:*"
           className="see_all_btn mt-1"
         >
           See All
