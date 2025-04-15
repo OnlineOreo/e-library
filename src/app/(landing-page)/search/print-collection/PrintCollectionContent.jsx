@@ -5,20 +5,24 @@ import { BsFillGrid3X3GapFill } from "react-icons/bs";
 import { FaListUl, FaSearch } from "react-icons/fa";
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from "next/navigation";
+import axios from 'axios';
 
 import CatalogGridCard from '../components/CatalogGridCard';
 import CatalogListCard from '../components/CatalogListCard';
 import GridViewSkelton from '../components/GridViewSkelton';
 import SearchSideFilter from '../components/SearchSideFilter';
 import CatalogDetailModal from '../components/CatalogDetailModal';
-// Import the server action
-import { loadMoreResults } from '../print-collection/page';
+
+import { useSelector } from 'react-redux';
 
 export default function PrintCollectionContent({
     initialResults,
     initialResultsCount,
     initialSideFilterResults,
-    searchQuery
+    searchQuery,
+    path,
+    status_code,
+    error_trace
 }) {
     const Router = useRouter();
     const searchParams = useSearchParams();
@@ -35,6 +39,9 @@ export default function PrintCollectionContent({
     const [isLoading, setIsLoading] = useState(false);
     const [startIndex, setStartIndex] = useState(0);
     const [isClient, setIsClient] = useState(false);
+    const [userSavedCatalogs, setUserSavedCatalogs] = useState({});
+
+    const instituteId = useSelector((state) => state.institute.instituteId);
 
     // Initialize state from props after hydration
     useEffect(() => {
@@ -43,6 +50,7 @@ export default function PrintCollectionContent({
         setResultsCount(initialResultsCount || 0);
         setSideFilterResults(initialSideFilterResults || {});
         setStartIndex(initialResults?.length || 0);
+        loadSavedCatalog()
     }, [initialResults, initialResultsCount, initialSideFilterResults]);
 
     const handleClose = () => setShow(false);
@@ -56,12 +64,11 @@ export default function PrintCollectionContent({
         const nextStart = startIndex;
 
         try {
-            // Call the server action instead of making direct API call
-            const data = await loadMoreResults(urlParams, nextStart);
+            const res = await fetch(`/api/load-more?q=${urlParams}&start=${nextStart}&catalogCore=Print-collection`);
+            const data = await res.json();
 
             const newDocs = data.results || [];
 
-            // Append new results to existing ones
             setResults(prevResults => [...prevResults, ...newDocs]);
             setStartIndex(nextStart + newDocs.length);
 
@@ -86,6 +93,88 @@ export default function PrintCollectionContent({
         const searchText = searchWithinSearch;
         // console.log(searchText);
         Router.push(`?q=${urlParams}%20AND%20datacite_titles%3A(${searchText})`);
+    }
+
+
+    const getToken = () => {
+        const cookieString = document.cookie
+            .split("; ")
+            .find((row) => row.startsWith("access_token="));
+
+        return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+    };
+
+    const getUserID = () => {
+        if (typeof window !== "undefined") {
+            const cookieString = document.cookie
+                .split("; ")
+                .find((row) => row.startsWith("user_id="));
+            return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+        }
+        return null;
+    };
+
+    const logUpdate = async ({ path, status_code, initialResults, error_trace }) => {
+        const token = getToken();
+        const userId = getUserID();
+
+        if (!token || !userId) {
+            console.error("Authentication or user ID missing.");
+            return;
+        }
+
+        const formdata = new FormData();
+        formdata.append("method", "get");
+        formdata.append("path", path);
+        formdata.append("status_code", status_code);
+        formdata.append("user", userId);
+        formdata.append("institute", instituteId);
+        formdata.append("request_body", "");
+        formdata.append("response_body", JSON.stringify(initialResults));
+        formdata.append("error_trace", error_trace || "");
+
+        try {
+            const response = await axios.post(
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/logs`,
+                formdata,
+                {
+                    headers: { Authorization: token },
+                }
+            );
+            // console.log("log response:", response.data);
+        } catch (error) {
+            console.error("Log API Error:", error);
+        }
+    };
+
+    useEffect(() => {
+        logUpdate({
+            path: path,
+            status_code: status_code,
+            initialResults: JSON.stringify(initialResults),
+            error_trace: error_trace || "",
+        });
+    }, [path, status_code, initialResults, error_trace]);
+
+    const loadSavedCatalog = async () => {
+        const token = getToken();
+        if (!token) {
+            console.error("Authentication required!");
+            return;
+        }
+        const userId = getUserID();
+        console.log("user_id", userId);
+        try {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-saved-article?user=${userId}`, {
+                headers: { Authorization: `${token}` },
+            });
+            setUserSavedCatalogs(response.data);
+            // console.log("user saved catalog : ", response.data);
+
+        } catch (error) {
+            console.error(error)
+        }
+
     }
 
     return (
@@ -122,9 +211,15 @@ export default function PrintCollectionContent({
                     </Row>
                     {gridView ? (
                         <Row id='grid-view' className={`grid-view`}>
-                            {!isClient || (!results.length && !isLoading) ? (
+                            {!isClient ? (
                                 Array.from({ length: 6 }).map((_, index) => (
                                     <Col md={4} key={`initial-skeleton-${index}`} className='mb-4'>
+                                        <GridViewSkelton />
+                                    </Col>
+                                ))
+                            ) : isLoading && results.length === 0 ? (
+                                Array.from({ length: 6 }).map((_, index) => (
+                                    <Col md={4} key={`loading-skeleton-${index}`} className='mb-4'>
                                         <GridViewSkelton />
                                     </Col>
                                 ))
@@ -133,7 +228,7 @@ export default function PrintCollectionContent({
                                     <Col md={4} key={item.id} className="mb-4">
                                         <CatalogGridCard
                                             id={item.id}
-                                            datacite_title={item.datacite_titles}
+                                            datacite_titles={item.datacite_titles}
                                             datacite_creators={item.datacite_creators}
                                             dc_date={item.dc_date}
                                             publisher={item.dc_publishers?.[0] || "Unknown Publisher"}
@@ -141,6 +236,8 @@ export default function PrintCollectionContent({
                                             description={item.description}
                                             uploader={item.uploader}
                                             url={item.url}
+                                            resource_type={item.resource_types_string}
+                                            user_saved_catalog={userSavedCatalogs}
                                             onShow={handleShow}
                                             onSelect={() => setSelectCatalog(item)}
                                         />
@@ -151,7 +248,8 @@ export default function PrintCollectionContent({
                                     <h5>No data found.</h5>
                                 </Col>
                             )}
-                            {isLoading && isClient && (
+
+                            {isLoading && isClient && results.length > 0 && (
                                 Array.from({ length: 3 }).map((_, index) => (
                                     <Col md={4} key={`loading-skeleton-${index}`} className='mb-4'>
                                         <GridViewSkelton />
@@ -161,13 +259,19 @@ export default function PrintCollectionContent({
                         </Row>
                     ) : (
                         <Row id='grid-view' className={`grid-view`}>
-                            {(!isClient || (!results.length && !isLoading)) ? (
+                            {!isClient ? (
                                 Array.from({ length: 6 }).map((_, index) => (
                                     <Col md={4} key={`initial-skeleton-${index}`} className='mb-4'>
                                         <GridViewSkelton />
                                     </Col>
                                 ))
-                            ) : (
+                            ) : isLoading && results.length === 0 ? (
+                                Array.from({ length: 6 }).map((_, index) => (
+                                    <Col md={4} key={`loading-skeleton-${index}`} className='mb-4'>
+                                        <GridViewSkelton />
+                                    </Col>
+                                ))
+                            ) : results.length > 0 ? (
                                 results.map((item) => (
                                     <Col md={12} key={item.id} className="mb-4">
                                         <CatalogListCard
@@ -180,13 +284,20 @@ export default function PrintCollectionContent({
                                             description={item.description}
                                             uploader={item.uploader}
                                             url={item.url}
+                                            resource_type={item.resource_types_string}
+                                            user_saved_catalog={userSavedCatalogs}
                                             onShow={handleShow}
                                             onSelect={() => setSelectCatalog(item)}
                                         />
                                     </Col>
                                 ))
+                            ) : (
+                                <Col md={12} className="text-center text-muted py-5">
+                                    <h5>No data found.</h5>
+                                </Col>
                             )}
-                            {isLoading && isClient && (
+
+                            {isLoading && isClient && results.length > 0 && (
                                 Array.from({ length: 3 }).map((_, index) => (
                                     <Col md={4} key={`loading-skeleton-${index}`} className='mb-4'>
                                         <GridViewSkelton />

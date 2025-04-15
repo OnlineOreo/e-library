@@ -9,7 +9,7 @@ import BookmarkCatalog from './BookmarkCatalog';
 import { MdOutlineMenuBook } from "react-icons/md";
 
 const CatalogListCard = (props) => {
-    console.log("props",props);
+    // console.log("props",props);
     
     return (
         <Card>
@@ -20,7 +20,7 @@ const CatalogListCard = (props) => {
                 </Col>
                 <Col md={9}>
                     <Card.Body className='text-secondary'>
-                        <div className='fw-bold'>{props.datacite_title}</div>
+                        <div className='fw-bold'>{props.datacite_titles}</div>
                         <div>{props.datacite_creators}</div>
                         <div className='text-primary'>{props.publisher}</div>
                         <div>{props.dc_date}</div>
