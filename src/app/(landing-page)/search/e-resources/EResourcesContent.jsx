@@ -12,6 +12,7 @@ import GridViewSkelton from '../components/GridViewSkelton';
 import SearchSideFilter from '../components/SearchSideFilter';
 import CatalogDetailModal from '../components/CatalogDetailModal';
 import { useSelector } from 'react-redux';
+import axios from 'axios';
 
 export default function EResourcesContent({
     initialResults,

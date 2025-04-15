@@ -5,9 +5,10 @@ export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const q = searchParams.get("q") || "";
   const start = searchParams.get("start") || 0;
+  const rows = searchParams.get("rows") || 15;
   const catalogCore = searchParams.get("catalogCore") || "Print-collecti";
 
-  const solrUrl = `${process.env.NEXT_PUBLIC_SOLR_BASE_URL}/solr/${catalogCore}/select?indent=true&q.op=OR&q=${q}&rows=15&start=${start}`;
+  const solrUrl = `${process.env.NEXT_PUBLIC_SOLR_BASE_URL}/solr/${catalogCore}/select?indent=true&q.op=OR&q=${q}&rows=${rows}&start=${start}`;
 
   try {
     const response = await axios.get(solrUrl);

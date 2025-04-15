@@ -109,7 +109,7 @@ const SearchSideFilter = (props) => {
         // const searchParams = new URLSearchParams(window.location.search);
         const fullQuery = decodeURIComponent(searchParams.get("q") || "");
 
-        const baseMatch = fullQuery.match(/^([a-zA-Z0-9_]+:\([^)]+\))/);
+        const baseMatch = fullQuery.match(/^([a-zA-Z0-9_*]+:(\([^)]+\)|[^ ]+))/);
         const baseQuery = baseMatch ? baseMatch[1] : "";
         // console.log("base query : ", baseQuery);
 
@@ -133,14 +133,18 @@ const SearchSideFilter = (props) => {
 
     const handelClearFilter = () => {
         const fullQuery = decodeURIComponent(searchParams.get("q") || "");
-
-        const baseMatch = fullQuery.match(/^([a-zA-Z0-9_]+:\([^)]+\))/);
+    
+        const baseMatch = fullQuery.match(/^([a-zA-Z0-9_*]+:(\([^)]+\)|[^ ]+))/);
         const baseQuery = baseMatch ? baseMatch[1] : "";
+    
         const parsed = parseSolrQuery(baseQuery);
-        console.log("parsed after clear : ",parsed);
-        setParsedUrl(parsed)
-        router.push(`/search/${solrCore}?q=${baseQuery}`);
-    }
+        console.log("parsed after clear:", parsed);
+    
+        setParsedUrl(parsed);
+        router.push(`/search/${solrCore}?q=${encodeURIComponent(baseQuery)}`);
+    };
+    
+    
 
 
 

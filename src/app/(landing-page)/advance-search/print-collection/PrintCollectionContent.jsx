@@ -36,6 +36,7 @@ export default function PrintCollectionContent({
     const [isLoading, setIsLoading] = useState(false);
     const [startIndex, setStartIndex] = useState(0);
     const [isClient, setIsClient] = useState(false);
+    const [userSavedCatalogs, setUserSavedCatalogs] = useState({});
 
     const instituteId = useSelector((state) => state.institute.instituteId);
 
@@ -45,6 +46,7 @@ export default function PrintCollectionContent({
         setResults(initialResults || []);
         setResultsCount(initialResultsCount || 0);
         setStartIndex(initialResults?.length || 0);
+        loadSavedCatalog()
     }, [initialResults, initialResultsCount]);
 
     const handleClose = () => setShow(false);
@@ -58,7 +60,7 @@ export default function PrintCollectionContent({
         const nextStart = startIndex;
       
         try {
-          const res = await fetch(`/api/load-more?q=${urlParams}&start=${nextStart}&catalogCore=Print-collection`);
+          const res = await fetch(`/api/load-more?q=${urlParams}&start=${nextStart}&catalogCore=Print-collection&rows=20`);
           const data = await res.json();
       
           const newDocs = data.results || [];
@@ -131,7 +133,7 @@ export default function PrintCollectionContent({
     
         try {
             const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/logs`,
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/log`,
                 formdata,
                 {
                     headers: { Authorization: token },
@@ -151,6 +153,28 @@ export default function PrintCollectionContent({
             error_trace: error_trace || "", 
         });
     }, [path, status_code, initialResults, error_trace]);
+
+
+    const loadSavedCatalog = async () => {
+        const token = getToken();
+        if (!token) {
+            console.error("Authentication required!");
+            return;
+        }
+        const userId = getUserID();
+        console.log("user_id", userId);
+        try {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-saved-article?user=${userId}`, {
+                headers: { Authorization: `${token}` },
+            });
+            setUserSavedCatalogs(response.data);
+            // console.log("user saved catalog : ", response.data);
+
+        } catch (error) {
+            console.error(error)
+        }
+
+    }
 
     return (
         <Container className="px-4 text-secondary">
@@ -209,6 +233,8 @@ export default function PrintCollectionContent({
                                             uploader={item.uploader}
                                             url={item.url}
                                             resource_type={item.resource_types_string}
+                                            user_saved_catalog={userSavedCatalogs}
+                                            catalogCore = {"Print-collection"}
                                             onShow={handleShow}
                                             onSelect={() => setSelectCatalog(item)}
                                         />
@@ -221,8 +247,8 @@ export default function PrintCollectionContent({
                             )}
 
                             {isLoading && isClient && results.length > 0 && (
-                                Array.from({ length: 3 }).map((_, index) => (
-                                    <Col md={4} key={`loading-skeleton-${index}`} className='mb-4'>
+                                Array.from({ length: 4 }).map((_, index) => (
+                                    <Col md={3} key={`loading-skeleton-${index}`} className='mb-4'>
                                         <GridViewSkelton />
                                     </Col>
                                 ))
@@ -256,6 +282,8 @@ export default function PrintCollectionContent({
                                             uploader={item.uploader}
                                             url={item.url}
                                             resource_type={item.resource_types_string}
+                                            user_saved_catalog={userSavedCatalogs}
+                                            catalogCore = {"Print-collection"}
                                             onShow={handleShow}
                                             onSelect={() => setSelectCatalog(item)}
                                         />
