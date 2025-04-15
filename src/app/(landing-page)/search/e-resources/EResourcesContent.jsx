@@ -39,6 +39,7 @@ export default function EResourcesContent({
     const [isClient, setIsClient] = useState(false);
 
     const instituteId = useSelector((state) => state.institute.instituteId);
+    const [userSavedCatalogs, setUserSavedCatalogs] = useState({});
     // Initialize state from props after hydration
     useEffect(() => {
         setIsClient(true);
@@ -46,6 +47,7 @@ export default function EResourcesContent({
         setResultsCount(initialResultsCount || 0);
         setSideFilterResults(initialSideFilterResults || {});
         setStartIndex(initialResults?.length || 0);
+        loadSavedCatalog()
     }, [initialResults, initialResultsCount, initialSideFilterResults]);
 
     const handleClose = () => setShow(false);
@@ -54,27 +56,27 @@ export default function EResourcesContent({
     // Load more results using server action
     const handleLoadMore = async () => {
         if (!urlParams) return;
-      
+
         setIsLoading(true);
         const nextStart = startIndex;
-      
-        try {
-          const res = await fetch(`/api/load-more?q=${urlParams}&start=${nextStart}&catalogCore=e-resources`);
-          const data = await res.json();
-      
-          const newDocs = data.results || [];
-      
-          setResults(prevResults => [...prevResults, ...newDocs]);
-          setStartIndex(nextStart + newDocs.length);
-      
-        } catch (error) {
-          console.error("Load More Error:", error);
-        } finally {
-          setIsLoading(false);
-        }
-      };
 
-    
+        try {
+            const res = await fetch(`/api/load-more?q=${urlParams}&start=${nextStart}&catalogCore=e-resources`);
+            const data = await res.json();
+
+            const newDocs = data.results || [];
+
+            setResults(prevResults => [...prevResults, ...newDocs]);
+            setStartIndex(nextStart + newDocs.length);
+
+        } catch (error) {
+            console.error("Load More Error:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+
 
     // When URL params change, reset to the initial server-fetched data
     useEffect(() => {
@@ -96,12 +98,12 @@ export default function EResourcesContent({
         const cookieString = document.cookie
             .split("; ")
             .find((row) => row.startsWith("access_token="));
-    
+
         return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
     };
-    
+
     const getUserID = () => {
-        if (typeof window !== "undefined") { 
+        if (typeof window !== "undefined") {
             const cookieString = document.cookie
                 .split("; ")
                 .find((row) => row.startsWith("user_id="));
@@ -109,16 +111,16 @@ export default function EResourcesContent({
         }
         return null;
     };
-    
+
     const logUpdate = async ({ path, status_code, initialResults, error_trace }) => {
         const token = getToken();
         const userId = getUserID();
-    
+
         if (!token || !userId) {
             console.error("Authentication or user ID missing.");
             return;
         }
-    
+
         const formdata = new FormData();
         formdata.append("method", "get");
         formdata.append("path", path);
@@ -128,7 +130,7 @@ export default function EResourcesContent({
         formdata.append("request_body", "");
         formdata.append("response_body", JSON.stringify(initialResults));
         formdata.append("error_trace", error_trace || "");
-    
+
         try {
             const response = await axios.post(
                 `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/log`,
@@ -142,15 +144,37 @@ export default function EResourcesContent({
             console.error("Log API Error:", error);
         }
     };
-    
+
     useEffect(() => {
         logUpdate({
             path: path,
             status_code: status_code,
-            initialResults: JSON.stringify(initialResults), 
-            error_trace: error_trace || "", 
+            initialResults: JSON.stringify(initialResults),
+            error_trace: error_trace || "",
         });
     }, [path, status_code, initialResults, error_trace]);
+
+
+    const loadSavedCatalog = async () => {
+        const token = getToken();
+        if (!token) {
+            console.error("Authentication required!");
+            return;
+        }
+        const userId = getUserID();
+        console.log("user_id", userId);
+        try {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-saved-article?user=${userId}`, {
+                headers: { Authorization: `${token}` },
+            });
+            setUserSavedCatalogs(response.data);
+            // console.log("user saved catalog : ", response.data);
+
+        } catch (error) {
+            console.error(error)
+        }
+
+    }
 
     return (
         <Container className="px-4 text-secondary">
@@ -211,6 +235,8 @@ export default function EResourcesContent({
                                             description={item.description}
                                             uploader={item.uploader}
                                             url={item.url}
+                                            user_saved_catalog={userSavedCatalogs}
+                                            catalogCore={"e-resources"}
                                             onShow={handleShow}
                                             onSelect={() => setSelectCatalog(item)}
                                         />
@@ -257,6 +283,8 @@ export default function EResourcesContent({
                                             description={item.description}
                                             uploader={item.uploader}
                                             url={item.url}
+                                            user_saved_catalog={userSavedCatalogs}
+                                            catalogCore={"e-resources"}
                                             onShow={handleShow}
                                             onSelect={() => setSelectCatalog(item)}
                                         />

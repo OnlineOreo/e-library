@@ -152,7 +152,7 @@ const Navbar = () => {
                   <Suspense fallback={<div>Loading search...</div>}>
                     <SearchBar />
                   </Suspense>
-                  <Link href="/advance-search" title="Advance search" className="fs-2 ps-4 text-dark">
+                  <Link href="/advance-search-filter" title="Advance search" className="fs-2 ps-5 text-dark">
                     <LuSlidersHorizontal />
                   </Link>
                 </div>

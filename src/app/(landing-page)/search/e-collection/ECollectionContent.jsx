@@ -39,6 +39,7 @@ export default function ECollectionContent({
     const [startIndex, setStartIndex] = useState(0);
     const [isClient, setIsClient] = useState(false);
     const instituteId = useSelector((state) => state.institute.instituteId);
+    const [userSavedCatalogs, setUserSavedCatalogs] = useState({});
 
     // Initialize state from props after hydration
     useEffect(() => {
@@ -47,6 +48,7 @@ export default function ECollectionContent({
         setResultsCount(initialResultsCount || 0);
         setSideFilterResults(initialSideFilterResults || {});
         setStartIndex(initialResults?.length || 0);
+        loadSavedCatalog()
     }, [initialResults, initialResultsCount, initialSideFilterResults]);
 
     const handleClose = () => setShow(false);
@@ -154,6 +156,28 @@ export default function ECollectionContent({
         });
     }, [path, status_code, initialResults, error_trace]);
 
+
+    const loadSavedCatalog = async () => {
+        const token = getToken();
+        if (!token) {
+            console.error("Authentication required!");
+            return;
+        }
+        const userId = getUserID();
+        console.log("user_id", userId);
+        try {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-saved-article?user=${userId}`, {
+                headers: { Authorization: `${token}` },
+            });
+            setUserSavedCatalogs(response.data);
+            // console.log("user saved catalog : ", response.data);
+
+        } catch (error) {
+            console.error(error)
+        }
+
+    }
+
     return (
         <Container className="px-4 text-secondary">
             <Row>
@@ -213,6 +237,8 @@ export default function ECollectionContent({
                                             description={item.description}
                                             uploader={item.uploader}
                                             url={item.url}
+                                            user_saved_catalog={userSavedCatalogs}
+                                            catalogCore = {"e-collection"}
                                             onShow={handleShow}
                                             onSelect={() => setSelectCatalog(item)}
                                         />
@@ -259,6 +285,8 @@ export default function ECollectionContent({
                                             description={item.description}
                                             uploader={item.uploader}
                                             url={item.url}
+                                            user_saved_catalog={userSavedCatalogs}
+                                            catalogCore = {"e-collection"}
                                             onShow={handleShow}
                                             onSelect={() => setSelectCatalog(item)}
                                         />
