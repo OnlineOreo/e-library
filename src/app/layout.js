@@ -13,7 +13,14 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "LibVirtuUa app",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    title: "LibVirtuUa app",
+    statusBarStyle: "default",
+  },
+  themeColor: "#ffffff",
+  // title: "LibVirtuUa app",
   description: "Discovery search",
   icons: {
     icon: "/favicon.ico", 
