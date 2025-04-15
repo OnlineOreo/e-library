@@ -3,22 +3,22 @@ import { Fragment, useEffect, useState } from "react";
 import { Container, Col, Row, Spinner } from "react-bootstrap";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { useRouter } from "next/navigation";
-import { ActiveProjects } from "@/sub-components";
+import { useRouter, useParams } from "next/navigation";
 import MethodDistributionChart from "@/app/Component/dashboard/log/MethodDistributionChart";
 import LogLevelDistributionChart from "@/app/Component/dashboard/log/LogLevelDistributionChart";
 import PathDistributionChart from "@/app/Component/dashboard/log/PathDistributionChart";
 import StatusCodeDistributionChart from "@/app/Component/dashboard/log/StatusCodeDistributionChart";
 import RecentLogsTable from "@/app/Component/dashboard/log/RecentLogsTable";
 import RawLogs from "@/app/Component/dashboard/log/RawLogs";
-import PathDistributionChartHorizontal from "@/app/Component/dashboard/log/PathDistributionChartHorizontal";
 
-const Logs = () => {
+const UserLogs = () => {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const instituteId = useSelector((state) => state.institute.instituteId);
   const router = useRouter();
-  const [horizontal , setHorizontal] = useState(false)
+  const params = useParams();
+  const userId = params?.userId; // URL param: /logs/[userId]
+  const [horizontal, setHorizontal] = useState(false);
 
   const getToken = () => {
     const cookieString = document.cookie
@@ -29,15 +29,15 @@ const Logs = () => {
 
   useEffect(() => {
     const token = getToken();
-    if(!token){
+    if (!token) {
       router.push("/authentication/sign-in");
-      return
+      return;
     }
 
     const fetchLogs = async () => {
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/logs?institute_id=${instituteId}`,
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/logs?institute_id=${instituteId}&user_id=${userId}`,
           {
             headers: {
               Authorization: `${token}`,
@@ -52,10 +52,10 @@ const Logs = () => {
       }
     };
 
-    if (instituteId) {
+    if (instituteId && userId) {
       fetchLogs();
     }
-  }, [instituteId]);
+  }, [instituteId, userId]);
 
   return (
     <Fragment>
@@ -76,11 +76,8 @@ const Logs = () => {
               <Col xl={4} lg={4} md={12} xs={12} className="mb-6 mb-xl-0">
                 <StatusCodeDistributionChart logs={logs} />
               </Col>
-              {/* <Col xl={6} lg={6} md={12} xs={12} className="mb-6 mb-xl-0">
+              <Col xl={6} lg={6} md={12} xs={12} className="mb-6 mb-xl-0">
                 <PathDistributionChart logs={logs} />
-              </Col> */}
-              <Col xl={12} lg={12} md={12} xs={12} className="mb-6 mb-xl-0">
-                <PathDistributionChartHorizontal logs={logs} />
               </Col>
             </>
           )}
@@ -92,4 +89,4 @@ const Logs = () => {
   );
 };
 
-export default Logs;
+export default UserLogs;

@@ -126,7 +126,6 @@ const Home = () => {
     { field: "email", headerName: "Email", flex: 2 },
     { field: "phone_number", headerName: "Number", flex: 2 },
     { field: "role", headerName: "Role", flex: 2 },
-    { field: "designation", headerName: "Designation", flex: 2 },
     // {
     //   field: "action",
     //   headerName: "Action",

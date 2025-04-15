@@ -40,7 +40,7 @@ export default function Home() {
 
   // Fetch API Data
   const configData = landingPageData?.instituteId?.configurations?.[0] || {};
-  const sectionOrder = configData?.section_order || {}; // <-- Avoid using useMemo for simple values
+  const sectionOrder = configData?.section_order || {};
   // if (Object.keys(configData).length === 0) {
   //   notFound();
   // }

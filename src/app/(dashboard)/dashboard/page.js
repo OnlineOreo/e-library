@@ -3,6 +3,7 @@ import { Fragment } from "react";
 import { Container, Col, Row } from 'react-bootstrap';
 import DashboardCard from "@/app/Component/dashboard/DashboardCard";
 import Link from "next/link";
+import TopUsersBySessions from "@/app/Component/dashboard/TopUsersBySessions";
 
 const Home = () => {
     return (
@@ -15,12 +16,12 @@ const Home = () => {
                             <div className="d-flex justify-content-between align-items-center">
                                 <div className="mb-2 mb-lg-0">
                                     <h3 className="mb-0 text-dark">Dashboard  </h3>
-                                    <Link href="/logs">View Logs</Link>
                                 </div>
                             </div>
                         </div>
                     </Col>
                     <DashboardCard />
+                    <TopUsersBySessions/>
                 </Row>
             </Container>
         </Fragment>

@@ -6,7 +6,6 @@ import Image from "next/image";
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-
 const Profile = () => {
     const [authUser, setAuthUser] = useState({
         name: "",
@@ -30,7 +29,7 @@ const Profile = () => {
 
     useEffect(() => {
         loadAuthUser()
-    }, []); // Runs whenever authUser changes
+    }, []);
     
     const loadAuthUser = async () => {
         const token = getToken();
@@ -44,8 +43,6 @@ const Profile = () => {
             });
             const authdata = response.data;
             setAuthUser(authdata);
-            console.log(authdata);
-            (response.data);
         } catch (error) {
             console.error("Axios Error:", error);
             if (error.response) {
@@ -129,33 +126,33 @@ const Profile = () => {
             <Card.Body>
                 {/* card title */}
                 {/* <Card.Title as="h4">About Me</Card.Title>
-                <span className="text-uppercase fw-medium text-dark fs-5 ls-2">Bio</span>
+                <span className="fw-medium text-dark fs-5 ls-2">Bio</span>
                 <p className="mt-2 mb-6">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspen disse var ius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat.
                 </p> */}
                 <Row>
                     <Col xs={6} className="mb-5">
-                        <h6 className="text-uppercase fs-5 ls-2">Role</h6>
+                        <h6 className="fs-5 ls-2">Role</h6>
                         <p className="mb-0">{authUser.role}</p>
                     </Col>
-                    <Col xs={6} className="mb-5">
-                        <h6 className="text-uppercase fs-5 ls-2">Designation</h6>
+                    {/* <Col xs={6} className="mb-5">
+                        <h6 className="fs-5 ls-2">Designation</h6>
                         <p className="mb-0">{authUser.designation
                         }</p>
-                    </Col>
+                    </Col> */}
                     <Col xs={6} className="mb-5">
-                        <h6 className="text-uppercase fs-5 ls-2">Phone </h6>
+                        <h6 className="fs-5 ls-2">Phone </h6>
                         <p className="mb-0">{authUser.phone_number}</p>
                     </Col>
                     {/* <Col xs={6} className="mb-5">
-                        <h6 className="text-uppercase fs-5 ls-2">Date of Birth </h6>
+                        <h6 className="fs-5 ls-2">Date of Birth </h6>
                         <p className="mb-0">{authUser.date_joined}</p>
                     </Col> */}
                     <Col xs={6}>
-                        <h6 className="text-uppercase fs-5 ls-2">Email </h6>
+                        <h6 className="fs-5 ls-2">Email </h6>
                         <p className="mb-0">{authUser.email}</p>
                     </Col>
                     <Col xs={6}>
-                        <h6 className="text-uppercase fs-5 ls-2">Address</h6>
+                        <h6 className="fs-5 ls-2">Address</h6>
                         <p className="mb-0">{authUser.address == 'null' ? '' : authUser.address}</p>
                     </Col>
                 </Row>

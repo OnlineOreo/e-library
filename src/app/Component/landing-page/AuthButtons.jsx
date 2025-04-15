@@ -22,13 +22,13 @@ const AuthButtons = ({ token, handleLogout, show, setShow }) => {
         <>
         { (userRole == "ADMIN" || userRole == "INSTITUTE ADMIN") &&(
           <div className="mx-2">
-            <Link href="/dashboard" className="mx-1 hover-underline">
+            <Link href="/dashboard" className="mx-1 hover-underline" title="Dashboard">
               Dashboard
             </Link>
           </div>
         )}
           <div>
-            <a onClick={handleLogout} className="mx-1 hover-underline cursor-pointer" style={{ cursor: "pointer" }}>
+            <a onClick={handleLogout} className="mx-1 hover-underline cursor-pointer" style={{ cursor: "pointer" }} title="Log Out" >
               Logout
             </a>
           </div>
@@ -39,6 +39,7 @@ const AuthButtons = ({ token, handleLogout, show, setShow }) => {
             onClick={() => setShow(true)}
             className="mx-1 hover-underline cursor-pointer"
             style={{ cursor: "pointer" }}
+            title="Sign In"
           >
             Sign In
           </div>

@@ -16,6 +16,7 @@ export const useDashboardMenu = () => {
 
     const menu = [
         { id: uuid(), title: 'Dashboard', icon: 'home', link: '/dashboard' },
+        { id: uuid(), title: 'View Logs', icon: 'git-pull-request', link: '/logs' },
     ];
 
     if(userRole === "ADMIN"){

@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { Card, Table, ProgressBar, Badge, Button } from "react-bootstrap";
 
-// Map of HTTP methods to Bootstrap color variants
 const methodColors = {
   GET: "info",
   POST: "warning",
@@ -12,15 +11,25 @@ const methodColors = {
   DEFAULT: "dark",
 };
 
-// Utility to aggregate log data (removing query params from path)
 function getPathStats(logs) {
   const stats = {};
 
   logs.forEach((log) => {
-    const cleanPath = log.path.split("?")[0]; // Remove query params
-    const key = `${log.method} ${cleanPath}`;
+    const method = log.method || "UNKNOWN";
+    const fullPath = log.path;
+    if (!fullPath) return;
+
+    // Key is full path with method (for counting)
+    const key = `${method} ${fullPath}`;
+    // const basePath = fullPath.split("?")[0]; // For label
+    const basePath = fullPath; // For label
+
     if (!stats[key]) {
-      stats[key] = { method: log.method, path: cleanPath, count: 1 };
+      stats[key] = {
+        method,
+        path: basePath,
+        count: 1,
+      };
     } else {
       stats[key].count += 1;
     }

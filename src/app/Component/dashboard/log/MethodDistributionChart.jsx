@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { Card, Spinner } from "react-bootstrap";
+
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 export default function MethodDistributionChart({ logs = [] }) {
@@ -85,6 +86,8 @@ export default function MethodDistributionChart({ logs = [] }) {
         </p>
         {loading ? (
           <div className="text-center"><Spinner /></div>
+        ) : chartSeries.length === 0 ? (
+          <div className="text-center text-muted">No data available</div>
         ) : (
           <Chart
             options={chartOptions}

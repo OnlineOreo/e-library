@@ -41,6 +41,7 @@ const Home = () => {
     role: "",
     address: "",
     gender: "",
+    image: null, // 👈 Added image field
   });
 
   const handleInputChange = (event) => {
@@ -105,7 +106,7 @@ const Home = () => {
         {
           headers: {
             Authorization: `${token}`,
-            "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data", // 👈 Ensure it's multipart for file upload
           },
         }
       );
@@ -123,6 +124,7 @@ const Home = () => {
           role: "",
           address: "",
           gender: "",
+          image: null, // reset image field
         });
         router.push("/user-management/admin");
       }
@@ -263,17 +265,27 @@ const Home = () => {
                   </div>
                 </Form.Group>
               </Col>
+              <Col lg={6}>
+                <Form.Group className="mb-3" controlId="formImage">
+                  <Form.Label>Upload Image</Form.Label>
+                  <Form.Control
+                    type="file"
+                    name="image"
+                    accept="image/*"
+                    onChange={handleInputChange}
+                  />
+                  {formData.image && (
+                    <div className="mt-2">
+                      <img
+                        src={URL.createObjectURL(formData.image)}
+                        alt="Preview"
+                        style={{ width: "100px", height: "100px", objectFit: "cover", borderRadius: "6px" }}
+                      />
+                    </div>
+                  )}
+                </Form.Group>
+              </Col>
             </Row>
-
-            {/* <Form.Group className="mb-3" controlId="formImage">
-              <Form.Label>Upload Image</Form.Label>
-              <Form.Control
-                type="file"
-                name="image"
-                accept="image/*"
-                onChange={handleInputChange}
-              />
-            </Form.Group> */}
 
             <Button variant="primary" className="w-100" type="submit" disabled={loading}>
               {loading ? (
