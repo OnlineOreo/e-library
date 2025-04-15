@@ -17,7 +17,6 @@ export default function Layout({ children }) {
                     </Row>
                 </Container>
             </Suspense>
-
             {children}
         </div>
     );

@@ -69,17 +69,37 @@ const BookmarkCatalog = ({ id, catalogType, user_saved_catalogs }) => {
     };
 
     const savedBookmarked = () => {
-        const saved_ids_string = user_saved_catalogs.arrayCors[catalogType]; 
+        const firstCatalog = user_saved_catalogs[0];
+    
+        if (!firstCatalog) {
+            console.log("No saved catalog data found.");
+            return;
+        }
+    
+        const key = arrayCors[catalogType]; // e.g., 'saved_p_collection_ids'
+        const saved_ids_string = firstCatalog[key];
+    
+        if (!saved_ids_string) {
+            console.log(`No saved IDs found for key: ${key}`);
+            return;
+        }
     
         const saved_ids_array = saved_ids_string
             .split(',')
-            .map(Number); 
+            .map(id => Number(id.trim()))
+            .filter(id => !isNaN(id));
     
-        console.log("user savd ccatalog : ",saved_ids_array); 
+        if (saved_ids_array.includes(Number(id))) {
+            setIsBookmarked(true);
+        }
     };
-    useEffect(()=>{
-        savedBookmarked()
-    },[])
+    
+    useEffect(() => {
+        if (user_saved_catalogs?.length > 0 && id != null) {
+            savedBookmarked();
+        }
+    }, [user_saved_catalogs, id, catalogType]); // <-- add dependencies here
+    
 
     return (
         <div style={{ width: "20px", height: "20px" }}>

@@ -135,7 +135,7 @@ export default function PrintCollectionContent({
 
         try {
             const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/logs`,
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/log`,
                 formdata,
                 {
                     headers: { Authorization: token },
@@ -238,6 +238,7 @@ export default function PrintCollectionContent({
                                             url={item.url}
                                             resource_type={item.resource_types_string}
                                             user_saved_catalog={userSavedCatalogs}
+                                            catalogCore = {"Print-collection"}
                                             onShow={handleShow}
                                             onSelect={() => setSelectCatalog(item)}
                                         />
@@ -286,6 +287,7 @@ export default function PrintCollectionContent({
                                             url={item.url}
                                             resource_type={item.resource_types_string}
                                             user_saved_catalog={userSavedCatalogs}
+                                            catalogCore = {"Print-collection"}
                                             onShow={handleShow}
                                             onSelect={() => setSelectCatalog(item)}
                                         />

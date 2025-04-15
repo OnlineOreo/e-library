@@ -132,7 +132,7 @@ export default function MultimediaContent({
         
             try {
                 const response = await axios.post(
-                    `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/logs`,
+                    `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/log`,
                     formdata,
                     {
                         headers: { Authorization: token },

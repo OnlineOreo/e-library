@@ -12,6 +12,7 @@ import GridViewSkelton from '../components/GridViewSkelton';
 import SearchSideFilter from '../components/SearchSideFilter';
 import CatalogDetailModal from '../components/CatalogDetailModal';
 import { useSelector } from 'react-redux';
+import axios from 'axios';
 
 export default function ECollectionContent({
     initialResults,
@@ -132,7 +133,7 @@ export default function ECollectionContent({
 
         try {
             const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/logs`,
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/log`,
                 formdata,
                 {
                     headers: { Authorization: token },

@@ -27,9 +27,9 @@ const CatalogGridCard = (props) => {
                 <div className='one_line_ellipses text-primary'>{props.publisher || "N/A"}</div>
                 <div>{props.dc_date}</div>
                 <div className='d-flex my-3'>
-                    <ShareButtonDropdown id={props.id} catalogType={"Print-collection"} />
-                    <CitationDownload id={props.id} catalogType={"Print-collection"} />
-                    <BookmarkCatalog id={props.id} catalogType={"Print-collection"} user_saved_catalogs={props.user_saved_catalog} />
+                    <ShareButtonDropdown id={props.id} catalogType={props.catalogCore} />
+                    <CitationDownload id={props.id} catalogType={props.catalogCore} />
+                    <BookmarkCatalog id={props.id} catalogType={props.catalogCore} user_saved_catalogs={props.user_saved_catalog} />
                 </div>
                 <div className="mt-2 d-flex">
                     <a

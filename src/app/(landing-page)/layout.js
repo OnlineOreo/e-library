@@ -22,12 +22,10 @@ export default function Layout({ children }) {
   const landingPageData = useSelector((state) => state.landingPageDataSlice);
   const configData = landingPageData?.instituteId?.configurations?.[0] || {};
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <div className={`${geistSans.variable} ${geistMono.variable}`}>
           <Navbar />
           {children}
          <Footer bannerData={configData} />
-      </body>
-    </html> 
+      </div>
   );
 }

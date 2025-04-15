@@ -21,7 +21,7 @@ function FetchInstitute() {
 export default function Providers({ children }) {
   return (
     <Provider store={store}>
-      <FetchInstitute /> {/* API call happens here */}
+      <FetchInstitute /> 
       {children}
     </Provider>
   );
