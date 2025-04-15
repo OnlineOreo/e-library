@@ -4,7 +4,10 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
-import { setUser } from "@/redux/slices/userSlice";
+// import { setUser } from "@/redux/slices/userSlice";
+import { setUser } from "../../../redux/slices/userSlice";
+
+
 
 const SignIn = () => {
   const router = useRouter();

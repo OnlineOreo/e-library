@@ -2,17 +2,17 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Container, Col, Row } from "react-bootstrap";
+import { Container, Col, Row, Modal, Button } from "react-bootstrap";
 import axios from "axios";
 import Box from "@mui/material/Box";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useRouter } from "next/navigation";
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaPlusCircle } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import Image from "next/image";
 import Swal from "sweetalert2";
-import { FaPlusCircle } from "react-icons/fa";
+import ImportPublisher from "./ImportPublisher";
 
 const ViewPublishers = () => {
   const router = useRouter();
@@ -22,6 +22,10 @@ const ViewPublishers = () => {
   const [contentGroup, setContentGroup] = useState([]);
   const [search, setSearch] = useState("");
   const [isClient, setIsClient] = useState(false);
+  const [showImportModal, setShowImportModal] = useState(false);
+
+  const handleOpenModal = () => setShowImportModal(true);
+  const handleCloseModal = () => setShowImportModal(false);
 
   useEffect(() => {
     setIsClient(true);
@@ -89,7 +93,6 @@ const ViewPublishers = () => {
             prev.filter((item) => item.publisher_id !== params.id)
           );
         } catch (error) {
-          // console.log(error.response.data.details);
           errorToaster(error.response.data.details);
         }
       }
@@ -159,9 +162,14 @@ const ViewPublishers = () => {
           <Col lg={12} md={12} xs={12}>
             <div className="d-flex justify-content-between align-items-center">
               <h3 className="mb-0 text-dark">Publishers</h3>
-              <Link href="./publishers/add" className="btn btn-white">
-                <FaPlusCircle /> Publisher
-              </Link>
+              <div>
+                <Button variant="white" onClick={handleOpenModal} className="me-2">
+                <FaPlusCircle /> Import Publisher
+                </Button>
+                <Link href="./publishers/add" className="btn btn-white">
+                  <FaPlusCircle /> Publisher
+                </Link>
+              </div>
             </div>
           </Col>
         </Row>
@@ -188,6 +196,17 @@ const ViewPublishers = () => {
           </Box>
         </div>
       </Container>
+
+      {/* Modal with ImportPublisher */}
+      <Modal show={showImportModal} onHide={handleCloseModal} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Import Publisher</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <ImportPublisher />
+        </Modal.Body>
+      </Modal>
+
       <ToastContainer />
     </>
   );

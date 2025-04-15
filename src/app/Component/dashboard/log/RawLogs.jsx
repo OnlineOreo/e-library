@@ -148,7 +148,8 @@ export default function RawLogs({ logs = [] }) {
               <td className="align-middle text-break">
                 <div className="text-dark">{log.msg.toLowerCase()}</div>
                 <div className="text-muted small">
-                  {log.path?.split("?")[0]}
+                  {/* {log.path?.split("?")[0]} */}
+                  {log.path}
                 </div>
               </td>
             </tr>

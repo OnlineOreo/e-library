@@ -23,6 +23,7 @@ function getPathStats(logs) {
     const key = `${method} ${fullPath}`;
     // const basePath = fullPath.split("?")[0]; // For label
     const basePath = fullPath; // For label
+    // if()
 
     if (!stats[key]) {
       stats[key] = {
