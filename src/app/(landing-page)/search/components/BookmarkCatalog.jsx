@@ -4,9 +4,12 @@ import { FaRegBookmark, FaBookmark } from "react-icons/fa";
 import { Spinner } from "react-bootstrap";
 import axios from 'axios';
 
-const BookmarkCatalog = ({ id, catalogType }) => {
+const BookmarkCatalog = ({ id, catalogType, user_saved_catalogs }) => {
     const [isBookmarked, setIsBookmarked] = useState(false);
     const [isLoading, setIsLoading] = useState(false); 
+
+    // console.log("user saved catalog throgh props : ",user_saved_catalogs);
+    
 
     const getToken = () => {
         const cookieString = document.cookie
@@ -27,37 +30,12 @@ const BookmarkCatalog = ({ id, catalogType }) => {
     };
 
     
-    
     const arrayCors = {
         "Print-collection": "saved_p_collection_ids",
         "e-resources": "saved_e_resources_ids",
         "e-collection": "saved_e_collection_ids",
         "multimedia": "saved_multimedia_ids",
     };
-
-    // const loadSavedCatalog = async () => {
-    //     const token = getToken();
-    //     if (!token) {
-    //         console.error("Authentication required!");
-    //         return;
-    //     }
-    //     const userId = getUserRole();
-    //     console.log("user_id", userId);
-    //     try {
-    //         const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-saved-article?user=${userId}`,{
-    //             headers:{Authorization:`${token}`},
-    //         });
-    //         console.log("user data : ",response.data);
-            
-    //     } catch (error) {
-    //         console.error(error)
-    //     }
-        
-    // }
-
-    // useEffect(() => {
-    //  loadSavedCatalog();
-    // }, [])
     
 
     const handleBookmark = async () => {
@@ -89,6 +67,19 @@ const BookmarkCatalog = ({ id, catalogType }) => {
             setIsLoading(false);
         }
     };
+
+    const savedBookmarked = () => {
+        const saved_ids_string = user_saved_catalogs.arrayCors[catalogType]; 
+    
+        const saved_ids_array = saved_ids_string
+            .split(',')
+            .map(Number); 
+    
+        console.log("user savd ccatalog : ",saved_ids_array); 
+    };
+    useEffect(()=>{
+        savedBookmarked()
+    },[])
 
     return (
         <div style={{ width: "20px", height: "20px" }}>

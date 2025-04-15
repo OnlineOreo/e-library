@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
-import EResourcesContent from './EResourcesContent';
 import axios from "axios";
+import MultimediaContent from './MultimediaContent';
 
 function combineFacetData(facetData) {
   const combined = [];
@@ -19,20 +19,17 @@ async function fetachSolrData(searchQuery, startIndex = 0) {
   
   try {
     // Main search results
-    const solrUrl = `${process.env.NEXT_PUBLIC_SOLR_BASE_URL}/solr/e-resources/select?indent=true&q.op=OR&q=${searchQuery}&rows=15&start=${startIndex}`;
-    console.log("solr url : ",solrUrl);
-    
+    const solrUrl = `${process.env.NEXT_PUBLIC_SOLR_BASE_URL}/solr/multimedia-n/select?indent=true&q.op=OR&q=${searchQuery}&rows=15&start=${startIndex}`;
     const response = await axios.get(solrUrl);
 
+    console.log("solr url : ",solrUrl);
     
     
     const docs = response.data.response.docs || [];
     const numFound = response.data.response.numFound || 0;
     
     // Side filter data
-    const sideFilterUrl = `${process.env.NEXT_PUBLIC_SOLR_BASE_URL}/solr/e-resources/select?indent=true&q=*:*&fq=${searchQuery}&facet=true&facet.field=dc_publishers_string&facet.field=datacite_rights_string&facet.field=resource_types_string&facet.field=dc_date&facet.field=datacite_creators_string&facet.limit=1000&facet.sort=count`;
-
-        console.log("solr side filter url : ",sideFilterUrl);
+    const sideFilterUrl = `${process.env.NEXT_PUBLIC_SOLR_BASE_URL}/solr/multimedia-n/select?indent=true&q=*:*&fq=${searchQuery}&facet=true&facet.field=dc_publishers_string&facet.field=datacite_rights_string&facet.field=resource_types_string&facet.field=dc_date&facet.field=datacite_creators_string&facet.limit=1000&facet.sort=count`;
     
     const sideFilterResponse = await axios.get(sideFilterUrl);
     const sideData = sideFilterResponse.data;
@@ -96,7 +93,7 @@ export default async function PrintCollectionPage({ searchParams }) {
   
   return (
     <Suspense fallback={<div>Loading search results...</div>}>
-      <EResourcesContent
+      <MultimediaContent
         initialResults={data.results}
         initialResultsCount={data.resultsCount}
         initialSideFilterResults={data.sideFilterResults}
