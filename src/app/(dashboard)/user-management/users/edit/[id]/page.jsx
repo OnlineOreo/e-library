@@ -123,19 +123,17 @@ const EditUser = () => {
 
   const handleNext = () => {
     setStep(step + 1);
-    console.log(formData);
   };
 
   const handlePrevious = () => {
     setStep(step - 1);
-    console.log(formData);
   };
 
   const getToken = () => {
     const cookieString = document.cookie
       .split("; ")
       .find((row) => row.startsWith("access_token="));
-  
+
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
@@ -147,10 +145,20 @@ const EditUser = () => {
       return;
     }
 
+    // Ensure every mapping has institute and library
+    const normalizedFormData = {
+      ...formData,
+      mappings: formData.mappings.map((mapping) => ({
+        ...mapping,
+        institute: mapping.institute || instituteId,
+        library: mapping.library || library?.[0]?.library_id || "",
+      })),
+    };
+
     try {
       const response = await axios.put(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users?user_id=${id}`,
-        formData,
+        normalizedFormData,
         {
           headers: {
             Authorization: `${token}`,
@@ -160,7 +168,7 @@ const EditUser = () => {
       );
 
       if (response.status === 200) {
-        Swal.fire("Deleted!", "User updated successfully!.", "success");
+        Swal.fire("Success!", "User updated successfully!", "success");
         router.push("/user-management/users");
       } else {
         errorToaster("Something went wrong!");
@@ -229,61 +237,74 @@ const EditUser = () => {
       const updatedFormData = { ...prevFormData };
 
       if (name === "institute") {
-        // Update institute ID state
         setInstituteId(value);
 
-        // Find selected institute data using current value
         const selectedInstitute = institute.find(
           (ins) => ins.institute_id === value
         );
+        const firstLibrary =
+          selectedInstitute?.libraries?.[0]?.library_id || "";
 
-        // Update libraries list
         setLibrary(selectedInstitute?.libraries || []);
-
-        // Reset dependent selections
         setDepartments([]);
         setPrograms([]);
 
-        // Update all mappings with new institute and first library
-        updatedFormData.mappings = updatedFormData.mappings.map((mapping) => ({
-          ...mapping,
-          institute: value,
-          library: selectedInstitute?.libraries?.[0]?.library_id || "",
-          department: "",
-          program: "",
-        }));
-      }
-
-      if (name === "library") {
-        // Find selected library data using current value
-        const selectedLibrary = library.find((lib) => lib.library_id === value);
-
-        // Update departments and programs
-        setDepartments(selectedLibrary?.departments || []);
-        setPrograms(selectedLibrary?.programs || []);
-
-        // Reset dependent fields in this mapping
         updatedFormData.mappings[index] = {
           ...updatedFormData.mappings[index],
+          institute: value,
+          library: firstLibrary,
           department: "",
           program: "",
         };
+
+        return updatedFormData;
       }
 
-      // Update the specific mapping field
+      if (name === "library") {
+        const selectedLibrary = library.find((lib) => lib.library_id === value);
+
+        setDepartments(selectedLibrary?.departments || []);
+        setPrograms(selectedLibrary?.programs || []);
+
+        updatedFormData.mappings[index] = {
+          ...updatedFormData.mappings[index],
+          library: value,
+          department: "",
+          program: "",
+          institute: updatedFormData.mappings[index].institute || instituteId,
+        };
+
+        return updatedFormData;
+      }
+
+      // Default case: update field normally
       updatedFormData.mappings[index] = {
         ...updatedFormData.mappings[index],
         [name]: value,
+        institute: updatedFormData.mappings[index].institute || instituteId,
+        library: updatedFormData.mappings[index].library || "",
       };
 
       return updatedFormData;
     });
   };
-
   const addNewMapping = () => {
+    const selectedInstitute = institute.find(
+      (ins) => ins.institute_id === instituteId
+    );
+    const firstLibrary = selectedInstitute?.libraries?.[0]?.library_id || "";
+
     setFormData((prevFormData) => ({
       ...prevFormData,
-      mappings: [...(prevFormData.mappings || []), {}],
+      mappings: [
+        ...prevFormData.mappings,
+        {
+          institute: instituteId,
+          library: firstLibrary,
+          department: "",
+          program: "",
+        },
+      ],
     }));
   };
 
@@ -293,7 +314,6 @@ const EditUser = () => {
       mappings: prevFormData.mappings.filter((_, i) => i !== index),
     }));
   };
-
 
   return (
     <Fragment>
@@ -375,8 +395,9 @@ const EditUser = () => {
                     required
                   >
                     <option value="">Select Role</option>
-                    <option value="ADMIN">Admin</option>
                     <option value="STUDENT">Student</option>
+                    <option value="FACULTY">Faculty</option>
+                    <option value="STAFF">Staff</option>
                   </Form.Select>
                 </Form.Group>
                 {/* <Form.Group className="mb-3" controlId="formImage">
@@ -630,14 +651,14 @@ const EditUser = () => {
                 <Button variant="primary" onClick={handleNext}>
                   Next
                 </Button>
-              ) :""}
-              {
-                step == 4 && (
-                  <Button variant="primary" type="submit">
-                    Submit
-                  </Button>
-                )
-              }
+              ) : (
+                ""
+              )}
+              {step == 4 && (
+                <Button variant="primary" type="submit">
+                  Submit
+                </Button>
+              )}
             </div>
           </Form>
         </div>
