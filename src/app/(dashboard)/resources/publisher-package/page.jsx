@@ -76,22 +76,25 @@ const ViewItemTypes = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
+          const token = getToken();
           var deleteMappingIdArr = [];
           params.row.mappings.forEach((element) => {
             deleteMappingIdArr.push(element.publisher_package_mapping_id);
           });
           var deleteMappingParam = deleteMappingIdArr.join(",");
+
           await axios.delete(
             `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/publisher-packages?package_id=${params.id}&mapping_ids=${deleteMappingParam}&delete_all=True`,
             {
               headers: { Authorization: `${token}` },
             }
           );
-          Swal.fire(
-            "Deleted!",
-            "Publisher package has been deleted.",
-            "success"
-          );
+          Swal.fire({
+            title: "Deleted!",
+            text: "Publisher package has been deleted.",
+            icon: "success",
+            confirmButtonText: "OK",
+          });
           setPublisherPkg((prev) =>
             prev.filter((item) => item.package_id !== params.id)
           );
@@ -111,8 +114,66 @@ const ViewItemTypes = () => {
 
   const columns = [
     { field: "package_name", headerName: "Package Name", flex: 2 },
-    { field: "created_at", headerName: "Created At", flex: 2 },
-    { field: "publisher", headerName: "Publisher", flex: 2 },
+    { field: "publisher_name", headerName: "Publisher", flex: 2 },
+    {
+      field: "expiry_status",
+      headerName: "Status",
+      flex: 2,
+      renderCell: (params) => {
+        const startedAt = new Date(params.row.started_at);
+        const endedAt = new Date(params.row.ended_at);
+        const today = new Date();
+    
+        const formatDate = (date) =>
+          date.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          });
+    
+        if (isNaN(startedAt) || isNaN(endedAt)) {
+          return (
+            <div title="Date not available">
+              <span className="badge bg-secondary" style={{ fontSize: "13px" }}>
+                N/A
+              </span>
+            </div>
+          );
+        }
+    
+        const diffInDays = Math.ceil((endedAt - today) / (1000 * 60 * 60 * 24));
+    
+        if (diffInDays < 0) {
+          return (
+            <div title={`Expired on ${formatDate(endedAt)}`}>
+              <span className="badge bg-danger" style={{ fontSize: "13px" }}>
+                Expired
+              </span>
+            </div>
+          );
+        } else if (diffInDays <= 10) {
+          return (
+            <div title={`Will expire in ${diffInDays} day(s) on ${formatDate(endedAt)}`}>
+              <span
+                className="badge bg-warning text-dark"
+                style={{ fontSize: "13px" }}
+              >
+                Expiring Soon
+              </span>
+            </div>
+          );
+        } else {
+          return (
+            <div title={`Active - expires on ${formatDate(endedAt)}`}>
+              <span className="badge bg-success" style={{ fontSize: "13px" }}>
+                Active
+              </span>
+            </div>
+          );
+        }
+      },
+    },
+    
     {
       field: "action",
       headerName: "Action",

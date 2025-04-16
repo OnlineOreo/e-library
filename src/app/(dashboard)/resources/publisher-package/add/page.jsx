@@ -16,6 +16,8 @@ const AddPublisherPackage = () => {
   const [formData, setFormData] = useState({
     package_name: "",
     publisher: "",
+    started_at: "",
+    ended_at: "",
     mappings: [{ department_id: "", program_id: "" }],
   });
 
@@ -71,8 +73,41 @@ const AddPublisherPackage = () => {
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setFormData({ ...formData, [name]: value });
+    const today = new Date().toISOString().split("T")[0];
+    const updatedFormData = { ...formData, [name]: value };
+  
+    let newErrors = { ...errors };
+  
+    // Clear existing errors for the field
+    newErrors[name] = [];
+  
+    // Apply date validations
+    if (name === "started_at" || name === "ended_at") {
+      if (value < today) {
+        newErrors[name].push("Date cannot be in the past.");
+      }
+  
+      if (
+        (name === "started_at" && value === formData.ended_at) ||
+        (name === "ended_at" && value === formData.started_at)
+      ) {
+        newErrors["started_at"] = ["Start and End date can't be the same."];
+        newErrors["ended_at"] = ["Start and End date can't be the same."];
+      } else {
+        // Clear same-date error if no longer same
+        if (newErrors.started_at?.includes("Start and End date can't be the same.")) {
+          newErrors["started_at"] = newErrors["started_at"].filter(err => err !== "Start and End date can't be the same.");
+        }
+        if (newErrors.ended_at?.includes("Start and End date can't be the same.")) {
+          newErrors["ended_at"] = newErrors["ended_at"].filter(err => err !== "Start and End date can't be the same.");
+        }
+      }
+    }
+  
+    setFormData(updatedFormData);
+    setErrors(newErrors);
   };
+  
 
   const handleInstituteChange = async (event) => {
     const { name, value } = event.target;
@@ -143,6 +178,8 @@ const AddPublisherPackage = () => {
     const transformedData = {
       package_name: formData.package_name,
       publisher: formData.publisher,
+      started_at: formData.started_at,
+      ended_at: formData.ended_at,
       mappings: formData.mappings.map((mapItem) => ({
         department: mapItem.department_id,
         program: mapItem.program_id,
@@ -298,6 +335,38 @@ const AddPublisherPackage = () => {
                   </Form.Select>
                   <Form.Control.Feedback type="invalid">
                     {errors.library?.join(", ")}
+                  </Form.Control.Feedback>
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+            <Col lg={6} className="mb-3">
+                <Form.Group>
+                  <Form.Label >Start Date</Form.Label>
+                  <Form.Control
+                    type="date"
+                    name="started_at"
+                    value={formData.started_at}
+                    onChange={handleInputChange}
+                    isInvalid={!!errors.started_at}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.started_at?.join(", ")}
+                  </Form.Control.Feedback>
+                </Form.Group>
+              </Col>
+            <Col lg={6} className="mb-3">
+                <Form.Group>
+                  <Form.Label >End Date</Form.Label>
+                  <Form.Control
+                    type="date"
+                    name="ended_at"
+                    value={formData.ended_at}
+                    onChange={handleInputChange}
+                    isInvalid={!!errors.ended_at}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.ended_at?.join(", ")}
                   </Form.Control.Feedback>
                 </Form.Group>
               </Col>

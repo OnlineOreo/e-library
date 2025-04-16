@@ -1,13 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import { Container } from "react-bootstrap";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { Container ,Button } from "react-bootstrap";
 import axios from "axios";
 import Box from "@mui/material/Box";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
 import { useSelector } from "react-redux";
+import { ButtonGroup} from "@mui/material";
 
 const ViewReports = () => {
   const router = useRouter();
@@ -74,12 +74,48 @@ const ViewReports = () => {
 
   const columns = [
     { field: "id", headerName: "ID", flex: 2 },
-    { field: "name", headername: "Name", flex: 2 },
+    { field: "name", headerName: "Name", flex: 2 },
     { field: "phone_number", headerName: "Phone", flex: 2 },
     { field: "email", headerName: "Email", flex: 2 },
     { field: "created_at", headerName: "Created At", flex: 2 },
     { field: "designation", headerName: "Designation", flex: 2 },
   ];
+
+  // Function to download table as CSV
+  const downloadCSV = () => {
+    const rows = formattedReports.map((row) => columns.map(col => row[col.field]));
+    const csvContent = [
+      columns.map(col => col.headerName).join(","),
+      ...rows.map(row => row.join(","))
+    ]
+      .map(e => e.replace(/(?:\r\n|\r|\n)/g, "")) // Remove newlines in CSV data
+      .join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", "user_reports.csv");
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  // Function to download table as Excel
+  const downloadExcel = () => {
+    const rows = formattedReports.map((row) => columns.map(col => row[col.field]));
+    const excelContent = [
+      columns.map(col => col.headerName).join("\t"),
+      ...rows.map(row => row.join("\t"))
+    ].join("\n");
+
+    const blob = new Blob([excelContent], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8;" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", "user_reports.xlsx");
+    link.click();
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <>
@@ -87,6 +123,7 @@ const ViewReports = () => {
       <Container fluid className="mt-n22 px-6">
         <div className="card p-3 mt-4">
           {/* Filters */}
+          <div className="d-flex justify-content-between">
           <div className="mb-3">
             <label className="me-3">
               <input
@@ -118,9 +155,11 @@ const ViewReports = () => {
               />{" "}
               Top Users
             </label>
-            {/* <button className="btn btn-primary ms-3" onClick={loadReports}>
-              Apply Filter
-            </button> */}
+          </div>
+          <ButtonGroup aria-label="Basic example" className="pb-2" >
+              <Button variant="outline-secondary" onClick={downloadCSV}>Download CSV</Button>
+              <Button variant="outline-secondary" className="ms-2" onClick={downloadExcel}>Download Excel</Button>
+          </ButtonGroup>
           </div>
 
           {/* Search Input */}
@@ -138,9 +177,17 @@ const ViewReports = () => {
                 rows={formattedReports}
                 columns={columns}
                 pageSize={5}
-                components={{ Toolbar: GridToolbar }}
                 getRowId={(row) => row.id}
-                columnVisibilityModel={{ id: false }}
+                components={{ Toolbar: GridToolbar }}
+                componentsProps={{
+                  toolbar: {
+                    showQuickFilter: true,
+                    csvOptions: {
+                      fileName: "user_reports",
+                      utf8WithBom: true,
+                    },
+                  },
+                }}
               />
             </Box>
           </Box>
