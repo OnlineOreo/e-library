@@ -3,12 +3,19 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-const SearchBar = () => {
+const SearchBar = ({show,setShow}) => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const [filterType, setFilterType] = useState("datacite_titles");
   const [searchText, setSearchText] = useState("");
+
+  const getToken = () => {
+    const cookieString = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("access_token="));
+    return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+  };
 
 
   useEffect(() => {
@@ -28,7 +35,13 @@ const SearchBar = () => {
   }, [searchParams]);
 
   const handleSubmit = (event) => {
-    event.preventDefault();
+    event.preventDefault(); 
+    const token = getToken();
+    if(!token){
+      setShow(true)
+      router.push(`/?q=${filterType}%3A(${encodeURIComponent(searchText)})`);
+      return 
+    }
     router.push(`/search/print-collection?q=${filterType}%3A(${encodeURIComponent(searchText)})`);
   };
 

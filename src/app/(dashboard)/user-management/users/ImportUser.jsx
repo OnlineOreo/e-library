@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
-const ImportUser = () => {
+const ImportUser = ({onSuccess}) => {
   const router = useRouter();
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
@@ -55,9 +55,8 @@ const ImportUser = () => {
         }
       );
 
-      setMessage(`${response.data.message || "Success"}`);
       setFile(null);
-      router.push("/users");
+      onSuccess?.();
       setError(false)
     } catch (error) {
       var backendError =

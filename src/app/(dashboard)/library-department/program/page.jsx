@@ -164,13 +164,13 @@ const ViewProgram = () => {
             <div className="d-flex justify-content-between align-items-center">
               <h3 className="mb-0 text-dark">Program</h3>
               <div>
-                {/* <Button
+                <Button
                   variant="white"
                   onClick={handleOpenModal}
                   className="me-2"
                 >
                   <FaPlusCircle /> Import Program
-                </Button> */}
+                </Button>
                 {userRole === "ADMIN" && (
                   <Link href="./program/add" className="btn btn-white">
                     <FaPlusCircle /> Program
@@ -201,15 +201,26 @@ const ViewProgram = () => {
           </Box>
         </div>
       </Container>
-      {/* Modal with ImportPublisher */}
       <Modal show={showImportModal} onHide={handleCloseModal} centered>
         <Modal.Header closeButton>
           <Modal.Title>Import Program</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <ImportProgram />
+          <ImportProgram
+            onSuccess={() => {
+              handleCloseModal();
+              loadProgram(instituteId);
+              Swal.fire({
+                title: "Success!",
+                text: "Program added successfully!",
+                icon: "success",
+                confirmButtonText: "OK",
+              });
+            }}
+          />
         </Modal.Body>
       </Modal>
+
       <ToastContainer />
     </>
   );

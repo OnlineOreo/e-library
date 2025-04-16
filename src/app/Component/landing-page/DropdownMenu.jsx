@@ -76,7 +76,7 @@ const DropdownMenu = ({
                 className="nav"
                 style={{ minWidth: "33%" }}
               >
-                <a className="dropdown-link" href="#">
+                <a className="dropdown-link one_line_ellipses" href="#">  
                   <img
                     src={item.image}
                     alt=""

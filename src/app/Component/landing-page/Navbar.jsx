@@ -38,22 +38,26 @@ const Navbar = () => {
     setToken(null);
     document.cookie = `access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
     document.cookie = `user_role=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+    router.push("/");
   };
 
   const handlePublisherClick = (publisher) => {
     const token = getToken();
-    if (!token) {
-      router.push("/authentication/sign-in");
-      return;
-    }
 
     const publisherUrls = {
       "EBSCO Academic Collection": `https://research-ebsco-com.mriirs.libvirtuua.com:8811/login.aspx?authtype=ip,uid&custid=ns193200&groupid=main&profile=ehost&defaultdb=bsh&token=${token}`,
       Manupatra: `https://www-manupatrafast-in.mriirs.libvirtuua.com:8811/LoginSwitch/ipRedirect.aspx?token=${token}`,
     };
 
+    if (!token) {
+      const searchParams = new URLSearchParams();
+      searchParams.set("redirect", publisher.publisher_name);
+      router.push(`/?${searchParams.toString()}`);
+      setShow(true);
+      return;
+    }
+
     if (publisherUrls[publisher.publisher_name]) {
-      console.log(publisherUrls[publisher.publisher_name]);
       window.open(publisherUrls[publisher.publisher_name], "_blank");
     }
   };
@@ -150,9 +154,16 @@ const Navbar = () => {
                 </div> */}
                 <div className="header-action-right" style={{ width: 600 }}>
                   <Suspense fallback={<div>Loading search...</div>}>
-                    <SearchBar />
+                    <SearchBar  
+                    show={show}
+                    setShow={setShow}
+                     />
                   </Suspense>
-                  <Link href="/advance-search-filter" title="Advance search" className="fs-2 ps-5 text-dark">
+                  <Link
+                    href="/advance-search-filter"
+                    title="Advance search"
+                    className="fs-2 ps-5 text-dark"
+                  >
                     <LuSlidersHorizontal />
                   </Link>
                 </div>
@@ -172,7 +183,7 @@ const Navbar = () => {
                       alt="App Icon"
                     />
                   </Link>
-                </div> 
+                </div>
                 <div className="d-flex justify-content-between w-100">
                   <div className="header-nav d-none d-lg-flex">
                     <div className="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block">
@@ -208,6 +219,7 @@ const Navbar = () => {
                     <div className="header-action-2">
                       <AuthButtons
                         token={token}
+                        setToken={setToken}
                         handleLogout={handleLogout}
                         show={show}
                         setShow={setShow}

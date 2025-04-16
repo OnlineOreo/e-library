@@ -1,11 +1,10 @@
-// components/importPublisher.tsx
 "use client";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import React, { useState } from "react";
 import axios from "axios";
 
-const ImportPublisher = ({onSuccess}) => {
+const ImportDepartment = ({ onSuccess }) => {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState("");
@@ -43,7 +42,7 @@ const ImportPublisher = ({onSuccess}) => {
       setUploading(true);
       setMessage("");
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/bulk-publisher-creation`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/bulk-department-creation`,
         formData,
         {
           headers: {
@@ -53,7 +52,12 @@ const ImportPublisher = ({onSuccess}) => {
         }
       );
 
-      onSuccess?.();
+      if (response.status === 200) {
+        setMessage("Upload successful!");
+        onSuccess?.(); // Notify parent
+      } else {
+        setMessage("Upload completed, but check for issues.");
+      }
     } catch (error) {
       setMessage(
         `Upload failed: ${error?.response?.data?.message || error.message}`
@@ -90,4 +94,4 @@ const ImportPublisher = ({onSuccess}) => {
   );
 };
 
-export default ImportPublisher;
+export default ImportDepartment;

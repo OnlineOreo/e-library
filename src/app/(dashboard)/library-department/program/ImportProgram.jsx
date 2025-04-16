@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
-const ImportProgram = () => {
+const ImportProgram = ({onSuccess}) => {
   const router = useRouter();
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
@@ -56,7 +56,7 @@ const ImportProgram = () => {
 
       setMessage(`${response.data.message || "Success"}`);
       setFile(null)
-      router.push("/library-department/program");
+      onSuccess?.();
     } catch (error) {
       const backendError =
         error?.response?.data?.error ||

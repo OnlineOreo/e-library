@@ -1,7 +1,7 @@
 "use client";
 import { Fragment, useEffect, useState } from "react";
 import Link from "next/link";
-import { Container, Col, Row } from "react-bootstrap";
+import { Container, Col, Row, Modal, Button } from "react-bootstrap";
 import axios from "axios";
 import Box from "@mui/material/Box";
 import { useRouter } from "next/navigation";
@@ -15,6 +15,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { FaEdit, FaPlusCircle } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
+import ImportDepartment from "./ImportDepartment";
 
 const Department = () => {
   const [users, setUsers] = useState([]);
@@ -25,6 +26,11 @@ const Department = () => {
   const router = useRouter();
   const instituteId = useSelector((state) => state.institute.instituteId);
 
+  const [showImportModal, setShowImportModal] = useState(false);
+
+  const handleOpenModal = () => setShowImportModal(true);
+  const handleCloseModal = () => setShowImportModal(false);
+
   useEffect(() => {
     setIsClient(true);
   }, []);
@@ -33,7 +39,7 @@ const Department = () => {
     if (isClient && instituteId) {
       loadDepartment(instituteId);
     }
-  }, [isClient,instituteId]);
+  }, [isClient, instituteId]);
 
   const getToken = () => {
     const cookieString = document.cookie
@@ -181,13 +187,23 @@ const Department = () => {
           <Col lg={12} md={12} xs={12}>
             <div className="d-flex justify-content-between align-items-center">
               <h3 className="mb-0 text-dark">Department</h3>
+
               {userRole === "ADMIN" && (
-                <Link
-                  href="/library-department/department/add"
-                  className="btn btn-white"
-                >
-                  <FaPlusCircle /> Department
-                </Link>
+                <div>
+                  <Button
+                    variant="white"
+                    onClick={handleOpenModal}
+                    className="me-2"
+                  >
+                    <FaPlusCircle /> Import Department
+                  </Button>
+                  <Link
+                    href="/library-department/department/add"
+                    className="btn btn-white"
+                  >
+                    <FaPlusCircle /> Department
+                  </Link>
+                </div>
               )}
             </div>
           </Col>
@@ -219,6 +235,25 @@ const Department = () => {
           </Box>
         </div>
       </Container>
+      <Modal show={showImportModal} onHide={handleCloseModal} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Import Department</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <ImportDepartment
+            onSuccess={() => {
+              handleCloseModal();
+              loadProgram(instituteId);
+              Swal.fire({
+                title: "Success!",
+                text: "Program added successfully!",
+                icon: "success",
+                confirmButtonText: "OK",
+              });
+            }}
+          />
+        </Modal.Body>
+      </Modal>
     </Fragment>
   );
 };

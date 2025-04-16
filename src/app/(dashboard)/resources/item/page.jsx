@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Container, Col, Row, Modal , Button} from "react-bootstrap";
+import { Container, Col, Row, Modal, Button } from "react-bootstrap";
 import axios from "axios";
 import Box from "@mui/material/Box";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
@@ -176,13 +176,13 @@ export default function Item() {
             <div className="d-flex justify-content-between align-items-center">
               <h3 className="mb-0 text-dark">Items</h3>
               <div>
-                {/* <Button
+                <Button
                   variant="white"
                   onClick={handleOpenModal}
                   className="me-2"
                 >
                   <FaPlusCircle /> Import Items
-                </Button> */}
+                </Button>
                 <Link href="./item/add" className="btn btn-white">
                   <FaPlusCircle /> Add Item
                 </Link>
@@ -216,7 +216,18 @@ export default function Item() {
           <Modal.Title>Import Items</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <ImportBulkItems />
+          <ImportBulkItems
+            onSuccess={() => {
+              handleCloseModal();
+              loadItem(instituteId);
+              Swal.fire({
+                title: "Success!",
+                text: "Items added successfully!",
+                icon: "success",
+                confirmButtonText: "OK",
+              });
+            }}
+          />
         </Modal.Body>
       </Modal>
       <ToastContainer />

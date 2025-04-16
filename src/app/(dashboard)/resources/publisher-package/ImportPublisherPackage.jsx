@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useState } from "react";
 import axios from "axios";
 
-const ImportPublisherPackage = () => {
+const ImportPublisherPackage = ({onSuccess}) => {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState("");
@@ -52,7 +52,7 @@ const ImportPublisherPackage = () => {
         }
       );
 
-      setMessage(`Upload successful: ${response.data.message || "Success"}`);
+      onSuccess?.();
     } catch (error) {
       setMessage(
         `Upload failed: ${error?.response?.data?.message || error.message}`

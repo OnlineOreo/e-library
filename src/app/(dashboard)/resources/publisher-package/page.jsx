@@ -198,7 +198,18 @@ const ViewItemTypes = () => {
           <Modal.Title>Import Publisher Package</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <ImportPublisherPackage />
+          <ImportPublisherPackage
+            onSuccess={() => {
+              handleCloseModal();
+              loadPublishers(instituteId);
+              Swal.fire({
+                title: "Success!",
+                text: "Publishers added successfully!",
+                icon: "success",
+                confirmButtonText: "OK",
+              });
+            }}
+          />
         </Modal.Body>
       </Modal>
 

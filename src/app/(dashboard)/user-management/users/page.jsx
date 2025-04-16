@@ -168,13 +168,13 @@ const Home = () => {
             <div className="d-flex justify-content-between align-items-center">
               <h3 className="mb-0 text-dark">Manage User</h3>
               <div>
-                {/* <Button
+                <Button
                   variant="white"
                   onClick={handleOpenModal}
                   className="me-2"
                 >
                   <FaPlusCircle /> Import User
-                </Button> */}
+                </Button>
                 <Link href="./users/add-user" className="btn btn-white">
                   <FaPlusCircle /> New User
                 </Link>
@@ -210,7 +210,18 @@ const Home = () => {
           <Modal.Title>Import Publisher</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <ImportUser />
+          <ImportUser
+            onSuccess={() => {
+              handleCloseModal();
+              loadPublishers(instituteId);
+              Swal.fire({
+                title: "Success!",
+                text: "Users added successfully!",
+                icon: "success",
+                confirmButtonText: "OK",
+              });
+            }}
+          />
         </Modal.Body>
       </Modal>
     </Fragment>

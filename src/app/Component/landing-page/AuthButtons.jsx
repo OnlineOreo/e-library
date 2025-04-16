@@ -3,7 +3,7 @@ import React from "react";
 import Link from "next/link";
 import SignIn from "./SignIn";
 
-const AuthButtons = ({ token, handleLogout, show, setShow }) => {
+const AuthButtons = ({ token,setToken, handleLogout, show, setShow }) => {
   const getUserRole = () => {
       if (typeof window !== "undefined") { 
           const cookieString = document.cookie
@@ -60,7 +60,7 @@ const AuthButtons = ({ token, handleLogout, show, setShow }) => {
                 style={{ zIndex: "99", right: "20px" }}
                 onClick={() => setShow(false)}
               ></button>
-              <SignIn />
+              <SignIn show={show} setShow={setShow} setToken={setToken} />
             </div>
           </div>
         </div>
