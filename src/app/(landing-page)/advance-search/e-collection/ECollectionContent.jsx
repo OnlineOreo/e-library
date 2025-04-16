@@ -7,18 +7,16 @@ import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from "next/navigation";
 import axios from 'axios';
 
-import CatalogGridCard from '../components/CatalogGridCard';
-import CatalogListCard from '../components/CatalogListCard';
-import GridViewSkelton from '../components/GridViewSkelton';
-import SearchSideFilter from '../components/SearchSideFilter';
-import CatalogDetailModal from '../components/CatalogDetailModal';
+import CatalogGridCard from '../../search/components/CatalogGridCard';
+import CatalogListCard from '../../search/components/CatalogListCard';
+import GridViewSkelton from '../../search/components/GridViewSkelton';
+import CatalogDetailModal from '../../search/components/CatalogDetailModal';
 
 import { useSelector } from 'react-redux';
 
-export default function PrintCollectionContent({
+export default function ECollectionContentAdv({
     initialResults,
     initialResultsCount,
-    initialSideFilterResults,
     searchQuery,
     path,
     status_code,
@@ -33,7 +31,6 @@ export default function PrintCollectionContent({
     const [searchWithinSearch, setSearchWithinSearch] = useState("")
     const [results, setResults] = useState([]);
     const [resultsCount, setResultsCount] = useState(0);
-    const [sideFilterResults, setSideFilterResults] = useState({});
     const [show, setShow] = useState(false);
     const [selectCatalog, setSelectCatalog] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -48,10 +45,9 @@ export default function PrintCollectionContent({
         setIsClient(true);
         setResults(initialResults || []);
         setResultsCount(initialResultsCount || 0);
-        setSideFilterResults(initialSideFilterResults || {});
         setStartIndex(initialResults?.length || 0);
         loadSavedCatalog()
-    }, [initialResults, initialResultsCount, initialSideFilterResults]);
+    }, [initialResults, initialResultsCount]);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -59,25 +55,27 @@ export default function PrintCollectionContent({
     // Load more results using server action
     const handleLoadMore = async () => {
         if (!urlParams) return;
-
+      
         setIsLoading(true);
         const nextStart = startIndex;
-
+      
         try {
-            const res = await fetch(`/api/load-more?q=${urlParams}&start=${nextStart}&catalogCore=Print-collection`);
-            const data = await res.json();
-
-            const newDocs = data.results || [];
-
-            setResults(prevResults => [...prevResults, ...newDocs]);
-            setStartIndex(nextStart + newDocs.length);
-
+          const res = await fetch(`/api/load-more?q=${urlParams}&start=${nextStart}&catalogCore=e-collection&rows=20`);
+          const data = await res.json();
+      
+          const newDocs = data.results || [];
+      
+          setResults(prevResults => [...prevResults, ...newDocs]);
+          setStartIndex(nextStart + newDocs.length);
+      
         } catch (error) {
-            console.error("Load More Error:", error);
+          console.error("Load More Error:", error);
         } finally {
-            setIsLoading(false);
+          setIsLoading(false);
         }
-    };
+      };
+
+    
 
     // When URL params change, reset to the initial server-fetched data
     useEffect(() => {
@@ -100,12 +98,12 @@ export default function PrintCollectionContent({
         const cookieString = document.cookie
             .split("; ")
             .find((row) => row.startsWith("access_token="));
-
+    
         return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
     };
-
+    
     const getUserID = () => {
-        if (typeof window !== "undefined") {
+        if (typeof window !== "undefined") { 
             const cookieString = document.cookie
                 .split("; ")
                 .find((row) => row.startsWith("user_id="));
@@ -113,16 +111,16 @@ export default function PrintCollectionContent({
         }
         return null;
     };
-
+    
     const logUpdate = async ({ path, status_code, initialResults, error_trace }) => {
         const token = getToken();
         const userId = getUserID();
-
+    
         if (!token || !userId) {
             console.error("Authentication or user ID missing.");
             return;
         }
-
+    
         const formdata = new FormData();
         formdata.append("method", "get");
         formdata.append("path", path);
@@ -132,7 +130,7 @@ export default function PrintCollectionContent({
         formdata.append("request_body", "");
         formdata.append("response_body", JSON.stringify(initialResults));
         formdata.append("error_trace", error_trace || "");
-
+    
         try {
             const response = await axios.post(
                 `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/log`,
@@ -146,15 +144,16 @@ export default function PrintCollectionContent({
             console.error("Log API Error:", error);
         }
     };
-
+    
     useEffect(() => {
         logUpdate({
             path: path,
             status_code: status_code,
-            initialResults: JSON.stringify(initialResults),
-            error_trace: error_trace || "",
+            initialResults: JSON.stringify(initialResults), 
+            error_trace: error_trace || "", 
         });
     }, [path, status_code, initialResults, error_trace]);
+
 
     const loadSavedCatalog = async () => {
         const token = getToken();
@@ -180,10 +179,7 @@ export default function PrintCollectionContent({
     return (
         <Container className="px-4 text-secondary">
             <Row>
-                <Col md={3} className="px-0 bg-white">
-                    <SearchSideFilter {...sideFilterResults} catalogCore={"print-collection"} />
-                </Col>
-                <Col md={9} className='pe-0 ps-4'>
+                <Col md={12} className='pe-0 ps-4'>
                     <Row className="mb-3">
                         <Col md={6}>
                             <p>Showing <strong>{resultsCount}</strong> results from data</p>
@@ -199,13 +195,11 @@ export default function PrintCollectionContent({
                                 <BsFillGrid3X3GapFill
                                     size={40}
                                     className={`border p-1 cursor_pointer rounded mx-2 ${gridView ? "active_result_view" : ""}`}
-                                    title='Grid View'
                                     onClick={() => setGridView(true)}
                                 />
                                 <FaListUl
                                     size={40}
                                     className={`border p-1 cursor_pointer rounded ${!gridView ? "active_result_view" : ""}`}
-                                    title='List View'
                                     onClick={() => setGridView(false)}
                                 />
                             </div>
@@ -215,19 +209,19 @@ export default function PrintCollectionContent({
                         <Row id='grid-view' className={`grid-view`}>
                             {!isClient ? (
                                 Array.from({ length: 6 }).map((_, index) => (
-                                    <Col md={4} key={`initial-skeleton-${index}`} className='mb-4'>
+                                    <Col md={3} key={`initial-skeleton-${index}`} className='mb-4'>
                                         <GridViewSkelton />
                                     </Col>
                                 ))
                             ) : isLoading && results.length === 0 ? (
                                 Array.from({ length: 6 }).map((_, index) => (
-                                    <Col md={4} key={`loading-skeleton-${index}`} className='mb-4'>
+                                    <Col md={3} key={`loading-skeleton-${index}`} className='mb-4'>
                                         <GridViewSkelton />
                                     </Col>
                                 ))
                             ) : results.length > 0 ? (
                                 results.map((item) => (
-                                    <Col md={4} key={item.id} className="mb-4">
+                                    <Col md={3} key={item.id} className="mb-4">
                                         <CatalogGridCard
                                             id={item.id}
                                             datacite_titles={item.datacite_titles}
@@ -240,7 +234,7 @@ export default function PrintCollectionContent({
                                             url={item.url}
                                             resource_type={item.resource_types_string}
                                             user_saved_catalog={userSavedCatalogs}
-                                            catalogCore = {"Print-collection"}
+                                            catalogCore = {"e-collection"}
                                             onShow={handleShow}
                                             onSelect={() => setSelectCatalog(item)}
                                         />
@@ -253,8 +247,8 @@ export default function PrintCollectionContent({
                             )}
 
                             {isLoading && isClient && results.length > 0 && (
-                                Array.from({ length: 3 }).map((_, index) => (
-                                    <Col md={4} key={`loading-skeleton-${index}`} className='mb-4'>
+                                Array.from({ length: 4 }).map((_, index) => (
+                                    <Col md={3} key={`loading-skeleton-${index}`} className='mb-4'>
                                         <GridViewSkelton />
                                     </Col>
                                 ))
@@ -289,7 +283,7 @@ export default function PrintCollectionContent({
                                             url={item.url}
                                             resource_type={item.resource_types_string}
                                             user_saved_catalog={userSavedCatalogs}
-                                            catalogCore = {"Print-collection"}
+                                            catalogCore = {"e-collection"}
                                             onShow={handleShow}
                                             onSelect={() => setSelectCatalog(item)}
                                         />

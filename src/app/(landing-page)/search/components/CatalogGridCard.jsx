@@ -1,19 +1,68 @@
 "use client"
 import React, { useState, useEffect } from 'react'
 import { Card, Button } from 'react-bootstrap';
-import { PiBookOpenTextFill } from "react-icons/pi";
-import { FaShareAlt, FaRegBookmark, FaFileDownload, FaFacebookSquare, FaLinkedin, FaTwitterSquare } from "react-icons/fa";
-import { IoMail } from "react-icons/io5";
 import ShareButtonDropdown from './ShareButtonDropdown';
 import CitationDownload from './CitationDownload';
 import BookmarkCatalog from './BookmarkCatalog';
 import { MdOutlineMenuBook } from "react-icons/md";
-import { GiBookmarklet } from "react-icons/gi";
+import { useSelector } from 'react-redux';
 import axios from 'axios';
 
 
 const CatalogGridCard = (props) => {
+    const instituteId = useSelector((state) => state.institute.instituteId);
 
+    const getToken = () => {
+        const cookieString = document.cookie
+            .split("; ")
+            .find((row) => row.startsWith("access_token="));
+
+        return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+    };
+
+    const getUserID = () => {
+        if (typeof window !== "undefined") {
+            const cookieString = document.cookie
+                .split("; ")
+                .find((row) => row.startsWith("user_id="));
+            return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+        }
+        return null;
+    };
+
+    const handelBookRead = async (id, url) => {
+        const token = getToken();
+        const userId = getUserID();
+
+        if (!token || !userId) {
+            console.error("Authentication or user ID missing.");
+            return;
+        }
+
+        const formdata = new FormData();
+        formdata.append("method", "get");
+        formdata.append("path", url);
+        formdata.append("status_code", 200);
+        formdata.append("user", userId);
+        formdata.append("institute", instituteId);
+        formdata.append("request_body", "");
+        formdata.append("response_body", "");
+        formdata.append("error_trace", "");
+
+        try {
+            const response = await axios.post(
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/log`,
+                formdata,
+                {
+                    headers: { Authorization: token },
+                }
+            );
+            // console.log("log response:", response.data);
+        } catch (error) {
+            console.error("Log API Error:", error);
+        }
+
+    }
     return (
         <Card>
             <div className="image text-center">
@@ -37,7 +86,7 @@ const CatalogGridCard = (props) => {
                         className="me-2 w-50 py-2 btn btn-success"
                         onClick={(e) => {
                             e.preventDefault();
-
+                            handelBookRead(props.id, props.url)
                             const screenWidth = window.screen.width;
                             const screenHeight = window.screen.height;
                             const width = screenWidth / 2;
@@ -52,8 +101,8 @@ const CatalogGridCard = (props) => {
                     >{props.resource_type == "Video"
                         ? "Watch"
                         : props.resource_type == "audio"
-                        ? "Listen"
-                        : "Read"}</a>
+                            ? "Listen"
+                            : "Read"}</a>
                     <Button variant="outline-secondary w-50 py-2" onClick={() => { props.onShow(); props.onSelect() }}>DETAILS</Button>
                 </div>
             </Card.Body>

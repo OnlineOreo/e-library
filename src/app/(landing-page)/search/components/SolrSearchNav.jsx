@@ -13,9 +13,9 @@ export default function SolrSearchNav() {
     const links = isAdvanceSearch
         ? [
               { href: '/advance-search/print-collection', label: 'Print Collection' },
-            //   { href: '/advance-search/e-collection', label: 'E Collection' },
-            //   { href: '/advance-search/e-resources', label: 'E Resources' },
-            //   { href: '/advance-search/multimedia', label: 'Multimedia' },
+              { href: '/advance-search/e-collection', label: 'E Collection' },
+              { href: '/advance-search/e-resources', label: 'E Resources' },
+              { href: '/advance-search/multimedia', label: 'Multimedia' },
           ]
         : [
               { href: '/search/print-collection', label: 'Print Collection' },
