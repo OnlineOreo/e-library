@@ -251,7 +251,7 @@ const SearchSideFilter = (props) => {
                                                 style={{ width: "90%" }}
                                                 label={item?.name || "Unknown"}
                                                 data-filtertype="dc_publishers_string"
-                                                data-label={item?.name || "Unknown"}
+                                                data-label={item?.name || ""}
                                                 onChange={filterChange}
                                                 checked={false}
                                             />
@@ -278,7 +278,7 @@ const SearchSideFilter = (props) => {
                                         <Form.Check type="checkbox" className='one_line_ellipses thats_filter'
                                             style={{ width: "90%" }} label={item?.name || "Unknown"}
                                             data-filtertype="resource_types_string"
-                                            data-label={item?.name || "Unknown"}
+                                            data-label={item?.name || ""}
                                             onChange={filterChange}
                                             checked={parsedUrl?.resource_types_string?.includes(item?.name) ?? false}
                                         />
@@ -321,7 +321,7 @@ const SearchSideFilter = (props) => {
                                                         style={{ width: "90%" }}
                                                         label={item?.name || "Unknown"}
                                                         data-filtertype="datacite_creators_string"
-                                                        data-label={item?.name || "Unknown"}
+                                                        data-label={item?.name || ""}
                                                     />
                                                     <span>({item?.count || 0})</span>
                                                 </div>
@@ -348,7 +348,7 @@ const SearchSideFilter = (props) => {
                                             label={item?.name || "Unknown"}
                                             className="thats_filter one_line_ellipses"
                                             data-filtertype="datacite_creators_string"
-                                            data-label={item?.name || "Unknown"}
+                                            data-label={item?.name || ""}
                                             onChange={filterChange}
                                             checked={parsedUrl?.datacite_creators_string?.includes(item?.name) ?? false}
                                         />
@@ -391,7 +391,7 @@ const SearchSideFilter = (props) => {
                                                         style={{ width: "90%" }}
                                                         label={item?.name || "Unknown"}
                                                         data-filtertype="dc_date"
-                                                        data-label={item?.name || "Unknown"}
+                                                        data-label={item?.name || ""}
                                                     />
                                                     <span>({item?.count || 0})</span>
                                                 </div>
