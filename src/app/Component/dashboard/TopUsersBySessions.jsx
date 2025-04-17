@@ -110,6 +110,7 @@ export default function TopUsersBySessions() {
               <th>Device type</th>
               <th>Ip Address</th>
               <th>Last Login Time</th>
+              <th>Logout Time</th>
             </tr>
           </thead>
           <tbody>
@@ -121,6 +122,16 @@ export default function TopUsersBySessions() {
                 <td>{user.ip_address}</td>
                 <td>
                   {new Date(user.updated_at).toLocaleString(undefined, {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit",
+                  })}
+                </td>
+                <td>
+                  {new Date(user.ended_at).toLocaleString(undefined, {
                     year: "numeric",
                     month: "short",
                     day: "numeric",

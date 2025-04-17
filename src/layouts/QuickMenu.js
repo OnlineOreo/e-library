@@ -1,21 +1,14 @@
 "use client";
-// import node module libraries
 import Link from "next/link";
 import { Fragment, useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { Row, Col, Image, Dropdown, ListGroup } from "react-bootstrap";
-
 import { useRouter } from "next/navigation";
 import axios from "axios";
-
-// simple bar scrolling used for notification item scrolling
 import SimpleBar from "simplebar-react";
 import "simplebar/dist/simplebar.min.css";
-
-// import data files
-import NotificationList from "../data/Notification";
-// import hooks
 import useMounted from "@/hooks/useMounted";
+import { useSelector } from "react-redux";
 
 const QuickMenu = () => {
   const [authUser, setAuthUser] = useState({
@@ -24,19 +17,9 @@ const QuickMenu = () => {
     image: "",
   });
 
+  const instituteId = useSelector((state) => state.institute.instituteId);
+
   const router = useRouter();
-
-  const handleLogout = () => {
-    document.cookie = `access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
-    document.cookie = `user_role=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
-    router.push("/");
-  };
-
-  const hasMounted = useMounted();
-
-  const isDesktop = useMediaQuery({
-    query: "(min-width: 1224px)",
-  });
 
   const getToken = () => {
     const cookieString = document.cookie
@@ -45,6 +28,58 @@ const QuickMenu = () => {
 
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
+
+  const getSession = () => {
+    const cookieString = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("session_id="));
+
+    return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+  };
+
+  const getUserId = () => {
+    const cookieString = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("user_id="));
+
+    return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+  };
+
+  const handleLogout = async (institute_id) => {
+    try {
+      const token = getToken();
+      const session_id = getSession();
+      const userId = getUserId();
+      await axios.put(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-session?session_id=${session_id}&institute_id=${institute_id}&user_id=${userId}`,
+        {
+          ended_at: new Date().toISOString(),
+          institute: instituteId,
+          user: userId,
+        },
+        {
+          headers: {
+            Authorization: ` ${token}`,
+          },
+        }
+      );
+    } catch (error) {
+      console.error("Failed to update user session:", error);
+    }
+
+    // Clear cookies
+    document.cookie = `access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+    document.cookie = `user_role=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+    document.cookie = `session_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+
+    router.push("/");
+  };
+
+  const hasMounted = useMounted();
+
+  const isDesktop = useMediaQuery({
+    query: "(min-width: 1224px)",
+  });
 
   useEffect(() => {
     loadAuthUser();
@@ -192,7 +227,7 @@ const QuickMenu = () => {
               eventKey="1"
               className="text-dark"
             >
-              <i className="fe fe-star me-2"></i> Back to Home
+              <i className="fe fe-star me-2"></i> Student Dashboard
             </Dropdown.Item>
 
             {/* <Dropdown.Item className="text-primary">
@@ -201,7 +236,7 @@ const QuickMenu = () => {
                     <Dropdown.Item >
                         <i className="fe fe-settings me-2"></i> Account Settings
                     </Dropdown.Item> */}
-            <Dropdown.Item onClick={handleLogout}>
+            <Dropdown.Item onClick={() => handleLogout(instituteId)}>
               <i className="fe fe-power me-2"></i>Sign Out
             </Dropdown.Item>
           </Dropdown.Menu>
@@ -284,7 +319,7 @@ const QuickMenu = () => {
                     <Dropdown.Item >
                         <i className="fe fe-settings me-2"></i> Account Settings
                     </Dropdown.Item> */}
-            <Dropdown.Item onClick={handleLogout}>
+            <Dropdown.Item onClick={() => handleLogout(instituteId)}>
               <i className="fe fe-power me-2"></i>Sign Out
             </Dropdown.Item>
           </Dropdown.Menu>

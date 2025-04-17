@@ -57,7 +57,9 @@ const Home = () => {
   };
 
   useEffect(() => {
-    loadUser(instituteId);
+    if(instituteId){
+      loadUser(instituteId);
+    }
   }, [instituteId]);
 
   const handleSearch = (event) => {
@@ -77,7 +79,7 @@ const Home = () => {
     const token = getToken();
     Swal.fire({
       title: "Are you sure?",
-      text: "Deletes package with all mapping!",
+      text: "Delete user with all mapping!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -87,18 +89,25 @@ const Home = () => {
       if (result.isConfirmed) {
         try {
           var deleteMappingIdArr = [];
-          params.row.mappings.forEach((element) => {
+          console.log(params)
+          params.mappings.forEach((element) => {
             deleteMappingIdArr.push(element.user_mapping_id);
           });
           var deleteMappingParam = deleteMappingIdArr.join(",");
+          console.log('chandan')
           await axios.delete(
-            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users?user_id=${params.id}&mapping_ids=${deleteMappingParam}&delete_all=True`,
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users?user_id=${params.id}&delete_all=True`,
             {
               headers: { Authorization: `${token}` },
             }
           );
 
-          Swal.fire("Deleted!", "User has been deleted.", "success");
+          Swal.fire({
+                   title: "Success!",
+                   text: "User Delete successfully!",
+                   icon: "success",
+                   confirmButtonText: "OK",
+                 });
           setFilteredUsers((prev) =>
             prev.filter((item) => item.id !== params.id)
           );
@@ -213,7 +222,7 @@ const Home = () => {
           <ImportUser
             onSuccess={() => {
               handleCloseModal();
-              loadPublishers(instituteId);
+              loadUser(instituteId);
               Swal.fire({
                 title: "Success!",
                 text: "Users added successfully!",

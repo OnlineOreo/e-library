@@ -1,140 +1,131 @@
-'use client'
-import { useState, useEffect } from "react";
+"use client";
+
+import { use, useState, useEffect } from "react";
 import axios from "axios";
-import { ListGroup, Col, Row, Card, Tab, Container, Spinner } from "react-bootstrap";
+import { Container, Row, Col, Card, Spinner, Table } from "react-bootstrap";
 import Link from "next/link";
-import { use } from "react";
-import { FaMinusCircle, FaPlusCircle } from "react-icons/fa";
+import { FaMinusCircle } from "react-icons/fa";
 
-export default function ShowInstitute(props) {
-    const [isLoading, setIsLoading] = useState(true);
-    const [formData, setFormData] = useState({
-        package_name: "",
-        mappings:[],
-    });
+export default function Page({ params }) {
+  const { id } = use(params); // ✅ unwrap promise with use()
 
-    const params = use(props.params);
-    const id = Array.isArray(params?.id) ? params.id[0] : params?.id;
+  const [isLoading, setIsLoading] = useState(true);
+  const [formData, setFormData] = useState({
+    package_name: "",
+    mappings: [],
+  });
 
-    // Function to get token
-    const getToken = () => {
-        const cookieString = document.cookie
-            .split("; ")
-            .find((row) => row.startsWith("access_token="));
-        
-        return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
-      };
+  const getToken = () => {
+    const cookieString = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("access_token="));
+    return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+  };
 
-    const getPublisherPkg = async (instituteId) => {
-        if (!instituteId) return;
+  const getPublisherPkg = async (instituteId) => {
+    if (!instituteId) return;
 
-        setIsLoading(true);
-        const token = getToken();
+    setIsLoading(true);
+    const token = getToken();
 
-        try {
-            const response = await axios.get(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/publisher-packages?package_id=${instituteId}`,
-                {
-                    headers: { Authorization: `${token}` },
-                }
-            );
-
-            setFormData({
-                package_name: response.data?.package_name || "",
-                mappings : response.data?.mappings || [],
-            });
-
-        } catch (error) {
-            console.error("Error fetching institute:", error);
-        } finally {
-            setIsLoading(false);
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/publisher-packages?package_id=${instituteId}`,
+        {
+          headers: { Authorization: `${token}` },
         }
-    };
+      );
 
-    useEffect(() => {
-        if (id) {
-            getPublisherPkg(id);
-        }
-    }, [id]);
+      setFormData({
+        package_name: response.data?.package_name || "",
+        publisher_name: response.data?.publisher_name || "",
+        mappings: response.data?.mappings || [],
+      });
+    } catch (error) {
+      console.error("Error fetching package:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    console.log(formData);
-    return (
-        <>
-            <div className="bg-primary pt-10 pb-21"></div>
-            <Container fluid className="mt-n22 px-6">
-                <Row>
-                    <Col lg={12} md={12} xs={12}>
-                        <div className="d-flex justify-content-between align-items-center">
-                            <h3 className="mb-0 text-dark">Show Packages</h3>
-                            <Link href="../" className="btn btn-white">
-                                <FaMinusCircle /> Back
-                            </Link>
-                        </div>
-                    </Col>
-                </Row>
-                <Row className="justify-content-center mt-4">
-                    <Col xl={8} lg={8} md={8} sm={12}>
-                        <Tab.Container id="tab-container-8" defaultActiveKey="design">
-                            <Card>
-                                <Card.Body className="p-0">
-                                    <Tab.Content>
-                                        <Tab.Pane eventKey="design" className="pb-4 p-4">
-                                            {isLoading ? (
-                                                <Spinner animation="border" size="sm" />
-                                            ) : (
-                                                <>
-                                                    <ListGroup horizontal className="mb-3">
-                                                        <ListGroup.Item className="flex-fill">
-                                                            Package Name        
-                                                        </ListGroup.Item>
-                                                        <ListGroup.Item className="flex-fill">
-                                                            { formData.package_name }
-                                                        </ListGroup.Item>
-                                                    </ListGroup>
-                                                    <ListGroup horizontal className="mb-3">
-                                                        <ListGroup.Item className="flex-fill">
-                                                            Library        
-                                                        </ListGroup.Item>
-                                                        <ListGroup.Item className="flex-fill">
-                                                            { formData.mappings[0]?.library }
-                                                        </ListGroup.Item>
-                                                    </ListGroup>
-                                                    {[formData.mappings] && (
-                                                        <>
-                                                            <ListGroup horizontal className="mb-3">
-                                                                <ListGroup.Item className="flex-fill">
-                                                                    <strong>Department</strong>
-                                                                </ListGroup.Item>
-                                                                <ListGroup.Item className="flex-fill">
-                                                                    <strong>Program</strong>
-                                                                </ListGroup.Item>
-                                                            </ListGroup>    
-                                                            { 
-                                                                formData.mappings.map((element,index)=>{
-                                                                return (
-                                                                        <ListGroup horizontal key={index} className="mb-3">
-                                                                            <ListGroup.Item className="flex-fill">
-                                                                                { element.department}
-                                                                            </ListGroup.Item>
-                                                                            <ListGroup.Item className="flex-fill">
-                                                                                { element.program }
-                                                                            </ListGroup.Item>
-                                                                        </ListGroup>
-                                                                    )
-                                                                })
-                                                            }
-                                                        </>
-                                                    )}
-                                                </>
-                                            )}
-                                        </Tab.Pane>
-                                    </Tab.Content>
-                                </Card.Body>
-                            </Card>
-                        </Tab.Container>
-                    </Col>
-                </Row>
-            </Container>
-        </>
-    );
+  useEffect(() => {
+    if (id) {
+      getPublisherPkg(id);
+    }
+  }, [id]);
+
+  return (
+    <Container className="py-5">
+      <Row className="align-items-center mb-4">
+        <Col></Col>
+        <Col className="text-end">
+          <Link href="/resources/publisher-package" className="btn btn-dark">
+            <FaMinusCircle /> Back
+          </Link>
+        </Col>
+      </Row>
+
+      <Card className="shadow rounded-4 border-0">
+        <Card.Body className="p-4">
+          {isLoading ? (
+            <div className="text-center py-5">
+              <Spinner animation="border" variant="primary" />
+            </div>
+          ) : (
+            <>
+              <Row className="mb-4">
+                <Col md={4}>
+                  <h6 className="text-muted">Package Name</h6>
+                </Col>
+                <Col md={8}>
+                  <h5 className="fw-semibold">
+                    {formData.package_name || "N/A"}
+                  </h5>
+                </Col>
+              </Row>
+
+              <Row className="mb-4">
+                <Col md={4}>
+                  <h6 className="text-muted">Publisher name</h6>
+                </Col>
+                <Col md={8}>{formData.publisher_name || "N/A"}</Col>
+              </Row>
+
+              <div className="mt-5">
+                <h5 className="fw-bold mb-3 text-dark">Department & Program</h5>
+                {formData.mappings.length > 0 ? (
+                  <Table
+                    striped
+                    bordered
+                    hover
+                    responsive
+                    className="rounded-3 overflow-hidden"
+                  >
+                    <thead className="table-light">
+                      <tr>
+                        <th>Department</th>
+                        <th>Program</th>
+                        <th>Library name</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {formData.mappings.map((item, index) => (
+                        <tr key={index}>
+                          <td>{item.department_name || "—"}</td>
+                          <td>{item.program_name || "—"}</td>
+                          <td>{item.library_name || "—"}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                ) : (
+                  <div className="text-muted">No mappings available.</div>
+                )}
+              </div>
+            </>
+          )}
+        </Card.Body>
+      </Card>
+    </Container>
+  );
 }

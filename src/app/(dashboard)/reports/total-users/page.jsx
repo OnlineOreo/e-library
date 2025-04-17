@@ -1,13 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { Container ,Button } from "react-bootstrap";
+import { Container, Button } from "react-bootstrap";
 import axios from "axios";
 import Box from "@mui/material/Box";
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
 import { useSelector } from "react-redux";
-import { ButtonGroup} from "@mui/material";
+import { ButtonGroup } from "@mui/material";
 
 const ViewReports = () => {
   const router = useRouter();
@@ -67,7 +67,10 @@ const ViewReports = () => {
   };
 
   const formattedReports = reports
-    .map((report) => ({ ...report }))
+    .map((report, index) => ({
+      ...report,
+      id: `${report.id}-${index}`, // ensures the id is unique for DataGrid
+    }))
     .filter((report) =>
       report.name?.toLowerCase().includes(search.toLowerCase())
     );
@@ -83,12 +86,14 @@ const ViewReports = () => {
 
   // Function to download table as CSV
   const downloadCSV = () => {
-    const rows = formattedReports.map((row) => columns.map(col => row[col.field]));
+    const rows = formattedReports.map((row) =>
+      columns.map((col) => row[col.field])
+    );
     const csvContent = [
-      columns.map(col => col.headerName).join(","),
-      ...rows.map(row => row.join(","))
+      columns.map((col) => col.headerName).join(","),
+      ...rows.map((row) => row.join(",")),
     ]
-      .map(e => e.replace(/(?:\r\n|\r|\n)/g, "")) // Remove newlines in CSV data
+      .map((e) => e.replace(/(?:\r\n|\r|\n)/g, "")) // Remove newlines in CSV data
       .join("\n");
 
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
@@ -102,13 +107,17 @@ const ViewReports = () => {
 
   // Function to download table as Excel
   const downloadExcel = () => {
-    const rows = formattedReports.map((row) => columns.map(col => row[col.field]));
+    const rows = formattedReports.map((row) =>
+      columns.map((col) => row[col.field])
+    );
     const excelContent = [
-      columns.map(col => col.headerName).join("\t"),
-      ...rows.map(row => row.join("\t"))
+      columns.map((col) => col.headerName).join("\t"),
+      ...rows.map((row) => row.join("\t")),
     ].join("\n");
 
-    const blob = new Blob([excelContent], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8;" });
+    const blob = new Blob([excelContent], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8;",
+    });
     const link = document.createElement("a");
     const url = URL.createObjectURL(blob);
     link.setAttribute("href", url);
@@ -124,42 +133,50 @@ const ViewReports = () => {
         <div className="card p-3 mt-4">
           {/* Filters */}
           <div className="d-flex justify-content-between">
-          <div className="mb-3">
-            <label className="me-3">
-              <input
-                type="radio"
-                name="reportFilter"
-                value="all_users"
-                checked={filter === "all_users"}
-                onChange={() => setFilter("all_users")}
-              />{" "}
-              All Users
-            </label>
-            <label className="me-3">
-              <input
-                type="radio"
-                name="reportFilter"
-                value="all_active_users"
-                checked={filter === "all_active_users"}
-                onChange={() => setFilter("all_active_users")}
-              />{" "}
-              Active Users
-            </label>
-            <label className="me-3">
-              <input
-                type="radio"
-                name="reportFilter"
-                value="top_users"
-                checked={filter === "top_users"}
-                onChange={() => setFilter("top_users")}
-              />{" "}
-              Top Users
-            </label>
-          </div>
-          <ButtonGroup aria-label="Basic example" className="pb-2" >
-              <Button variant="outline-secondary" onClick={downloadCSV}>Download CSV</Button>
-              <Button variant="outline-secondary" className="ms-2" onClick={downloadExcel}>Download Excel</Button>
-          </ButtonGroup>
+            <div className="mb-3">
+              <label className="me-3">
+                <input
+                  type="radio"
+                  name="reportFilter"
+                  value="all_users"
+                  checked={filter === "all_users"}
+                  onChange={() => setFilter("all_users")}
+                />{" "}
+                All Users
+              </label>
+              <label className="me-3">
+                <input
+                  type="radio"
+                  name="reportFilter"
+                  value="all_active_users"
+                  checked={filter === "all_active_users"}
+                  onChange={() => setFilter("all_active_users")}
+                />{" "}
+                Active Users
+              </label>
+              <label className="me-3">
+                <input
+                  type="radio"
+                  name="reportFilter"
+                  value="top_users"
+                  checked={filter === "top_users"}
+                  onChange={() => setFilter("top_users")}
+                />{" "}
+                Top Users
+              </label>
+            </div>
+            <ButtonGroup aria-label="Basic example" className="pb-2">
+              <Button variant="outline-secondary" onClick={downloadCSV}>
+                Download CSV
+              </Button>
+              <Button
+                variant="outline-secondary"
+                className="ms-2"
+                onClick={downloadExcel}
+              >
+                Download Excel
+              </Button>
+            </ButtonGroup>
           </div>
 
           {/* Search Input */}

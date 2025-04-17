@@ -74,6 +74,7 @@
         // Save user role in cookie and redux
         document.cookie = `user_role=${userData.role}; path=/; max-age=6000; SameSite=Lax;`;
         document.cookie = `user_id=${userData.id}; path=/; max-age=6000; SameSite=Lax;`;
+        // document.cookie = `user_id=${userData.id}; path=/; max-age=6000; SameSite=Lax;`;
         dispatch(setUser(userData));
 
         // Get device & browser info
@@ -108,8 +109,14 @@
               device_type: deviceType,
               ip_address: ipData.ip,
             }),
-          }).catch((err) => console.error("Session save failed:", err));
+          })
+            .then((res) => res.json())
+            .then((response) => {
+              document.cookie = `session_id=${response.session}; path=/; max-age=6000; SameSite=Lax;`;
+            })
+            .catch((err) => console.error("Session save failed:", err));
         });
+        
 
         const publisherUrls = {
           "EBSCO Academic Collection": `https://research-ebsco-com.mriirs.libvirtuua.com:8811/login.aspx?authtype=ip,uid&custid=ns193200&groupid=main&profile=ehost&defaultdb=bsh&token=${token}`,
@@ -121,7 +128,6 @@
         }else if(redirect != null){
           router.push(`/`);
           window.open(publisherUrls[redirect], "_blank");
-          // router.push(publisherUrls[redirect])
         } else {
           router.push(userData.role === "STUDENT" ? "/" : "/dashboard");
         }
@@ -132,7 +138,6 @@
         setEmail('');
         setPassword('');
       } catch (err) {
-        console.error("Login error:", err);
         setError(err.message || "Login failed. Something went wrong!");
         setIsLoading(false);
       }

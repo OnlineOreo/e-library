@@ -20,14 +20,6 @@ export default function DashboardLayout({ children }) {
         />
       </div>
       <div id="page-content">
-        <div className="header">
-          <NavbarTop
-            data={{
-              showMenu: showMenu,
-              SidebarToggleMenu: ToggleMenu,
-            }}
-          />
-        </div>
         {children}
       </div>
     </div>

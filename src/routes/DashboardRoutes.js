@@ -34,16 +34,16 @@ export const useDashboardMenu = () => {
         icon: "user",
         children: [
           { id: uuid(), link: "/user-management/users", name: "Manage User" },
-          {
-            id: uuid(),
-            link: "/user-management/users/add-user",
-            name: "Add User",
-          },
-          {
-            id: uuid(),
-            link: "/user-management/admin/add-admin",
-            name: "Add Admin",
-          },
+          // {
+          //   id: uuid(),
+          //   link: "/user-management/users/add-user",
+          //   name: "Add User",
+          // },
+          // {
+          //   id: uuid(),
+          //   link: "/user-management/admin/add-admin",
+          //   name: "Add Admin",
+          // },
           { id: uuid(), link: "/user-management/admin", name: "Manage Admin" },
           // { id: uuid(), link: '/user-management/self-restriction', name: 'Self Restriction' },
           // { id: uuid(), link: '/user-management/domain-restriction', name: 'Domain Restriction' },

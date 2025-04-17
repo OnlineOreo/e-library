@@ -8,8 +8,10 @@ import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
 import Swal from "sweetalert2";
 import { FaMinusCircle } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 const AddDepartment = () => {
+    const instituteId = useSelector((state) => state.institute.instituteId);
     const router = useRouter();
     const successToaster = (text) => toast(text);
     const errorToaster = (text) => toast.error(text);
@@ -97,7 +99,7 @@ const AddDepartment = () => {
         }
     };
 
-    const loadLibrary = async () => {
+    const loadLibrary = async (instituteId) => {
         const token = getToken();
 
         if (!token) {
@@ -106,7 +108,7 @@ const AddDepartment = () => {
         }
 
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/libraries`, {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/libraries?institute_id=${instituteId}`, {
                 headers: {
                     "Authorization": `${token}`,
                     "Content-Type": "application/json",
@@ -122,8 +124,10 @@ const AddDepartment = () => {
     };
 
     useEffect(() => {
-        loadLibrary();
-    }, []);
+        if(instituteId){
+            loadLibrary(instituteId);
+        }
+    }, [instituteId]);
 
     return (
         <Fragment>
