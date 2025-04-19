@@ -163,9 +163,9 @@ const NewsClipping = () => {
         <Row>
           <Col lg={12} md={12} xs={12}>
             <div className="d-flex justify-content-between align-items-center">
-              <h3 className="mb-0 text-dark">News Clipping</h3>
+              <h3 className="mb-0 text-dark">News-Paper Clipping</h3>
               <Link href="./news-clippings/add" className="btn btn-white">
-                <FaPlusCircle /> Page
+                <FaPlusCircle /> News
               </Link>
             </div>
           </Col>
