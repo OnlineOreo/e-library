@@ -1,3 +1,4 @@
+'use client'
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const fetchInstituteId = createAsyncThunk("institute/fetchInstituteId", async () => {

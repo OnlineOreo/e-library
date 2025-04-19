@@ -1,3 +1,5 @@
+'use client'
+
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const landingPageData = createAsyncThunk("institute/landingPageData", async () => {

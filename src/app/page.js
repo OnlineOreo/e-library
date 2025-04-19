@@ -20,7 +20,7 @@ import { notFound } from 'next/navigation';
 export default function Home() {
   const dispatch = useDispatch();
   const status = useSelector((state) => state.institute.status);
-  const landingPageData = useSelector((state) => state.landingPageDataSlice);
+  const landingPageData2 = useSelector((state) => state.landingPageDataSlice);
   const [loading, setLoading] = useState(true);
 
   // Dispatch action once when the component mounts
@@ -38,7 +38,9 @@ export default function Home() {
   }, [status]);
 
   // Fetch API Data
-  const configData = landingPageData?.instituteId?.configurations?.[0] || {};
+  // const configData = landingPageData?.instituteId?.configurations?.[0] || {};
+  const configData = landingPageData2?.landingPageData?.configurations?.[0] || {};
+
   const sectionOrder = configData?.section_order || {};
   // if (Object.keys(configData).length === 0) {
   //   notFound();

@@ -14,7 +14,7 @@ import "swiper/css/scrollbar";
 export default function NoticeBoard({headingName,bannerData}) {
     const swiperRef = useRef(null);
     const landingPageData = useSelector((state) => state.landingPageDataSlice);
-    const notices = landingPageData?.instituteId?.notices
+    const notices = landingPageData?.landingPageData?.notices
 
     return (
         <>

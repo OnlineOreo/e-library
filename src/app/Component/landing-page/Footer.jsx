@@ -7,9 +7,12 @@ import { FaLinkedinIn } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 
-export default function Footer({bannerData}) {
+export default function Footer() {
     const landingPageData = useSelector((state) => state.landingPageDataSlice);
-    const footer = landingPageData?.instituteId?.footers?.[0]
+    const footer = landingPageData?.landingPageData?.footers?.[0]
+    // console.log(bannerData)
+    const landingPageData2 = useSelector((state) => state.landingPageDataSlice);
+    const bannerData = landingPageData2?.landingPageData?.configurations?.[0] || {};
     return (
         <>
         <style jsx>{`
@@ -26,7 +29,7 @@ export default function Footer({bannerData}) {
                         <div className="col-md-6 col-lg-4">
                             <h4 className="text-white">Developed By</h4>
                             <img
-                                src={landingPageData?.instituteId?.configurations?.[0]?.logo || 'default'}
+                                src={bannerData?.logo || 'default'}
                                 alt=""
                                 style={{ width: 100, height: 100 }}
                             />

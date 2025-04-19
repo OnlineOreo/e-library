@@ -26,7 +26,6 @@ const Navbar = () => {
 
   const getBaseDomain = () => {
     const hostname = typeof window !== "undefined" ? window.location.hostname : "";
-    // return hostname.replace(".com", "");
     return hostname;
   };
 
@@ -83,8 +82,8 @@ const Navbar = () => {
   const baseDomain = getBaseDomain();
 
   const publisherUrls = {
-    "EBSCO Academic Collection": `https://research-ebsco-com.${baseDomain}:8811/login.aspx?authtype=ip,uid&custid=ns193200&groupid=main&profile=ehost&defaultdb=bsh&token=${token}`,
-    Manupatra: `https://www-manupatrafast-in.${baseDomain}:8811/LoginSwitch/ipRedirect.aspx?token=${token}`,
+    "EBSCO Academic Collection": `https://research-ebsco-com.${baseDomain}/login.aspx?authtype=ip,uid&custid=ns193200&groupid=main&profile=ehost&defaultdb=bsh&token=${token}`,
+    Manupatra: `https://www-manupatrafast-in.${baseDomain}/LoginSwitch/ipRedirect.aspx?token=${token}`,
   };
   // const publisherUrls = {
   //   "EBSCO Academic Collection": `https://research-ebsco-com.mriirs.libvirtuua.com:8811/login.aspx?authtype=ip,uid&custid=ns193200&groupid=main&profile=ehost&defaultdb=bsh&token=${token}`,
@@ -134,27 +133,27 @@ const Navbar = () => {
     {
       type: "dropdown",
       title: "eResources",
-      items: landingPageData?.instituteId?.publishers || [],
+      items: landingPageData?.landingPageData?.publishers || [],
       isPublisher: true,
     },
     {
       type: "dropdown",
       title: "Categories",
-      items: landingPageData?.instituteId?.categories || [],
+      items: landingPageData?.landingPageData?.categories || [],
     },
     {
       type: "dropdown",
       title: "Media",
-      items: landingPageData?.instituteId?.medias || [],
+      items: landingPageData?.landingPageData?.medias || [],
     },
     {
       type: "dropdown",
       title: "Collection",
-      items: landingPageData?.instituteId?.collections || [],
+      items: landingPageData?.landingPageData?.collections || [],
     },
     {
       type: "dropdown",
-      items: landingPageData?.instituteId?.metas || [],
+      items: landingPageData?.landingPageData?.metas || [],
       title: "Important Link",
       href: "/",
     },
@@ -186,7 +185,7 @@ const Navbar = () => {
                   <Link href="/">
                     <img
                       src={
-                        landingPageData?.instituteId?.configurations?.[0]?.logo || "default"
+                        landingPageData?.landingPageData?.configurations?.[0]?.logo || "default"
                       }
                       alt="App Icon"
                     />
