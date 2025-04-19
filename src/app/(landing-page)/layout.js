@@ -1,4 +1,5 @@
 'use client'
+import { Suspense } from 'react';
 import { Geist, Geist_Mono } from "next/font/google";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Providers from "../providers";
@@ -22,10 +23,12 @@ export default function Layout({ children }) {
   const landingPageData = useSelector((state) => state.landingPageDataSlice);
   const configData = landingPageData?.instituteId?.configurations?.[0] || {};
   return (
-      <div className={`${geistSans.variable} ${geistMono.variable}`}>
-          <Navbar />
-          {children}
-         <Footer bannerData={configData} />
-      </div>
+    <div className={`${geistSans.variable} ${geistMono.variable}`}>
+      <Suspense fallback={<div>Loading Navbar...</div>}>
+        <Navbar />
+      </Suspense>
+      {children}
+      <Footer bannerData={configData} />
+    </div>
   );
 }

@@ -30,7 +30,7 @@ async function fetachSolrData(searchQuery, startIndex = 0) {
 }
 
 
-export default async function PrintCollectionPage({ searchParams }) {
+export default async function EResourcesData({ searchParams }) {
   const searchParamsObj = await searchParams || {};
   const searchQuery = searchParamsObj.q || "";
 
