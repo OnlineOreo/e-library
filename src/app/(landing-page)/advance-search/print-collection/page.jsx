@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import PrintCollectionContent from './PrintCollectionContent';
+import PrintCollectionContentAdv from './PrintCollectionContent';
 import axios from "axios";
 
 
@@ -38,7 +38,7 @@ export default async function EResourcesData({ searchParams }) {
 
   return (
     <Suspense fallback={<div>Loading search results...</div>}>
-      <PrintCollectionContent
+      <PrintCollectionContentAdv
         initialResults={data.results}
         initialResultsCount={data.resultsCount}
         searchQuery={searchQuery}

@@ -9,20 +9,32 @@ export default function SolrSearchNav() {
     const qParam = searchParams.get('q');
 
     const isAdvanceSearch = pathname.startsWith('/advance-search');
+    const isSavedCatalog = pathname.startsWith('/saved-catalog');
 
-    const links = isAdvanceSearch
-        ? [
-              { href: '/advance-search/print-collection', label: 'Print Collection' },
-              { href: '/advance-search/e-collection', label: 'E Collection' },
-              { href: '/advance-search/e-resources', label: 'E Resources' },
-              { href: '/advance-search/multimedia', label: 'Multimedia' },
-          ]
-        : [
-              { href: '/search/print-collection', label: 'Print Collection' },
-              { href: '/search/e-collection', label: 'E Collection' },
-              { href: '/search/e-resources', label: 'E Resources' },
-              { href: '/search/multimedia', label: 'Multimedia' },
-          ];
+    let links;
+
+    if (isAdvanceSearch) {
+        links = [
+            { href: '/advance-search/print-collection', label: 'Print Collection' },
+            { href: '/advance-search/e-collection', label: 'E Collection' },
+            { href: '/advance-search/e-resources', label: 'E Resources' },
+            { href: '/advance-search/multimedia', label: 'Multimedia' },
+        ];
+    } else if (isSavedCatalog) {
+        links = [
+            { href: '/saved-catalog/print-collection', label: 'Print Collection' },
+            { href: '/saved-catalog/e-collection', label: 'E Collection' },
+            { href: '/saved-catalog/e-resources', label: 'E Resources' },
+            { href: '/saved-catalog/multimedia', label: 'Multimedia' },
+        ];
+    } else {
+        links = [
+            { href: '/search/print-collection', label: 'Print Collection' },
+            { href: '/search/e-collection', label: 'E Collection' },
+            { href: '/search/e-resources', label: 'E Resources' },
+            { href: '/search/multimedia', label: 'Multimedia' },
+        ];
+    }
 
     return (
         <>
@@ -43,4 +55,3 @@ export default function SolrSearchNav() {
         </>
     );
 }
-

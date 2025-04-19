@@ -4,7 +4,7 @@ import { Container, Row, Col, Button, Spinner, Form, InputGroup } from 'react-bo
 import { BsFillGrid3X3GapFill } from "react-icons/bs";
 import { FaListUl, FaSearch } from "react-icons/fa";
 import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import axios from 'axios';
 
 import CatalogGridCard from '../../search/components/CatalogGridCard';
@@ -12,19 +12,9 @@ import CatalogListCard from '../../search/components/CatalogListCard';
 import GridViewSkelton from '../../search/components/GridViewSkelton';
 import CatalogDetailModal from '../../search/components/CatalogDetailModal';
 
-import { useSelector } from 'react-redux';
 
-export default function PrintCollectionContentAdv({
-    initialResults,
-    initialResultsCount,
-    searchQuery,
-    path,
-    status_code,
-    error_trace
-}) {
+export default function PrintCollectionSavedCatalog() {
     const Router = useRouter();
-    const searchParams = useSearchParams();
-    const urlParams = searchParams.get("q");
 
     // Use state with initialization from props
     const [gridView, setGridView] = useState(true);
@@ -33,58 +23,35 @@ export default function PrintCollectionContentAdv({
     const [resultsCount, setResultsCount] = useState(0);
     const [show, setShow] = useState(false);
     const [selectCatalog, setSelectCatalog] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
-    const [startIndex, setStartIndex] = useState(0);
-    const [isClient, setIsClient] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    // const [startIndex, setStartIndex] = useState(0);
     const [userSavedCatalogs, setUserSavedCatalogs] = useState({});
-
-    const instituteId = useSelector((state) => state.institute.instituteId);
-
-    // Initialize state from props after hydration
-    useEffect(() => {
-        setIsClient(true);
-        setResults(initialResults || []);
-        setResultsCount(initialResultsCount || 0);
-        setStartIndex(initialResults?.length || 0);
-        loadSavedCatalog()
-    }, [initialResults, initialResultsCount]);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
     // Load more results using server action
-    const handleLoadMore = async () => {
-        if (!urlParams) return;
-      
-        setIsLoading(true);
-        const nextStart = startIndex;
-      
-        try {
-          const res = await fetch(`/api/load-more?q=${urlParams}&start=${nextStart}&catalogCore=Print-collection&rows=20`);
-          const data = await res.json();
-      
-          const newDocs = data.results || [];
-      
-          setResults(prevResults => [...prevResults, ...newDocs]);
-          setStartIndex(nextStart + newDocs.length);
-      
-        } catch (error) {
-          console.error("Load More Error:", error);
-        } finally {
-          setIsLoading(false);
-        }
-      };
+    // const handleLoadMore = async () => {
+    //     if (!urlParams) return;
 
-    
+    //     setIsLoading(true);
+    //     const nextStart = startIndex;
 
-    // When URL params change, reset to the initial server-fetched data
-    useEffect(() => {
-        if (isClient && urlParams !== searchQuery) {
-            // If URL changed but we haven't received new props yet,
-            // reload the page to get new server data
-            Router.refresh();
-        }
-    }, [urlParams, searchQuery, Router, isClient]);
+    //     try {
+    //         const res = await fetch(`/api/load-more?q=${urlParams}&start=${nextStart}&catalogCore=Print-collection&rows=20`);
+    //         const data = await res.json();
+
+    //         const newDocs = data.results || [];
+
+    //         setResults(prevResults => [...prevResults, ...newDocs]);
+    //         setStartIndex(nextStart + newDocs.length);
+
+    //     } catch (error) {
+    //         console.error("Load More Error:", error);
+    //     } finally {
+    //         setIsLoading(false);
+    //     }
+    // };
 
     const handelSearchWithinSearch = (e) => {
         e.preventDefault()
@@ -98,12 +65,12 @@ export default function PrintCollectionContentAdv({
         const cookieString = document.cookie
             .split("; ")
             .find((row) => row.startsWith("access_token="));
-    
+
         return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
     };
-    
+
     const getUserID = () => {
-        if (typeof window !== "undefined") { 
+        if (typeof window !== "undefined") {
             const cookieString = document.cookie
                 .split("; ")
                 .find((row) => row.startsWith("user_id="));
@@ -111,49 +78,6 @@ export default function PrintCollectionContentAdv({
         }
         return null;
     };
-    
-    const logUpdate = async ({ path, status_code, initialResults, error_trace }) => {
-        const token = getToken();
-        const userId = getUserID();
-    
-        if (!token || !userId) {
-            console.error("Authentication or user ID missing.");
-            return;
-        }
-    
-        const formdata = new FormData();
-        formdata.append("method", "get");
-        formdata.append("path", path);
-        formdata.append("status_code", status_code);
-        formdata.append("user", userId);
-        formdata.append("institute", instituteId);
-        formdata.append("request_body", "");
-        formdata.append("response_body", JSON.stringify(initialResults));
-        formdata.append("error_trace", error_trace || "");
-    
-        try {
-            const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/log`,
-                formdata,
-                {
-                    headers: { Authorization: token },
-                }
-            );
-            // console.log("log response:", response.data);
-        } catch (error) {
-            console.error("Log API Error:", error);
-        }
-    };
-    
-    useEffect(() => {
-        logUpdate({
-            path: path,
-            status_code: status_code,
-            initialResults: JSON.stringify(initialResults), 
-            error_trace: error_trace || "", 
-        });
-    }, [path, status_code, initialResults, error_trace]);
-
 
     const loadSavedCatalog = async () => {
         const token = getToken();
@@ -168,16 +92,29 @@ export default function PrintCollectionContentAdv({
                 headers: { Authorization: `${token}` },
             });
             setUserSavedCatalogs(response.data);
-            // console.log("user saved catalog : ", response.data);
+
+            const catalogIds = response.data[0].saved_p_collection_ids;
+            console.log("user saved catalog : ", catalogIds);
+            const responce_catalog = await axios.get(`/api/saved-catalog?catalogIds=${catalogIds}&catalogCore="Print-collection"`)
+            setResults(responce_catalog.data.results)
+            setResultsCount(responce_catalog.data.resultsCount)
+
+            console.log("user saved catalog detail : ", responce_catalog);
+
 
         } catch (error) {
             console.error(error)
+        }finally{
+            setIsLoading(false)
         }
-
     }
 
+    useEffect(() => {
+        loadSavedCatalog()
+    }, [])
+
     return (
-        <Container className="px-4 text-secondary">
+        <Container className="px-4 text-secondary mt-5">
             <Row>
                 <Col md={12} className='pe-0 ps-4'>
                     <Row className="mb-3">
@@ -207,14 +144,8 @@ export default function PrintCollectionContentAdv({
                     </Row>
                     {gridView ? (
                         <Row id='grid-view' className={`grid-view`}>
-                            {!isClient ? (
-                                Array.from({ length: 6 }).map((_, index) => (
-                                    <Col md={3} key={`initial-skeleton-${index}`} className='mb-4'>
-                                        <GridViewSkelton />
-                                    </Col>
-                                ))
-                            ) : isLoading && results.length === 0 ? (
-                                Array.from({ length: 6 }).map((_, index) => (
+                            {isLoading && results.length === 0 ? (
+                                Array.from({ length: 4 }).map((_, index) => (
                                     <Col md={3} key={`loading-skeleton-${index}`} className='mb-4'>
                                         <GridViewSkelton />
                                     </Col>
@@ -234,7 +165,7 @@ export default function PrintCollectionContentAdv({
                                             url={item.url}
                                             resource_type={item.resource_types_string}
                                             user_saved_catalog={userSavedCatalogs}
-                                            catalogCore = {"Print-collection"}
+                                            catalogCore={"Print-collection"}
                                             onShow={handleShow}
                                             onSelect={() => setSelectCatalog(item)}
                                         />
@@ -242,28 +173,14 @@ export default function PrintCollectionContentAdv({
                                 ))
                             ) : (
                                 <Col md={12} className="text-center text-muted py-5">
-                                    <h5>No data found.</h5>
+                                    <h5>No Catalog Saved.</h5>
                                 </Col>
-                            )}
-
-                            {isLoading && isClient && results.length > 0 && (
-                                Array.from({ length: 4 }).map((_, index) => (
-                                    <Col md={3} key={`loading-skeleton-${index}`} className='mb-4'>
-                                        <GridViewSkelton />
-                                    </Col>
-                                ))
                             )}
                         </Row>
                     ) : (
                         <Row id='grid-view' className={`grid-view`}>
-                            {!isClient ? (
-                                Array.from({ length: 6 }).map((_, index) => (
-                                    <Col md={4} key={`initial-skeleton-${index}`} className='mb-4'>
-                                        <GridViewSkelton />
-                                    </Col>
-                                ))
-                            ) : isLoading && results.length === 0 ? (
-                                Array.from({ length: 6 }).map((_, index) => (
+                            {isLoading && results.length === 0 ? (
+                                Array.from({ length: 4 }).map((_, index) => (
                                     <Col md={4} key={`loading-skeleton-${index}`} className='mb-4'>
                                         <GridViewSkelton />
                                     </Col>
@@ -283,7 +200,7 @@ export default function PrintCollectionContentAdv({
                                             url={item.url}
                                             resource_type={item.resource_types_string}
                                             user_saved_catalog={userSavedCatalogs}
-                                            catalogCore = {"Print-collection"}
+                                            catalogCore={"Print-collection"}
                                             onShow={handleShow}
                                             onSelect={() => setSelectCatalog(item)}
                                         />
@@ -291,21 +208,13 @@ export default function PrintCollectionContentAdv({
                                 ))
                             ) : (
                                 <Col md={12} className="text-center text-muted py-5">
-                                    <h5>No data found.</h5>
+                                    <h5>No Catalog Saved.</h5>
                                 </Col>
-                            )}
-
-                            {isLoading && isClient && results.length > 0 && (
-                                Array.from({ length: 3 }).map((_, index) => (
-                                    <Col md={4} key={`loading-skeleton-${index}`} className='mb-4'>
-                                        <GridViewSkelton />
-                                    </Col>
-                                ))
                             )}
                         </Row>
                     )}
                     <div className='d-flex justify-content-center my-5'>
-                        {isClient && results.length > 0 && results.length < resultsCount && (
+                        {results.length > 0 && results.length < resultsCount && (
                             <Button
                                 variant='success'
                                 style={{ width: "100%", padding: "10px" }}
@@ -322,13 +231,12 @@ export default function PrintCollectionContentAdv({
                     </div>
                 </Col>
             </Row>
-            {isClient && (
-                <CatalogDetailModal
-                    modalShow={show}
-                    handleClose={handleClose}
-                    {...selectCatalog}
-                />
-            )}
+
+            <CatalogDetailModal
+                modalShow={show}
+                handleClose={handleClose}
+                {...selectCatalog}
+            />
         </Container>
     );
 }
