@@ -82,8 +82,6 @@ export default function SendEmail() {
             content,
         };
     
-        console.log('Payload:', payload);
-    
         const token = getToken();
     
         axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/send-email?institute_id=${instituteId}`, formData, {

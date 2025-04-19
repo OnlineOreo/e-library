@@ -12,6 +12,7 @@ import { FaPlusCircle, FaEdit } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
 import ImportUser from "./ImportUser";
+import "./custom-toggle.css";
 
 const Home = () => {
   const router = useRouter();
@@ -57,7 +58,7 @@ const Home = () => {
   };
 
   useEffect(() => {
-    if(instituteId){
+    if (instituteId) {
       loadUser(instituteId);
     }
   }, [instituteId]);
@@ -88,13 +89,11 @@ const Home = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          var deleteMappingIdArr = [];
-          console.log(params)
-          params.mappings.forEach((element) => {
-            deleteMappingIdArr.push(element.user_mapping_id);
-          });
-          var deleteMappingParam = deleteMappingIdArr.join(",");
-          console.log('chandan')
+          const deleteMappingIdArr = params.mappings.map(
+            (element) => element.user_mapping_id
+          );
+          const deleteMappingParam = deleteMappingIdArr.join(",");
+
           await axios.delete(
             `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users?user_id=${params.id}&delete_all=True`,
             {
@@ -103,18 +102,16 @@ const Home = () => {
           );
 
           Swal.fire({
-                   title: "Success!",
-                   text: "User Delete successfully!",
-                   icon: "success",
-                   confirmButtonText: "OK",
-                 });
+            title: "Success!",
+            text: "User deleted successfully!",
+            icon: "success",
+            confirmButtonText: "OK",
+          });
           setFilteredUsers((prev) =>
             prev.filter((item) => item.id !== params.id)
           );
           setUsers((prev) => prev.filter((item) => item.id !== params.id));
-        } catch (error) {
-          console.log(error);
-        }
+        } catch (error) {}
       }
     });
   };
@@ -127,12 +124,67 @@ const Home = () => {
     router.push(`/user-management/users/logs/${params.id}`);
   };
 
+  const handleToggleActive = async (user) => {
+    const token = getToken();
+    const updatedUser = { ...user, is_active: !user.is_active };
+
+    try {
+      await axios.put(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users?user_id=${user.id}`,
+        JSON.stringify(updatedUser),
+        {
+          headers: {
+            Authorization: `${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      Swal.fire({
+        title: "Success!",
+        text: `User ${
+          updatedUser.is_active ? "activated" : "deactivated"
+        } successfully!`,
+        icon: "success",
+        confirmButtonText: "OK",
+      });
+
+      setUsers((prev) => prev.map((u) => (u.id === user.id ? updatedUser : u)));
+      setFilteredUsers((prev) =>
+        prev.map((u) => (u.id === user.id ? updatedUser : u))
+      );
+    } catch (error) {
+      Swal.fire({
+        title: "Error!",
+        text: "Could not update user status.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    }
+  };
+
   const columns = [
     { field: "id", headerName: "User ID", flex: 2 },
     { field: "name", headerName: "Name", flex: 2 },
-    { field: "email", headerName: "Email", flex: 2 },
     { field: "phone_number", headerName: "Number", flex: 2 },
     { field: "role", headerName: "Role", flex: 2 },
+    {
+      field: "is_active",
+      headerName: "Status",
+      flex: 1,
+      renderCell: (params) => (
+        <div className="custom-switch-wrapper mt-3">
+          <input
+            type="checkbox"
+            className="custom-switch"
+            id={`toggle-${params.row.id}`}
+            checked={params.row.is_active}
+            onChange={() => handleToggleActive(params.row)}
+          />
+          <label htmlFor={`toggle-${params.row.id}`} />
+        </div>
+      ),
+    },
     {
       field: "logs",
       headerName: "Logs",
@@ -153,13 +205,13 @@ const Home = () => {
       renderCell: (params) => (
         <>
           <button
-            onClick={() => handleEdit(params.row)} // 👈 pass actual row data
+            onClick={() => handleEdit(params.row)}
             className="btn btn-primary mx-2 btn-sm"
           >
             <FaEdit />
           </button>
           <button
-            onClick={() => handleDelete(params.row)} // 👈 pass actual row data
+            onClick={() => handleDelete(params.row)}
             className="btn btn-danger btn-sm"
           >
             <RiDeleteBin6Line />
@@ -168,6 +220,7 @@ const Home = () => {
       ),
     },
   ];
+
   return (
     <Fragment>
       <div className="bg-primary pt-10 pb-21"></div>
@@ -213,10 +266,11 @@ const Home = () => {
           </Box>
         </div>
       </Container>
-      {/* Modal with ImportPublisher */}
+
+      {/* Modal with ImportUser */}
       <Modal show={showImportModal} onHide={handleCloseModal} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Import Publisher</Modal.Title>
+          <Modal.Title>Import User</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <ImportUser

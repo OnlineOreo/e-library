@@ -42,7 +42,7 @@ const DropdownMenu = ({
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search Publisher..."
-                  className="form-control"
+                  className="form-control mt-2"
                   style={{ fontSize: "0.9rem" }}
                 />
               </div>

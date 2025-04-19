@@ -159,13 +159,17 @@ const Department = () => {
           );
           setUsers(updatedUsers);
           setFilteredUsers(updatedUsers);
-          Swal.fire("Deleted!", "Department has been deleted.", "success");
+          Swal.fire({
+            title: "Success!",
+            text: "Department deleted successfully!",
+            icon: "success",
+            confirmButtonText: "OK",
+          });
         } catch (error) {
-          console.error("Axios Error:", error);
           Swal.fire({
             icon: "warning",
-            title: "Delete Failed!",
-            text: error.error || "An error occurred while deleting.",
+            title: "Delete Failed!",  
+            text: error.response.data.error || "An error occurred while deleting.",
             position: "center",
             showConfirmButton: true,
             timer: 3000,

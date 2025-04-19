@@ -52,7 +52,7 @@ const sendEmails = () => {
     try {
       console.log("redux institute Id", instituteId);
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/emails-sent?institute_id=${instituteId}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/send-email?institute_id=${instituteId}`,
         {
           headers: { Authorization: `${token}` },
         }

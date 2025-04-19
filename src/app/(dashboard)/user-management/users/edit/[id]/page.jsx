@@ -43,7 +43,6 @@ const EditUser = () => {
     institute: "",
     designation: "",
     gender: "",
-
     mappings: [],
   });
 
@@ -474,7 +473,7 @@ const EditUser = () => {
             )}
             {step === 4 && (
               <Row>
-                <Col lg={12} className="mb-5">
+                {/* <Col lg={12} className="mb-5">
                   <Form.Group className="mb-3" controlId="formDesignation">
                     <Form.Label>Institute</Form.Label>
                     <Form.Select
@@ -493,7 +492,7 @@ const EditUser = () => {
                       })}
                     </Form.Select>
                   </Form.Group>
-                </Col>
+                </Col> */}
                 {formData.mappings?.map((mapping, index) => (
                   <>
                     <Col lg={6}>

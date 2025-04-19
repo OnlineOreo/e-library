@@ -1,14 +1,14 @@
-// components/Navbar.js
 "use client";
 import React, { useEffect, useState } from "react";
 import MobileNav from "./MobileNav";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
-import { IoChevronDown } from "react-icons/io5";
-import Link from "next/link";
+import axios from "axios";
+import Link from "next/link"; 
 import SearchBar from "./SearchBar";
 import DropdownMenu from "./DropdownMenu";
 import AuthButtons from "./AuthButtons";
+import Swal from "sweetalert2";
 import { Suspense } from "react";
 import { LuSlidersHorizontal } from "react-icons/lu";
 import "../../../../public/landingPageAsset/css/style2.css";
@@ -18,7 +18,7 @@ const Navbar = () => {
   const [show, setShow] = useState(false);
   const router = useRouter();
   const landingPageData = useSelector((state) => state.landingPageDataSlice);
-  // const logo = useSelector((state) => state.landingPageDataSlice);
+  const instituteId = useSelector((state) => state.institute.instituteId);
   // console.log(landingPageData)
   const [token, setToken] = useState(null);
 
@@ -33,13 +33,53 @@ const Navbar = () => {
     const cookieString = document.cookie
       .split("; ")
       .find((row) => row.startsWith("access_token="));
+
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
-  const handleLogout = () => {
-    setToken(null);
+  const getSession = () => {
+    const cookieString = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("session_id="));
+
+    return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+  };
+
+  const getUserId = () => {
+    const cookieString = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("user_id="));
+
+    return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+  };
+
+  const handleLogout = async (institute_id) => {
+    try {
+      const token = getToken();
+      const session_id = getSession();
+      const userId = getUserId();
+      await axios.put(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-session?session_id=${session_id}&institute_id=${institute_id}&user_id=${userId}`,
+        {
+          ended_at: new Date().toISOString(),
+          institute: instituteId,
+          user: userId,
+        },
+        {
+          headers: {
+            Authorization: ` ${token}`,
+          },
+        }
+      );
+    } catch (error) {
+      console.error("Failed to update user session:", error);
+    }
+
+    // Clear cookies
     document.cookie = `access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
     document.cookie = `user_role=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+    document.cookie = `session_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+
     router.push("/");
   };
 
@@ -51,12 +91,22 @@ const Navbar = () => {
       Manupatra: `https://www-manupatrafast-in.mriirs.libvirtuua.com:8811/LoginSwitch/ipRedirect.aspx?token=${token}`,
     };
 
-    if (!token) {
-      const searchParams = new URLSearchParams();
-      searchParams.set("redirect", publisher.publisher_name);
-      router.push(`/?${searchParams.toString()}`);
-      setShow(true);
-      return;
+    if (!publisherUrls[publisher.publisher_name]) {
+      Swal.fire({
+        title: "Warning!",
+        text: "Publisher Url not found!",
+        icon: "success",
+        confirmButtonText: "OK",
+      });
+    }
+    if (publisherUrls[publisher.publisher_name]) {
+      if (!token) {
+        const searchParams = new URLSearchParams();
+        searchParams.set("redirect", publisher.publisher_name);
+        router.push(`/?${searchParams.toString()}`);
+        setShow(true);
+        return;
+      }
     }
 
     if (publisherUrls[publisher.publisher_name]) {
@@ -125,18 +175,20 @@ const Navbar = () => {
   return (
     <>
       <div className="container-fluid mt-2 bg-white p-0">
-        <header className="header-area header-style-4 header-height-2">
+        <header className="header-area header-style-4 header-height-2" 
+        style={{
+          position: isSticky ? "fixed" : "relative",
+          top: 0,
+          width: "100%",
+          zIndex: 1000,
+          backgroundColor: "white",
+          boxShadow: isSticky ? "0px 2px 10px rgba(0, 0, 0, 0.1)" : "none",
+          transition: "all 0.3s ease-in-out",
+        }}
+        >
           <div
             className="header-middle sticky-top header-middle-ptb-1 d-none d-lg-block"
-            style={{
-              position: isSticky ? "fixed" : "relative",
-              top: 0,
-              width: "100%",
-              zIndex: 1000,
-              backgroundColor: "white",
-              boxShadow: isSticky ? "0px 2px 10px rgba(0, 0, 0, 0.1)" : "none",
-              transition: "all 0.3s ease-in-out",
-            }}
+            
           >
             <div className="container">
               <div className="header-wrap">
@@ -156,10 +208,7 @@ const Navbar = () => {
                 </div> */}
                 <div className="header-action-right" style={{ width: 600 }}>
                   <Suspense fallback={<div>Loading search...</div>}>
-                    <SearchBar  
-                    show={show}
-                    setShow={setShow}
-                     />
+                    <SearchBar show={show} setShow={setShow} />
                   </Suspense>
                   <Link
                     href="/advance-search-filter"
