@@ -32,7 +32,7 @@ const AddDepartment = () => {
             ...formData,
             [name]: value,
         });
-        setErrors({ ...errors, [name]: "" }); // Clear error on user input
+        setErrors({ ...errors, [name]: "" });
     };
 
     const getToken = () => {

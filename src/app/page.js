@@ -3,10 +3,9 @@
 import { useEffect, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchInstituteId } from "./../redux/slices/instituteSlice";
-import styles from "./page.module.css";
 import Navbar from "./Component/landing-page/Navbar";
-import "../../public/landingPageAsset/css/style2.css";
-import "../../public/landingPageAsset/css/header.css";
+import styles from "./page.module.css";
+
 import Banner from "./Component/landing-page/Banner";
 import Publisher from "./Component/landing-page/Publisher";
 import NoticeBoard from "./Component/landing-page/NoticeBoard";

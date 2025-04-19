@@ -11,6 +11,8 @@ import DropdownMenu from "./DropdownMenu";
 import AuthButtons from "./AuthButtons";
 import { Suspense } from "react";
 import { LuSlidersHorizontal } from "react-icons/lu";
+import "../../../../public/landingPageAsset/css/style2.css";
+import "../../../../public/landingPageAsset/css/header.css";
 
 const Navbar = () => {
   const [show, setShow] = useState(false);
