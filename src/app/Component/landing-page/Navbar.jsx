@@ -1,15 +1,14 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import MobileNav from "./MobileNav";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import Link from "next/link"; 
+import Link from "next/link";
 import SearchBar from "./SearchBar";
 import DropdownMenu from "./DropdownMenu";
 import AuthButtons from "./AuthButtons";
 import Swal from "sweetalert2";
-import { Suspense } from "react";
 import { LuSlidersHorizontal } from "react-icons/lu";
 import "../../../../public/landingPageAsset/css/style2.css";
 import "../../../../public/landingPageAsset/css/header.css";
@@ -19,21 +18,22 @@ const Navbar = () => {
   const router = useRouter();
   const landingPageData = useSelector((state) => state.landingPageDataSlice);
   const instituteId = useSelector((state) => state.institute.instituteId);
-  // console.log(landingPageData)
   const [token, setToken] = useState(null);
-
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isSticky, setIsSticky] = useState(false);
 
-  // Toggle mobile menu
-  const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
+  const toggleMenu = () => setMenuOpen(!menuOpen);
+
+  const getBaseDomain = () => {
+    const hostname = typeof window !== "undefined" ? window.location.hostname : "";
+    // return hostname.replace(".com", "");
+    return hostname;
   };
 
   const getToken = () => {
     const cookieString = document.cookie
       .split("; ")
       .find((row) => row.startsWith("access_token="));
-
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
@@ -41,7 +41,6 @@ const Navbar = () => {
     const cookieString = document.cookie
       .split("; ")
       .find((row) => row.startsWith("session_id="));
-
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
@@ -49,7 +48,6 @@ const Navbar = () => {
     const cookieString = document.cookie
       .split("; ")
       .find((row) => row.startsWith("user_id="));
-
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
@@ -67,7 +65,7 @@ const Navbar = () => {
         },
         {
           headers: {
-            Authorization: ` ${token}`,
+            Authorization: `${token}`,
           },
         }
       );
@@ -75,30 +73,37 @@ const Navbar = () => {
       console.error("Failed to update user session:", error);
     }
 
-    // Clear cookies
-    document.cookie = `access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
-    document.cookie = `user_role=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
-    document.cookie = `session_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+    document.cookie = "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie = "user_role=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie = "session_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 
     router.push("/");
   };
 
+  const baseDomain = getBaseDomain();
+
+  const publisherUrls = {
+    "EBSCO Academic Collection": `https://research-ebsco-com.${baseDomain}:8811/login.aspx?authtype=ip,uid&custid=ns193200&groupid=main&profile=ehost&defaultdb=bsh&token=${token}`,
+    Manupatra: `https://www-manupatrafast-in.${baseDomain}:8811/LoginSwitch/ipRedirect.aspx?token=${token}`,
+  };
+  // const publisherUrls = {
+  //   "EBSCO Academic Collection": `https://research-ebsco-com.mriirs.libvirtuua.com:8811/login.aspx?authtype=ip,uid&custid=ns193200&groupid=main&profile=ehost&defaultdb=bsh&token=${token}`,
+  //   Manupatra: `https://www-manupatrafast-in.mriirs.libvirtuua.com:8811/LoginSwitch/ipRedirect.aspx?token=${token}`,
+  // };
+
+
   const handlePublisherClick = (publisher) => {
     const token = getToken();
-
-    const publisherUrls = {
-      "EBSCO Academic Collection": `https://research-ebsco-com.mriirs.libvirtuua.com:8811/login.aspx?authtype=ip,uid&custid=ns193200&groupid=main&profile=ehost&defaultdb=bsh&token=${token}`,
-      Manupatra: `https://www-manupatrafast-in.mriirs.libvirtuua.com:8811/LoginSwitch/ipRedirect.aspx?token=${token}`,
-    };
 
     if (!publisherUrls[publisher.publisher_name]) {
       Swal.fire({
         title: "Warning!",
         text: "Publisher Url not found!",
-        icon: "success",
+        icon: "warning",
         confirmButtonText: "OK",
       });
     }
+
     if (publisherUrls[publisher.publisher_name]) {
       if (!token) {
         const searchParams = new URLSearchParams();
@@ -107,9 +112,6 @@ const Navbar = () => {
         setShow(true);
         return;
       }
-    }
-
-    if (publisherUrls[publisher.publisher_name]) {
       window.open(publisherUrls[publisher.publisher_name], "_blank");
     }
   };
@@ -117,7 +119,15 @@ const Navbar = () => {
   useEffect(() => {
     const token = getToken();
     setToken(token);
-  }, [token]);
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsSticky(window.scrollY > 50);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const navItems = [
     { type: "link", title: "Home", href: "/" },
@@ -150,62 +160,38 @@ const Navbar = () => {
     },
   ];
 
-  const visibleNavItems = navItems.filter((item) => {
-    if (item.type === "dropdown") {
-      return Array.isArray(item.items) && item.items.length > 0;
-    }
-    return true;
-  });
-
-  const [isSticky, setIsSticky] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setIsSticky(true);
-      } else {
-        setIsSticky(false);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  const visibleNavItems = navItems.filter((item) =>
+    item.type === "dropdown" ? Array.isArray(item.items) && item.items.length > 0 : true
+  );
 
   return (
     <>
       <div className="container-fluid mt-2 bg-white p-0">
-        <header className="header-area header-style-4 header-height-2" 
-        style={{
-          position: isSticky ? "fixed" : "relative",
-          top: 0,
-          width: "100%",
-          zIndex: 1000,
-          backgroundColor: "white",
-          boxShadow: isSticky ? "0px 2px 10px rgba(0, 0, 0, 0.1)" : "none",
-          transition: "all 0.3s ease-in-out",
-        }}
+        <header
+          className="header-area header-style-4 header-height-2"
+          style={{
+            position: isSticky ? "fixed" : "relative",
+            top: 0,
+            width: "100%",
+            zIndex: 1000,
+            backgroundColor: "white",
+            boxShadow: isSticky ? "0px 2px 10px rgba(0, 0, 0, 0.1)" : "none",
+            transition: "all 0.3s ease-in-out",
+          }}
         >
-          <div
-            className="header-middle sticky-top header-middle-ptb-1 d-none d-lg-block"
-            
-          >
+          <div className="header-middle sticky-top header-middle-ptb-1 d-none d-lg-block">
             <div className="container">
               <div className="header-wrap">
                 <div className="logo logo-width-1">
                   <Link href="/">
                     <img
                       src={
-                        landingPageData?.instituteId?.configurations?.[0]
-                          ?.logo || "default"
+                        landingPageData?.instituteId?.configurations?.[0]?.logo || "default"
                       }
                       alt="App Icon"
                     />
                   </Link>
                 </div>
-                {/* <div className="" style={{ width: 200 }}>
-                  Welcome to LibVituUa
-                </div> */}
                 <div className="header-action-right" style={{ width: 600 }}>
                   <Suspense fallback={<div>Loading search...</div>}>
                     <SearchBar show={show} setShow={setShow} />
@@ -228,8 +214,7 @@ const Navbar = () => {
                   <Link href="/">
                     <img
                       src={
-                        landingPageData?.instituteId?.configurations?.[0]
-                          ?.logo || "default"
+                        landingPageData?.instituteId?.configurations?.[0]?.logo || "default"
                       }
                       alt="App Icon"
                     />
@@ -246,10 +231,7 @@ const Navbar = () => {
                           {visibleNavItems.map((item, index) => (
                             <li key={index}>
                               {item.type === "link" ? (
-                                <Link
-                                  className="nav-link nav-btn"
-                                  href={item.href}
-                                >
+                                <Link className="nav-link nav-btn" href={item.href}>
                                   {item.title}
                                 </Link>
                               ) : (
@@ -274,6 +256,7 @@ const Navbar = () => {
                         handleLogout={handleLogout}
                         show={show}
                         setShow={setShow}
+                        publisherUrls={publisherUrls}
                       />
                       <div className="header-action-icon-2 d-block d-lg-none">
                         <div

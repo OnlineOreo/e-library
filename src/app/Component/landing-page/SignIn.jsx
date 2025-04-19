@@ -9,7 +9,7 @@
 
 
 
-  const SignIn = ({show, setShow, setToken}) => {
+  const SignIn = ({show, publisherUrls , setShow, setToken}) => {
     const router = useRouter();
     const dispatch = useDispatch();
     const instituteId = useSelector((state) => state.institute.instituteId);
@@ -117,12 +117,6 @@
             .catch((err) => console.error("Session save failed:", err));
         });
         
-
-        const publisherUrls = {
-          "EBSCO Academic Collection": `https://research-ebsco-com.mriirs.libvirtuua.com:8811/login.aspx?authtype=ip,uid&custid=ns193200&groupid=main&profile=ehost&defaultdb=bsh&token=${token}`,
-          Manupatra: `https://www-manupatrafast-in.mriirs.libvirtuua.com:8811/LoginSwitch/ipRedirect.aspx?token=${token}`,
-        };
-
         if (q != null) {
           router.push(`/search/print-collection?q=${q}`);
         }else if(redirect != null){

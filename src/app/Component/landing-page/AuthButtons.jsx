@@ -4,7 +4,7 @@ import Link from "next/link";
 import SignIn from "./SignIn";
 import { useRouter, usePathname } from "next/navigation"; // at the top
 
-const AuthButtons = ({ token, setToken, handleLogout, show, setShow }) => {
+const AuthButtons = ({ token, setToken, handleLogout, show, setShow , publisherUrls }) => {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -82,7 +82,7 @@ const AuthButtons = ({ token, setToken, handleLogout, show, setShow }) => {
                   router.replace(pathname); // removes all query params
                 }}
               ></button>
-              <SignIn show={show} setShow={setShow} setToken={setToken} />
+              <SignIn show={show} setShow={setShow} publisherUrls={publisherUrls} setToken={setToken} />
             </div>
           </div>
         </div>

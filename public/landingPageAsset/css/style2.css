@@ -1919,3 +1919,31 @@ a {
     opacity: 1;
     visibility: visible;
 }
+
+
+div:where(.swal2-container) h2:where(.swal2-title){
+    font-size: 1.2em !important;
+  }
+  
+  div:where(.swal2-container) div:where(.swal2-html-container){
+    font-size: 1em !important;
+  }
+  div:where(.swal2-icon){
+    height: 4em !important;
+    width: 4em !important;
+    margin: 1.2em auto .6em !important;
+  }
+  div:where(.swal2-container) button:where(.swal2-styled){
+    padding: .425em 1em !important;
+  }
+  div:where(.swal2-icon).swal2-success [class^=swal2-success-line][class$=long]{
+    top: 2em !important;
+    right: 0.50em !important;
+    width: 2.3em !important;
+  }
+  div:where(.swal2-icon).swal2-success [class^=swal2-success-line][class$=tip]{
+    top: 2.4em !important;
+    left: 0.7em !important;
+    width: 1.2em !important;
+  }
+  
