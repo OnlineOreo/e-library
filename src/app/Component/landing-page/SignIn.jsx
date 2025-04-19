@@ -41,8 +41,9 @@
 
       try {
         // Step 1: Login
+        const hostname = typeof window !== "undefined" ? window.location.hostname : "";
         const loginResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/login?sub_domain=mriirs.libvirtuua.com`,
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/login?sub_domain=${hostname}`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },

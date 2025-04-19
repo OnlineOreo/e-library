@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-const API_URL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/institute?sub_domain=mriirs.libvirtuua.com`;
-
 export const landingPageData = createAsyncThunk("institute/landingPageData", async () => {
+  const hostname = typeof window !== "undefined" ? window.location.hostname : "";
+  const API_URL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/institute?sub_domain=${hostname}`;
   const response = await fetch(API_URL);
   const data = await response.json();
   return data;
@@ -23,7 +23,7 @@ const landingPageDataSlice = createSlice({
       })
       .addCase(landingPageData.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.instituteId = action.payload;
+        state.landingPageData = action.payload;
       })
       .addCase(landingPageData.rejected, (state, action) => {
         state.status = "failed";
