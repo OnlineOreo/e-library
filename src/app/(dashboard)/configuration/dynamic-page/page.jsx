@@ -157,7 +157,7 @@ const ViewDynamicPages = () => {
             <div className="d-flex justify-content-between align-items-center">
               <h3 className="mb-0 text-dark">Dynamic Page</h3>
               <Link href="./dynamic-page/add" className="btn btn-white">
-                <FaPlusCircle /> Page
+                <FaPlusCircle /> Add New Page
               </Link>
             </div>
           </Col>
