@@ -34,7 +34,7 @@ const BookmarkCatalog = ({ id, catalogType, user_saved_catalogs }) => {
         "Print-collection": "saved_p_collection_ids",
         "e-resources": "saved_e_resources_ids",
         "e-collection": "saved_e_collection_ids",
-        "multimedia": "saved_multimedia_ids",
+        "multimedia-n": "saved_multimedia_ids",
     };
     
 

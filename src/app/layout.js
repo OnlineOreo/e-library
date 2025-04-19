@@ -12,7 +12,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata = {
+export const viewport = {
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,

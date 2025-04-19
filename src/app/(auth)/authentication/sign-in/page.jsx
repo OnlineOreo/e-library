@@ -1,7 +1,7 @@
 "use client";
 import { Row, Col, Card, Form, Button } from "react-bootstrap";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import Spinner from "react-bootstrap/Spinner";
 import { useSelector } from "react-redux";
@@ -128,7 +128,9 @@ const SignIn2 = () => {
   return (
     <Row className="align-items-center justify-content-center g-0 min-vh-100">
       <Col xxl={4} lg={6} md={8} xs={12} className="py-8 py-xl-0">
-      <SignIn/>
+      <Suspense fallback={<div>Loading...</div>}>
+         <SignIn/>
+      </Suspense>
         {/* <Card className="shadow">
           <Card.Body className="p-6">
             <Form onSubmit={handleSignIn}>

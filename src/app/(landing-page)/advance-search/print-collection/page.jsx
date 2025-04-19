@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import PrintCollectionContent from './PrintCollectionContent';
+import PrintCollectionContentAdv from './PrintCollectionContent';
 import axios from "axios";
 
 
@@ -30,7 +30,7 @@ async function fetachSolrData(searchQuery, startIndex = 0) {
 }
 
 
-export default async function PrintCollectionPage({ searchParams }) {
+export default async function EResourcesData({ searchParams }) {
   const searchParamsObj = await searchParams || {};
   const searchQuery = searchParamsObj.q || "";
 
@@ -38,7 +38,7 @@ export default async function PrintCollectionPage({ searchParams }) {
 
   return (
     <Suspense fallback={<div>Loading search results...</div>}>
-      <PrintCollectionContent
+      <PrintCollectionContentAdv
         initialResults={data.results}
         initialResultsCount={data.resultsCount}
         searchQuery={searchQuery}
