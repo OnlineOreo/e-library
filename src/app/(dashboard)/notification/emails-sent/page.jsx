@@ -128,9 +128,9 @@ const sendEmails = () => {
         <Row>
           <Col lg={12} md={12} xs={12}>
             <div className="d-flex justify-content-between align-items-center">
-              <h3 className="mb-0 text-dark">Emails Sent</h3>
+              <h3 className="mb-0 text-dark">Sent Emails </h3>
               <Link href="./send-email" className="btn btn-white">
-                <FaPlusCircle /> Emails Sent
+                <FaPlusCircle /> Compose Emails
               </Link>
             </div>
           </Col>

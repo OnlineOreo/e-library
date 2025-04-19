@@ -22,12 +22,7 @@ export const useDashboardMenu = () => {
 
   if (userRole === "ADMIN") {
     menu.push(
-      {
-        id: uuid(),
-        title: "View Logs",
-        icon: "git-pull-request",
-        link: "/logs",
-      },
+      
       {
         id: uuid(),
         title: "User Management",
@@ -148,13 +143,15 @@ export const useDashboardMenu = () => {
       icon: "layers",
       children: [
         { id: uuid(), link: "/resources/item-types", name: "Item Types" },
+        { id: uuid(), link: "/resources/item", name: "Items" },
+        { id: uuid(), link: "/resources/publishers", name: "Publishers" },
+        
         {
           id: uuid(),
           link: "/resources/publisher-package",
           name: "Publisher Package",
         },
-        { id: uuid(), link: "/resources/publishers", name: "Publishers" },
-        { id: uuid(), link: "/resources/item", name: "Item" },
+       
       ],
     });
   }
@@ -166,6 +163,7 @@ export const useDashboardMenu = () => {
       icon: "layout",
       children: [
         { id: uuid(), link: "/reports/total-users", name: "User Report" },
+        { id: uuid(), link: "/reports/Resource-reports", name: "Resource Reports" },
         // { id: uuid(), link: '/reports/top-users', name: 'Top Users' },
       ],
     },
@@ -217,6 +215,12 @@ export const useDashboardMenu = () => {
     title: "Configuration",
     icon: "lock",
     children: configMenu,
+  },
+  {
+    id: uuid(),
+    title: "View Logs",
+    icon: "git-pull-request",
+    link: "/logs",
   });
 
   return menu;

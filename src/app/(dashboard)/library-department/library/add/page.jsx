@@ -49,7 +49,7 @@ const AddLibrary = () => {
     phone: "",
     institute: "",
     email_config: {
-      mail_driver: "",
+      mail_driver: "smtp",
       mail_host: "",
       mail_port: "",
       mail_username: "",
@@ -219,25 +219,57 @@ const AddLibrary = () => {
                     <Form.Label htmlFor={`email_config.${key}`}>
                       {key.replace("_", " ").toUpperCase()}
                     </Form.Label>
-                    <Form.Control
-                      id={`email_config.${key}`}
-                      type={key.includes("password") ? "password" : "text"}
-                      name={`email_config.${key}`}
-                      value={formData.email_config[key] || ""}
-                      onChange={handleInputChange}
-                      placeholder={`Enter ${key.replace("_", " ")}`}
-                      isInvalid={!!(errors.email_config && errors.email_config[key])}
-                      required
-                    />
-                    {errors.email_config && errors.email_config[key] && errors.email_config[key].map((err, i) => (
-                      <Form.Control.Feedback key={i} type="invalid">
-                        {err}
-                      </Form.Control.Feedback>
-                    ))}
+
+                    {key === "mail_encryption" ? (
+                      // Dropdown for mail_encryption
+                      <Form.Select
+                        id={`email_config.${key}`}
+                        name={`email_config.${key}`}
+                        value={formData.email_config[key] || ""}
+                        onChange={handleInputChange}
+                        isInvalid={!!(errors.email_config && errors.email_config[key])}
+                        required
+                      >
+                        <option value="">Select Encryption</option>
+                        <option value="TLS">TLS</option>
+                        <option value="SSL">SSL</option>
+                        <option value="STARTTLS">STARTTLS</option>
+                      </Form.Select>
+                    ) : key === "mail_driver" ? (
+                      // Non-editable input for mail_driver with "smtp"
+                      <Form.Control
+                        id={`email_config.${key}`}
+                        type="text"
+                        name={`email_config.${key}`}
+                        value="smtp"
+                        readOnly
+                      />
+                    ) : (
+                      // Default input for all other fields
+                      <Form.Control
+                        id={`email_config.${key}`}
+                        type={key.includes("password") ? "password" : "text"}
+                        name={`email_config.${key}`}
+                        value={formData.email_config[key] || ""}
+                        onChange={handleInputChange}
+                        placeholder={`Enter ${key.replace("_", " ")}`}
+                        isInvalid={!!(errors.email_config && errors.email_config[key])}
+                        required
+                      />
+                    )}
+
+                    {errors.email_config &&
+                      errors.email_config[key] &&
+                      errors.email_config[key].map((err, i) => (
+                        <Form.Control.Feedback key={i} type="invalid">
+                          {err}
+                        </Form.Control.Feedback>
+                      ))}
                   </Form.Group>
                 </Col>
               ))}
             </Row>
+
 
             <div className="text-center mt-4">
               <Button type="submit" className="w-100" variant="dark" disabled={isLoading}>

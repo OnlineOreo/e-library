@@ -220,22 +220,37 @@ const EditCategory = () => {
                                 </Form.Group>
                             </Col>
 
-                            {['fb_url', 'x_url', 'yt_url', 'li_url', 'insta_url'].map((field, index) => (
-                                <Col lg={6} className="mb-3" key={index}>
-                                    <Form.Group controlId={`form${field}`}>
-                                        <Form.Label>{field.replace("_", " ").toUpperCase()}</Form.Label>
-                                        <Form.Control
-                                            type="text"
-                                            name={field}
-                                            value={formData[field]}
-                                            onChange={handleInputChange}
-                                            placeholder={`Enter ${field.replace("_", " ")}`}
-                                            isInvalid={!!errors[field]}
-                                        />
-                                        {errors[field] && <Form.Control.Feedback type="invalid">{errors[field]}</Form.Control.Feedback>}
-                                    </Form.Group>
-                                </Col>
-                            ))}
+                            {['fb_url', 'x_url', 'yt_url', 'li_url', 'insta_url'].map((field, index) => {
+                                const platformExamples = {
+                                    fb_url: 'e.g., https://www.facebook.com/',
+                                    x_url: 'e.g., https://twitter.com/',
+                                    yt_url: 'e.g., https://www.youtube.com/',
+                                    li_url: 'e.g., https://www.linkedin.com/',
+                                    insta_url: 'e.g., https://www.instagram.com/',
+                                };
+
+                                return (
+                                    <Col lg={6} className="mb-3" key={index}>
+                                        <Form.Group controlId={`form${field}`}>
+                                            <Form.Label>{field.replace("_", " ").toUpperCase()}</Form.Label>
+                                            <Form.Control
+                                                type="text"
+                                                name={field}
+                                                value={formData[field]}
+                                                onChange={handleInputChange}
+                                                placeholder={`Enter ${field.replace("_", " ")}`}
+                                                isInvalid={!!errors[field]}
+                                            />
+                                            {errors[field] && (
+                                                <Form.Control.Feedback type="invalid">
+                                                    {errors[field]} ({platformExamples[field]})
+                                                </Form.Control.Feedback>
+                                            )}
+                                        </Form.Group>
+                                    </Col>
+                                );
+                            })}
+
 
                             <Col lg={12} className="mb-3">
                                 <Form.Group controlId="formPageContent">
