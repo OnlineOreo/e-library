@@ -9,6 +9,6 @@ export default function Template({ children }) {
   const toggleMenu = () => setShowMenu((prev) => !prev);
 
   return (    
-      <main className="p-4">{children}</main>
+      <main>{children}</main>
   );
 }

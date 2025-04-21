@@ -28,7 +28,7 @@ export default function DashboardLayout({ children }) {
               }}
             />
           </div>
-          <main className="p-4">{children}</main>
+          <main>{children}</main>
         </div>
       </div>
     </div>

@@ -8,16 +8,14 @@ import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
 import Link from "next/link";
 import { FaMinusCircle } from "react-icons/fa";
-// import { useSelector } from "react-redux";
 
 const EditConfigurationMeta = () => {
   const router = useRouter();
-  const { id } = useParams(); // Get ID from URL params
+  const { id } = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [imageFile, setImageFile] = useState(null);
   const [existingImage, setExistingImage] = useState("");
-  // const instituteId = useSelector((state) => state.institute.instituteId);
 
   const [formData, setFormData] = useState({
     list: "",
@@ -29,7 +27,6 @@ const EditConfigurationMeta = () => {
     const cookieString = document.cookie
       .split("; ")
       .find((row) => row.startsWith("access_token="));
-
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
@@ -48,12 +45,11 @@ const EditConfigurationMeta = () => {
           }
         );
         setFormData({
-          // institute:data.instituteId,
-          list: data.list,
-          link_url: data.link_url,
-          description: data.description,
+          list: data.list || "",
+          link_url: data.link_url || "",
+          description: data.description || "",
         });
-        setExistingImage(data.image || ""); // Store existing image URL
+        setExistingImage(data.image || "");
       } catch (error) {
         toast.error("Failed to load meta.");
       }
@@ -64,11 +60,11 @@ const EditConfigurationMeta = () => {
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleFileChange = (event) => {
-    setImageFile(event.target.files[0]); // Save selected file
+    setImageFile(event.target.files[0]);
   };
 
   const handleSubmit = async (event) => {
@@ -86,7 +82,7 @@ const EditConfigurationMeta = () => {
 
     const formDataToSend = new FormData();
     formDataToSend.append("list", formData.list);
-    formDataToSend.append("sub_list", "important link"); // Hidden field
+    formDataToSend.append("sub_list", "important link");
     formDataToSend.append("link_url", formData.link_url);
     formDataToSend.append("description", formData.description);
 
@@ -154,7 +150,7 @@ const EditConfigurationMeta = () => {
                   </Form.Control.Feedback>
                 </Form.Group>
               </Col>
-           
+
               <Col lg={6} className="mb-3">
                 <Form.Group>
                   <Form.Label>Image Upload</Form.Label>
@@ -196,8 +192,8 @@ const EditConfigurationMeta = () => {
                   </Form.Control.Feedback>
                 </Form.Group>
               </Col>
-              </Row>
-              <Row>
+            </Row>
+            <Row>
               <Col lg={12} className="mb-3">
                 <Form.Group>
                   <Form.Label>Description</Form.Label>
@@ -209,6 +205,9 @@ const EditConfigurationMeta = () => {
                     onChange={handleInputChange}
                     isInvalid={!!errors.description}
                   />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.description?.join(", ")}
+                  </Form.Control.Feedback>
                 </Form.Group>
               </Col>
             </Row>
