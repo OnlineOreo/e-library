@@ -165,7 +165,7 @@ const NewsClipping = () => {
             <div className="d-flex justify-content-between align-items-center">
               <h3 className="mb-0 text-dark">News-Paper Clipping</h3>
               <Link href="./news-clippings/add" className="btn btn-white">
-                <FaPlusCircle /> News
+                <FaPlusCircle /> Add Clipping
               </Link>
             </div>
           </Col>

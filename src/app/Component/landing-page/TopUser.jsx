@@ -17,24 +17,11 @@ import "swiper/css/scrollbar";
 
 export default function TopUser({ headingName, bannerData }) {
   const swiperRef = useRef(null);
-  const [topUsers, setTopUsers] = useState([]);
+  // const [topUsers, setTopUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchTopUsers = async () => {
-      try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/top-users`);
-        const data = await res.json();
-        setTopUsers(data.top_users || []);
-      } catch (err) {
-        console.error("Failed to fetch top users:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const topUsers = landingPageData.landingPageData?.top_users || [];
 
-    fetchTopUsers();
-  }, []);
 
   if (loading || !topUsers.length) return null;
 

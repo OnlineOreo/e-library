@@ -6,8 +6,10 @@ import NavbarVertical from "@/layouts/navbars/NavbarVertical";
 
 export default function DashboardLayout({ children }) {
   const [showMenu, setShowMenu] = useState(true);
+
+  // Simplified toggle function
   const ToggleMenu = () => {
-    return setShowMenu(!showMenu);
+    setShowMenu((prev) => !prev);
   };
 
   return (
@@ -15,7 +17,7 @@ export default function DashboardLayout({ children }) {
       <div className="navbar-vertical navbar">
         <NavbarVertical
           showMenu={showMenu}
-          onClick={(value) => setShowMenu(value)}
+          onClick={ToggleMenu}
         />
       </div>
       <div id="page-content">

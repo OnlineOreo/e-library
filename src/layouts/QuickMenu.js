@@ -221,14 +221,14 @@ const QuickMenu = () => {
             >
               <i className="fe fe-activity me-2"></i> Edit Profile
             </Dropdown.Item>
-            <Dropdown.Item
+            {/* <Dropdown.Item
               as={Link}
               href="/"
               eventKey="1"
               className="text-dark"
             >
               <i className="fe fe-star me-2"></i> Student Dashboard
-            </Dropdown.Item>
+            </Dropdown.Item> */}
 
             {/* <Dropdown.Item className="text-primary">
                         <i className="fe fe-star me-2"></i> Go Pro
@@ -236,9 +236,9 @@ const QuickMenu = () => {
                     <Dropdown.Item >
                         <i className="fe fe-settings me-2"></i> Account Settings
                     </Dropdown.Item> */}
-            <Dropdown.Item onClick={() => handleLogout(instituteId)}>
+            {/* <Dropdown.Item onClick={() => handleLogout(instituteId)}>
               <i className="fe fe-power me-2"></i>Sign Out
-            </Dropdown.Item>
+            </Dropdown.Item> */}
           </Dropdown.Menu>
         </Dropdown>
       </ListGroup>
@@ -304,14 +304,14 @@ const QuickMenu = () => {
             >
               <i className="fe fe-activity me-2"></i> Edit Profile
             </Dropdown.Item>
-            <Dropdown.Item
+            {/* <Dropdown.Item
               as={Link}
               href="/"
               eventKey="1"
               className="text-dark"
             >
               <i className="fe fe-star me-2"></i> Back to Home
-            </Dropdown.Item>
+            </Dropdown.Item> */}
 
             {/* <Dropdown.Item className="text-primary">
                         <i className="fe fe-star me-2"></i> Go Pro
@@ -319,9 +319,9 @@ const QuickMenu = () => {
                     <Dropdown.Item >
                         <i className="fe fe-settings me-2"></i> Account Settings
                     </Dropdown.Item> */}
-            <Dropdown.Item onClick={() => handleLogout(instituteId)}>
+            {/* <Dropdown.Item onClick={() => handleLogout(instituteId)}>
               <i className="fe fe-power me-2"></i>Sign Out
-            </Dropdown.Item>
+            </Dropdown.Item> */}
           </Dropdown.Menu>
         </Dropdown>
       </ListGroup>

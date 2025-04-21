@@ -12,7 +12,7 @@ import 'swiper/css/scrollbar';
 
 export default function TrendingBook({headingName,bannerData}) {
     const landingPageData = useSelector((state) => state.landingPageDataSlice);
-    const books = landingPageData?.instituteId?.trending_books?.map(trending_book => trending_book.book_image) || [];
+    const books = landingPageData?.landingPageData?.trending_books?.map(trending_book => trending_book.book_image) || [];
     console.log(books)
     return (
         <div

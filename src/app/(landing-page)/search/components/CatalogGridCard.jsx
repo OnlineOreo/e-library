@@ -30,7 +30,7 @@ const CatalogGridCard = (props) => {
         return null;
     };
 
-    const handelBookRead = async (id, url) => {
+    const handelBookRead = async (id, url, title, catalogCore) => {
         const token = getToken();
         const userId = getUserID();
 
@@ -45,6 +45,9 @@ const CatalogGridCard = (props) => {
         formdata.append("status_code", 200);
         formdata.append("user", userId);
         formdata.append("institute", instituteId);
+        formdata.append("book_id", id);
+        formdata.append("book_name", title);
+        formdata.append("core", catalogCore);
         formdata.append("request_body", "");
         formdata.append("response_body", "");
         formdata.append("error_trace", "");
@@ -86,7 +89,7 @@ const CatalogGridCard = (props) => {
                         className="me-2 w-50 py-2 btn btn-success"
                         onClick={(e) => {
                             e.preventDefault();
-                            handelBookRead(props.id, props.url)
+                            handelBookRead(props.id, props.url, props.datacite_titles, props.catalogCore)
                             const screenWidth = window.screen.width;
                             const screenHeight = window.screen.height;
                             const width = screenWidth / 2;

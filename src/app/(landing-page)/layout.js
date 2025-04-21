@@ -8,6 +8,7 @@ import Footer from "../Component/landing-page/Footer";
 import '../../../public/landingPageAsset/css/style2.css';
 import '../../../public/landingPageAsset/css/header.css';
 import { useSelector } from "react-redux";
+import './search.css';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
