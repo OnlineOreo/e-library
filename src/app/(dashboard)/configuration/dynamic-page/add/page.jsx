@@ -25,13 +25,25 @@ const AddDynamicPage = () => {
 
   const [formData, setFormData] = useState({
     page_name: "",
-    page_image: null,
+    page_image: "",
     page_content: "",
+    institute : instituteId
   });
 
-  useEffect(() => {
-    setFormData((prev) => ({ ...prev, institute: instituteId || "" }));
-  }, [instituteId]);
+
+
+  const handleInputChange = (event) => {
+    const { name, value, type, files } = event.target;
+    if (type === "file") {
+      setFormData({ ...formData, page_image: files[0] });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
+  };
+
+  const handleContentChange = (content) => {
+    setFormData((prev)=>({ ...prev, page_content: content }));
+  };
 
   const getToken = () => {
     const cookieString = document.cookie
@@ -39,19 +51,6 @@ const AddDynamicPage = () => {
       .find((row) => row.startsWith("access_token="));
 
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
-  };
-
-  const handleInputChange = (event) => {
-    const { name, value, type, files } = event.target;
-    if (type === "file") {
-      setFormData({ ...formData, [name]: files[0] });
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
-  };
-
-  const handleContentChange = (content) => {
-    setFormData({ ...formData, page_content: content });
   };
 
   const handleSubmit = async (event, instituteId) => {
@@ -101,6 +100,8 @@ const AddDynamicPage = () => {
       setIsLoading(false);
     }
   };
+
+
 
   return (
     <>
