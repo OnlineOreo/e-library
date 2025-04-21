@@ -21,6 +21,19 @@
 .book-items{
   height: 300px;
 }
+.cursor_pointer{
+  cursor:pointer;
+}
+.cursor_pointer:hover{
+  color: rgb(107, 60, 151);
+}
+.cursor_pointer_underline{
+  cursor:pointer;
+}
+.cursor_pointer_underline:hover{
+  color: rgb(107, 60, 151);
+  text-decoration: underline;
+}
 .index-banner{
   position:absolute; 
   top: 48%; 

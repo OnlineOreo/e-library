@@ -153,11 +153,33 @@ const Navbar = () => {
     },
     {
       type: "dropdown",
-      items: landingPageData?.landingPageData?.metas || [],
       title: "Important Link",
       href: "/",
+      items: landingPageData?.landingPageData?.metas || [],
+    },
+    {
+      type: "dropdown",
+      title: "Account",
+      items: [
+        {
+          image: "/images/avatar/saved_icon.png",
+          name: "Saved Article",
+          href: "/saved-catalog/print-collection",
+        },
+        {
+          image: "/images/avatar/search_history_icon.png",
+          name: "Search History",
+          href: "#",
+        },
+        {
+          image: "/images/avatar/read_history.png",
+          name: "Read History",
+          href: "#",
+        },
+      ],
     },
   ];
+  
 
   const visibleNavItems = navItems.filter((item) =>
     item.type === "dropdown" ? Array.isArray(item.items) && item.items.length > 0 : true

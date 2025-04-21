@@ -62,7 +62,7 @@ const DropdownMenu = ({
                 {filteredAndSortedItems.map((item) => (
                   <div key={item.publisher_id} className="nav publisher_nav">
                     <span
-                      className="dropdown-link pe-auto one_line_ellipses"
+                      className="dropdown-link pe-auto one_line_ellipses cursor_pointer_underline"
                       style={{ cursor: "pointer" }}
                       onClick={() => handlePublisherClick(item)}
                     >
@@ -106,12 +106,18 @@ const DropdownMenu = ({
                   item.configuration_category_id ||
                   item.configuration_media_id ||
                   item.configuration_collection_id ||
-                  item.configuration_meta_id
+                  item.configuration_meta_id ||
+                  item.name
                 }
                 className="nav"
                 style={{ minWidth: "33%" }}
               >
-                <a className="dropdown-link one_line_ellipses" href="#">
+                <a className="dropdown-link one_line_ellipses cursor_pointer_underline" href=  {item.publisher_name ||
+                    item.category_name ||
+                    item.media_name ||
+                    item.collection_name ||
+                    item.list ||
+                    item.href}>
                   <img
                     src={item.image}
                     alt=""
@@ -125,7 +131,8 @@ const DropdownMenu = ({
                     item.category_name ||
                     item.media_name ||
                     item.collection_name ||
-                    item.list}
+                    item.list ||
+                    item.name}
                 </a>
               </div>
             ))}
