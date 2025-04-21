@@ -112,12 +112,13 @@ const DropdownMenu = ({
                 className="nav"
                 style={{ minWidth: "33%" }}
               >
-                <a className="dropdown-link one_line_ellipses cursor_pointer_underline" href=  {item.publisher_name ||
-                    item.category_name ||
-                    item.media_name ||
-                    item.collection_name ||
-                    item.list ||
-                    item.href}>
+                <a className="dropdown-link one_line_ellipses cursor_pointer_underline" 
+                href=  {
+                  item.link_url ||
+                  item.href ||
+                  "#"
+                }
+                  >
                   <img
                     src={item.image}
                     alt=""

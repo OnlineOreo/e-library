@@ -11,7 +11,9 @@ import { FaMinusCircle } from "react-icons/fa";
 
 const EditConfigurationMeta = () => {
   const router = useRouter();
-  const { id } = useParams();
+  const { id } = useParams(); 
+  // console.log("meta id : ",id);
+  
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [imageFile, setImageFile] = useState(null);
