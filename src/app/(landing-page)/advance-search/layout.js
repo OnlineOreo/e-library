@@ -2,7 +2,6 @@
 
 import { Suspense } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
-import '../search/search.css';
 import SolrSearchNav from '../search/components/SolrSearchNav';
 
 export default function Layout({ children }) {

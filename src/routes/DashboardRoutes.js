@@ -29,19 +29,8 @@ export const useDashboardMenu = () => {
         icon: "user",
         children: [
           { id: uuid(), link: "/user-management/users", name: "Manage User" },
-          // {
-          //   id: uuid(),
-          //   link: "/user-management/users/add-user",
-          //   name: "Add User",
-          // },
-          // {
-          //   id: uuid(),
-          //   link: "/user-management/admin/add-admin",
-          //   name: "Add Admin",
-          // },
           { id: uuid(), link: "/user-management/admin", name: "Manage Admin" },
-          // { id: uuid(), link: '/user-management/self-restriction', name: 'Self Restriction' },
-          // { id: uuid(), link: '/user-management/domain-restriction', name: 'Domain Restriction' },
+
         ],
       }
     );
@@ -56,16 +45,6 @@ export const useDashboardMenu = () => {
           id: uuid(),
           link: "/user-management/users/add-user",
           name: "Add User",
-        },
-        {
-          id: uuid(),
-          link: "/user-management/self-restriction",
-          name: "Self Restriction",
-        },
-        {
-          id: uuid(),
-          link: "/user-management/domain-restriction",
-          name: "Domain Restriction",
         },
       ],
     });
@@ -154,6 +133,15 @@ export const useDashboardMenu = () => {
        
       ],
     });
+  }else{
+    menu.push({
+      id: uuid(),
+      title: "Resources",
+      icon: "layers",
+      children: [
+        { id: uuid(), link: "/resources/item", name: "Items" },
+      ],
+    });
   }
 
   menu.push(
@@ -215,13 +203,16 @@ export const useDashboardMenu = () => {
     title: "Configuration",
     icon: "lock",
     children: configMenu,
-  },
-  {
-    id: uuid(),
-    title: "View Logs",
-    icon: "git-pull-request",
-    link: "/logs",
   });
+  
+  if(userRole === "ADMIN"){
+    menu.push(  {
+      id: uuid(),
+      title: "View Logs",
+      icon: "git-pull-request",
+      link: "/logs",
+    })
+  }
 
   return menu;
 };

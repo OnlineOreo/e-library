@@ -305,7 +305,7 @@ const Home = () => {
         </Row>
         <div className="card p-6 mt-5">
           <Form onSubmit={handleSubmit} encType="multipart/form-data">
-            <ProgressBar now={(step / 4) * 100} className="mb-3" />
+            <ProgressBar now={(step / 4) * 100} className="mb-4" />
             {/* Step 1 - Basic Information */}
             {step === 1 && (
               <>
@@ -450,7 +450,7 @@ const Home = () => {
             )}
             {step === 4 && (
               <>
-                <Row>
+                <Row className="mt-5">
                   {/* <Col lg={12} className="mb-5">
                     <Form.Group className="mb-3" controlId="formDesignation">
                       <Form.Label>Institute</Form.Label>
@@ -472,7 +472,7 @@ const Home = () => {
                     </Form.Group>
                   </Col> */}
                   {formData.mappings?.map((mapping, index) => (
-                    <Fragment key={index}>
+                    <Fragment key={index} >
                       <Col lg={6}>
                         <Form.Group
                           className="mb-3"
