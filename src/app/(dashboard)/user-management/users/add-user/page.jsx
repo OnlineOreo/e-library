@@ -62,15 +62,15 @@ const Home = () => {
         const [serviceGroupRes, contentGroupRes, userTypeRes, libraryRes] =
           await Promise.all([
             axios.get(
-              `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/service-groups`,
+              `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/service-groups?institute_id=${instituteId}`,
               { headers: { Authorization: `${token}` } }
             ),
             axios.get(
-              `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/content-groups`,
+              `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/content-groups?institute_id=${instituteId}`,
               { headers: { Authorization: `${token}` } }
             ),
             axios.get(
-              `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-types`,
+              `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-types?institute_id=${instituteId}`,
               { headers: { Authorization: `${token}` } }
             ),
             axios.get(
@@ -135,8 +135,6 @@ const Home = () => {
       errorToaster("Authentication required!");
       return;
     }
-
-    // const formDataToSend = formData;
 
     const formDataToSend = new FormData();
 
@@ -283,10 +281,12 @@ const Home = () => {
   };
 
   const removeMapping = (index) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      mappings: prevFormData.mappings.filter((_, i) => i !== index),
-    }));
+    if (index != 0) {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        mappings: prevFormData.mappings.filter((_, i) => i !== index),
+      }));
+    }
   };
 
   return (
@@ -374,15 +374,6 @@ const Home = () => {
                     <option value="STAFF">Staff</option>
                   </Form.Select>
                 </Form.Group>
-                {/* <Form.Group className="mb-3" controlId="formImage">
-                  <Form.Label>Upload Image</Form.Label>
-                  <Form.Control
-                    type="file"
-                    name="image"
-                    accept="image/*"
-                    onChange={handleInputChange}
-                  />
-                </Form.Group> */}
 
                 <Form.Group className="mb-3" controlId="formGender">
                   <Form.Label>Gender</Form.Label>
@@ -451,6 +442,15 @@ const Home = () => {
             {step === 4 && (
               <>
                 <Row className="mt-5">
+                  {/* <Form.Group className="mb-3" controlId="formImage">
+                  <Form.Label>Upload Image</Form.Label>
+                  <Form.Control
+                    type="file"
+                    name="image"
+                    accept="image/*"
+                    onChange={handleInputChange}
+                  />
+                </Form.Group> */}
                   {/* <Col lg={12} className="mb-5">
                     <Form.Group className="mb-3" controlId="formDesignation">
                       <Form.Label>Institute</Form.Label>
@@ -472,7 +472,7 @@ const Home = () => {
                     </Form.Group>
                   </Col> */}
                   {formData.mappings?.map((mapping, index) => (
-                    <Fragment key={index} >
+                    <Fragment key={index}>
                       <Col lg={6}>
                         <Form.Group
                           className="mb-3"
@@ -613,19 +613,21 @@ const Home = () => {
                           </Form.Select>
                         </Form.Group>
 
-                        <Button
-                          variant="danger"
-                          className="position-absolute"
-                          style={{ right: "-10px", top: "-20px" }}
-                          onClick={() => removeMapping(index)}
-                        >
-                          <ImCross />
-                        </Button>
+                        {index !== 0 && (
+                            <Button
+                              variant="danger"
+                              size="sm"
+                              className="position-absolute top-0 end-0"
+                              onClick={() => removeMapping(index)}
+                            >
+                              <ImCross /> Remove
+                            </Button>
+                          )}
                       </Col>
                     </Fragment>
                   ))}
 
-                  <Col lg={2}>
+                  <Col lg={3}>
                     <Button variant="primary" onClick={addNewMapping}>
                       Add Mapping
                     </Button>

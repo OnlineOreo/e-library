@@ -82,7 +82,6 @@ export default function RawLogs({ logs = [] }) {
             <tr key={log.id || index}>
               <td className="align-middle">
                 <div className="d-flex align-items-center">
-                  {log.user_image ? (
                     <div
                       className="icon-shape icon-md border p-1 rounded-1 bg-white"
                       style={{
@@ -93,7 +92,7 @@ export default function RawLogs({ logs = [] }) {
                       }}
                     >
                       <img
-                        src={log.user_image}
+                        src={log.user_image || './images/avatar/avatar-1.jpg'}
                         alt={log.user || "User"}
                         style={{
                           width: "100%",
@@ -102,9 +101,6 @@ export default function RawLogs({ logs = [] }) {
                         }}
                       />
                     </div>
-                  ) : (
-                    <BsEnvelope size={18} />
-                  )}
 
                   <div className="ms-3 lh-1">
                     <h6 className="mb-1 text-break">{log.user || "N/A"}</h6>
@@ -149,7 +145,7 @@ export default function RawLogs({ logs = [] }) {
                 <div className="text-dark">{log.msg.toLowerCase()}</div>
                 <div className="text-muted small">
                   {/* {log.path?.split("?")[0]} */}
-                  {log.path}
+                  {log.path }
                 </div>
               </td>
             </tr>

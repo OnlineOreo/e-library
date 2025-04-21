@@ -110,7 +110,7 @@ export default function TopUsersBySessions() {
               <th>Device type</th>
               <th>Ip Address</th>
               <th>Last Login Time</th>
-              <th>Logout Time</th>
+              <th>Last Logout Time</th>
             </tr>
           </thead>
           <tbody>

@@ -1,6 +1,5 @@
 'use client'
 
-// import node module libraries
 import { Fragment, useContext, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -16,7 +15,6 @@ import Accordion from 'react-bootstrap/Accordion';
 import AccordionContext from 'react-bootstrap/AccordionContext';
 import { useAccordionButton } from 'react-bootstrap/AccordionButton';
 
-// import simple bar scrolling used for notification item scrolling
 import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
 
