@@ -8,8 +8,10 @@ import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { FaMinusCircle, FaPlusCircle } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 const AddPublisherPackage = () => {
+  const instituteId = useSelector((state) => state.institute.instituteId);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
@@ -24,7 +26,7 @@ const AddPublisherPackage = () => {
   const [publishers, setPublishers] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [programs, setPrograms] = useState([]);
-  const [institute, setInstitute] = useState([]); 
+  // const [institute, setInstitute] = useState([]); 
   const [library, setLibrary] = useState([]);
   const [loadingDropdowns, setLoadingDropdowns] = useState(false);
 
@@ -37,7 +39,7 @@ const AddPublisherPackage = () => {
   };
 
   useEffect(() => {
-    const fetchDropdownData = async () => {
+    const fetchDropdownData = async (instituteId) => {
       setLoadingDropdowns(true);
       const token = getToken();
       if (!token) {
@@ -46,17 +48,17 @@ const AddPublisherPackage = () => {
       }
 
       try {
-        const [pubRes, institute] = await Promise.all([
-          axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/publishers`, {
+        const [pubRes,libRes] = await Promise.all([
+          axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/publishers?institute_id=${instituteId}`, {
             headers: { Authorization: token },
           }),
-          axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/institutes`, {
+          axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/libraries?institute_id=${instituteId}`, {
             headers: { Authorization: token },
           }),
         ]);
 
         setPublishers(pubRes.data);
-        setInstitute(institute.data);
+        setLibrary(libRes.data)
       } catch (error) {
         if(error.response.data.error.trim() == 'Token has expired.'){
           router.push("/authentication/sign-in");
@@ -68,8 +70,10 @@ const AddPublisherPackage = () => {
       }
     };
 
-    fetchDropdownData();
-  }, []);
+    if(instituteId){
+      fetchDropdownData(instituteId);
+    }
+  }, [instituteId]);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -109,16 +113,16 @@ const AddPublisherPackage = () => {
   };
   
 
-  const handleInstituteChange = async (event) => {
-    const { name, value } = event.target;
-    setFormData({ ...formData, [name]: value });
-    const allChildData =  institute.find((ins) => ins.institute_id === value);
-    if (allChildData) {
-      setLibrary(allChildData.libraries || []);
-      setDepartments([])
-      setPrograms([])
-    }
-  }
+  // const handleInstituteChange = async (event) => {
+  //   const { name, value } = event.target;
+  //   setFormData({ ...formData, [name]: value });
+  //   const allChildData =  institute.find((ins) => ins.institute_id === value);
+  //   if (allChildData) {
+  //     setLibrary(allChildData.libraries || []);
+  //     setDepartments([])
+  //     setPrograms([])
+  //   }
+  // }
 
   const handleLibraryChange = async (event) => {
     const { name, value } = event.target;
@@ -162,7 +166,7 @@ const AddPublisherPackage = () => {
   };
   
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event,instituteId) => {
     event.preventDefault();
     setIsLoading(true);
     setErrors({});
@@ -199,7 +203,7 @@ const AddPublisherPackage = () => {
 
     try {
       await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/publisher-packages`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/publisher-packages?institute_id=${instituteId}`,
         transformedData,
         {
           headers: {
@@ -237,6 +241,8 @@ const AddPublisherPackage = () => {
     }
   };
 
+  console.log(library)
+
   return (
     <>
       <div className="bg-primary pt-10 pb-21"></div>
@@ -252,7 +258,7 @@ const AddPublisherPackage = () => {
           </Col>
         </Row>
         <div className="card p-6 mt-5">
-          <Form onSubmit={handleSubmit}>
+          <Form onSubmit={(e)=>handleSubmit(e,instituteId)}>
             <Row>
               <Col lg={6} className="mb-3">
                 <Form.Group>
@@ -295,7 +301,7 @@ const AddPublisherPackage = () => {
             </Row>
 
             <Row>
-              <Col lg={6} className="mb-3">
+              {/* <Col lg={6} className="mb-3">
                 <Form.Group>
                   <Form.Label>Institute</Form.Label>
                   <Form.Select
@@ -315,7 +321,7 @@ const AddPublisherPackage = () => {
                     {errors.institute?.join(", ")}
                   </Form.Control.Feedback>
                 </Form.Group>
-              </Col>
+              </Col> */}
 
               <Col lg={6} className="mb-3">
                 <Form.Group>
@@ -327,7 +333,7 @@ const AddPublisherPackage = () => {
                     isInvalid={!!errors.library}
                   >
                     <option value="">Select Library</option>
-                    {library.map((lib) => (
+                    {library && library.map((lib) => (
                       <option key={lib.library_id} value={lib.library_id}>
                         {lib.library_name}
                       </option>

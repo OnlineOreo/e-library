@@ -11,6 +11,7 @@ import { FaEdit, FaEye, FaPlusCircle } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
 import ImportPublisherPackage from "./ImportPublisherPackage";
+import { useSelector } from "react-redux";
 
 const ViewItemTypes = () => {
   const router = useRouter();
@@ -21,6 +22,7 @@ const ViewItemTypes = () => {
   const [search, setSearch] = useState("");
 
   const [showImportModal, setShowImportModal] = useState(false);
+  const instituteId = useSelector((state) => state.institute.instituteId);
 
   const handleOpenModal = () => setShowImportModal(true);
   const handleCloseModal = () => setShowImportModal(false);
@@ -35,12 +37,12 @@ const ViewItemTypes = () => {
 
   useEffect(() => {
     const token = getToken();
-    if (token) {
-      loadItemTypes();
+    if (token && instituteId) {
+      loadPublisherPkg(instituteId);
     }
-  }, []);
+  }, [instituteId]);
 
-  const loadItemTypes = async () => {
+  const loadPublisherPkg = async (instituteId) => {
     const token = getToken();
     if (!token) {
       errorToaster("Authentication required!");
@@ -50,7 +52,7 @@ const ViewItemTypes = () => {
 
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/publisher-packages`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/publisher-packages?institute_id=${instituteId}`,
         {
           headers: { Authorization: `${token}` },
         }

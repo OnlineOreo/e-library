@@ -11,7 +11,7 @@ import 'swiper/css/scrollbar';
 
 export default function Ejournal({ toggle }) {
     const landingPageData = useSelector((state) => state.landingPageDataSlice);
-    const ejournals = landingPageData?.instituteId?.staff_picks?.filter(staff_pick => 
+    const ejournals = landingPageData?.landingPageData?.staff_picks?.filter(staff_pick => 
         staff_pick.article_type_name?.toLowerCase() === "journals"
     ) || [];
 

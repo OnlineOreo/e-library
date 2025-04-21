@@ -28,7 +28,7 @@ export default function TopUser({ headingName, bannerData }) {
   const swiperRef = useRef(null);
   const landingPageData = useSelector((state) => state.landingPageDataSlice);
 
-  const topUsers = landingPageData.instituteId?.top_users || [];
+  const topUsers = landingPageData.landingPageData?.top_users || [];
 
   // 🔒 Do not render anything if no top users
   if (!topUsers.length) return null;

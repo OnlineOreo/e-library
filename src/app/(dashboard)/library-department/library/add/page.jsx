@@ -8,11 +8,11 @@ import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { FaMinusCircle } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 const AddLibrary = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [institutes, setInstitutes] = useState([]);
   const [errors, setErrors] = useState({});
 
   const getToken = () => {
@@ -23,21 +23,8 @@ const AddLibrary = () => {
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
-  useEffect(() => {
-    const token = getToken();
-    axios
-      .get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/institutes`, {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((response) => {
-        setInstitutes(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching institutes", error);
-      });
-  }, []);
+  const instituteId = useSelector((state) => state.institute.instituteId);
+ 
 
   const errorToaster = (text) => toast.error(text);
 
@@ -47,7 +34,7 @@ const AddLibrary = () => {
     address: "",
     email: "",
     phone: "",
-    institute: "",
+    institute: instituteId,
     email_config: {
       mail_driver: "smtp",
       mail_host: "",
@@ -184,7 +171,7 @@ const AddLibrary = () => {
               ))}
               
               {/* Institute Dropdown */}
-              <Col md={4} className="mb-3">
+              {/* <Col md={4} className="mb-3">
                 <Form.Group>
                   <Form.Label htmlFor="institute">INSTITUTE</Form.Label>
                   <Form.Select
@@ -208,7 +195,7 @@ const AddLibrary = () => {
                     </Form.Control.Feedback>
                   ))}
                 </Form.Group>
-              </Col>
+              </Col> */}
             </Row>
 
             <h5 className="mt-4">Mail Configuration</h5>

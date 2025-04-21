@@ -25,13 +25,15 @@ export default function SendEmail() {
     };
 
     useEffect(() => {
-        loadLibraries();
-    }, []);
+        if(instituteId){
+            loadLibraries(instituteId);
+        }
+    }, [instituteId]);
 
-    const loadLibraries = async () => {
+    const loadLibraries = async (instituteId) => {
         const token = getToken();
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/libraries`, {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/libraries?institute_id=${instituteId}`, {
                 headers: { Authorization: `${token}` },
             });
 

@@ -8,11 +8,13 @@ import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { FaMinusCircle, FaPlusCircle } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 const EditPublisherPackage = () => {
   const router = useRouter();
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(false);
+  const instituteId = useSelector((state) => state.institute.instituteId);
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     package_name: "",
@@ -23,7 +25,6 @@ const EditPublisherPackage = () => {
   const [publishers, setPublishers] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [programs, setPrograms] = useState([]);
-  const [institute, setInstitute] = useState([]);
   const [library, setLibrary] = useState([]);
   const [loadingDropdowns, setLoadingDropdowns] = useState(false);
 
@@ -36,7 +37,7 @@ const EditPublisherPackage = () => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchData = async (instituteId) => {
       setLoadingDropdowns(true);
       const token = getToken();
       if (!token) {
@@ -45,29 +46,23 @@ const EditPublisherPackage = () => {
       }
 
       try {
-        const [pubRes, deptRes, progRes, instRes, packageRes] =
+        const [pubRes, deptRes, progRes, packageRes] =
           await Promise.all([
             axios.get(
-              `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/publishers`,
+              `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/publishers?institute_id=${instituteId}`,
               {
                 headers: { Authorization: token },
               }
             ),
             axios.get(
-              `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/departments`,
+              `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/departments?institute_id=${instituteId}`,
               {
                 headers: { Authorization: token },
               }
             ),
-            axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/programs`, {
+            axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/programs?institute_id=${instituteId}`, {
               headers: { Authorization: token },
             }),
-            axios.get(
-              `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/institutes`,
-              {
-                headers: { Authorization: token },
-              }
-            ),
             axios.get(
               `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/publisher-packages?package_id=${id}`,
               {
@@ -79,10 +74,11 @@ const EditPublisherPackage = () => {
         setPublishers(pubRes.data);
         setDepartments(deptRes.data);
         setPrograms(progRes.data);
-        setInstitute(instRes.data);
         setFormData({
           package_name: packageRes.data.package_name,
           publisher: packageRes.data.publisher,
+          started_at: packageRes.data.started_at,
+          ended_at: packageRes.data.ended_at,
           mappings: packageRes.data.mappings.map((map) => ({
             department: map.department,
             program: map.program,
@@ -100,8 +96,10 @@ const EditPublisherPackage = () => {
       }
     };
 
-    fetchData();
-  }, [id]);
+    if(instituteId){
+      fetchData(instituteId);
+    }
+  }, [id,instituteId]);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -223,15 +221,47 @@ const EditPublisherPackage = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsLoading(true);
-    setErrors({});
-
+  
+    // Run validation again before submitting
+    const today = new Date().toISOString().split("T")[0];
+    let newErrors = {};
+  
+    const { started_at, ended_at } = formData;
+  
+    if (!started_at || started_at < today) {
+      newErrors.started_at = ["Start date cannot be in the past."];
+    }
+  
+    if (!ended_at || ended_at < today) {
+      newErrors.ended_at = ["End date cannot be in the past."];
+    }
+  
+    if (started_at === ended_at) {
+      newErrors.started_at = ["Start and End date can't be the same."];
+      newErrors.ended_at = ["Start and End date can't be the same."];
+    }
+  
+    if (started_at && ended_at && ended_at < started_at) {
+      if (!newErrors.ended_at) newErrors.ended_at = [];
+      newErrors.ended_at.push("End date must be greater than Start date.");
+    }
+  
+    setErrors(newErrors);
+  
+    // If there are any errors, stop submission
+    const hasErrors = Object.values(newErrors).some((errList) => errList.length > 0);
+    if (hasErrors) {
+      setIsLoading(false);
+      return;
+    }
+  
     const token = getToken();
     if (!token) {
       router.push("/authentication/sign-in");
       setIsLoading(false);
       return;
     }
-
+  
     try {
       await axios.put(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/publisher-packages?package_id=${id}`,
@@ -243,7 +273,7 @@ const EditPublisherPackage = () => {
           },
         }
       );
-
+  
       Swal.fire(
         "Success!",
         "Publisher package updated successfully!",
@@ -257,6 +287,7 @@ const EditPublisherPackage = () => {
       setIsLoading(false);
     }
   };
+  
 
   return (
     <>
@@ -306,14 +337,14 @@ const EditPublisherPackage = () => {
                 </Form.Group>
               </Col>
             </Row>
-            {/* <Row>
+            <Row>
               <Col lg={6} className="mb-3">
                 <Form.Group>
                   <Form.Label>Start Date</Form.Label>
                   <Form.Control
                     type="date"
                     name="started_at"
-                    value={formData.started_at}
+                    value={formData.started_at ? formData.started_at.split("T")[0] : ""}
                     onChange={handleInputChange}
                     isInvalid={!!errors.started_at}
                   />
@@ -328,7 +359,7 @@ const EditPublisherPackage = () => {
                   <Form.Control
                     type="date"
                     name="ended_at"
-                    value={formData.ended_at}
+                    value={formData.ended_at ? formData.ended_at.split("T")[0] : ""}
                     onChange={handleInputChange}
                     isInvalid={!!errors.ended_at}
                   />
@@ -337,7 +368,7 @@ const EditPublisherPackage = () => {
                   </Form.Control.Feedback>
                 </Form.Group>
               </Col>
-            </Row> */}
+            </Row>
             {formData.mappings.map((mapping, index) => (
               <Row
                 className="justify-content-center align-items-center"

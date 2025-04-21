@@ -1,5 +1,4 @@
 'use client';
-// Import node module libraries
 import { Row, Col, Card, Form, Button, Spinner, Alert } from 'react-bootstrap';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -92,7 +91,7 @@ const ForgetPassword = () => {
         });
 
       setTimeout(() => {
-        router.push('./sign-in');
+        router.push('./');
       }, 2000);
     } catch (err) {
       console.error('Password reset error:', err);

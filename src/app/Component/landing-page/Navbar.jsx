@@ -70,8 +70,8 @@ const Navbar = () => {
       );
     } catch (error) {
       console.error("Failed to update user session:", error);
+      router.push("/");
     }
-
     document.cookie = "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     document.cookie = "user_role=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     document.cookie = "session_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";

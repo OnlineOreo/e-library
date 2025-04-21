@@ -108,7 +108,7 @@ const EditInstitute = () => {
                 <Row>
                     <Col lg={12}>
                         <div className="d-flex justify-content-between align-items-center">
-                            <h3 className="mb-0 text-white">Edit User Type</h3>
+                            <h3 className="mb-0 text-dark">Edit User Type</h3>
                             <Link href="../" className="btn btn-white"> <FaMinusCircle /> Back</Link>
                         </div>
                     </Col>
