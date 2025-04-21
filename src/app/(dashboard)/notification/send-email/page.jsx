@@ -4,6 +4,8 @@ import { Form, Button, Container, Row, Col, Card, Spinner } from 'react-bootstra
 import axios from 'axios';
 import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
+import SunEditor from 'suneditor-react';
+import 'suneditor/dist/css/suneditor.min.css';
 
 export default function SendEmail() {
 
@@ -249,7 +251,15 @@ export default function SendEmail() {
 
                         <Form.Group className="mb-3">
                             <Form.Label className="fw-semibold">Email Content:</Form.Label>
-                            <Form.Control as="textarea" rows={5} name='content' placeholder="Enter Email Content" />
+                            <SunEditor
+                                name="content"
+                                height="200px"
+                                placeholder="Enter Email Content"
+                                onChange={(content) => {
+                                    // You can handle form data update here
+                                    console.log(content);
+                                }}
+                            />
                         </Form.Group>
 
                         {/* <Form.Group className="mb-4">

@@ -218,13 +218,13 @@ const ViewItemTypes = () => {
             <div className="d-flex justify-content-between align-items-center">
               <h3 className="mb-0 text-dark">Publisher Packages</h3>
               <div>
-                {/* <Button
+                <Button
                   variant="white"
                   onClick={handleOpenModal}
                   className="me-2"
                 >
                   <FaPlusCircle /> Import Publisher Package
-                </Button> */}
+                </Button>
                 <Link href="./publisher-package/add" className="btn btn-white">
                   <FaPlusCircle /> Publisher Package
                 </Link>

@@ -270,8 +270,10 @@ const Home = () => {
       {/* Modal with ImportUser */}
       <Modal show={showImportModal} onHide={handleCloseModal} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Import User</Modal.Title>
+          <Modal.Title class="w-25">Import User</Modal.Title>
+          
         </Modal.Header>
+        
         <Modal.Body>
           <ImportUser
             onSuccess={() => {

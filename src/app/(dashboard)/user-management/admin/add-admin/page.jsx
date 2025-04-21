@@ -41,7 +41,7 @@ const Home = () => {
     role: "",
     address: "",
     gender: "",
-    image: null, // 👈 Added image field
+    image: "", // 👈 Added image field
   });
 
   const handleInputChange = (event) => {
@@ -77,14 +77,17 @@ const Home = () => {
       setLoading(false);
       return;
     }
+    
+   
 
     const formDataToSend = new FormData();
 
     Object.entries(formData).forEach(([key, value]) => {
-      if (key === "image" && value instanceof File) {
-        formDataToSend.append(key, value);
-      } else if (key === "image") {
-        formDataToSend.append(key, new Blob([]));
+      if (key === "image") {
+        if (value instanceof File) {
+          formDataToSend.append(key, value); // Append only if image is selected
+        }
+        // Do nothing if image is not selected (i.e., optional)
       } else if (key === "mappings" && Array.isArray(value)) {
         value.forEach((item, index) => {
           Object.entries(item).forEach(([subKey, subValue]) => {
@@ -95,6 +98,7 @@ const Home = () => {
         formDataToSend.append(key, value);
       }
     });
+    
 
     const isSuperUser = formData.role === "ADMIN";
     formDataToSend.append("is_superuser", isSuperUser);
@@ -124,7 +128,7 @@ const Home = () => {
           role: "",
           address: "",
           gender: "",
-          image: null, // reset image field
+          image: "", // reset image field
         });
         router.push("/user-management/admin");
       }
