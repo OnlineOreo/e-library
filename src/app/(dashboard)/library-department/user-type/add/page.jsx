@@ -8,12 +8,14 @@ import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
 import Swal from "sweetalert2";
 import { FaMinusCircle } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 const AddInstitute = () => {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [errors, setErrors] = useState({});
     const [formData, setFormData] = useState({ type_name: "" });
+    const instituteId = useSelector((state) => state.institute.instituteId);
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -32,7 +34,7 @@ const AddInstitute = () => {
         return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
       };
 
-    const handleSubmit = async (event) => {
+    const handleSubmit = async (event,instituteId) => {
         event.preventDefault();
         setIsLoading(true);
         setErrors({}); 
@@ -45,7 +47,7 @@ const AddInstitute = () => {
         }
         try {
             await axios.post(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-types`,
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-types?institute_id=${instituteId}`,
                 formData,
                 {
                     headers: {
@@ -63,7 +65,7 @@ const AddInstitute = () => {
             });
 
             setFormData({ type_name: "" });
-            setTimeout(() => router.push('../user-type'), 2000);
+            setTimeout(() => router.push('../user-type'), 1000);
         } catch (error) {
             if (error.response?.data) {
                 setErrors(error.response.data);
@@ -88,7 +90,7 @@ const AddInstitute = () => {
                     </Col>
                 </Row>
                 <div className="card p-6 mt-5">
-                    <Form onSubmit={handleSubmit}>
+                    <Form onSubmit={(e)=>handleSubmit(e,instituteId)}>
                         <Row>
                             <Col lg={6} className="mb-3">
                                 <Form.Group controlId="formName">

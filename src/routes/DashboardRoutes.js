@@ -14,7 +14,6 @@ export const useDashboardMenu = () => {
   };
 
   const userRole = getUserRole();
-  // console.log("User Role:", userRole);
 
   const menu = [
     { id: uuid(), title: "Dashboard", icon: "home", link: "/dashboard" },
@@ -41,11 +40,6 @@ export const useDashboardMenu = () => {
       icon: "user",
       children: [
         { id: uuid(), link: "/user-management/users", name: "Manage User" },
-        {
-          id: uuid(),
-          link: "/user-management/users/add-user",
-          name: "Add User",
-        },
       ],
     });
   }
@@ -205,14 +199,14 @@ export const useDashboardMenu = () => {
     children: configMenu,
   });
   
-  if(userRole === "ADMIN"){
-    menu.push(  {
-      id: uuid(),
-      title: "View Logs",
-      icon: "git-pull-request",
-      link: "/logs",
-    })
-  }
+  // if(userRole === "ADMIN"){
+  //   menu.push(  {
+  //     id: uuid(),
+  //     title: "View Logs",
+  //     icon: "git-pull-request",
+  //     link: "/logs",
+  //   })
+  // }
 
   return menu;
 };

@@ -78,14 +78,14 @@ const NavbarTop = (props) => {
 
           <Nav className="ms-auto d-flex align-items-center gap-2">
             {/* Back to Home */}
-            <Link href="/" target="_blank" passHref>
+            <Link href="/" target="_blank" passHref title="Open frontend of student in new window">
               <button className="custom-nav-btn d-flex align-items-center gap-1">
                 <Home size="16px" /> Switch to student Dashboard
               </button>
             </Link>
 
             {/* Logs */}
-            <Link href="/logs" passHref>
+            <Link href="/logs" passHref title="Logs">
               <button className="custom-nav-btn d-flex align-items-center gap-1">
                 <FileText size="16px" /> Logs
               </button>
@@ -94,6 +94,7 @@ const NavbarTop = (props) => {
             {/* Logout */}
             <button
               className="custom-nav-btn d-flex align-items-center gap-1"
+              title="Log Out"
               onClick={()=> handleLogout(instituteId)}
             >
               <LogOut size="16px" /> Logout

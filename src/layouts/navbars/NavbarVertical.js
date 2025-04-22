@@ -1,17 +1,11 @@
 'use client'
 
-// import node module libraries
 import { Fragment, useContext, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useMediaQuery } from 'react-responsive';
 import { FaAngleDown } from "react-icons/fa";
-import {
-	ListGroup,
-	Card,
-	Image,
-	Badge,
-} from 'react-bootstrap';
+import { ListGroup, Card, Image, Badge } from 'react-bootstrap';
 import Accordion from 'react-bootstrap/Accordion';
 import AccordionContext from 'react-bootstrap/AccordionContext';
 import { useAccordionButton } from 'react-bootstrap/AccordionButton';

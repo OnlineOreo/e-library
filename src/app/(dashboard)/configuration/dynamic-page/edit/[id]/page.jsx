@@ -22,14 +22,16 @@ const EditConfigurationMeta = () => {
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
-  const [institutes, setInstitutes] = useState([]);
   const [existingImage, setExistingImage] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
 
+  const instituteId = useSelector((state) => state.institute.instituteId);
+
   const [formData, setFormData] = useState({
     page_name: "",
-    page_image: null,
+    page_image: "",
     page_content: "",
+    institute: instituteId,
   });
 
   const getToken = () => {
@@ -41,25 +43,6 @@ const EditConfigurationMeta = () => {
   };
 
   useEffect(() => {
-    const fetchInstitutes = async () => {
-      const token = getToken();
-      if (!token) {
-        router.push("/authentication/sign-in");
-        return;
-      }
-      try {
-        const { data } = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/institutes`,
-          {
-            headers: { Authorization: token },
-          }
-        );
-        setInstitutes(data);
-      } catch (error) {
-        toast.error("Failed to load institutes.");
-      }
-    };
-
     const fetchPageData = async () => {
       const token = getToken();
       if (!token) {
@@ -68,24 +51,22 @@ const EditConfigurationMeta = () => {
       }
       try {
         const { data } = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dynamic-page?page_id=${id}`,
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dynamic-page?page_id=${id}&institute_id=${instituteId}`,
           {
             headers: { Authorization: token },
           }
         );
         setFormData({
           page_name: data.page_name,
-          page_image: null,
-          institute: '',
+          page_image: "",
           page_content: data.page_content,
+          institute_id: instituteId,
         });
         setExistingImage(data.page_image);
       } catch (error) {
         toast.error("Failed to load page data.");
       }
     };
-
-    fetchInstitutes();
     fetchPageData();
   }, [id]);
 

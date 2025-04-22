@@ -145,10 +145,10 @@ const AddConfigurationMeta = () => {
                                         value={formData.title}
                                         placeholder="Enter title here"
                                         onChange={handleInputChange}
-                                        isInvalid={!!errors.title}
+                                        isInvalid={!!errors.non_field_errors}
                                     />
                                     <Form.Control.Feedback type="invalid">
-                                        {errors.title?.[0]}
+                                        {errors.non_field_errors?.[0]}
                                     </Form.Control.Feedback>
                                 </Form.Group>
                             </Col>

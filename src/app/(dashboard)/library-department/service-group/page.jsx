@@ -10,17 +10,19 @@ import { useRouter } from "next/navigation";
 import { FaEdit, FaPlusCircle } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
+import { useSelector } from "react-redux";
 
 export default function ServiceGroup() {
   const router = useRouter();
   const [serviceGroup, setServiceGroup] = useState([]);
   const [search, setSearch] = useState("");
+  const instituteId = useSelector((state) => state.institute.instituteId);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      loadServiceGroup();
+    if (typeof window !== "undefined" && instituteId) {
+      loadServiceGroup(instituteId);
     }
-  }, []);
+  }, [instituteId]);
 
   const getToken = () => {
     const cookieString = document.cookie
@@ -44,7 +46,7 @@ export default function ServiceGroup() {
 
   const userRole = getUserRole();
 
-  const loadServiceGroup = async () => {
+  const loadServiceGroup = async (instituteId) => {
     const token = getToken();
     if (!token) {
       toast.error("Authentication required!");
@@ -53,7 +55,7 @@ export default function ServiceGroup() {
     }
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/service-groups`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/service-groups?institute_id=${instituteId}`,
         { headers: { Authorization: `${token}` } }
       );
       if (response.status === 200) {

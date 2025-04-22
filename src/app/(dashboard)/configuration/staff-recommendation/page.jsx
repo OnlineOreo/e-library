@@ -18,13 +18,6 @@ export default function Configurationmeta() {
   const [isLoading, setIsLoading] = useState(true);
   const instituteId = useSelector((state) => state.institute.instituteId);
 
-  useEffect(() => {
-    if (instituteId) {
-      if (typeof window !== "undefined") {
-        loadStaffPick(instituteId);
-      }
-    }
-  }, [instituteId]);
 
   const getToken = () => {
     const cookieString = document.cookie
@@ -57,6 +50,14 @@ export default function Configurationmeta() {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (instituteId) {
+      if (typeof window !== "undefined") {
+        loadStaffPick(instituteId);
+      }
+    }
+  }, [instituteId]);
 
   const columns = [
     { field: "institute", headerName: "Institute", flex: 2 },
@@ -134,7 +135,7 @@ export default function Configurationmeta() {
             "Staff Recommendation has been deleted.",
             "success"
           );
-          loadStaffPick();
+          loadStaffPick(instituteId);
         } catch (error) {
           toast.error("Error deleting meta!");
           console.error(error);

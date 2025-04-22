@@ -4,7 +4,6 @@ import { Container, Col, Row, Spinner } from "react-bootstrap";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
-import { ActiveProjects } from "@/sub-components";
 import MethodDistributionChart from "@/app/Component/dashboard/log/MethodDistributionChart";
 import LogLevelDistributionChart from "@/app/Component/dashboard/log/LogLevelDistributionChart";
 import PathDistributionChart from "@/app/Component/dashboard/log/PathDistributionChart";

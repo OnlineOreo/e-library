@@ -136,7 +136,7 @@ export default function Menu() {
   return (
     <>
       <Form onSubmit={handleSubmit}>
-        <Row className="p-4 user-select-none">
+        <Row className="p-4 user-select-none input_hidden">
           <CheckboxCard
             title="Publishers"
             checklists={publisherList}
@@ -177,7 +177,7 @@ export default function Menu() {
 const CheckboxCard = ({ title, checklists, idKey, nameKey, onChange }) => (
   <Col lg={3}>
     <Card>
-      <Card.Body className="p-0">
+      <Card.Body className="p-0 input_hidden">
         <h5 className="p-2 bg-dark text-white rounded-top-3">{title}</h5>
       </Card.Body>
       <div className="p-2" style={{ maxHeight:'350px',overflow:'auto' }}>
