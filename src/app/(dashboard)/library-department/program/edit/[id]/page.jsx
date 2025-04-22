@@ -8,11 +8,12 @@ import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
 import Swal from "sweetalert2";
 import { FaMinusCircle } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 const EditProgram = () => {
     const router = useRouter();
     const { id: programId } = useParams();
-
+    const instituteId = useSelector((state) => state.institute.instituteId);
     const [isLoading, setIsLoading] = useState(false);
     const [errors, setErrors] = useState({});
     const [formData, setFormData] = useState({ program_name: "", program_code: "", library: "" });
@@ -27,7 +28,7 @@ const EditProgram = () => {
       };
 
     useEffect(() => {
-        const fetchLibraries = async () => {
+        const fetchLibraries = async (instituteId) => {
             const token = getToken();
             if (!token) {
                 router.push("/authentication/sign-in");
@@ -35,7 +36,7 @@ const EditProgram = () => {
             }
             try {
                 const response = await axios.get(
-                    `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/libraries`,
+                    `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/libraries?institute_id=${instituteId}`,
                     {
                         headers: {
                             "Authorization": `${token}`,
@@ -71,9 +72,11 @@ const EditProgram = () => {
             }
         };
 
-        fetchLibraries();
+        if(instituteId){
+            fetchLibraries(instituteId);
+        }
         fetchProgram();
-    }, [programId]);
+    }, [instituteId,programId]);
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;

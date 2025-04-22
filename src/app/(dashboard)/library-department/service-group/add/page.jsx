@@ -7,11 +7,13 @@ import { ToastContainer, toast } from "react-toastify";
 import Link from "next/link";
 import Swal from "sweetalert2";
 import { FaMinusCircle } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 export default function AddServiceGroup() {
   const router = useRouter();
   const [serviceName, setServiceName] = useState("");
   const [loading, setLoading] = useState(false);
+  const instituteId = useSelector((state) => state.institute.instituteId);
 
   const getToken = () => {
     const cookieString = document.cookie
@@ -21,7 +23,7 @@ export default function AddServiceGroup() {
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e,instituteId) => {
     e.preventDefault();
     if (!serviceName.trim()) {
       toast.error("Service name is required!");
@@ -38,7 +40,7 @@ export default function AddServiceGroup() {
     setLoading(true);
     try {
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/service-groups`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/service-groups?institute_id=${instituteId}`,
         { service_name: serviceName },
         { headers: { Authorization: `${token}` } }
       );
@@ -74,7 +76,7 @@ export default function AddServiceGroup() {
           </Col>
         </Row>
         <div className="card p-4">
-          <Form onSubmit={handleSubmit}>
+          <Form onSubmit={(e)=>handleSubmit(e,instituteId)}>
             <Form.Group controlId="serviceName">
               <Form.Label>Service Group Name</Form.Label>
               <Form.Control

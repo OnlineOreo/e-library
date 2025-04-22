@@ -8,10 +8,12 @@ import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
 import Swal from "sweetalert2";
 import { FaMinusCircle } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 const AddProgram = () => {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
+    const instituteId = useSelector((state) => state.institute.instituteId);
     const [errors, setErrors] = useState({});
     const [formData, setFormData] = useState({ program_name: "", program_code: "", library: "" });
     const [libraries, setLibraries] = useState([]);
@@ -25,7 +27,7 @@ const AddProgram = () => {
       };
 
     useEffect(() => {
-        const fetchLibraries = async () => {
+        const fetchLibraries = async (instituteId) => {
             const token = getToken();
             if (!token) {
                 router.push("/authentication/sign-in");
@@ -33,7 +35,7 @@ const AddProgram = () => {
             }
             try {
                 const response = await axios.get(
-                    `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/libraries`,
+                    `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/libraries?institute_id=${instituteId}`,
                     {
                         headers: {
                             "Authorization": `${token}`,
@@ -46,8 +48,10 @@ const AddProgram = () => {
                 toast.error("Failed to fetch libraries!");
             }
         };
-        fetchLibraries();
-    }, []);
+        if(instituteId){
+            fetchLibraries(instituteId);
+        }
+    }, [instituteId]);
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -58,7 +62,7 @@ const AddProgram = () => {
         }
     };
 
-    const handleSubmit = async (event) => {
+    const handleSubmit = async (event,instituteId) => {
         event.preventDefault();
         setIsLoading(true);
         setErrors({}); 
@@ -71,7 +75,7 @@ const AddProgram = () => {
         }
         try {
             await axios.post(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/programs`,
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/programs?institute_id=${instituteId}`,
                 formData,
                 {
                     headers: {
@@ -114,7 +118,7 @@ const AddProgram = () => {
                     </Col>
                 </Row>
                 <div className="card p-6 mt-5">
-                    <Form onSubmit={handleSubmit}>
+                    <Form onSubmit={(e)=>handleSubmit(e,instituteId)}>
                         <Row>
                             <Col lg={4} className="mb-3">
                                 <Form.Group controlId="formName">

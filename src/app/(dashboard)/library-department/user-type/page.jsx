@@ -11,11 +11,13 @@ import { FaEdit } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
 import { FaPlusCircle } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 const ViewUserType = () => {
   const router = useRouter();
   const successToaster = (text) => toast(text);
   const errorToaster = (text) => toast.error(text);
+  const instituteId = useSelector((state) => state.institute.instituteId);
 
   const [userType, setUserType] = useState([]);
   const [search, setSearch] = useState("");
@@ -43,12 +45,12 @@ const ViewUserType = () => {
   const userRole = getUserRole();
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      loadUserType();
+    if (typeof window !== "undefined" && instituteId) {
+      loadUserType(instituteId);
     }
-  }, []);
+  }, [instituteId]);
 
-  const loadUserType = async () => {
+  const loadUserType = async (instituteId) => {
     const token = getToken();
     if (!token) {
       errorToaster("Authentication required!");
@@ -58,7 +60,7 @@ const ViewUserType = () => {
 
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-types`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-types?institute_id=${instituteId}`,
         {
           headers: { Authorization: `${token}` },
         }

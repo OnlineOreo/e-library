@@ -51,10 +51,10 @@ const Navbar = () => {
   };
 
   const handleLogout = async (institute_id) => {
+    const token = getToken();
+    const session_id = getSession();
+    const userId = getUserId();
     try {
-      const token = getToken();
-      const session_id = getSession();
-      const userId = getUserId();
       await axios.put(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-session?session_id=${session_id}&institute_id=${institute_id}&user_id=${userId}`,
         {
@@ -97,7 +97,7 @@ const Navbar = () => {
     if (!publisherUrls[publisher.publisher_name]) {
       Swal.fire({
         title: "Warning!",
-        text: "Publisher Url not found!",
+        text: "Publisher not available!",
         icon: "warning",
         confirmButtonText: "OK",
       });
@@ -274,7 +274,7 @@ const Navbar = () => {
                       <AuthButtons
                         token={token}
                         setToken={setToken}
-                        handleLogout={handleLogout}
+                        handleLogout={()=>handleLogout(instituteId)}
                         show={show}
                         setShow={setShow}
                         publisherUrls={publisherUrls}

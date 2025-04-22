@@ -15,13 +15,17 @@ import axios from "axios";
 import { FaMinusCircle } from "react-icons/fa";
 import { ImCross } from "react-icons/im";
 import Swal from "sweetalert2";
+import { useSelector } from "react-redux";
+import { Loader } from "react-feather";
 
 const EditUser = () => {
   const router = useRouter();
   const { id } = useParams();
   const successToaster = (text) => toast(text);
   const errorToaster = (text) => toast.error(text);
+  const instituteIds = useSelector((state) => state.institute.instituteId);
 
+  const [isUpdating, setIsUpdating] = useState(false);
   const [step, setStep] = useState(1);
   const [serviceGroup, setServiceGroup] = useState([]);
   const [contentGroup, setContentGroup] = useState([]);
@@ -53,7 +57,7 @@ const EditUser = () => {
       return;
     }
 
-    const fetchData = async () => {
+    const fetchData = async (instituteIds, id) => {
       try {
         const [
           userRes,
@@ -61,6 +65,8 @@ const EditUser = () => {
           serviceGroupRes,
           contentGroupRes,
           userTypeRes,
+          depRes,
+          proRes,
         ] = await Promise.all([
           axios.get(
             `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users?user_id=${id}`,
@@ -72,20 +78,35 @@ const EditUser = () => {
             headers: { Authorization: `${token}` },
           }),
           axios.get(
-            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/service-groups`,
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/service-groups?institute_id=${instituteIds}`,
             {
               headers: { Authorization: `${token}` },
             }
           ),
           axios.get(
-            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/content-groups`,
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/content-groups?institute_id=${instituteIds}`,
             {
               headers: { Authorization: `${token}` },
             }
           ),
-          axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-types`, {
-            headers: { Authorization: `${token}` },
-          }),
+          axios.get(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-types?institute_id=${instituteIds}`,
+            {
+              headers: { Authorization: `${token}` },
+            }
+          ),
+          axios.get(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/departments?institute_id=${instituteIds}`,
+            {
+              headers: { Authorization: `${token}` },
+            }
+          ),
+          axios.get(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/programs?institute_id=${instituteIds}`,
+            {
+              headers: { Authorization: `${token}` },
+            }
+          ),
         ]);
 
         setFormData(userRes.data);
@@ -100,17 +121,19 @@ const EditUser = () => {
         );
         setLibrary(initialInstitute?.libraries || []);
 
-        const initialLibrary = initialInstitute?.libraries.find(
-          (lib) => lib.library_id === userRes.data.mappings[0].library
-        );
-        setDepartments(initialLibrary?.departments || []);
-        setPrograms(initialLibrary?.programs || []);
+        // const initialLibrary = initialInstitute?.libraries.find(
+        //   (lib) => lib.library_id === userRes.data.mappings[0].library
+        // );
+        setDepartments(depRes.data || []);
+        setPrograms(proRes.data || []);
       } catch (error) {
         errorToaster("Failed to fetch data!");
       }
     };
-    fetchData();
-  }, [id]);
+    if (instituteIds && id) {
+      fetchData(instituteIds, id);
+    }
+  }, [instituteIds, id]);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -138,6 +161,7 @@ const EditUser = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setIsUpdating(true);
     const token = getToken();
     if (!token) {
       errorToaster("Authentication required!");
@@ -168,12 +192,17 @@ const EditUser = () => {
 
       if (response.status === 200) {
         Swal.fire("Success!", "User updated successfully!", "success");
+        setIsUpdating(false);
         router.push("/user-management/users");
       } else {
         errorToaster("Something went wrong!");
+        setIsUpdating(false);
       }
     } catch (error) {
-      errorToaster(error.response?.data?.message || "Something went wrong!");
+      setIsUpdating(false);
+      errorToaster(
+        error.response?.data?.message || error.response?.data?.mappings[0]
+      );
     }
   };
 
@@ -262,8 +291,8 @@ const EditUser = () => {
       if (name === "library") {
         const selectedLibrary = library.find((lib) => lib.library_id === value);
 
-        setDepartments(selectedLibrary?.departments || []);
-        setPrograms(selectedLibrary?.programs || []);
+        // setDepartments(selectedLibrary?.departments || []);
+        // setPrograms(selectedLibrary?.programs || []);
 
         updatedFormData.mappings[index] = {
           ...updatedFormData.mappings[index],
@@ -299,7 +328,7 @@ const EditUser = () => {
         ...prevFormData.mappings,
         {
           institute: instituteId,
-          library: firstLibrary,
+          library: "",
           department: "",
           program: "",
         },
@@ -307,11 +336,50 @@ const EditUser = () => {
     }));
   };
 
-  const removeMapping = (index) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      mappings: prevFormData.mappings.filter((_, i) => i !== index),
-    }));
+  const removeMapping = async (index, mapping_id, user_id) => {
+    if(mapping_id != undefined){
+
+      const result = await Swal.fire({
+        title: "Are you sure?",
+      text: "Do you really want to remove this mapping?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        const token = getToken();
+
+        await axios.delete(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users?user_id=${user_id}&mapping_ids=${mapping_id}`,
+          {
+            headers: {
+              Authorization: `${token}`,
+            },
+          }
+        );
+        
+        // Remove from local state
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          mappings: prevFormData.mappings.filter((_, i) => i !== index),
+        }));
+        
+        Swal.fire("Deleted!", "The mapping has been removed.", "success");
+      } catch (error) {
+        console.error("Failed to delete mapping:", error);
+        Swal.fire("Error", "Something went wrong while deleting.", "error");
+      }
+    }
+    }else{
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        mappings: prevFormData.mappings.filter((_, i) => i !== index),
+      }));
+    }
   };
 
   return (
@@ -417,7 +485,7 @@ const EditUser = () => {
                         inline
                         key={gender}
                         label={gender}
-                        htmlFor={gender}
+                        id={`gender-${gender}`} // give unique ID
                         name="gender"
                         type="radio"
                         value={gender}
@@ -494,7 +562,7 @@ const EditUser = () => {
                   </Form.Group>
                 </Col> */}
                 {formData.mappings?.map((mapping, index) => (
-                  <>
+                  <Fragment key={index}>
                     <Col lg={6}>
                       <Form.Group className="mb-3" controlId="formDesignation">
                         <Form.Label>Content Group</Form.Label>
@@ -580,7 +648,9 @@ const EditUser = () => {
                         className="mb-3"
                         controlId={`formDepartment${index}`}
                       >
-                        <Form.Label>Department</Form.Label>
+                        <Form.Label title={mapping.department || ""}>
+                          Department
+                        </Form.Label>
                         <Form.Select
                           name="department"
                           value={mapping.department || ""}
@@ -621,21 +691,27 @@ const EditUser = () => {
                           ))}
                         </Form.Select>
                       </Form.Group>
-                      <Button
-                        variant="danger"
-                        className="position-absolute"
-                        style={{ right: "-10px", top: "-20px" }}
-                        onClick={() => removeMapping(index)}
-                      >
-                        <ImCross />
-                      </Button>
+                      {index !== 0 && (
+                        <Button
+                          variant="danger"
+                          className="position-absolute"
+                          style={{ right: "-10px", top: "-20px" }}
+                          onClick={() =>
+                            removeMapping(index, mapping.user_mapping_id, id)
+                          }
+                        >
+                          <ImCross />
+                        </Button>
+                      )}
                     </Col>
-                  </>
+                  </Fragment>
                 ))}
 
-                <Button variant="primary" onClick={addNewMapping}>
-                  Add More
-                </Button>
+                <Col lg={2}>
+                  <Button variant="primary" onClick={addNewMapping}>
+                    Add Mapping
+                  </Button>
+                </Col>
               </Row>
             )}
 
@@ -653,9 +729,10 @@ const EditUser = () => {
               ) : (
                 ""
               )}
-              {step == 4 && (
-                <Button variant="primary" type="submit">
-                  Submit
+
+              {step === 4 && (
+                <Button variant="primary" type="submit" disabled={isUpdating}>
+                  {isUpdating ? <Loader /> : "Update"}
                 </Button>
               )}
             </div>
