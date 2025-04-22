@@ -166,6 +166,7 @@ const Home = () => {
   const columns = [
     { field: "id", headerName: "User ID", flex: 2 },
     { field: "name", headerName: "Name", flex: 2 },
+    { field: "email", headerName: "Email", flex: 2 },
     { field: "phone_number", headerName: "Number", flex: 2 },
     { field: "role", headerName: "Role", flex: 2 },
     {

@@ -228,10 +228,6 @@ const EditPublisherPackage = () => {
   
     const { started_at, ended_at } = formData;
   
-    if (!started_at || started_at < today) {
-      newErrors.started_at = ["Start date cannot be in the past."];
-    }
-  
     if (!ended_at || ended_at < today) {
       newErrors.ended_at = ["End date cannot be in the past."];
     }

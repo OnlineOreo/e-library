@@ -20,7 +20,8 @@ export default function TopUser({ headingName, bannerData }) {
   // const [topUsers, setTopUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const topUsers = landingPageData.landingPageData?.top_users || [];
+  // const topUsers = landingPageData.landingPageData?.top_users || [];
+  const topUsers = [];
 
 
   if (loading || !topUsers.length) return null;

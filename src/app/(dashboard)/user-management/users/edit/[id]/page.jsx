@@ -2,14 +2,7 @@
 import { Fragment, useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
-import {
-  Container,
-  Col,
-  Row,
-  Form,
-  Button,
-  ProgressBar,
-} from "react-bootstrap";
+import { Container, Col, Row, Form, Button, ProgressBar } from "react-bootstrap";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import { FaMinusCircle } from "react-icons/fa";

@@ -129,7 +129,7 @@ export default function PathDistributionChartHorizontal({ logs = [] }) {
           <div className="text-center">
             <Spinner />
           </div>
-        ) : finalSeries[0].data.length === 0 ? (
+        ) : finalSeries?.[0]?.data?.length === 0 ? (
           <p className="text-center text-muted">No path data available</p>
         ) : (
           <div style={{ width: "100%" }}>
