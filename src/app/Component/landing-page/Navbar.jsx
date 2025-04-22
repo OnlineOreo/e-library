@@ -238,7 +238,7 @@ const Navbar = () => {
                   <Link href="/">
                     <img
                       src={
-                        landingPageData?.instituteId?.configurations?.[0]?.logo || "default"
+                        landingPageData?.landingPageData?.configurations?.[0]?.logo || "default"
                       }
                       alt="App Icon"
                     />
@@ -300,7 +300,7 @@ const Navbar = () => {
           </div>
         </header>
       </div>
-      <MobileNav menuOpen={menuOpen} toggleMenu={toggleMenu} />
+      <MobileNav menuOpen={menuOpen} publisherUrls={publisherUrls} toggleMenu={toggleMenu} />
     </>
   );
 };

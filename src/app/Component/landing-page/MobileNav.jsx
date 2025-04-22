@@ -3,7 +3,7 @@ import Link from "next/link";
 import { FaAngleDown } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 
-const MobileNav = ({ menuOpen, toggleMenu }) => {
+const MobileNav = ({ menuOpen, toggleMenu ,publisherUrls }) => {
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [token, setToken] = useState(null);
 
@@ -25,36 +25,36 @@ const MobileNav = ({ menuOpen, toggleMenu }) => {
 
   const landingPageData = useSelector((state) => state.landingPageDataSlice);
 
-  const bannerData = landingPageData?.instituteId?.configurations?.[0] || [];
+  const bannerData = landingPageData?.landingPageData?.configurations?.[0] || [];
 
-  const publisherUrls = {
-    "EBSCO Academic Collection": `https://research-ebsco-com.mriirs.libvirtuua.com:8811/login.aspx?authtype=ip,uid&custid=ns193200&groupid=main&profile=ehost&defaultdb=bsh&token=${token}`,
-    Manupatra: `https://www-manupatrafast-in.mriirs.libvirtuua.com:8811/LoginSwitch/ipRedirect.aspx?token=${token}`,
-  };
+  // const publisherUrls = {
+  //   "EBSCO Academic Collection": `https://research-ebsco-com.mriirs.libvirtuua.com:8811/login.aspx?authtype=ip,uid&custid=ns193200&groupid=main&profile=ehost&defaultdb=bsh&token=${token}`,
+  //   Manupatra: `https://www-manupatrafast-in.mriirs.libvirtuua.com:8811/LoginSwitch/ipRedirect.aspx?token=${token}`,
+  // };
 
   const sections = [
     {
       key: "publishers",
       label: "eResources",
-      data: landingPageData?.instituteId?.publishers || [],
+      data: landingPageData?.landingPageData?.publishers || [],
       field: "publisher_name",
     },
     {
       key: "categories",
       label: "Categories",
-      data: landingPageData?.instituteId?.categories || [],
+      data: landingPageData?.landingPageData?.categories || [],
       field: "category_name",
     },
     {
       key: "media",
       label: "Media",
-      data: landingPageData?.instituteId?.medias || [],
+      data: landingPageData?.landingPageData?.medias || [],
       field: "media_name",
     },
     {
       key: "collections",
       label: "Collections",
-      data: landingPageData?.instituteId?.collections || [],
+      data: landingPageData?.landingPageData?.collections || [],
       field: "collection_name",
     },
   ];
@@ -68,7 +68,19 @@ const MobileNav = ({ menuOpen, toggleMenu }) => {
         className="offcanvas-header text-white"
         style={{ backgroundColor: bannerData?.color1 }}
       >
-        <h5 className="offcanvas-title text-dark">LibVirtuUa</h5>
+        {/* <h5 className="offcanvas-title text-dark">
+          LibVirtuUa
+          </h5> */}
+           <div className="logo logo-width-1 d-block d-lg-none">
+                  <Link href="/">
+                    <img
+                      src={
+                        landingPageData?.landingPageData?.configurations?.[0]?.logo || "default"
+                      }
+                      alt="App Icon"
+                    />
+                  </Link>
+                </div>
         <button
           type="button"
           className="btn-close btn-close-dark"
