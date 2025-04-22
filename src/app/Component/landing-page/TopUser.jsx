@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import axios from "axios";
 import {
   Autoplay,
   Pagination,
@@ -15,13 +16,35 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 
-export default function TopUser({ headingName, bannerData }) {
+export default function TopUser({ headingName, bannerData, landingPageData, instituteId, token }) {
   const swiperRef = useRef(null);
-  // const [topUsers, setTopUsers] = useState([]);
+  const [topUsers, setTopUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const topUsers = landingPageData.landingPageData?.top_users || [];
+  useEffect(() => {
+    const fetchTopUsers = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/reports?institute_id=${instituteId}&top_users=true`,
+          {
+            headers: { Authorization: `${token}` },
+          }
+        );
 
+        if (response.status === 200) {
+          setTopUsers(response.data?.top_users || []);
+        }
+      } catch (error) {
+        console.error("Error fetching top users:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (instituteId && token) {
+      fetchTopUsers();
+    }
+  }, [instituteId, token]);
 
   if (loading || !topUsers.length) return null;
 
