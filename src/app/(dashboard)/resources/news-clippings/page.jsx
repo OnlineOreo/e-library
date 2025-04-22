@@ -11,6 +11,7 @@ import { FaEdit, FaPlusCircle } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
 import Image from "next/image";
+import { useSelector } from "react-redux";
 
 const NewsClipping = () => {
   const router = useRouter();
@@ -19,6 +20,8 @@ const NewsClipping = () => {
 
   const [newsClipping, setNewsClipping] = useState([]);
   const [search, setSearch] = useState("");
+
+  const instituteId = useSelector((state) => state.institute.instituteId);
 
   const getToken = () => {
     const cookieString = document.cookie
@@ -30,9 +33,11 @@ const NewsClipping = () => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      loadItemTypes();
+      if(instituteId){
+        loadItemTypes();
+      }
     }
-  }, []);
+  }, [instituteId]);
 
   const loadItemTypes = async () => {
     const token = getToken();
@@ -44,7 +49,7 @@ const NewsClipping = () => {
 
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/e-news-clips`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/e-news-clips?institute=${instituteId}`,
         {
           headers: { Authorization: `${token}` },
         }

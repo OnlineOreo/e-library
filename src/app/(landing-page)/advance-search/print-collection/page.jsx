@@ -19,7 +19,7 @@ async function fetachSolrData(searchQuery, startIndex = 0) {
       resultsCount: numFound,
       path:solrUrl,
       status_code:response.status,
-      response_body:JSON.stringify(docs),
+      response_body:JSON.stringify(docs), 
       error_trace:response.error ? JSON.stringify(response.error) : "",
     };
 

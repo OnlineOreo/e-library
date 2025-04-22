@@ -155,7 +155,10 @@ const Navbar = () => {
       type: "dropdown",
       title: "Important Link",
       href: "/",
-      items: landingPageData?.landingPageData?.metas || [],
+      items: [
+        ...(landingPageData?.landingPageData?.metas || []),
+        ...(landingPageData?.landingPageData?.dynamic_page || []),
+      ],
     },
     {
       type: "dropdown",

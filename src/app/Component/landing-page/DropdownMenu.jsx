@@ -107,20 +107,22 @@ const DropdownMenu = ({
                   item.configuration_media_id ||
                   item.configuration_collection_id ||
                   item.configuration_meta_id ||
+                  item.page_id ||
                   item.name
                 }
                 className="nav"
                 style={{ minWidth: "33%" }}
               >
-                <a className="dropdown-link one_line_ellipses cursor_pointer_underline" 
+                <a className="dropdown-link cursor_pointer_underline" 
                 href=  {
                   item.link_url ||
+                  (item.page_id  && `/dynamic-page/${item.page_id}`)||
                   item.href ||
                   "#"
                 }
                   >
                   <img
-                    src={item.image}
+                    src={item.image || item.page_image}
                     alt=""
                     style={{
                       width: 25,
@@ -133,6 +135,7 @@ const DropdownMenu = ({
                     item.media_name ||
                     item.collection_name ||
                     item.list ||
+                    item.page_name ||
                     item.name}
                 </a>
               </div>
