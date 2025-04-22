@@ -25,11 +25,6 @@ const Department = () => {
 
   const instituteId = useSelector((state) => state.institute.instituteId);
 
-  useEffect(() => {
-    if (instituteId) {
-      loadNotices();
-    }
-  }, [instituteId]);
 
   const getToken = () => {
     const cookieString = document.cookie
@@ -63,6 +58,14 @@ const Department = () => {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      if (instituteId) {
+        loadNotices();
+      }
+    }
+  }, [instituteId]);
 
   const handleSearch = (event) => {
     const searchValue = event.target.value;

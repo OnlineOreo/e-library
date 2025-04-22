@@ -73,8 +73,10 @@ const AddCategory = () => {
     };
 
     useEffect(()=>{
-        loadNotices();
-    },[])
+        if(prop){
+            loadNotices();
+        }
+    },[prop])
 
 
     const handleSubmit = async (event) => {
