@@ -205,14 +205,14 @@ export const useDashboardMenu = () => {
     children: configMenu,
   });
   
-  if(userRole === "ADMIN"){
-    menu.push(  {
-      id: uuid(),
-      title: "View Logs",
-      icon: "git-pull-request",
-      link: "/logs",
-    })
-  }
+  // if(userRole === "ADMIN"){
+  //   menu.push(  {
+  //     id: uuid(),
+  //     title: "View Logs",
+  //     icon: "git-pull-request",
+  //     link: "/logs",
+  //   })
+  // }
 
   return menu;
 };

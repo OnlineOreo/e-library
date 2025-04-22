@@ -75,9 +75,9 @@ const Profile = () => {
             <div className="d-flex align-items-center">
               <div className="avatar-xxl avatar-indicators avatar-online me-2 position-relative d-flex justify-content-end align-items-end mt-n10">
                 <Image src={authUser?.image && authUser.image !== "" ? authUser.image : "/images/avatar/avatar-1.jpg"} alt="Verified" className="avatar-xxl rounded-circle border border-4 border-white-color-40" width={200} height={200} />
-                <Link href="#!" className="position-absolute top-0 right-0 me-2" data-bs-toggle="tooltip" data-placement="top" title="" data-original-title="Verified">
+                {/* <Link href="#!" className="position-absolute top-0 right-0 me-2" data-bs-toggle="tooltip" data-placement="top" title="" data-original-title="Verified">
                   <Image src="/images/svg/checked-mark.svg" alt="" height="30" width="30" />
-                </Link>
+                </Link> */}
               </div>
               {/* text */}
               <div className="lh-1">

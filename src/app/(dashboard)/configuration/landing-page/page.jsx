@@ -9,7 +9,7 @@ import NewsCategory from "./NewsCategory";
 
 const Badges = () => {
   return (
-    <Container fluid className="p-6">
+    <Container fluid className="p-6 input_hidden">
       <Row>
         <Col xl={12}>
           <Tab.Container defaultActiveKey="header">
