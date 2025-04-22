@@ -1,37 +1,29 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Autoplay,
-  Navigation,
   Pagination,
   Scrollbar,
   A11y,
 } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import { useSelector } from "react-redux";
 
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 
-const defaultUsers = [
-  { name: "Dr. Arely Gusikowski", role: "admin", rank: "#1", initials: "AG" },
-  { name: "Mr. John Doe", role: "moderator", rank: "#2", initials: "JD" },
-  { name: "Ms. Jane Smith", role: "user", rank: "#3", initials: "JS" },
-  { name: "Dr. Robert Brown", role: "admin", rank: "#4", initials: "RB" },
-];
-
 export default function TopUser({ headingName, bannerData }) {
   const swiperRef = useRef(null);
-  const landingPageData = useSelector((state) => state.landingPageDataSlice);
+  // const [topUsers, setTopUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const topUsers = landingPageData.landingPageData?.top_users || [];
 
-  // 🔒 Do not render anything if no top users
-  if (!topUsers.length) return null;
+
+  if (loading || !topUsers.length) return null;
 
   return (
     <>
@@ -70,9 +62,10 @@ export default function TopUser({ headingName, bannerData }) {
                         height: 85,
                         fontSize: 24,
                         borderRadius: "50%",
+                        background: "#000",
                       }}
                     >
-                      {user.initials}
+                      {user.initials || user.name?.slice(0, 2).toUpperCase()}
                     </div>
                     <div className="ms-4">
                       <h5 className="mb-1 custom-banner">{user.name}</h5>
@@ -131,4 +124,3 @@ export default function TopUser({ headingName, bannerData }) {
     </>
   );
 }
-

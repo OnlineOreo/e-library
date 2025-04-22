@@ -18,8 +18,6 @@ const Home = () => {
   const [searchText, setSearchText] = useState("");
   const instituteId = useSelector((state) => state.institute.instituteId);
 
-  // console.log(instituteId)
-
   const getToken = () => {
     const cookieString = document.cookie
       .split("; ")
@@ -38,7 +36,7 @@ const Home = () => {
 
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users?admin=true  `,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users?admin=true`,
         {
           headers: { Authorization: `${token}` },
           method: "GET",
@@ -61,8 +59,6 @@ const Home = () => {
   };
 
   useEffect(() => {
-    // if (instituteId) {
-    // }
     loadUser();
   }, []);
 
@@ -92,11 +88,10 @@ const Home = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          var deleteMappingIdArr = [];
-          params.row.mappings.forEach((element) => {
-            deleteMappingIdArr.push(element.user_mapping_id);
-          });
-          var deleteMappingParam = deleteMappingIdArr.join(",");
+          const deleteMappingIdArr = params.row.mappings.map(
+            (element) => element.user_mapping_id
+          );
+          const deleteMappingParam = deleteMappingIdArr.join(",");
           await axios.delete(
             `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users?user_id=${params.id}&mapping_ids=${deleteMappingParam}&delete_all=True`,
             {
@@ -122,21 +117,53 @@ const Home = () => {
 
   const columns = [
     { field: "id", headerName: "User ID", flex: 2 },
+    {
+      field: "image",
+      headerName: "Photo",
+      flex: 2,
+      renderCell: (params) => (
+        <img
+          src={params.value || "/images/avatar/avatar-1.jpg"}
+          alt="User"
+          style={{
+            width: "50px",
+            height: "50px",
+            borderRadius: "50%",
+            objectFit: "cover",
+          }}
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = "/images/avatar/avatar-1.jpg";
+          }}
+        />
+      ),
+    },    
+    
     { field: "name", headerName: "Name", flex: 2 },
     { field: "email", headerName: "Email", flex: 2 },
     { field: "phone_number", headerName: "Number", flex: 2 },
     { field: "role", headerName: "Role", flex: 2 },
-    // {
-    //   field: "action",
-    //   headerName: "Action",
-    //   flex: 2,
-    //   renderCell: (params) => (
-    //     <>
-    //     <button onClick={() => handleEdit(params)} className="btn btn-primary mx-2 btn-sm"><FaEdit /></button>
-    //     <button onClick={() => handleDelete(params)} className="btn btn-danger btn-sm"><RiDeleteBin6Line /></button>
-    //     </>
-    //   ),
-    // },
+    {
+      field: "action",
+      headerName: "Action",
+      flex: 2,
+      renderCell: (params) => (
+        <>
+          <button
+            onClick={() => handleEdit(params)}
+            className="btn btn-primary mx-2 btn-sm"
+          >
+            <FaEdit />
+          </button>
+          <button
+            onClick={() => handleDelete(params)}
+            className="btn btn-danger btn-sm"
+          >
+            <RiDeleteBin6Line />
+          </button>
+        </>
+      ),
+    },
   ];
 
   return (

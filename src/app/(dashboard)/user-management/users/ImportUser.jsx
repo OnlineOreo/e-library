@@ -5,12 +5,12 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
-const ImportUser = ({onSuccess}) => {
+const ImportUser = ({ onSuccess }) => {
   const router = useRouter();
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState("");
-  const [error , setError] = useState(false)
+  const [error, setError] = useState(false);
 
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -57,14 +57,15 @@ const ImportUser = ({onSuccess}) => {
 
       setFile(null);
       onSuccess?.();
-      setError(false)
+      setError(false);
+      setMessage("Upload successful!");
     } catch (error) {
-      var backendError =
+      const backendError =
         error?.response?.data?.error ||
         error?.response?.data?.message ||
         error.message;
       setMessage(`Upload failed: ${backendError}`);
-      setError(true)
+      setError(true);
     } finally {
       setUploading(false);
     }
@@ -72,24 +73,42 @@ const ImportUser = ({onSuccess}) => {
 
   return (
     <>
+     
       <div className="mb-3">
+     
         <input
           type="file"
           className="form-control"
           onChange={handleFileChange}
         />
       </div>
+      <div className="mb-3 d-flex justify-content-center">
+      <a
+          href="/sample-import/users.xlsx"
+          download
+          className=" w-70"
+        >
+          Download Sample File
+        </a>
+        </div>
 
-      <button
-        className="btn btn-primary w-100"
-        onClick={handleUpload}
-        disabled={uploading}
-      >
-        {uploading ? "Uploading..." : "Upload"}
-      </button>
+      <div className="d-flex justify-content-between gap-2">
+        <button
+          className="btn btn-primary w-100 "
+          onClick={handleUpload}
+          disabled={uploading}
+        >
+          {uploading ? "Uploading..." : "Upload"}
+        </button>
 
+       
+      </div>
+      
       {message && (
-        <div className={`mt-3 alert alert-${error ? 'danger' : 'info'}`} role="alert">
+        <div
+          className={`mt-3 alert alert-${error ? "danger" : "info"}`}
+          role="alert"
+        >
           {message}
         </div>
       )}

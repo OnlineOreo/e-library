@@ -77,7 +77,15 @@ const ImportProgram = ({onSuccess}) => {
           onChange={handleFileChange}
         />
       </div>
-
+      <div className="mb-3 d-flex justify-content-center">
+      <a
+          href="/sample-import/program.xlsx"
+          download
+          className=" w-70"
+        >
+          Download Sample File
+        </a>
+        </div>
       <button
         className="btn btn-primary w-100"
         onClick={handleUpload}
