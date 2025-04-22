@@ -4,9 +4,9 @@ import { Card, Button } from 'react-bootstrap';
 import ShareButtonDropdown from './ShareButtonDropdown';
 import CitationDownload from './CitationDownload';
 import BookmarkCatalog from './BookmarkCatalog';
-import { MdOutlineMenuBook } from "react-icons/md";
 import { useSelector } from 'react-redux';
 import axios from 'axios';
+import BookCover from './BookCover';
 
 
 const CatalogGridCard = (props) => {
@@ -69,9 +69,7 @@ const CatalogGridCard = (props) => {
     return (
         <Card>
             <div className="image text-center">
-                {/* <PiBookOpenTextFill size={170} className='text-secondary' /> */}
-                <MdOutlineMenuBook size={170} className='text-secondary' />
-                {/* <GiBookmarklet size={170} className='text-secondary' /> */}
+                <BookCover title={props.datacite_titles} author={props.datacite_creators}/>
             </div>
             <Card.Body className='text-secondary'>
                 <div className='fw-bold one_line_ellipses'>{props.datacite_titles}</div>
