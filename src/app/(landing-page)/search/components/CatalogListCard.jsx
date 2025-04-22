@@ -6,7 +6,7 @@ import { FaShareAlt, FaRegBookmark, FaFileDownload } from "react-icons/fa";
 import ShareButtonDropdown from './ShareButtonDropdown';
 import CitationDownload from './CitationDownload';
 import BookmarkCatalog from './BookmarkCatalog';
-import { MdOutlineMenuBook } from "react-icons/md";
+import BookCover from './BookCover';
 
 const CatalogListCard = (props) => {
     // console.log("props",props);
@@ -15,8 +15,7 @@ const CatalogListCard = (props) => {
         <Card>
             <Row>
                 <Col md={3} className="image text-center">
-                    {/* <PiBookOpenTextFill size={170} className='text-secondary' /> */}
-                    <MdOutlineMenuBook size={170} className='text-secondary' />
+                <BookCover title={props.datacite_titles}/>
                 </Col>
                 <Col md={9}>
                     <Card.Body className='text-secondary'>

@@ -228,7 +228,7 @@ export default function EResourcesContent({
                                     <Col md={4} key={item.id} className="mb-4">
                                         <CatalogGridCard
                                             id={item.id}
-                                            datacite_title={item.datacite_titles}
+                                            datacite_titles={item.datacite_titles}
                                             datacite_creators={item.datacite_creators}
                                             dc_date={item.dc_date}
                                             publisher={item.dc_publishers?.[0] || "Unknown Publisher"}

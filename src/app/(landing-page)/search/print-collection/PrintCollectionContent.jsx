@@ -165,7 +165,7 @@ export default function PrintCollectionContent({
         const userId = getUserID();
         console.log("user_id", userId);
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-saved-article?user=${userId}`, {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-saved-article?user_id=${userId}`, {
                 headers: { Authorization: `${token}` },
             });
             setUserSavedCatalogs(response.data);
@@ -279,7 +279,7 @@ export default function PrintCollectionContent({
                                     <Col md={12} key={item.id} className="mb-4">
                                         <CatalogListCard
                                             id={item.id}
-                                            datacite_title={item.datacite_titles}
+                                            datacite_titles={item.datacite_titles}
                                             datacite_creators={item.datacite_creators}
                                             dc_date={item.dc_date}
                                             publisher={item.dc_publishers?.[0] || "Unknown Publisher"}
