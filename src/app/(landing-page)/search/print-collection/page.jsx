@@ -53,26 +53,6 @@ async function fetachSolrData(searchQuery, startIndex = 0) {
   }
 }
 
-// export async function loadMoreResults(searchQuery, startIndex) {
-//   if (!searchQuery) return { results: [], resultsCount: 0 };
-
-//   try {
-//     const solrUrl = `${process.env.NEXT_PUBLIC_SOLR_BASE_URL}/solr/Print-collection/select?indent=true&q.op=OR&q=${searchQuery}&rows=15&start=${startIndex}`;
-//     const response = await axios.get(solrUrl);
-
-//     const docs = response.data.response.docs || [];
-//     const numFound = response.data.response.numFound || 0;
-
-//     return {
-//       results: docs,
-//       resultsCount: numFound
-//     };
-//   } catch (error) {
-//     console.error("Load More Error:", error);
-//     return { results: [], resultsCount: 0 };
-//   }
-// }
-
 export default async function PrintCollectionPage({ searchParams }) {
   const searchParamsObj = await searchParams || {};
   const searchQuery = searchParamsObj.q || "";

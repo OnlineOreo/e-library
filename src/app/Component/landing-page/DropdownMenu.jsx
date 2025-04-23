@@ -24,6 +24,14 @@ const DropdownMenu = ({
       );
   }, [items, isPublisher, search]);
 
+  const mediaMapping = {
+    "eBooks":"/search/e-resources?q=resource_types_string%3A(e-book)",
+    "Video Resources":"/search/multimedia?q=resource_types_string%3A(Video)",
+    "Audio Resources":"/search/multimedia?q=resource_types_string%3A(audio)",
+    "Print Collection":"/search/print-collection?q=resource_types_string%3A(book)",
+    "eJournals":"/search/e-resources?q=resource_types_string%3A(e-journals)",
+  }
+
   return (
     <>
       <button className="nav-link dropdown-btn nav-btn">
@@ -115,6 +123,7 @@ const DropdownMenu = ({
               >
                 <a className="dropdown-link cursor_pointer_underline" 
                 href=  {
+                  item.configuration_media_id && mediaMapping[item.media_name] ||
                   item.link_url ||
                   (item.page_id  && `/dynamic-page/${item.page_id}`)||
                   item.href ||

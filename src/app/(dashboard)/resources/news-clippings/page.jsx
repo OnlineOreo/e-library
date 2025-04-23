@@ -49,7 +49,7 @@ const NewsClipping = () => {
 
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/e-news-clips?institute=${instituteId}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/e-news-clips?institute_id=${instituteId}`,
         {
           headers: { Authorization: `${token}` },
         }

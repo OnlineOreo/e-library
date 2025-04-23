@@ -14,6 +14,12 @@ const SearchSideFilter = (props) => {
     const [resourceTypes, setResourceType] = useState(props.resource_types_string || []);
 
     const [solrCore, setSolrCore] = useState(props.catalogCore || "print-collection")
+    const solrCoreArr = {
+        "Print-collection" : "Print-collection",
+        "e-resources" : "e-resources",
+        "e-collection" : "e-collection",
+        "multimedia-n" : "multimedia"
+    }
 
     const [parsedUrl, setParsedUrl] = useState([])
     
@@ -128,7 +134,7 @@ const SearchSideFilter = (props) => {
 
         // console.log("Filter Change URL:", filterUrl);
 
-        router.push(`/search/${solrCore}?q=${filterUrl}`);
+        router.push(`/search/${solrCoreArr[solrCore]}?q=${filterUrl}`);
     };
 
     const handelClearFilter = () => {
@@ -141,11 +147,9 @@ const SearchSideFilter = (props) => {
         console.log("parsed after clear:", parsed);
     
         setParsedUrl(parsed);
-        router.push(`/search/${solrCore}?q=${encodeURIComponent(baseQuery)}`);
+        router.push(`/search/${solrCoreArr[solrCore]}?q=${encodeURIComponent(baseQuery)}`);
     };
     
-    
-
 
 
     return (

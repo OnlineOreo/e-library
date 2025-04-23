@@ -51,7 +51,8 @@ const SearchBar = ({show,setShow}) => {
         <select value={filterType} onChange={(e) => setFilterType(e.target.value)}>
           <option value="datacite_titles">Title</option>
           <option value="datacite_creators">Author</option>
-          <option value="datacite_subject">Category</option>
+          <option value="resource_types_string">Resrorces Types</option>
+          <option value="datacite_subject">Subject</option>
         </select>
         <input type="text" value={searchText} placeholder="Search with/without any keyword" onChange={(e) => setSearchText(e.target.value)} />
         <button type="submit"><img alt="Search" src="https://wp.alithemes.com/html/evara/evara-frontend/assets/imgs/theme/icons/search.png" /></button>
