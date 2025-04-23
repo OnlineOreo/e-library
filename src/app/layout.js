@@ -21,12 +21,11 @@ export const viewport = {
     statusBarStyle: "default",
   },
   themeColor: "#ffffff",
-  // title: "LibVirtuUa app",
   description: "Discovery search",
   icons: {
-    icon: "/favicon.ico", 
-    apple: "/apple-touch-icon.png", 
-    shortcut: "/favicon-32x32.png", 
+    icon: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+    shortcut: "/favicon-32x32.png",
   },
 };
 
@@ -35,9 +34,11 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <Providers>
-          {children}
+          <div className="dynamic-text-style">
+            {children}
+          </div>
         </Providers>
       </body>
-    </html> 
+    </html>
   );
 }

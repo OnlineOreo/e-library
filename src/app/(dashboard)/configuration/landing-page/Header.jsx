@@ -14,7 +14,7 @@ export default function Header() {
   const [coverImage, setCoverImage] = useState(null);
   const router = useRouter();
   const instituteId = useSelector((state) => state.institute.instituteId);
-  
+
   const [eLibraryData, setElibraryData] = useState({
     font_style: "",
     font_size: "",
@@ -52,8 +52,8 @@ export default function Header() {
       router.push("/authentication/sign-in");
       return;
     }
-    if(!instituteId){
-      return
+    if (!instituteId) {
+      return;
     }
 
     try {
@@ -119,7 +119,7 @@ export default function Header() {
     const token = getToken();
     const formData = new FormData();
     formData.append("logo", logo);
-    formData.append("institute", instituteId);  
+    formData.append("institute", instituteId);
 
     try {
       const response = await axios.patch(
@@ -147,6 +147,12 @@ export default function Header() {
 
   const handleElibraryChange = (event) => {
     const { name, value, type } = event.target;
+    // if(name == 'font_size'){
+    //   const numericValue = Number(value)
+    //   if (numericValue > 18) {
+
+    //   }
+    // }
 
     setElibraryData((prevState) => ({
       ...prevState,
@@ -272,6 +278,13 @@ export default function Header() {
 
   const handleCoverHeadlineChange = (event) => {
     const { name, value } = event.target;
+    if (name == "banner_font_size") {
+      const numericValue = Number(value);
+      if (numericValue > 18) {
+        Swal.fire("Error", "You can't set font size above 18px", "error");
+        return;
+      }
+    }
     setCoverHeadlineData((prevState) => ({
       ...prevState,
       [name]: value,
@@ -382,6 +395,7 @@ export default function Header() {
                         >
                           <option value="roboto">Roboto</option>
                           <option value="railway">Railway</option>
+                          <option value="heebo">Heebo</option>
                         </Form.Select>
                       </Col>
                     </Row>
@@ -404,7 +418,7 @@ export default function Header() {
                       </Col>
                     </Row>
                   </Col>
-                  <Col lg={12} className="mt-2">
+                  <Col lg={12} className="mt-2 h-100">
                     <Row>
                       <Col lg={5}>
                         <label>Font Weight</label>
@@ -413,6 +427,7 @@ export default function Header() {
                         <Form.Check
                           type="radio"
                           label="Normal"
+                          id="normal"
                           name="font_weight"
                           value="normal"
                           checked={eLibraryData.font_weight === "normal"}
@@ -421,6 +436,7 @@ export default function Header() {
                         <Form.Check
                           type="radio"
                           label="Bold"
+                          id="bold"
                           name="font_weight"
                           value="bold"
                           checked={eLibraryData.font_weight === "bold"}
@@ -429,7 +445,7 @@ export default function Header() {
                       </Col>
                     </Row>
                   </Col>
-                  <Col lg={12} className="mt-2">
+                  {/* <Col lg={12} className="mt-2">
                     <Row>
                       <Col lg={4}>
                         <label htmlFor="font_color">Font Color</label>
@@ -444,7 +460,7 @@ export default function Header() {
                         />
                       </Col>
                     </Row>
-                  </Col>
+                  </Col> */}
                 </Row>
 
                 <Row className="justify-content-center">
@@ -510,6 +526,7 @@ export default function Header() {
                   <Col lg={12} className="mt-2">
                     <Form.Check
                       type="checkbox"
+                      id="showBannerCheckbox"
                       label="Show Banner"
                       name="show_banner"
                       checked={colorThemeData.show_banner}
@@ -591,7 +608,7 @@ export default function Header() {
             </Card.Body>
           </Card>
         </Col>
-        
+
         <Col lg={12} className="mt-5">
           <Card>
             <Card.Body className="p-0">
@@ -610,7 +627,7 @@ export default function Header() {
                           rows={3}
                           name="firstQuote"
                           placeholder="Enter first quote"
-                          value={coverHeadlineData.firstQuote || ''}
+                          value={coverHeadlineData.firstQuote || ""}
                           onChange={handleCoverHeadlineChange}
                         />
                       </Col>
@@ -625,7 +642,7 @@ export default function Header() {
                         <Form.Control
                           as="textarea"
                           name="subHeadline"
-                          value={coverHeadlineData.subHeadline || ''}
+                          value={coverHeadlineData.subHeadline || ""}
                           onChange={handleCoverHeadlineChange}
                           placeholder="Enter subHeadline"
                           rows={3} // Adjust the number of rows as needed
@@ -634,17 +651,18 @@ export default function Header() {
                     </Row>
                   </Col>
 
-                  {/* <Col lg={12} className="mt-2">
+                  <Col lg={12} className="mt-2">
                     <Row>
                       <Col lg={6}>
-                        <label>Font Size</label>
+                        <label>Paragraph Font Size (in px)</label>
                       </Col>
                       <Col lg={6}>
                         <Form.Control
                           type="number"
                           name="banner_font_size"
                           placeholder="Enter font size"
-                          value={coverHeadlineData.banner_font_size || ''}
+                          max={18}
+                          value={coverHeadlineData.banner_font_size || ""}
                           onChange={handleCoverHeadlineChange}
                         />
                       </Col>
@@ -653,13 +671,13 @@ export default function Header() {
                   <Col lg={12} className="mt-2">
                     <Row>
                       <Col lg={6}>
-                        <label>Quote Font Color</label>
+                        <label>First Quote Font Color</label>
                       </Col>
                       <Col lg={6}>
                         <Form.Control
                           type="color"
                           name="banner_font_color"
-                          value={coverHeadlineData.banner_font_color || ''}
+                          value={coverHeadlineData.banner_font_color || ""}
                           onChange={handleCoverHeadlineChange}
                         />
                       </Col>
@@ -668,13 +686,13 @@ export default function Header() {
                   <Col lg={12} className="mt-2">
                     <Row>
                       <Col lg={6}>
-                        <label>Background Color</label>
+                        <label>Background Color pf paragraph</label>
                       </Col>
                       <Col lg={6}>
                         <Form.Control
                           type="color"
                           name="background_color"
-                          value={coverHeadlineData.background_color || ''}
+                          value={coverHeadlineData.background_color || ""}
                           onChange={handleCoverHeadlineChange}
                         />
                       </Col>
@@ -689,12 +707,12 @@ export default function Header() {
                         <Form.Control
                           type="color"
                           name="banner_text_color"
-                          value={coverHeadlineData.banner_text_color || ''}
+                          value={coverHeadlineData.banner_text_color || ""}
                           onChange={handleCoverHeadlineChange}
                         />
                       </Col>
                     </Row>
-                  </Col> */}
+                  </Col>
                 </Row>
 
                 <Row className="justify-content-center">

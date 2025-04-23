@@ -36,7 +36,7 @@ const Home = () => {
 
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users?admin=true`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users?admin=true&institute_id=${instituteId}`,
         {
           headers: { Authorization: `${token}` },
           method: "GET",
@@ -59,8 +59,10 @@ const Home = () => {
   };
 
   useEffect(() => {
-    loadUser();
-  }, []);
+    if(instituteId){
+      loadUser(instituteId);
+    }
+  }, [instituteId]);
 
   const handleSearch = (event) => {
     const searchValue = event.target.value;
@@ -112,7 +114,7 @@ const Home = () => {
   };
 
   const handleEdit = (params) => {
-    router.push(`/user-management/users/edit/${params.id}`);
+    router.push(`/user-management/admin/edit/${params.id}`);
   };
 
   const columns = [
@@ -149,12 +151,12 @@ const Home = () => {
       flex: 2,
       renderCell: (params) => (
         <>
-          <button
+          {/* <button
             onClick={() => handleEdit(params)}
             className="btn btn-primary mx-2 btn-sm"
           >
             <FaEdit />
-          </button>
+          </button> */}
           <button
             onClick={() => handleDelete(params)}
             className="btn btn-danger btn-sm"

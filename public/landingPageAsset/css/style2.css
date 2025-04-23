@@ -21,7 +21,7 @@ body {
     font-family: var(--nav_link_style) !important;
 }
 h2{
-    font-size: 3em !important;
+    font-size: 2em !important;
     font-family: var(--nav_link_style) !important;
 }
 
@@ -262,7 +262,7 @@ a {
     background-color: white;
     border-radius: 10px;
     position: absolute;
-    top: 110%;
+    top: 100%;
     left: 17%;
     transform: translateX(-17%);
     z-index: 99;
@@ -355,7 +355,7 @@ a {
     color: #636363;
 }
 .dropdown-link{
-    font-size: 1.2em !important;
+    font-size: 0.9em !important;
 }
 .nav-item a.nav-link{
     font-size: 1.2em !important;
@@ -1736,11 +1736,6 @@ a {
 
 .text-primary{
     color: var(--primary) !important;
-}
-
-
-#main_widget_section .section:nth-child(odd){
-    background-color: rgba(136, 100, 76, 0.08);
 }
 
 .one_line_ellipses {

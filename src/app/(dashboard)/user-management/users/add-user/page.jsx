@@ -154,6 +154,8 @@ const Home = () => {
         formDataToSend.append(key, value);
       }
     });
+    const hostname = typeof window !== "undefined" ? window.location.hostname : "";
+    formData.append('sub_domain',hostname);
 
     try {
       const response = await axios.post(

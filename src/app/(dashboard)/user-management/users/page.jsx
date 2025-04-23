@@ -271,7 +271,7 @@ const Home = () => {
       {/* Modal with ImportUser */}
       <Modal show={showImportModal} onHide={handleCloseModal} centered>
         <Modal.Header closeButton>
-          <Modal.Title class="w-25">Import User</Modal.Title>
+          <Modal.Title className="w-25">Import User</Modal.Title>
           
         </Modal.Header>
         

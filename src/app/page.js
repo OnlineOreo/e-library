@@ -37,6 +37,8 @@ export default function Home() {
     }
   }, [status]);
 
+  
+
   // Fetch API Data
   // const configData = landingPageData?.instituteId?.configurations?.[0] || {};
   const configData = landingPageData2?.landingPageData?.configurations?.[0] || {};
@@ -45,6 +47,22 @@ export default function Home() {
   // if (Object.keys(configData).length === 0) {
   //   notFound();
   // }
+  useEffect(() => {
+    if (configData) {
+      document.documentElement.style.setProperty(
+        "--dynamic-font-family",
+        configData?.font_style || "inherit"
+      );
+      document.documentElement.style.setProperty(
+        "--dynamic-font-size",
+        `${configData?.font_size}px` || "inherit"
+      );
+      document.documentElement.style.setProperty(
+        "--dynamic-font-weight",
+        configData?.font_weight || "inherit"
+      );
+    }
+  }, [configData]);
   
   // Memoized components map
   const componentsMap = useMemo(

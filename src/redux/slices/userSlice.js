@@ -9,10 +9,10 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     setUser: (state, action) => {
-      state.user = action.payload; // Store full user data
+      state.user = action.payload;
     },
     clearUser: (state) => {
-      state.user = null; // Clear user data on logout
+      state.user = null;
     },
   },
 });

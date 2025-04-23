@@ -44,8 +44,9 @@ const ImportUser = ({ onSuccess }) => {
     try {
       setUploading(true);
       setMessage("");
+      const hostname = typeof window !== "undefined" ? window.location.hostname : "";
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/bulk-user-creation?sub_domain=mriirs.libvirtuua.com`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/bulk-user-creation?sub_domain=${hostname}`,
         formData,
         {
           headers: {

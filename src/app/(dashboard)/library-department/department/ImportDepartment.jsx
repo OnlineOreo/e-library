@@ -54,7 +54,7 @@ const ImportDepartment = ({ onSuccess }) => {
 
       if (response.status === 200) {
         setMessage("Upload successful!");
-        onSuccess?.(); // Notify parent
+        onSuccess?.();
       } else {
         setMessage("Upload completed, but check for issues.");
       }

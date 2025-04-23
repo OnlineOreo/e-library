@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -33,21 +33,42 @@ export default function Banner({ bannerData }) {
     <>
       <style jsx>{`
         .custom-banner {
-          background-color: ${bannerData?.color2};
-          font-size: ${bannerData?.font_size}px !important;
+          background-color: ${bannerData?.cover_headline?.background_color ||
+          "inherit"};
+          font-size: ${bannerData?.cover_headline?.banner_font_size ||
+          "inherit"}px !important;
+          color: ${bannerData?.cover_headline?.banner_text_color ||
+          "inherit"} !important;
         }
       `}</style>
 
       <div
         className="w-100 pt-3"
-        style={{ backgroundColor: bannerData?.color1 }}
+        style={{
+          ...(bannerData?.so_banner
+            ? {
+                backgroundImage: `url(${bannerData?.upper_cover_image})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                backgroundColor: bannerData?.color1,
+              }
+            : {
+                backgroundColor: bannerData?.color1,
+              }),
+        }}        
       >
-        <div className="container-fluid hero-header text-white d-flex align-items-center justify-content-center min-vh-50 py-4">
+        <div className="container-fluid hero-header d-flex align-items-center justify-content-center min-vh-50 py-4">
           <div className="container text-center w-50 px-sm-3">
-            <h2 className="fw-bold text-dark fs-md-2 fs-lg-3">
+            <h2
+              className="fw-bold fs-md-2 fs-lg-3"
+              style={{
+                color: bannerData?.cover_headline?.banner_font_color || "",
+              }}
+            >
               {bannerData?.cover_headline?.firstQuote || ""}
             </h2>
-            <p className="lead text-white fw-semibold px-1 px-sm-4 py-3  rounded-3 d-md-inline-block d-none mt-3 shadow-sm custom-banner">
+            <p className="lead fw-semibold px-1 px-sm-4 py-3  rounded-3 d-md-inline-block d-none mt-3 shadow-sm custom-banner">
               {bannerData?.cover_headline?.subHeadline || ""}
             </p>
             <div className="d-inline-block d-md-none">
