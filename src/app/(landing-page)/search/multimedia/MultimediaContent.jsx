@@ -166,7 +166,7 @@ export default function MultimediaContent({
         const userId = getUserID();
         console.log("user_id", userId);
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-saved-article?user=${userId}`, {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-saved-article?user_id=${userId}`, {
                 headers: { Authorization: `${token}` },
             });
             setUserSavedCatalogs(response.data);
@@ -239,6 +239,7 @@ export default function MultimediaContent({
                                             url={item.url}
                                             resource_type={item.resource_types_string}
                                             user_saved_catalog={userSavedCatalogs}
+                                            thumbnail = {item.thumbnail}
                                             catalogCore={"multimedia-n"}
                                             onShow={handleShow}
                                             onSelect={() => setSelectCatalog(item)}
@@ -290,6 +291,7 @@ export default function MultimediaContent({
                                             url={item.url}
                                             resource_type={item.resource_types_string}
                                             user_saved_catalog={userSavedCatalogs}
+                                            thumbnail = {item.thumbnail}
                                             catalogCore={"multimedia-n"}
                                             onShow={handleShow}
                                             onSelect={() => setSelectCatalog(item)}

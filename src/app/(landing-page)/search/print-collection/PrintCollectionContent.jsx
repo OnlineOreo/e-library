@@ -241,6 +241,7 @@ export default function PrintCollectionContent({
                                             resource_type={item.resource_types_string}
                                             user_saved_catalog={userSavedCatalogs}
                                             catalogCore = {"Print-collection"}
+                                            thumbnail = {item.thumbnail}
                                             onShow={handleShow}
                                             onSelect={() => setSelectCatalog(item)}
                                         />
@@ -289,6 +290,7 @@ export default function PrintCollectionContent({
                                             url={item.url}
                                             resource_type={item.resource_types_string}
                                             user_saved_catalog={userSavedCatalogs}
+                                            thumbnail = {item.thumbnail}
                                             catalogCore = {"Print-collection"}
                                             onShow={handleShow}
                                             onSelect={() => setSelectCatalog(item)}

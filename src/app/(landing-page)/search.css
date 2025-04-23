@@ -33,6 +33,14 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+.five_line_ellipses {
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+  }
 .width-200{
    width: 200px;
 }

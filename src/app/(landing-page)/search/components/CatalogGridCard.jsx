@@ -69,7 +69,7 @@ const CatalogGridCard = (props) => {
     return (
         <Card>
             <div className="image text-center">
-                <BookCover title={props.datacite_titles} author={props.datacite_creators}/>
+                <BookCover title={props.datacite_titles} author={props.datacite_creators} thumbnail={props.thumbnail}/>
             </div>
             <Card.Body className='text-secondary'>
                 <div className='fw-bold one_line_ellipses'>{props.datacite_titles}</div>
