@@ -16,7 +16,7 @@ const CatalogDetailModal = (props) => {
                             <p className='mb-1'><strong>Author:</strong> {props.datacite_creators}</p>
                             <p className='mb-1'><strong>Date:</strong> {props.dc_date}</p>
                             <p className='mb-1'><strong>Publisher:</strong> {props.dc_publishers?.[0] || "Unknown Publisher"}</p>
-                            <p className='mb-1'><strong>Subject:</strong> {props.datacite_subject?.[0]}</p>
+                            <p className='mb-1'><strong>Subject:</strong> {props.college_category}</p>
                             <p className='mb-1'><strong>Description:</strong> {props.description}</p>
                         </>
                     ) : (
