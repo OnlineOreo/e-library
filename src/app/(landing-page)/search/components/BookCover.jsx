@@ -6,11 +6,11 @@ let imageIndex = 0;
 
 const BookCover = ({ title, author, thumbnail }) => {
   const coverImageArray = [
-    "/images/avatar/book_cover1.jpeg",
-    "/images/avatar/book_cover3.jpeg",
-    "/images/avatar/book_cover2.jpeg",
-    "/images/avatar/book_cover4.jpeg",
-    "/images/avatar/book_cover5.jpeg",
+    "/images/avatar/1.png",
+    "/images/avatar/2.png",
+    "/images/avatar/3.png",
+    "/images/avatar/4.png",
+    "/images/avatar/5.png",
   ];
 
   const currentImage = coverImageArray[imageIndex % coverImageArray.length];
@@ -36,30 +36,29 @@ const BookCover = ({ title, author, thumbnail }) => {
   return (
     <div className="mx-3 mt-3 mb-3 border" style={{ position: 'relative' }}>
       {/* Title on top of image */}
-      <div
-        className='fw-bold fs-4 five_line_ellipses'
+      <h3
+        className='fw-bold fs-12 f-italic four_line_ellipses'
         style={{
           position: 'absolute',
-          top: 40,
+          top: '22%',
           left: 10,
-          width: '90%',
-          color: '#272626',
+          width: '95%',
+          color: '#404040',
           padding: '8px',
           textAlign: 'center',
           zIndex: 2,
         }}
       >
         {title?.toUpperCase()}
-      </div>
+      </h3>
 
       {/* Author at the bottom */}
       <div
-        className='mt-2 one_line_ellipses'
+        className='mt-2 fw-bold one_line_ellipses'
         style={{
           position: 'absolute',
-          bottom: 20,
-          left: 10,
-          width: '90%',
+          bottom: '25%',
+          right: '3%',
           color: '#272626',
           padding: '8px',
           textAlign: 'center',

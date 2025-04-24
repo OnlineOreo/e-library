@@ -27,7 +27,7 @@ async function fetachSolrData(searchQuery, startIndex = 0) {
     const numFound = response.data.response.numFound || 0;
 
     // Side filter
-    const sideFilterUrl = `${process.env.NEXT_PUBLIC_SOLR_BASE_URL}/solr/Print-collection/select?indent=true&q=*:*&fq=${searchQuery}&facet=true&facet.field=dc_publishers_string&facet.field=datacite_rights_string&facet.field=resource_types_string&facet.field=dc_date&facet.field=datacite_creators_string&facet.limit=1000&facet.sort=count`;
+    const sideFilterUrl = `${process.env.NEXT_PUBLIC_SOLR_BASE_URL}/solr/Print-collection/select?indent=true&q=*:*&fq=${searchQuery}&facet=true&facet.field=dc_publishers_string&facet.field=datacite_rights_string&facet.field=resource_types_string&facet.field=dc_date&facet.field=datacite_creators_string&facet.limit=500&facet.sort=count`;
 
     const sideFilterResponse = await axios.get(sideFilterUrl);
     const sideData = sideFilterResponse.data;

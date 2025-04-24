@@ -13,9 +13,9 @@ const SearchSideFilter = (props) => {
     const [dcDate, setDcDate] = useState(props.dc_date || []);
     const [resourceTypes, setResourceType] = useState(props.resource_types_string || []);
 
-    const [solrCore, setSolrCore] = useState(props.catalogCore || "print-collection")
+    const [solrCore, setSolrCore] = useState(props.catalogCore || "Print-collection")
     const solrCoreArr = {
-        "Print-collection" : "Print-collection",
+        "Print-collection" : "print-collection",
         "e-resources" : "e-resources",
         "e-collection" : "e-collection",
         "multimedia-n" : "multimedia"
@@ -94,7 +94,7 @@ const SearchSideFilter = (props) => {
         setDcCreators(props.datacite_creators_string || []);
         setDcDate(props.dc_date || []);
         setResourceType(props.resource_types_string || []);
-        setSolrCore(props.catalogCore || "print-collection");
+        setSolrCore(props.catalogCore || "Print-collection");
     }, [props.dc_publishers_string, props.datacite_creators_string, props.dc_date, props.catalogCore]);
 
     const filterChange = () => {
@@ -266,13 +266,13 @@ const SearchSideFilter = (props) => {
                             </Form.Group>
 
                             {/* Access Type */}
-                            <Form.Group className="border-bottom p-3">
+                            {/* <Form.Group className="border-bottom p-3">
                                 <Form.Label className="fw-bold mb-2">Access Type</Form.Label>
                                 <div className="d-flex justify-content-between">
                                     <Form.Check type="checkbox" label="Subscribe" />
                                     <span className="text-secondary">00</span>
                                 </div>
-                            </Form.Group>
+                            </Form.Group> */}
 
                             {/* Content */}
                             <Form.Group className="border-bottom p-3">
@@ -362,6 +362,7 @@ const SearchSideFilter = (props) => {
                             </Form.Group>
 
                             {/* Publish Year */}
+                            {solrCore !== "multimedia-n" && (
                             <Form.Group className="border-bottom p-3">
                                 <div className="d-flex justify-content-between align-items-center mb-2" style={{ position: "relative" }}>
                                     <Form.Label className="fw-bold mb-0">Publish Year</Form.Label>
@@ -383,10 +384,10 @@ const SearchSideFilter = (props) => {
                                             className="px-2 pt-4 d-flex flex-column flex-wrap align-items-start gap-1"
                                             style={{ height: "100%", width: "100%", overflowX: "scroll" }}
                                         >
-                                            {filteredDates.filter(item => parsedUrl?.dc_date?.includes(item?.name)).map((item, index) => (
+                                            {filteredDates.filter(item => !parsedUrl?.dc_date?.includes(item?.name)).map((item, index) => (
                                                 <div
                                                     className="d-flex justify-content-between text-secondary ms-4"
-                                                    style={{ width: "300px", fontSize: "11pt" }}
+                                                    style={{ width: "200px", fontSize: "11pt" }}
                                                     key={index}
                                                 >
                                                     <Form.Check
@@ -428,6 +429,7 @@ const SearchSideFilter = (props) => {
                                     </div>
                                 ))}
                             </Form.Group>
+                            )}
                         </Form>
                     </div>
                 ) : (
