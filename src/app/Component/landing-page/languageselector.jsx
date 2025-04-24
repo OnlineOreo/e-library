@@ -12,10 +12,9 @@ const LanguageSelector = () => {
   return (
     <div className='ms-3'>
       <select id="lang" onChange={handleChangeLanguage} value={i18n.language}>
-        <option value="en">{t('English')}</option>
-        <option value="hi">{t('Hindi')}</option>
-        <option value="ar">{t('Arabic')}</option>
-        <option value="ta">{t('Tamil')}</option>
+        <option value="en">English</option>
+        <option value="hi">हिंदी</option>
+        <option value="ar">العربية</option>
         {/* <option value="te">Telugu</option>
         <option value="bn">Bengali</option>
         <option value="ml">Malayalam</option>

@@ -147,7 +147,7 @@ const Navbar = ({ show, setShow }) => {
     },
     {
       type: "dropdown",
-      title: "Categories",
+      title: t("Categories"),
       items: [
         {
           configuration_category_id: "a15ed045-a3ba-46ea-b480-088061f2a34a",
@@ -292,14 +292,14 @@ const Navbar = ({ show, setShow }) => {
       title: t("Media"),
       items: landingPageData?.landingPageData?.medias || [],
     },
+    // {
+    //   type: "dropdown",
+    //   title: t("Collection"),
+    //   items: landingPageData?.landingPageData?.collections || [],
+    // },
     {
       type: "dropdown",
-      title: t("Collection"),
-      items: landingPageData?.landingPageData?.collections || [],
-    },
-    {
-      type: "dropdown",
-      title: t("Important Link"),
+      title: t("Important Link0"),
       href: "/",
       items: [
         ...(landingPageData?.landingPageData?.metas || []),

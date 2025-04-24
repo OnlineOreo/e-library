@@ -15,6 +15,9 @@ import CatalogDetailModal from '../components/CatalogDetailModal';
 
 import { useSelector } from 'react-redux';
 
+import { useTranslation } from 'react-i18next';
+import '@/i18n'; // cleaner using path alias `@`
+
 export default function PrintCollectionContent({
     initialResults,
     initialResultsCount,
@@ -24,6 +27,8 @@ export default function PrintCollectionContent({
     status_code,
     error_trace
 }) {
+    
+    const { t, i18n } = useTranslation();
     const Router = useRouter();
     const searchParams = useSearchParams();
     const urlParams = searchParams.get("q");
@@ -188,7 +193,7 @@ export default function PrintCollectionContent({
                 <Col md={9} className='pe-0 ps-4'>
                     <Row className="mb-3">
                         <Col md={6}>
-                            <p>Showing <strong>{resultsCount}</strong> results from data</p>
+                            <p>{t('Showing')} <strong>{resultsCount}</strong> {t('results from data')}</p>
                         </Col>
                         <Col md={6}>
                             <div className="d-flex align-items-center justify-content-end">
