@@ -3,6 +3,9 @@ import React, { useState, useMemo } from "react";
 import { IoChevronDown } from "react-icons/io5";
 import AZFilter from "./AZFilter";
 import Image from "next/image";
+import { useTranslation } from 'react-i18next';
+import '@/i18n'; // cleaner using path alias `@`
+
 
 const DropdownMenu = ({
   title,
@@ -11,10 +14,11 @@ const DropdownMenu = ({
   handlePublisherClick,
 }) => {
   const [search, setSearch] = useState("");
-
+  const { t, i18n } = useTranslation();
   const filteredAndSortedItems = useMemo(() => {
+    
     if (!isPublisher) return items;
-
+    
     return items
       .filter((item) =>
         (item.publisher_name || "").toLowerCase().includes(search.toLowerCase())
@@ -63,7 +67,7 @@ const DropdownMenu = ({
         {isPublisher && (
           <>
             <div className="d-flex align-items-center justify-content-between">
-              <div className="px-3 fw-bold">Publisher</div>
+              <div className="px-3 fw-bold">{t('Publisher')}</div>
               <div className="px-3 pb-2">
                 <input
                   type="text"

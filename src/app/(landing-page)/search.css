@@ -1,38 +1,41 @@
-
-.active_result_view{
+.active_result_view {
     color: rgb(107, 60, 151);
 }
 
-.active_nav{
-    color: rgb(107, 60, 151);
-    border-bottom: 2px solid rgb(107, 60, 151);
-}
-
-.search_nav:hover{
+.active_nav {
     color: rgb(107, 60, 151);
     border-bottom: 2px solid rgb(107, 60, 151);
 }
 
-.cursor_pointer{
-    cursor:pointer;
+.search_nav:hover {
+    color: rgb(107, 60, 151);
+    border-bottom: 2px solid rgb(107, 60, 151);
 }
-.cursor_pointer:hover{
+
+.cursor_pointer {
+    cursor: pointer;
+}
+
+.cursor_pointer:hover {
     color: rgb(107, 60, 151);
 }
-.cursor_pointer_underline{
-    cursor:pointer;
+
+.cursor_pointer_underline {
+    cursor: pointer;
 }
-.cursor_pointer_underline:hover{
+
+.cursor_pointer_underline:hover {
     color: rgb(107, 60, 151);
     text-decoration: underline;
 }
 
-.one_line_ellipses{
+.one_line_ellipses {
     display: block;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
 .five_line_ellipses {
     display: -webkit-box;
     -webkit-line-clamp: 5;
@@ -40,9 +43,19 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: normal;
-  }
-.width-200{
-   width: 200px;
+}
+
+.four_line_ellipses {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+}
+
+.width-200 {
+    width: 200px;
 }
 
 .bookmark-icon {
@@ -52,4 +65,21 @@
 .bookmark-icon.gray {
     color: gray;
     fill: aqua;
+}
+
+
+.fw-bold {
+    font-weight: bold !important;
+}
+
+.fs-12 {
+    font-size: 1.3em !important;
+}
+
+.f-italic {
+    font-style: italic !important;
+}
+
+.f-cursive {
+    font-family: cursive !important;
 }

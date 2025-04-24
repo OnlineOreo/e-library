@@ -3,11 +3,17 @@ import React from "react";
 import Link from "next/link";
 import SignIn from "./SignIn";
 import { useRouter, usePathname } from "next/navigation"; // at the top
+import LanguageSelector from "./languageselector.jsx";
+import { useTranslation } from 'react-i18next';
+import '@/i18n'; // cleaner using path alias `@`
+
 
 const AuthButtons = ({ token, setToken, handleLogout, show, setShow , publisherUrls }) => {
+  const { t, i18n } = useTranslation();
   const router = useRouter();
   const pathname = usePathname();
 
+  
   const getUserRole = () => {
     if (typeof window !== "undefined") {
       const cookieString = document.cookie
@@ -33,7 +39,7 @@ const AuthButtons = ({ token, setToken, handleLogout, show, setShow , publisherU
                 className="mx-1 hover-underline"
                 title="Dashboard"
               >
-                Dashboard
+                {t('Dashboard')}
               </Link>
             </div>
           )}
@@ -55,9 +61,11 @@ const AuthButtons = ({ token, setToken, handleLogout, show, setShow , publisherU
               style={{ cursor: "pointer" }}
               title="Log Out"
             >
-              Logout
+              {t('Logout')}
             </a>
           </div>
+
+          <LanguageSelector/>
         </>
       ) : (
         <div>
@@ -67,9 +75,12 @@ const AuthButtons = ({ token, setToken, handleLogout, show, setShow , publisherU
             style={{ cursor: "pointer" }}
             title="Sign In"
           >
-            Sign In
+            {t('Sign In')}
           </div>
+            <LanguageSelector/>
         </div>
+
+
       )}
       <div
         className={`modal fade ${show ? "show d-block" : ""}`}

@@ -10,8 +10,12 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
+import { useTranslation } from 'react-i18next';
+import '@/i18n'; // cleaner using path alias `@`
+
 
 export default function NoticeBoard({headingName,bannerData}) {
+    const { t, i18n } = useTranslation();
     const swiperRef = useRef(null);
     const landingPageData = useSelector((state) => state.landingPageDataSlice);
     const notices = landingPageData?.landingPageData?.notices
@@ -21,7 +25,7 @@ export default function NoticeBoard({headingName,bannerData}) {
         <div className="container-xxl py-5 section" id="notice_section" >
             <div className="container py-5 px-lg-5">
                 <div className="text-center wow fadeInUp" data-wow-delay="0.1s">
-                    <h2 className="mb-5" id="notice_heading">{headingName}</h2>
+                    <h2 className="mb-5" id="notice_heading">{t(headingName)}</h2>
                 </div>
 
                 <Swiper
@@ -43,7 +47,7 @@ export default function NoticeBoard({headingName,bannerData}) {
                         notices.map((notice, index) => (
                             <SwiperSlide key={index}>
                                 <div className="testimonial-item rounded p-4 gradient-bg">
-                                    <p className="mb-0">{notice.description}</p>
+                                    <p className="mb-0">{t(notice.description)}</p>
                                 </div>
                             </SwiperSlide>
                         ))

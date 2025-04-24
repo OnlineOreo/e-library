@@ -4,8 +4,11 @@ import { memo, useMemo } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
 import 'swiper/css';
+import { useTranslation } from 'react-i18next';
+import '@/i18n'; // cleaner using path alias `@`
 
 const Publisher = ({ headingName }) => {
+  const { t, i18n } = useTranslation();
   // Memoized image list to prevent unnecessary re-renders
   const publisherImages = useMemo(() => [
     '/images/publisher/publisher1.jpg',
@@ -25,7 +28,7 @@ const Publisher = ({ headingName }) => {
       style={{ display: 'block' }}
     >
       <h2 className="mb-5 wow fadeInUp" id="publisher_heading" data-wow-delay="0.3s">
-        {headingName}
+        {t(headingName)}
       </h2>
 
       <div className="publish-carousel d-flex wow fadeInUp" data-wow-delay="0.5s">

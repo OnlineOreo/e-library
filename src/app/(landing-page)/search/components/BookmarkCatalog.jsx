@@ -76,7 +76,7 @@ const BookmarkCatalog = ({ id, catalogType, user_saved_catalogs }) => {
             return;
         }
     
-        const key = arrayCors[catalogType]; // e.g., 'saved_p_collection_ids'
+        const key = arrayCors[catalogType];
         const saved_ids_string = firstCatalog[key];
     
         if (!saved_ids_string) {
@@ -98,7 +98,7 @@ const BookmarkCatalog = ({ id, catalogType, user_saved_catalogs }) => {
         if (user_saved_catalogs?.length > 0 && id != null) {
             savedBookmarked();
         }
-    }, [user_saved_catalogs, id, catalogType]); // <-- add dependencies here
+    }, []);
     
 
     return (
