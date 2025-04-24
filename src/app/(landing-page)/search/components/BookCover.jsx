@@ -50,24 +50,21 @@ const BookCover = ({ title, author, thumbnail }) => {
       >
         {title?.toUpperCase()}
       </h3>
-
-      {/* Author at the bottom */}
       <div
         className='mt-2 fw-bold one_line_ellipses'
         style={{
           position: 'absolute',
           bottom: '25%',
-          right: '3%',
+          right: '2%',
+          width: '95%',
           color: '#272626',
           padding: '8px',
-          textAlign: 'center',
+          textAlign: 'right',
           zIndex: 2,
         }}
       >
         By: {author}
       </div>
-
-      {/* Book cover image */}
       <Image
         src={currentImage}
         alt={title}

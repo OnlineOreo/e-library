@@ -14,11 +14,11 @@ function combineFacetData(facetData) {
   return combined;
 }
 
-async function fetachSolrData(searchQuery, startIndex = 0) {
+async function fetachSolrData(searchQuery, startIndex = 0, pubPkg) {
   if (!searchQuery) return { results: [], resultsCount: 0, sideFilterResults: {} };
 
   try {
-    const solrUrl = `${process.env.NEXT_PUBLIC_SOLR_BASE_URL}/solr/Print-collection/select?indent=true&q.op=OR&q=${searchQuery}&rows=15&start=${startIndex}`;
+    const solrUrl = `${process.env.NEXT_PUBLIC_SOLR_BASE_URL}/solr/Print-collection/select?fq=pkg_id%3A(${pubPkg})&indent=true&q.op=OR&q=${searchQuery}&rows=15&start=${startIndex}`;
     console.log("solr url : ", solrUrl);
     
     const response = await axios.get(solrUrl);
@@ -27,7 +27,7 @@ async function fetachSolrData(searchQuery, startIndex = 0) {
     const numFound = response.data.response.numFound || 0;
 
     // Side filter
-    const sideFilterUrl = `${process.env.NEXT_PUBLIC_SOLR_BASE_URL}/solr/Print-collection/select?indent=true&q=*:*&fq=${searchQuery}&facet=true&facet.field=dc_publishers_string&facet.field=datacite_rights_string&facet.field=resource_types_string&facet.field=dc_date&facet.field=datacite_creators_string&facet.limit=500&facet.sort=count`;
+    const sideFilterUrl = `${process.env.NEXT_PUBLIC_SOLR_BASE_URL}/solr/Print-collection/select?fq=pkg_id%3A(${pubPkg})&indent=true&q=*:*&fq=${searchQuery}&facet=true&facet.field=dc_publishers_string&facet.field=datacite_rights_string&facet.field=resource_types_string&facet.field=dc_date&facet.field=datacite_creators_string&facet.limit=500&facet.sort=count`;
 
     const sideFilterResponse = await axios.get(sideFilterUrl);
     const sideData = sideFilterResponse.data;
@@ -58,8 +58,13 @@ async function fetachSolrData(searchQuery, startIndex = 0) {
 export default async function PrintCollectionPage({ searchParams }) {
   const searchParamsObj = await searchParams || {};
   const searchQuery = searchParamsObj.q || "";
+  // const fullHostname = searchParams?.hostname || "";
+  // const hostname = fullHostname.split('.')[0];
+  // console.log("host name : ", hostname);
+  
+  const pubPkg = `11%2043%2049`;
 
-  const data = await fetachSolrData(searchQuery, 0);
+  const data = await fetachSolrData(searchQuery, 0, pubPkg);
 
   return (
     <Suspense fallback={<div>Loading search results...</div>}>
