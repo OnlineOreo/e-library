@@ -105,7 +105,7 @@ const DropdownMenu = ({
                           objectFit: "contain",
                           objectPosition: "center",
                         }}
-                        width={25}
+                        width={25}  
                         height={25}
                         onError={(e) => {
                           e.target.src = "/images/avatar/navbar-default.jpeg";
