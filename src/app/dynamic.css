@@ -1,0 +1,6 @@
+.dynamic-text-style p,h4,h5,h6,button,label,a,
+.dynamic-text-style div {
+  font-family: var(--dynamic-font-family, inherit) !important;
+  font-size: var(--dynamic-font-size, inherit) !important;
+  font-weight: var(--dynamic-font-weight, inherit) !important;
+}

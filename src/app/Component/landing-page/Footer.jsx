@@ -30,7 +30,7 @@ export default function Footer() {
                             <h4 className="text-white">Developed By</h4>
                             <img
                                  src={
-                                    `http://192.168.1.171:8000/api${landingPageData?.landingPageData?.configurations?.[0]?.latest_logos.find(
+                                    `${landingPageData?.landingPageData?.configurations?.[0]?.latest_logos.find(
                                       (config) => config.is_active
                                     )?.logo}` || "default"
                                   }
