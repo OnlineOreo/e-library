@@ -99,7 +99,7 @@ const DropdownMenu = ({
                       onClick={() => handlePublisherClick(item)}
                     >
                       <Image
-                        src={item.image}
+                        src={item.image || '/images/avatar/saved_icon.png'}
                         alt={item.publisher_name}
                         style={{
                           objectFit: "contain",

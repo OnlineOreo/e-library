@@ -10,8 +10,7 @@ const LanguageSelector = () => {
   };
 
   return (
-    <div>
-      <label htmlFor="lang">{t('Select Language')}:</label>
+    <div className='ms-3'>
       <select id="lang" onChange={handleChangeLanguage} value={i18n.language}>
         <option value="en">{t('English')}</option>
         <option value="hi">{t('Hindi')}</option>

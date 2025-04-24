@@ -12,7 +12,6 @@ const AuthButtons = ({ token, setToken, handleLogout, show, setShow , publisherU
   const { t, i18n } = useTranslation();
   const router = useRouter();
   const pathname = usePathname();
-
   
   const getUserRole = () => {
     if (typeof window !== "undefined") {

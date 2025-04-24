@@ -35,7 +35,6 @@ const BookCover = ({ title, author, thumbnail }) => {
 
   return (
     <div className="mx-3 mt-3 mb-3 border" style={{ position: 'relative' }}>
-      {/* Title on top of image */}
       <h3
         className='fw-bold fs-12 f-italic four_line_ellipses'
         style={{
