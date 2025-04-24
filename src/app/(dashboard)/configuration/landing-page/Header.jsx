@@ -392,10 +392,10 @@ export default function Header() {
                   {/* Font Style */}
                   <Col lg={12}>
                     <Row>
-                      <Col lg={4}>
+                      <Col lg={12} className="mb-2">
                         <label htmlFor="font_style">Font Style</label>
                       </Col>
-                      <Col lg={8}>
+                      <Col lg={12}>
                         <Form.Select
                           name="font_style"
                           value={eLibraryData.font_style}
@@ -412,10 +412,10 @@ export default function Header() {
 
                   <Col lg={12} className="mt-2">
                     <Row>
-                      <Col lg={4}>
+                      <Col lg={12} className="mb-2">
                         <label htmlFor="font_size">Font Size</label>
                       </Col>
-                      <Col lg={8}>
+                      <Col lg={12}>
                         <Form.Control
                           name="font_size"
                           value={eLibraryData.font_size}
@@ -427,7 +427,7 @@ export default function Header() {
                       </Col>
                     </Row>
                   </Col>
-                  <Col lg={12} className="mt-2 h-100">
+                  {/* <Col lg={12} className="mt-2 h-100">
                     <Row>
                       <Col lg={5}>
                         <label>Font Weight</label>
@@ -453,7 +453,7 @@ export default function Header() {
                         />
                       </Col>
                     </Row>
-                  </Col>
+                  </Col> */}
                   {/* <Col lg={12} className="mt-2">
                     <Row>
                       <Col lg={4}>

@@ -52,7 +52,7 @@ const ImportDepartment = ({ onSuccess }) => {
         }
       );
 
-      if (response.status === 200) {
+      if (response.status === 200 || response.status === 201) {
         setMessage("Upload successful!");
         onSuccess?.();
       } else {
@@ -60,7 +60,7 @@ const ImportDepartment = ({ onSuccess }) => {
       }
     } catch (error) {
       setMessage(
-        `Upload failed: ${error?.response?.data?.message || error.message}`
+        `Upload failed: ${error?.response?.data?.error || error.message}`
       );
     } finally {
       setUploading(false);

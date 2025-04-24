@@ -100,7 +100,7 @@ export default function Home() {
 
   return (
     <div className={styles.page}>
-      <div id="main_widget_section">
+      <div id="main_widget_section">  
         <Navbar show={show} setShow={setShow} />
         <Banner bannerData={configData} />
 

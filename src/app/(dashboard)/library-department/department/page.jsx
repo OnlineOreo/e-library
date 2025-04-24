@@ -247,7 +247,7 @@ const Department = () => {
           <ImportDepartment
             onSuccess={() => {
               handleCloseModal();
-              loadProgram(instituteId);
+              loadDepartment(instituteId);
               Swal.fire({
                 title: "Success!",
                 text: "Program added successfully!",
