@@ -3,8 +3,13 @@ import React, { useState } from 'react';
 import Ebook from './Ebook';
 import Ejournal from './Ejournal';
 import Video from './Video';
+import { useTranslation } from 'react-i18next';
+import '@/i18n'; // cleaner using path alias `@`
+
+
 
 export default function StaffPick({headingName}) {
+    const { t, i18n } = useTranslation();
     const [book, setBook] = useState(true)
     const [journal, setJournal] = useState(false)
     const [video, setVideo] = useState(false)
@@ -38,20 +43,20 @@ export default function StaffPick({headingName}) {
                 data-wow-delay="0.3s"
                 style={{ letterSpacing: 1 }}
             >
-                {headingName}
+                {t(headingName)}
             </h2>
             <div
                 className="navtabs d-flex justify-content-evenly mx-auto bg-light p-3 mb-5 rounded"
                 style={{ cursor: "pointer" }}
             >
                 <div id="ebook" onClick={()=>handleChange('book')} className={`sp_nav ${ book ? 'sp_active' : ''}`}>
-                    E-Book
+                    {t('E-Book')}
                 </div>
                 <div id="ejournals" onClick={()=>handleChange('journal')} className={`sp_nav ${ journal ? 'sp_active' : ''}`}>
-                    E-Journals
+                    {t('E-Journals')}
                 </div>
                 <div id="video" onClick={()=>handleChange('video')} className={`sp_nav ${ video ? 'sp_active' : ''}`}>
-                    Video
+                    {t('Video')}
                 </div>
             </div>
             <Ebook toggle={book} />

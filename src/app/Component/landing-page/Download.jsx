@@ -12,8 +12,12 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
+import { useTranslation } from 'react-i18next';
+import '@/i18n'; // cleaner using path alias `@`
+
 
 const downloadLinks = [
+  
   {
     href: "",
     iconClass: "fab fa-apple fa-3x text-white flex-shrink-0",
@@ -26,7 +30,9 @@ const downloadLinks = [
     bgClass: "bg-secondary-gradient",
     platform: "Play Store",
   },
+ 
 ];
+
 
 const screenshots = [
   "https://demo.libvirtuua.com/landingPageAsset/img/screenshot-1.png",
@@ -37,6 +43,7 @@ const screenshots = [
 ];
 
 export default function Download({ headingName, bannerData }) {
+  const { t, i18n } = useTranslation();
   return (
     <>
       <style jsx>{`
@@ -57,9 +64,9 @@ export default function Download({ headingName, bannerData }) {
             <div className="row g-5 align-items-center">
               <div className="col-lg-7 wow fadeInUp" data-wow-delay="0.3s">
                 <h5 className=" fw-medium" id="download_heading">
-                  {headingName}
+                  {t(headingName)}
                 </h5>
-                <h2 className="mb-4">Download The Latest Version Of Our App</h2>
+                <h2 className="mb-4">{t('Download The Latest Version Of Our App')}</h2>
                 <div className="row g-4">
                   {downloadLinks.map((link, index) => (
                     <div
@@ -73,8 +80,8 @@ export default function Download({ headingName, bannerData }) {
                       >
                         <i className={link.iconClass} />
                         <div className="ms-3">
-                          <p className="text-white mb-0">Available On</p>
-                          <h5 className="text-white mb-0">{link.platform}</h5>
+                          <p className="text-white mb-0">{t('Available On')}</p>
+                          <h5 className="text-white mb-0">{t(link.platform)}</h5>
                         </div>
                       </a>
                     </div>
@@ -122,3 +129,4 @@ export default function Download({ headingName, bannerData }) {
     </>
   );
 }
+

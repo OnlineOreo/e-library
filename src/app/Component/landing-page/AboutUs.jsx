@@ -1,3 +1,8 @@
+import { useTranslation } from 'react-i18next';
+import '@/i18n'; // cleaner using path alias `@`
+
+const { t, i18n } = useTranslation();
+
 export default function AboutUs() {
     return (
         <>
@@ -10,7 +15,7 @@ export default function AboutUs() {
                     <div className="row g-5 align-items-center">
                         <div className="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
                             <h5 className="text-primary-gradient fw-medium" id="about_heading">
-                                About Us
+                                {t('About Us')}
                             </h5>
                             <h2 className="mb-4">1.4 Million users in over 700 libraries</h2>
                             <span className="mb-4">

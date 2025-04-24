@@ -1,7 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from 'react-i18next';
+import '@/i18n'; // cleaner using path alias `@`
+
 
 export default function Headline({ headingName, bannerData }) {
+    const { t, i18n } = useTranslation();
     const [activeTab, setActiveTab] = useState(null);
     const [news, setNews] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -43,7 +47,7 @@ export default function Headline({ headingName, bannerData }) {
 
     return (
         <div className="container py-5">
-            <h2 className="text-center fw-bold mb-4">{headingName}</h2>
+            <h2 className="text-center fw-bold mb-4">{t(headingName)}</h2>
 
             {/* Tabs */}
             <div className="d-flex justify-content-center mb-4">
@@ -55,7 +59,7 @@ export default function Headline({ headingName, bannerData }) {
                                 }`}
                             onClick={() => setActiveTab(category.trim())} // ✅ Trim before setting
                         >
-                            {category}
+                            {t(category)}
                         </button>
                     ))}
                 </div>
@@ -95,14 +99,14 @@ export default function Headline({ headingName, bannerData }) {
                                         rel="noopener noreferrer"
                                         className="btn btn-outline-light btn-sm read-more-btn"
                                     >
-                                        Read More →
+                                       {t(" Read More →")}
                                     </a>
                                 </div>
                             </div>
                         </div>
                     ))
                 ) : (
-                    !loading && <p className="text-center text-muted">No news available.</p>
+                    !loading && <p className="text-center text-muted">{t('No news available.')}</p>
                 )}
                 
             </div>

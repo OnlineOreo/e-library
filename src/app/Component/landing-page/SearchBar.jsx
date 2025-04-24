@@ -2,10 +2,16 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTranslation } from 'react-i18next';
+import '@/i18n'; // cleaner using path alias `@`
+
+
 
 const SearchBar = ({show,setShow}) => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { t, i18n } = useTranslation();
+
 
   const [filterType, setFilterType] = useState("datacite_titles");
   const [searchText, setSearchText] = useState("");
@@ -49,12 +55,12 @@ const SearchBar = ({show,setShow}) => {
     <div className="search-style-2">
       <form id="search_form" className="d-flex w-100" onSubmit={handleSubmit}>
         <select value={filterType} onChange={(e) => setFilterType(e.target.value)}>
-          <option value="datacite_titles">Title</option>
-          <option value="datacite_creators">Author</option>
-          <option value="resource_types_string">Resrorces Types</option>
-          <option value="college_category">Subject</option>
+          <option value="datacite_titles">{t('Title')}</option>
+          <option value="datacite_creators">{t('Author')}</option>
+          <option value="resource_types_string">{t('Resource Types')}</option>
+          <option value="college_category">{t('Subject')}</option>
         </select>
-        <input type="text" value={searchText} placeholder="Search with/without any keyword" onChange={(e) => setSearchText(e.target.value)} />
+        <input type="text" value={searchText} placeholder={t('Search with/without any keyword')} onChange={(e) => setSearchText(e.target.value)} />
         <button type="submit"><img alt="Search" src="https://wp.alithemes.com/html/evara/evara-frontend/assets/imgs/theme/icons/search.png" /></button>
       </form>
     </div>

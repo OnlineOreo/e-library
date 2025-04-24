@@ -13,10 +13,13 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import { useRouter } from "next/navigation";
+import { useTranslation } from 'react-i18next';
+import '@/i18n'; // cleaner using path alias `@`
 
 
 export default function TrendingBook({ headingName, bannerData,show,setShow }) {
   const landingPageData = useSelector((state) => state.landingPageDataSlice);
+  const { t, i18n } = useTranslation();
   const books =
     landingPageData?.landingPageData?.trending_books
     const router = useRouter();
@@ -47,7 +50,7 @@ export default function TrendingBook({ headingName, bannerData,show,setShow }) {
           id="trending_books_heading"
           data-wow-delay="0.3s"
         >
-          {headingName}
+          {t(headingName)}
         </h2>
         <div className="book-wrapper wow fadeInUp" data-wow-delay="0.5s">
           <Swiper

@@ -6,8 +6,14 @@ import { FaPhoneAlt , FaTwitter , FaFacebookF  } from "react-icons/fa";
 import { FaLinkedinIn } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa6";
 import { useSelector } from "react-redux";
+import { useTranslation } from 'react-i18next';
+import '@/i18n'; // cleaner using path alias `@`
+
+
 
 export default function Footer() {
+    const { t, i18n } = useTranslation();
+    
     const landingPageData = useSelector((state) => state.landingPageDataSlice);
     const footer = landingPageData?.landingPageData?.footers?.[0]
     // console.log(bannerData)
@@ -27,7 +33,7 @@ export default function Footer() {
                 <div className="container py-5 px-lg-5">
                     <div className="row">
                         <div className="col-md-6 col-lg-4">
-                            <h4 className="text-white">Developed By</h4>
+                            <h4 className="text-white">{t('Developed By')}</h4>
                             <img
                                  src={
                                     `${landingPageData?.landingPageData?.configurations?.[0]?.latest_logos.find(
@@ -37,33 +43,33 @@ export default function Footer() {
                                 alt=""
                                 style={{ width: 100, height: 100 }}
                             />
-                            <p>Copyright 2016-25</p>
-                            <p>{footer?.address}</p>
+                            <p>{t('Copyright 2016-25')}</p>
+                            <p>{t(footer?.address)}</p>
                             <div className="d-flex gap-3">
                                 <a href="" style={{ fontSize: "1em", textDecoration: "underline" }}>
-                                    Term of use
+                                    {t('Term of use')}
                                 </a>
                                 <a
                                     href="https://elibrary.libvirtual.com"
                                     style={{ fontSize: "1em", textDecoration: "underline" }}
                                 >
-                                    Libvertua Website
+                                    {t('LibVirtuUA Website')}
                                 </a>
                             </div>
                         </div>
                         <div className="col-md-6 col-lg-4">
-                            <h4 className="text-white mb-4">Quick Link</h4>
+                            <h4 className="text-white mb-4">{t('Quick Link')}</h4>
                             <a className="btn btn-link" href="#">
-                                About Library
+                                {t('About Library')}
                             </a>
                             <a className="btn btn-link" href="#">
-                                Request an eResource
+                                {t('Request an eResource')}
                             </a>
                             <a className="btn btn-link" href="#">
-                                User Manual
+                                {t('User Manual')}
                             </a>
                             <a className="btn btn-link" href="#">
-                                Submit Feedback
+                                {t('Submit Feedback')}
                             </a>
                             <div className="d-flex pt-2">
                                 <a className="btn btn-outline-light btn-social" href={footer?.x_url}>
@@ -75,27 +81,27 @@ export default function Footer() {
                                 <a className="btn btn-outline-light btn-social" href={footer?.insta_url}>
                                 <FaInstagram />
                                 </a>
-                                <a className="btn btn-outline-light btn-social" href={footer?.li_url
+                                <a className="btn btn-outline-light btn-social" href={(footer?.li_url)
                                 }>
                                 <FaLinkedinIn />
                                 </a>
                             </div>
                         </div>
                         <div className="col-md-6 col-lg-4">
-                            <h4 className="text-white mb-4">Address</h4>
+                            <h4 className="text-white mb-4">{t('Address')}</h4>
                             <p className="text-truncate">
                                 <FaMapMarkerAlt className="me-2" />
-                                {footer?.address}
+                                {t(footer?.address)}
                             </p>
                             <p className="text-truncate">
                                 <FaPhoneAlt className="me-2" />
-                                {footer?.phone}
+                                {t(footer?.phone)}
                             </p>
                             <p className="text-truncate">
                                 <MdEmail className="me-2" />
-                                {footer?.email}
+                                {t(footer?.email)}
                             </p>
-                            <div className="mt-5">Visits : 3939</div>
+                            <div className="mt-5">{t('Visits : 3939')}</div>
                         </div>
                     </div>
                 </div>

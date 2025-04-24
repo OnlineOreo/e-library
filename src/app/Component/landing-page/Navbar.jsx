@@ -12,9 +12,12 @@ import Swal from "sweetalert2";
 import { LuSlidersHorizontal } from "react-icons/lu";
 import "../../../../public/landingPageAsset/css/style2.css";
 import "../../../../public/landingPageAsset/css/header.css";
+import { useTranslation } from 'react-i18next';
+import '@/i18n'; // cleaner using path alias `@`
+
 
 const Navbar = ({show,setShow}) => {
- 
+  const { t, i18n } = useTranslation();
   const router = useRouter();
   const landingPageData = useSelector((state) => state.landingPageDataSlice);
   const instituteId = useSelector((state) => state.institute.instituteId);
@@ -132,10 +135,10 @@ const Navbar = ({show,setShow}) => {
   }, []);
 
   const navItems = [
-    { type: "link", title: "Home", href: "/" },
+    { type: "link", title: t("Home"), href: "/" },
     {
       type: "dropdown",
-      title: "eResources",
+      title: t("eResources"),
       items: landingPageData?.landingPageData?.publishers || [],
       isPublisher: true,
     },
@@ -283,17 +286,17 @@ const Navbar = ({show,setShow}) => {
     },
     {
       type: "dropdown",
-      title: "Media",
+      title: t("Media"),
       items: landingPageData?.landingPageData?.medias || [],
     },
-    // {
-    //   type: "dropdown",
-    //   title: "Collection",
-    //   items: landingPageData?.landingPageData?.collections || [],
-    // },
     {
       type: "dropdown",
-      title: "Important Link",
+      title: t("Collection"),
+      items: landingPageData?.landingPageData?.collections || [],
+    },
+    {
+      type: "dropdown",
+      title: t("Important Link"),
       href: "/",
       items: [
         ...(landingPageData?.landingPageData?.metas || []),
@@ -302,21 +305,21 @@ const Navbar = ({show,setShow}) => {
     },
     {
       type: "dropdown",
-      title: "Account",
+      title: t("Account"),
       items: [
         {
           image: "/images/avatar/saved_icon.png",
-          name: "Saved Article",
+          name: t("Saved Article"),
           href: "/saved-catalog/print-collection",
         },
         {
           image: "/images/avatar/search_history_icon.png",
-          name: "Search History",
+          name: t("Search History"),
           href: "#",
         },
         {
           image: "/images/avatar/read_history.png",
-          name: "Read History",
+          name: t("Read History"),
           href: "#",
         },
       ],
