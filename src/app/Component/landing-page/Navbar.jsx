@@ -12,9 +12,11 @@ import Swal from "sweetalert2";
 import { LuSlidersHorizontal } from "react-icons/lu";
 import "../../../../public/landingPageAsset/css/style2.css";
 import "../../../../public/landingPageAsset/css/header.css";
+import { useTranslation } from "react-i18next";
+import "@/i18n"; // cleaner using path alias `@`
 
-const Navbar = () => {
-  const [show, setShow] = useState(false);
+const Navbar = ({ show, setShow }) => {
+  const { t, i18n } = useTranslation();
   const router = useRouter();
   const landingPageData = useSelector((state) => state.landingPageDataSlice);
   const instituteId = useSelector((state) => state.institute.instituteId);
@@ -25,7 +27,8 @@ const Navbar = () => {
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
   const getBaseDomain = () => {
-    const hostname = typeof window !== "undefined" ? window.location.hostname : "";
+    const hostname =
+      typeof window !== "undefined" ? window.location.hostname : "";
     return hostname;
   };
 
@@ -50,32 +53,37 @@ const Navbar = () => {
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
-  const handleLogout = async (institute_id) => {
+  const handleLogout = async (institute_id, setShow) => {
     const token = getToken();
     const session_id = getSession();
     const userId = getUserId();
-    try {
-      await axios.put(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-session?session_id=${session_id}&institute_id=${institute_id}&user_id=${userId}`,
-        {
-          ended_at: new Date().toISOString(),
-          institute: instituteId,
-          user: userId,
-        },
-        {
-          headers: {
-            Authorization: `${token}`,
+    if (session_id) {
+      try {
+        await axios.put(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-session?session_id=${session_id}&institute_id=${institute_id}&user_id=${userId}`,
+          {
+            ended_at: new Date().toISOString(),
+            institute: instituteId,
+            user: userId,
           },
-        }
-      );
-    } catch (error) {
-      console.error("Failed to update user session:", error);
-      router.push("/");
+          {
+            headers: {
+              Authorization: `${token}`,
+            },
+          }
+        );
+      } catch (error) {
+        console.error("Failed to update user session:", error);
+        router.push("/");
+      }
     }
-    document.cookie = "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    document.cookie = "user_role=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    document.cookie = "session_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    setShow(false);
+    document.cookie =
+      "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie =
+      "user_role=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie =
+      "session_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    setShow = false;
     router.push("/");
   };
 
@@ -89,7 +97,6 @@ const Navbar = () => {
   //   "EBSCO Academic Collection": `https://research-ebsco-com.mriirs.libvirtuua.com:8811/login.aspx?authtype=ip,uid&custid=ns193200&groupid=main&profile=ehost&defaultdb=bsh&token=${token}`,
   //   Manupatra: `https://www-manupatrafast-in.mriirs.libvirtuua.com:8811/LoginSwitch/ipRedirect.aspx?token=${token}`,
   // };
-
 
   const handlePublisherClick = (publisher) => {
     const token = getToken();
@@ -128,8 +135,10 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+
   const navItems = [
-    { type: "link", title: "Home", href: "/" },
+    { type: "link", title: t("Home"), href: "/" },
     {
       type: "dropdown",
       title: "eResources",
@@ -139,158 +148,21 @@ const Navbar = () => {
     {
       type: "dropdown",
       title: "Categories",
-      items: [
-        {
-          "configuration_category_id": "a15ed045-a3ba-46ea-b480-088061f2a34a",
-          "category_name": "Biotechnology",
-          "image": "http://192.168.1.171:8000/api/media/configuration_category/image_a15ed045-a3ba-46ea-b480-088061f2a34a.png",
-          "description": "",
-          "created_at": "2025-04-24T06:14:49.752734Z",
-          "updated_at": "2025-04-24T06:14:49.752767Z"
-        },
-        {
-          "configuration_category_id": "e86eda5b-7e10-49de-8628-0b25458292be",
-          "category_name": "Chemical Engineering",
-          "image": "http://192.168.1.171:8000/api/media/configuration_category/image_e86eda5b-7e10-49de-8628-0b25458292be.png",
-          "description": "",
-          "created_at": "2025-04-24T06:14:50.891779Z",
-          "updated_at": "2025-04-24T06:14:50.891818Z"
-        },
-        {
-          "configuration_category_id": "5116e43b-cebd-44df-a7ee-0bcf8f2c364c",
-          "category_name": "Civil Engineering",
-          "image": "http://192.168.1.171:8000/api/media/configuration_category/image_5116e43b-cebd-44df-a7ee-0bcf8f2c364c.png",
-          "description": "",
-          "created_at": "2025-04-24T06:14:50.968288Z",
-          "updated_at": "2025-04-24T06:14:50.968319Z"
-        },
-        {
-          "configuration_category_id": "095e10a7-4e72-4447-90ff-1dd64626f011",
-          "category_name": "Computer Sciences",
-          "image": "http://192.168.1.171:8000/api/media/configuration_category/image_095e10a7-4e72-4447-90ff-1dd64626f011.png",
-          "description": "",
-          "created_at": "2025-04-24T06:14:50.700319Z",
-          "updated_at": "2025-04-24T06:14:50.700377Z"
-        },
-        {
-          "configuration_category_id": "b15177a0-155b-448e-9af7-22bad7137337",
-          "category_name": "Electrical Engineering",
-          "image": "http://192.168.1.171:8000/api/media/configuration_category/image_b15177a0-155b-448e-9af7-22bad7137337.png",
-          "description": "",
-          "created_at": "2025-04-24T06:14:50.601327Z",
-          "updated_at": "2025-04-24T06:14:50.601357Z"
-        },
-        {
-          "configuration_category_id": "7efe319f-2b25-4c2b-8b1b-267780ac9ba7",
-          "category_name": "Electronics & Communicatiion",
-          "image": "http://192.168.1.171:8000/api/media/configuration_category/image_7efe319f-2b25-4c2b-8b1b-267780ac9ba7.png",
-          "description": "",
-          "created_at": "2025-04-24T06:14:50.290363Z",
-          "updated_at": "2025-04-24T06:14:50.290395Z"
-        },
-        {
-          "configuration_category_id": "429ea20e-059e-43c9-8ccc-2e231dc6fb5f",
-          "category_name": "Finance Management",
-          "image": "http://192.168.1.171:8000/api/media/configuration_category/image_429ea20e-059e-43c9-8ccc-2e231dc6fb5f.png",
-          "description": "",
-          "created_at": "2025-04-24T06:14:50.272801Z",
-          "updated_at": "2025-04-24T06:14:50.272832Z"
-        },
-        {
-          "configuration_category_id": "e175d31d-acef-43a3-bf35-2e830c500d02",
-          "category_name": "Human Resource Management",
-          "image": "http://192.168.1.171:8000/api/media/configuration_category/image_e175d31d-acef-43a3-bf35-2e830c500d02.png",
-          "description": "",
-          "created_at": "2025-04-24T06:14:51.184513Z",
-          "updated_at": "2025-04-24T06:14:51.184543Z"
-        },
-        {
-          "configuration_category_id": "ef7ff645-588f-4d29-9c59-2eb6ccd7c18c",
-          "category_name": "Law",
-          "image": "http://192.168.1.171:8000/api/media/configuration_category/image_ef7ff645-588f-4d29-9c59-2eb6ccd7c18c.png",
-          "description": "",
-          "created_at": "2025-04-24T06:14:51.101574Z",
-          "updated_at": "2025-04-24T06:14:51.101607Z"
-        },
-        {
-          "configuration_category_id": "9e2dca3c-224a-4e9b-aad6-314ca15d7e35",
-          "category_name": "Management (General)",
-          "image": "http://192.168.1.171:8000/api/media/configuration_category/image_9e2dca3c-224a-4e9b-aad6-314ca15d7e35.png",
-          "description": "",
-          "created_at": "2025-04-24T06:14:51.168081Z",
-          "updated_at": "2025-04-24T06:14:51.168112Z"
-        },
-        {
-          "configuration_category_id": "2808ec19-33e0-4739-ac4b-39f43e704051",
-          "category_name": "Marketing Management",
-          "image": "http://192.168.1.171:8000/api/media/configuration_category/image_2808ec19-33e0-4739-ac4b-39f43e704051.png",
-          "description": "",
-          "created_at": "2025-04-24T06:14:50.151202Z",
-          "updated_at": "2025-04-24T06:14:50.151237Z"
-        },
-        {
-          "configuration_category_id": "8819c97f-49b3-484f-bdba-3b5ba8e1578d",
-          "category_name": "Mathematics",
-          "image": "http://192.168.1.171:8000/api/media/configuration_category/image_8819c97f-49b3-484f-bdba-3b5ba8e1578d.png",
-          "description": "",
-          "created_at": "2025-04-24T06:14:50.108208Z",
-          "updated_at": "2025-04-24T06:14:50.108271Z"
-        },
-        {
-          "configuration_category_id": "6e97a822-87e3-4602-86b6-43474bbbe7ff",
-          "category_name": "Mechanical Engineering ",
-          "image": "http://192.168.1.171:8000/api/media/configuration_category/image_6e97a822-87e3-4602-86b6-43474bbbe7ff.png",
-          "description": "",
-          "created_at": "2025-04-24T06:14:50.951155Z",
-          "updated_at": "2025-04-24T06:14:50.951185Z"
-        },
-        {
-          "configuration_category_id": "5807826e-4acb-4ba7-aa9f-4e7a02ad670e",
-          "category_name": "Philosophy, Religion",
-          "image": "http://192.168.1.171:8000/api/media/configuration_category/image_5807826e-4acb-4ba7-aa9f-4e7a02ad670e.png",
-          "description": "",
-          "created_at": "2025-04-24T06:14:50.508140Z",
-          "updated_at": "2025-04-24T06:14:50.508184Z"
-        },
-        {
-          "configuration_category_id": "7ecab279-f00e-4c79-acf3-5d3d634608d7",
-          "category_name": "Physics",
-          "image": "http://192.168.1.171:8000/api/media/configuration_category/image_7ecab279-f00e-4c79-acf3-5d3d634608d7.png",
-          "description": "",
-          "created_at": "2025-04-24T06:14:50.258146Z",
-          "updated_at": "2025-04-24T06:14:50.258176Z"
-        },
-        {
-          "configuration_category_id": "7596fc4a-23fe-4d30-8fa3-63cb46ea4332",
-          "category_name": "Production & Operations Management",
-          "image": "http://192.168.1.171:8000/api/media/configuration_category/image_7596fc4a-23fe-4d30-8fa3-63cb46ea4332.png",
-          "description": "",
-          "created_at": "2025-04-24T06:14:50.543058Z",
-          "updated_at": "2025-04-24T06:14:50.543087Z"
-        },
-        {
-          "configuration_category_id": "2dcbc16e-fdc9-4cc2-9461-64fac094ac3d",
-          "category_name": "Social Science",
-          "image": "http://192.168.1.171:8000/api/media/configuration_category/image_2dcbc16e-fdc9-4cc2-9461-64fac094ac3d.png",
-          "description": "",
-          "created_at": "2025-04-24T06:14:50.075448Z",
-          "updated_at": "2025-04-24T06:14:50.075478Z"
-        },
-      ],
+      items: landingPageData?.landingPageData?.categories || [],
     },
     {
       type: "dropdown",
-      title: "Media",
+      title: t("Media"),
       items: landingPageData?.landingPageData?.medias || [],
     },
-    // {
-    //   type: "dropdown",
-    //   title: "Collection",
-    //   items: landingPageData?.landingPageData?.collections || [],
-    // },
     {
       type: "dropdown",
-      title: "Important Link",
+      title: t("Collection"),
+      items: landingPageData?.landingPageData?.collections || [],
+    },
+    {
+      type: "dropdown",
+      title: t("Important Link"),
       href: "/",
       items: [
         ...(landingPageData?.landingPageData?.metas || []),
@@ -299,30 +171,31 @@ const Navbar = () => {
     },
     {
       type: "dropdown",
-      title: "Account",
+      title: t("Account"),
       items: [
         {
           image: "/images/avatar/saved_icon.png",
-          name: "Saved Article",
+          name: t("Saved Article"),
           href: "/saved-catalog/print-collection",
         },
         {
           image: "/images/avatar/search_history_icon.png",
-          name: "Search History",
+          name: t("Search History"),
           href: "#",
         },
         {
           image: "/images/avatar/read_history.png",
-          name: "Read History",
+          name: t("Read History"),
           href: "#",
         },
       ],
     },
   ];
 
-
   const visibleNavItems = navItems.filter((item) =>
-    item.type === "dropdown" ? Array.isArray(item.items) && item.items.length > 0 : true
+    item.type === "dropdown"
+      ? Array.isArray(item.items) && item.items.length > 0
+      : true
   );
 
   return (
@@ -347,7 +220,11 @@ const Navbar = () => {
                   <Link href="/">
                     <img
                       src={
-                        landingPageData?.landingPageData?.configurations?.[0]?.logo || "default"
+                        `${
+                          landingPageData?.landingPageData?.configurations?.[0]?.latest_logos.find(
+                            (config) => config.is_active
+                          )?.logo
+                        }` || "default"
                       }
                       alt="App Icon"
                     />
@@ -375,7 +252,8 @@ const Navbar = () => {
                   <Link href="/">
                     <img
                       src={
-                        landingPageData?.landingPageData?.configurations?.[0]?.logo || "default"
+                        landingPageData?.landingPageData?.configurations?.[0]
+                          ?.logo || "default"
                       }
                       alt="App Icon"
                     />
@@ -392,7 +270,10 @@ const Navbar = () => {
                           {visibleNavItems.map((item, index) => (
                             <li key={index}>
                               {item.type === "link" ? (
-                                <Link className="nav-link nav-btn" href={item.href}>
+                                <Link
+                                  className="nav-link nav-btn"
+                                  href={item.href}
+                                >
                                   {item.title}
                                 </Link>
                               ) : (
@@ -414,7 +295,7 @@ const Navbar = () => {
                       <AuthButtons
                         token={token}
                         setToken={setToken}
-                        handleLogout={() => handleLogout(instituteId)}
+                        handleLogout={() => handleLogout(instituteId, setShow)}
                         show={show}
                         setShow={setShow}
                         publisherUrls={publisherUrls}
@@ -437,7 +318,11 @@ const Navbar = () => {
           </div>
         </header>
       </div>
-      <MobileNav menuOpen={menuOpen} publisherUrls={publisherUrls} toggleMenu={toggleMenu} />
+      <MobileNav
+        menuOpen={menuOpen}
+        publisherUrls={publisherUrls}
+        toggleMenu={toggleMenu}
+      />
     </>
   );
 };
