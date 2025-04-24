@@ -40,6 +40,7 @@ export default function SolrSearchNav() {
             { href: '/search/multimedia', label: t('Multimedia') },
         ];
     }
+    
 
     return (
         <>
