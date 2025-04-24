@@ -6,6 +6,8 @@ import { Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import { useTranslation } from 'react-i18next';
 import '@/i18n'; // cleaner using path alias `@`
+import Image from 'next/image';
+
 
 const Publisher = ({ headingName }) => {
   const { t, i18n } = useTranslation();
