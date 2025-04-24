@@ -34,25 +34,27 @@ const NavbarTop = (props) => {
   };
 
   const handleLogout = async (institute_id) => {
-    try {
-      const token = getToken();
-      const session_id = getSession();
-      const userId = getUserId();
-      await axios.put(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-session?session_id=${session_id}&institute_id=${institute_id}&user_id=${userId}`,
-        {
-          ended_at: new Date().toISOString(),
-          institute: instituteId,
-          user: userId,
-        },
-        {
-          headers: {
-            Authorization: ` ${token}`,
+    const token = getToken();
+    const session_id = getSession();
+    const userId = getUserId();
+    if (session_id) {
+      try {
+        await axios.put(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-session?session_id=${session_id}&institute_id=${institute_id}&user_id=${userId}`,
+          {
+            ended_at: new Date().toISOString(),
+            institute: instituteId,
+            user: userId,
           },
-        }
-      );
-    } catch (error) {
-      console.error("Failed to update user session:", error);
+          {
+            headers: {
+              Authorization: ` ${token}`,
+            },
+          }
+        );
+      } catch (error) {
+        console.error("Failed to update user session:", error);
+      }
     }
 
     // Clear cookies
@@ -62,10 +64,13 @@ const NavbarTop = (props) => {
 
     router.push("/");
   };
-  
+
   return (
     <>
-      <Navbar expanded="lg" className="navbar-classic navbar navbar-expand-lg custom-navbar px-3">
+      <Navbar
+        expanded="lg"
+        className="navbar-classic navbar navbar-expand-lg custom-navbar px-3"
+      >
         <div className="d-flex justify-content-between w-100 align-items-center">
           <div className="d-flex align-items-center">
             <button
@@ -78,7 +83,12 @@ const NavbarTop = (props) => {
 
           <Nav className="ms-auto d-flex align-items-center gap-2">
             {/* Back to Home */}
-            <Link href="/" target="_blank" passHref title="Open frontend of student in new window">
+            <Link
+              href="/"
+              target="_blank"
+              passHref
+              title="Open frontend of student in new window"
+            >
               <button className="custom-nav-btn d-flex align-items-center gap-1">
                 <Home size="16px" /> Switch to student Dashboard
               </button>
@@ -95,7 +105,7 @@ const NavbarTop = (props) => {
             <button
               className="custom-nav-btn d-flex align-items-center gap-1"
               title="Log Out"
-              onClick={()=> handleLogout(instituteId)}
+              onClick={() => handleLogout(instituteId)}
             >
               <LogOut size="16px" /> Logout
             </button>
@@ -110,7 +120,7 @@ const NavbarTop = (props) => {
         }
 
         .custom-nav-btn {
-          border:1px solid #2a3555;
+          border: 1px solid #2a3555;
           border: 1px solid #3c4a6b;
           color: #000;
           padding: 6px 12px;

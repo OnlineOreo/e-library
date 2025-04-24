@@ -37,6 +37,17 @@ const AuthButtons = ({ token, setToken, handleLogout, show, setShow , publisherU
               </Link>
             </div>
           )}
+          {(userRole == "STUDENT" || userRole == "FACULTY") && (
+            <div className="mx-2">
+              <Link
+                href="/student-profile"
+                className="mx-1 hover-underline"
+                title="Profile"
+              >
+                Profile
+              </Link>
+            </div>
+          )}
           <div>
             <a
               onClick={handleLogout}

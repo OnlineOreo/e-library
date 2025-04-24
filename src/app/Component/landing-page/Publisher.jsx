@@ -69,6 +69,8 @@ const Publisher = ({ headingName }) => {
                       borderRadius: 10,
                       backgroundColor: '#fff'
                     }}
+                    width='auto'
+                    height='auto'
                   />
                 </div>
               </div>
