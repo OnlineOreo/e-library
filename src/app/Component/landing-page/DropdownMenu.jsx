@@ -32,6 +32,26 @@ const DropdownMenu = ({
     "eJournals":"/search/e-resources?q=resource_types_string%3A(e-journals)",
   }
 
+  const categoriesMapping = {
+    "Biotechnology" : "/search/print-collection?q=college_category%3A(biotechnology)",
+    "Chemical Engineering" : "/search/print-collection?q=college_category%3A(chemical)",
+    "Civil Engineering" : "/search/print-collection?q=college_category%3A(civil)",
+    "Computer Sciences" : "/search/print-collection?q=college_category%3A(computer)",
+    "Electrical Engineering" : "/search/print-collection?q=college_category%3A(electrical)",
+    "Electronics & Communicatiion" : "/search/print-collection?q=college_category%3A(electronics)",
+    "Finance Management" : "/search/print-collection?q=college_category%3A(finance)",
+    "Human Resource Management" : "/search/print-collection?q=college_category%3A(human)",
+    "Law" : "/search/print-collection?q=college_category%3A(law)",
+    "Management (General)" : "/search/print-collection?q=college_category%3A(management)",
+    "Marketing Management" : "/search/print-collection?q=college_category%3A(marketing)",
+    "Mathematics" : "/search/print-collection?q=college_category%3A(mathematics)",
+    "Mechanical Engineering " : "/search/print-collection?q=college_category%3A(mechanical)",
+    "Philosophy, Religion" : "/search/print-collection?q=college_category%3A(philosophy)",
+    "Physics" : "/search/print-collection?q=college_category%3A(physics)",
+    "Production & Operations Management" : "/search/print-collection?q=college_category%3A(production)",
+    "Social Science" : "/search/print-collection?q=college_category%3A(social)",
+  }
+
   return (
     <>
       <button className="nav-link dropdown-btn nav-btn">
@@ -123,6 +143,7 @@ const DropdownMenu = ({
               >
                 <a className="dropdown-link cursor_pointer_underline" 
                 href=  {
+                  item.configuration_category_id && categoriesMapping[item.category_name] ||
                   item.configuration_media_id && mediaMapping[item.media_name] ||
                   item.link_url ||
                   (item.page_id  && `/dynamic-page/${item.page_id}`)||
