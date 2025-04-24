@@ -19,6 +19,7 @@ import { notFound } from 'next/navigation';
 
 export default function Home() {
   const dispatch = useDispatch();
+   const [show, setShow] = useState(false);
   const status = useSelector((state) => state.institute.status);
   const landingPageData2 = useSelector((state) => state.landingPageDataSlice);
   const [loading, setLoading] = useState(true);
@@ -99,7 +100,7 @@ export default function Home() {
   return (
     <div className={styles.page}>
       <div id="main_widget_section">
-        <Navbar />
+        <Navbar show={show} setShow={setShow} />
         <Banner bannerData={configData} />
 
         {/* Render Components Dynamically Based on API Response */}
@@ -112,6 +113,8 @@ export default function Home() {
                 key={section.id || index} // Ensure a unique key
                 headingName={section.heading_name}
                 bannerData={configData}
+                show={show}
+                setShow={setShow}
               />
             ) : null;
           })}

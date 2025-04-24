@@ -30,7 +30,7 @@ const CatalogGridCard = (props) => {
         return null;
     };
 
-    const handelBookRead = async (id, url, title, catalogCore) => {
+    const handelBookRead = async (id, url, title, catalogCore , instituteId) => {
         const token = getToken();
         const userId = getUserID();
 
@@ -65,6 +65,14 @@ const CatalogGridCard = (props) => {
             console.error("Log API Error:", error);
         }
 
+        try {
+            const response = await axios.get(
+              `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/trending-books?institute_id=${instituteId}`,
+              { headers: { Authorization: `${token}` } }
+            );
+          } catch (error) {
+          }
+
     }
     return (
         <Card>
@@ -87,7 +95,7 @@ const CatalogGridCard = (props) => {
                         className="me-2 w-50 py-2 btn btn-success"
                         onClick={(e) => {
                             e.preventDefault();
-                            handelBookRead(props.id, props.url, props.datacite_titles, props.catalogCore)
+                            handelBookRead(props.id, props.url, props.datacite_titles, props.catalogCore,instituteId)
                             const screenWidth = window.screen.width;
                             const screenHeight = window.screen.height;
                             const width = screenWidth / 2;

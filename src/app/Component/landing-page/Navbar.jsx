@@ -13,8 +13,8 @@ import { LuSlidersHorizontal } from "react-icons/lu";
 import "../../../../public/landingPageAsset/css/style2.css";
 import "../../../../public/landingPageAsset/css/header.css";
 
-const Navbar = () => {
-  const [show, setShow] = useState(false);
+const Navbar = ({show,setShow}) => {
+ 
   const router = useRouter();
   const landingPageData = useSelector((state) => state.landingPageDataSlice);
   const instituteId = useSelector((state) => state.institute.instituteId);
@@ -25,7 +25,8 @@ const Navbar = () => {
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
   const getBaseDomain = () => {
-    const hostname = typeof window !== "undefined" ? window.location.hostname : "";
+    const hostname =
+      typeof window !== "undefined" ? window.location.hostname : "";
     return hostname;
   };
 
@@ -72,9 +73,12 @@ const Navbar = () => {
       console.error("Failed to update user session:", error);
       router.push("/");
     }
-    document.cookie = "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    document.cookie = "user_role=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    document.cookie = "session_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie =
+      "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie =
+      "user_role=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie =
+      "session_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     setShow(false);
     router.push("/");
   };
@@ -89,7 +93,6 @@ const Navbar = () => {
   //   "EBSCO Academic Collection": `https://research-ebsco-com.mriirs.libvirtuua.com:8811/login.aspx?authtype=ip,uid&custid=ns193200&groupid=main&profile=ehost&defaultdb=bsh&token=${token}`,
   //   Manupatra: `https://www-manupatrafast-in.mriirs.libvirtuua.com:8811/LoginSwitch/ipRedirect.aspx?token=${token}`,
   // };
-
 
   const handlePublisherClick = (publisher) => {
     const token = getToken();
@@ -182,10 +185,11 @@ const Navbar = () => {
       ],
     },
   ];
-  
 
   const visibleNavItems = navItems.filter((item) =>
-    item.type === "dropdown" ? Array.isArray(item.items) && item.items.length > 0 : true
+    item.type === "dropdown"
+      ? Array.isArray(item.items) && item.items.length > 0
+      : true
   );
 
   return (
@@ -210,7 +214,9 @@ const Navbar = () => {
                   <Link href="/">
                     <img
                       src={
-                        landingPageData?.landingPageData?.configurations?.[0]?.logo || "default"
+                        `http://192.168.1.171:8000/api${landingPageData?.landingPageData?.configurations?.[0]?.latest_logos.find(
+                          (config) => config.is_active
+                        )?.logo}` || "default"
                       }
                       alt="App Icon"
                     />
@@ -238,7 +244,8 @@ const Navbar = () => {
                   <Link href="/">
                     <img
                       src={
-                        landingPageData?.landingPageData?.configurations?.[0]?.logo || "default"
+                        landingPageData?.landingPageData?.configurations?.[0]
+                          ?.logo || "default"
                       }
                       alt="App Icon"
                     />
@@ -255,7 +262,10 @@ const Navbar = () => {
                           {visibleNavItems.map((item, index) => (
                             <li key={index}>
                               {item.type === "link" ? (
-                                <Link className="nav-link nav-btn" href={item.href}>
+                                <Link
+                                  className="nav-link nav-btn"
+                                  href={item.href}
+                                >
                                   {item.title}
                                 </Link>
                               ) : (
@@ -277,7 +287,7 @@ const Navbar = () => {
                       <AuthButtons
                         token={token}
                         setToken={setToken}
-                        handleLogout={()=>handleLogout(instituteId)}
+                        handleLogout={() => handleLogout(instituteId)}
                         show={show}
                         setShow={setShow}
                         publisherUrls={publisherUrls}
@@ -300,7 +310,11 @@ const Navbar = () => {
           </div>
         </header>
       </div>
-      <MobileNav menuOpen={menuOpen} publisherUrls={publisherUrls} toggleMenu={toggleMenu} />
+      <MobileNav
+        menuOpen={menuOpen}
+        publisherUrls={publisherUrls}
+        toggleMenu={toggleMenu}
+      />
     </>
   );
 };

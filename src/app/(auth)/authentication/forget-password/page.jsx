@@ -91,7 +91,7 @@ const ForgetPassword = () => {
         });
 
       setTimeout(() => {
-        router.push('./');
+        router.push('/');
       }, 2000);
     } catch (err) {
       console.error('Password reset error:', err);

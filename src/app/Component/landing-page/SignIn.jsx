@@ -7,8 +7,6 @@
   // import { setUser } from "@/redux/slices/userSlice";
   import { setUser } from "../../../redux/slices/userSlice";
 
-
-
   const SignIn = ({show, publisherUrls , setShow, setToken}) => {
     const router = useRouter();
     const dispatch = useDispatch();
@@ -16,6 +14,7 @@
     const searchParams = useSearchParams();
     const q = searchParams.get("q");
     const redirect = searchParams.get("redirect");
+    const book = searchParams.get("book");
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -124,6 +123,8 @@
         }else if(redirect != null){
           router.push(`/`);
           window.open(publisherUrls[redirect], "_blank");
+        }else if(book != null){
+          window.open(`${book}`, "_blank")
         } else {
           router.push(userData.role === "STUDENT" ? "/" : "/dashboard");
         }

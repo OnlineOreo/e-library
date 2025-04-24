@@ -102,8 +102,8 @@ const Home = () => {
     const isSuperUser = formData.role === "ADMIN";
     formDataToSend.append("is_superuser", isSuperUser);
     const hostname = typeof window !== "undefined" ? window.location.hostname : "";
-    formData.append('sub_domain',hostname);
-
+    formDataToSend.append('sub_domain',hostname);
+    
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users`,

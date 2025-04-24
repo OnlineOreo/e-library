@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 
 export default function Header() {
   const [logo, setLogo] = useState(null);
+  const [allLogo, setAllLogo] = useState([]);
   const [preview, setPreview] = useState(null);
   const [coverPreview, setCoverPreview] = useState(null);
   const [configId, setConfigId] = useState(null);
@@ -66,7 +67,13 @@ export default function Header() {
 
       if (response.status === 200) {
         const mainData = response.data[0];
-        setLogo(mainData.logo);
+        
+        const logos = mainData?.latest_logos || [];
+        const activeLogoUrl = logos.find(logo => logo.is_active)?.logo;
+      
+        setAllLogo(logos);
+        setLogo(activeLogoUrl);
+      
         setConfigId(mainData.conf_id);
         setElibraryData({
           font_style: mainData.font_style,
@@ -74,14 +81,16 @@ export default function Header() {
           font_weight: mainData.font_weight,
           font_color: mainData.font_color,
         });
+      
         setColorThemeData({
           color1: mainData.color1 || "#ffffff",
           color2: mainData.color2 || "#000000",
-          show_banner: mainData.upper_cover_image ? true : false,
+          show_banner: mainData.so_banner || false,
           upper_cover_image: mainData.upper_cover_image || "",
         });
+      
         setCoverImage(mainData.upper_cover_image);
-
+      
         setCoverHeadlineData({
           firstQuote: mainData.cover_headline.firstQuote,
           subHeadline: mainData.cover_headline.subHeadline,
@@ -91,6 +100,7 @@ export default function Header() {
           banner_text_color: mainData.cover_headline.banner_text_color,
         });
       }
+      
     } catch (error) {
       console.error("Error fetching logo:", error);
     } finally {
@@ -123,7 +133,7 @@ export default function Header() {
 
     try {
       const response = await axios.patch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/configurations?conf_id=${configId}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/logos?conf_id=${configId}`,
         formData,
         {
           headers: {
@@ -133,7 +143,7 @@ export default function Header() {
         }
       );
 
-      if (response.status === 200) {
+      if (response.status === 200 || response.status === 201) {
         Swal.fire("Success", "Logo updated successfully!", "success");
         LoadConfigData(); // Reload the logo after upload
       }
@@ -209,7 +219,7 @@ export default function Header() {
     formData.append("color1", colorThemeData.color1);
     formData.append("color2", colorThemeData.color2);
     formData.append(
-      "show_banner",
+      "so_banner",
       colorThemeData.show_banner ? "true" : "false"
     );
     formData.append("institute", instituteId);
@@ -271,8 +281,7 @@ export default function Header() {
         LoadConfigData(); // Reload the image after upload
       }
     } catch (error) {
-      console.error("Error updating upper cover image:", error);
-      Swal.fire("Error", "Failed to update upper cover image", "error");
+      Swal.fire("Error", `${error?.response?.data.upper_cover_image[0] || 'Failed to update upper cover image' }`, "error");
     }
   };
 
@@ -337,7 +346,7 @@ export default function Header() {
                       <p>Loading...</p>
                     ) : (
                       <img
-                        src={preview || logo || "/default-logo.png"}
+                        src={preview || `http://192.168.1.171:8000/api${logo}` || logo || "/default-logo.png"}
                         alt="Logo"
                         style={{
                           width: "100%",
@@ -686,15 +695,21 @@ export default function Header() {
                   <Col lg={12} className="mt-2">
                     <Row>
                       <Col lg={6}>
-                        <label>Background Color pf paragraph</label>
+                        <label>Background Color of paragraph</label>
                       </Col>
                       <Col lg={6}>
                         <Form.Control
                           type="color"
                           name="background_color"
-                          value={coverHeadlineData.background_color || ""}
+                          value={coverHeadlineData?.background_color || ""}
                           onChange={handleCoverHeadlineChange}
                         />
+                        {/* <Form.Control
+                          type="color"
+                          name="color1"
+                          value={colorThemeData.color1}
+                          onChange={handleColorThemeChange}
+                        /> */}
                       </Col>
                     </Row>
                   </Col>

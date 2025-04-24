@@ -29,7 +29,11 @@ export default function Footer() {
                         <div className="col-md-6 col-lg-4">
                             <h4 className="text-white">Developed By</h4>
                             <img
-                                src={bannerData?.logo || 'default'}
+                                 src={
+                                    `http://192.168.1.171:8000/api${landingPageData?.landingPageData?.configurations?.[0]?.latest_logos.find(
+                                      (config) => config.is_active
+                                    )?.logo}` || "default"
+                                  }
                                 alt=""
                                 style={{ width: 100, height: 100 }}
                             />
