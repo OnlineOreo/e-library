@@ -14,9 +14,9 @@ import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
-import Image from "next/image";
+import Image from 'next/image';
 
-import "@/i18n"; // cleaner using path alias `@`
+import "@/i18n"; // cleaner using path alias @
 
 export default function TrendingBook({
   headingName,
@@ -75,80 +75,91 @@ export default function TrendingBook({
             {books.map((book, index) => (
               <SwiperSlide key={index}>
                 <div
+                  className="book-items"
+                  style={{ display: "flex", justifyContent: "center" }}
                   onClick={() => handleRedirect(book.url)}
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    height: "100%",
-                  }}
                 >
                   <div
+                    className="main-book-wrap"
                     style={{
-                      width: "200px",
-                      height: "280px",
+                      width: "100%",
+                      maxWidth: "200px",
                       display: "flex",
                       alignItems: "center",
-                      justifyContent: "center",
-                      position: "relative",
-                      borderRadius: "8px",
-                      overflow: "hidden",
                     }}
                   >
-                    {book?.book_image &&
-                    book.book_image.split("/").pop() !== "undefined" ? (
-                      <img
-                        src={book.book_image}
-                        alt={`Trending book ${index + 1}`}
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "contain",
-                        }}
-                      />
-                    ) : (
+                    <div className="book-cover" style={{ width: "100%" }}>
+                      <div className="book-inside" />
                       <div
+                        className="book-image"
                         style={{
-                          position: "relative",
                           width: "100%",
                           height: "100%",
-                          backgroundColor: "#f8f8f8",
-                          border: "1px solid #ddd",
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
-                          textAlign: "center",
-                          flexDirection: "column",
-                          padding: "10px",
+                          cursor: "pointer",
                         }}
                       >
-                        <h3
-                          className="fw-bold fs-6 f-italic four_line_ellipses"
-                          style={{
-                            color: "#404040",
-                            marginBottom: "10px",
-                          }}
-                        >
-                          {book.book_title?.toUpperCase()}
-                        </h3>
-                        <div
-                          className="fw-bold one_line_ellipses"
-                          style={{
-                            color: "#272626",
-                            fontSize: "14px",
-                          }}
-                        >
-                          {book.book_author || ""}
-                        </div>
-                        <Image
-                          src="/images/avatar/1.png"
-                          alt={book.book_title}
-                          width={100}
-                          height={100}
-                          style={{ marginTop: "10px", objectFit: "contain" }}
-                        />
+                        {book?.book_image &&
+                        book.book_image.split("/").pop() !== "undefined" ? (
+                          <img
+                            src={book.book_image}
+                            alt={`Trending book ${index + 1}`}
+                            style={{
+                              width: "100%",
+                              height: "100%",
+                              objectFit: "contain",
+                            }}
+                          />
+                        ) : (
+                          
+                           <div className="mx-3 mt-3 mb-3 border" style={{ position: 'relative' }}>
+                                <h3
+                                  className='fw-bold fs-6 f-italic four_line_ellipses'
+                                  style={{
+                                    position: 'absolute',
+                                    top: '22%',
+                                    left: 10,
+                                    width: '95%',
+                                    color: '#404040',
+                                    padding: '8px',
+                                    textAlign: 'center',
+                                    zIndex: 2,
+                                  }}
+                                >
+                                  {book.book_title?.toUpperCase()}
+                                </h3>
+                          
+                                {/* Author at the bottom */}
+                                <div
+                                  className='mt-2 fw-bold one_line_ellipses'
+                                  style={{
+                                    position: 'absolute',
+                                    bottom: '25%',
+                                    right: '3%',
+                                    color: '#272626',
+                                    padding: '8px',
+                                    textAlign: 'center',
+                                    zIndex: 2,
+                                  }}
+                                >
+                                </div>
+                          
+                                {/* Book cover image */}
+                                <Image
+                                  src={'/images/avatar/1.png'}
+                                  alt={book.book_title}
+                                  width={300}
+                                  height={300}
+                                  style={{ width: '100%', height: 'auto', objectFit: 'fill' }}
+                                />
+                              </div>
+                        )}
+
+                        {/* <div className="light" /> */}
                       </div>
-                    )}
+                    </div>
                   </div>
                 </div>
               </SwiperSlide>
