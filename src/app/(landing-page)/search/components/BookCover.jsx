@@ -16,7 +16,7 @@ const BookCover = ({ title, author, thumbnail }) => {
   const currentImage = coverImageArray[imageIndex % coverImageArray.length];
   imageIndex++;
 
-  console.log("this is thumbnail : ", thumbnail);
+  // console.log("this is thumbnail : ", thumbnail);
   
 
   if (thumbnail && thumbnail !== "") {

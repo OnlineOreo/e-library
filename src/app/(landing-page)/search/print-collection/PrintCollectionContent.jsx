@@ -148,13 +148,15 @@ export default function PrintCollectionContent({
     };
 
     useEffect(() => {
-        logUpdate({
-            path: path,
-            status_code: status_code,
-            initialResults: JSON.stringify(initialResults),
-            error_trace: error_trace || "",
-        });
-    }, [path, status_code, initialResults, error_trace]);
+        if(instituteId){
+            logUpdate({
+                path: path,
+                status_code: status_code,
+                initialResults: JSON.stringify(initialResults),
+                error_trace: error_trace || "",
+            });
+        }
+    }, [path, status_code, initialResults, error_trace, instituteId]);
 
     const loadSavedCatalog = async () => {
         const token = getToken();

@@ -19,6 +19,8 @@ async function fetachSolrData(searchQuery, startIndex = 0) {
 
   try {
     const solrUrl = `${process.env.NEXT_PUBLIC_SOLR_BASE_URL}/solr/Print-collection/select?indent=true&q.op=OR&q=${searchQuery}&rows=15&start=${startIndex}`;
+    console.log("solr url : ", solrUrl);
+    
     const response = await axios.get(solrUrl);
 
     const docs = response.data.response.docs || [];
