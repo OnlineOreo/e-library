@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchInstituteId } from "./../redux/slices/instituteSlice";
 import Navbar from "./Component/landing-page/Navbar";
 import styles from "./page.module.css";
+import './dynamic.css'
 
 import Banner from "./Component/landing-page/Banner";
 import Publisher from "./Component/landing-page/Publisher";

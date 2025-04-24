@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import "../styles/theme.scss";
+import "../../dynamic.css"
 
 import NavbarTop from "@/layouts/navbars/NavbarTop";
 import NavbarVertical from "@/layouts/navbars/NavbarVertical";

@@ -346,7 +346,7 @@ export default function Header() {
                       <p>Loading...</p>
                     ) : (
                       <img
-                        src={preview || `http://192.168.1.171:8000/api${logo}` || logo || "/default-logo.png"}
+                        src={preview || `${logo}` || logo || "/default-logo.png"}
                         alt="Logo"
                         style={{
                           width: "100%",

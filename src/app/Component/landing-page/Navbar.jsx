@@ -214,7 +214,7 @@ const Navbar = ({show,setShow}) => {
                   <Link href="/">
                     <img
                       src={
-                        `http://192.168.1.171:8000/api${landingPageData?.landingPageData?.configurations?.[0]?.latest_logos.find(
+                        `${landingPageData?.landingPageData?.configurations?.[0]?.latest_logos.find(
                           (config) => config.is_active
                         )?.logo}` || "default"
                       }
