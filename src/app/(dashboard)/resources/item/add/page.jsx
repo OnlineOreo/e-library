@@ -14,6 +14,7 @@ export default function AddItem() {
   const [itemTypes, setItemTypes] = useState([]);
   const [packageList, setPackageList] = useState([]);
   const [errors, setErrors] = useState({});
+  const instituteId = useSelector((state) => state.institute.instituteId);
 
   const [formData, setFormData] = useState({
     ISBN: "",
@@ -133,7 +134,7 @@ export default function AddItem() {
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e,instituteId) => {
     e.preventDefault();
     setErrors({});
 
@@ -164,6 +165,8 @@ export default function AddItem() {
         package: pkg,
         item_type: formData.mappings.item_type[index],
       }));
+      // formData.append('institute',instituteId)
+      
 
       const payload = {
         ...formData,
@@ -209,7 +212,7 @@ export default function AddItem() {
           </Col>
         </Row>
         <div className="card p-4">
-          <Form onSubmit={handleSubmit}>
+          <Form onSubmit={(e)=>handleSubmit(e,instituteId)}>
             <Row className="mb-3">
               <Col md={6}>
                 <Form.Group controlId="title">

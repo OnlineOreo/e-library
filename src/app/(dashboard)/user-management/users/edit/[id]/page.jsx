@@ -194,7 +194,7 @@ const EditUser = () => {
     } catch (error) {
       setIsUpdating(false);
       errorToaster(
-        error.response?.data?.message || error.response?.data?.mappings[0]
+        error.response?.data?.message || error.response?.data?.mappings || error.response?.data?.mappings?.[0]
       );
     }
   };

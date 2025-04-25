@@ -5,6 +5,7 @@ import AZFilter from "./AZFilter";
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
 import "@/i18n"; // cleaner using path alias @
+import Link from "next/link";
 
 const DropdownMenu = ({
   title,
@@ -17,17 +18,17 @@ const DropdownMenu = ({
 }) => {
   const [search, setSearch] = useState("");
   const { t, i18n } = useTranslation();
-  const filteredAndSortedItems = useMemo(() => {
-    if (!isPublisher) return items;
+  // const filteredAndSortedItems = useMemo(() => {
+  //   if (!isPublisher) return items;
 
-    return items
-      .filter((item) =>
-        (item.publisher_name || "").toLowerCase().includes(search.toLowerCase())
-      )
-      .sort((a, b) =>
-        (a.publisher_name || "").localeCompare(b.publisher_name || "")
-      );
-  }, [search]);
+  //   return items
+  //     .filter((item) =>
+  //       (item.publisher_name || "").toLowerCase().includes(search.toLowerCase())
+  //     )
+  //     .sort((a, b) =>
+  //       (a.publisher_name || "").localeCompare(b.publisher_name || "")
+  //     );
+  // }, [search]);
 
   const getToken = () => {
     const cookieString = document.cookie
@@ -121,8 +122,8 @@ const DropdownMenu = ({
               }}
             >
               <div className="nav_menu">
-                {filteredAndSortedItems.map((item) => (
-                  <div key={item.publisher_id} className="nav publisher_nav">
+                {items.map((item,index) => (
+                  <div key={index} className="nav publisher_nav">
                     <span
                       className="dropdown-link pe-auto one_line_ellipses cursor_pointer_underline"
                       style={{ cursor: "pointer" }}
@@ -254,7 +255,7 @@ const DropdownMenu = ({
                 className="nav"
                 style={{ minWidth: "33%" }}
               >
-                <a
+                <Link
                   className="dropdown-link cursor_pointer_underline"
                   href="#"
                   onClick={(e) => {
@@ -299,7 +300,7 @@ const DropdownMenu = ({
                     item.list ||
                     item.page_name ||
                     item.name}
-                </a>
+                </Link>
               </div>
             ))}
           </div>

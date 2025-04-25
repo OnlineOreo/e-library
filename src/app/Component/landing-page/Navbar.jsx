@@ -91,8 +91,8 @@ const Navbar = ({ show, setShow }) => {
   const baseDomain = getBaseDomain();
 
   const publisherUrls = {
-    "EBSCO Academic Collection": `https://research-ebsco-com.${baseDomain}/login.aspx?authtype=ip,uid&custid=ns193200&groupid=main&profile=ehost&defaultdb=bsh&token=${token}`,
-    Manupatra: `https://www-manupatrafast-in.${baseDomain}/LoginSwitch/ipRedirect.aspx?token=${token}`,
+    "EBSCO Academic Collection": `https://research-ebsco-com.${baseDomain}:8811/login.aspx?authtype=ip,uid&custid=ns193200&groupid=main&profile=ehost&defaultdb=bsh&token=${token}`,
+    Manupatra: `https://www-manupatrafast-in.${baseDomain}:8811/LoginSwitch/ipRedirect.aspx?token=${token}`,
   };
   // const publisherUrls = {
   //   "EBSCO Academic Collection": `https://research-ebsco-com.mriirs.libvirtuua.com:8811/login.aspx?authtype=ip,uid&custid=ns193200&groupid=main&profile=ehost&defaultdb=bsh&token=${token}`,
