@@ -231,6 +231,7 @@ export default function PrintCollectionContentAdv({
                                             subject={item.datacite_subject?.[0]}
                                             description={item.description}
                                             uploader={item.uploader}
+                                            thumbnail = {item.thumbnail}
                                             url={item.url}
                                             resource_type={item.resource_types_string}
                                             user_saved_catalog={userSavedCatalogs}
@@ -280,6 +281,7 @@ export default function PrintCollectionContentAdv({
                                             subject={item.datacite_subject?.[0]}
                                             description={item.description}
                                             uploader={item.uploader}
+                                            thumbnail = {item.thumbnail}
                                             url={item.url}
                                             resource_type={item.resource_types_string}
                                             user_saved_catalog={userSavedCatalogs}

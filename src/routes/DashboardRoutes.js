@@ -172,11 +172,11 @@ export const useDashboardMenu = () => {
   const configMenu = [
     { id: uuid(), link: "/configuration/landing-page", name: t("Landing Page") },
     { id: uuid(), link: "/configuration/metas", name: t("Important Link") },
-    {
-      id: uuid(),
-      link: "/configuration/trending-books",
-      name: t("Trending Books"),
-    },
+    // {
+    //   id: uuid(),
+    //   link: "/configuration/trending-books",
+    //   name: t("Trending Books"),
+    // },
     { id: uuid(), link: "/configuration/dynamic-page", name: t("Dynamic Page") },
     { id: uuid(), link: "/configuration/footer", name: t("Footer") },
     { id: uuid(), link: "/configuration/notice", name: t("Notices") },
