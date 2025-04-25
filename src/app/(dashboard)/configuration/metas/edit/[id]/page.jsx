@@ -8,11 +8,13 @@ import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
 import Link from "next/link";
 import { FaMinusCircle } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 const EditConfigurationMeta = () => {
   const router = useRouter();
   const { id } = useParams(); 
   // console.log("meta id : ",id);
+  const instituteId = useSelector((state) => state.institute.instituteId);
   
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
@@ -33,7 +35,7 @@ const EditConfigurationMeta = () => {
   };
 
   useEffect(() => {
-    const fetchMeta = async () => {
+    const fetchMeta = async (id,instituteId) => {
       const token = getToken();
       if (!token) {
         router.push("/authentication/sign-in");
@@ -41,7 +43,7 @@ const EditConfigurationMeta = () => {
       }
       try {
         const { data } = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/configuration-meta?configuration_meta_id=${id}`,
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/configuration-meta?configuration_meta_id=${id}&institute_id=${instituteId}`,
           {
             headers: { Authorization: token },
           }
@@ -57,8 +59,10 @@ const EditConfigurationMeta = () => {
       }
     };
 
-    fetchMeta();
-  }, [id]);
+    if(id,instituteId){
+      fetchMeta(id,instituteId);
+    }
+  }, [id,instituteId]);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;

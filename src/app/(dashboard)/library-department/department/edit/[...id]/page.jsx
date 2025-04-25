@@ -8,12 +8,14 @@ import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
 import Swal from "sweetalert2"; 
 import { FaMinusCircle } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 const EditDepartment = () => {
     const router = useRouter();
     const { id } = useParams(); // Get department_id from URL
     const successToaster = (text) => toast(text);
     const errorToaster = (text) => toast.error(text);
+    const instituteId = useSelector((state) => state.institute.instituteId);
 
     const [isLoading, setIsLoading] = useState(false);
     const [library, setLibrary] = useState([]);
@@ -33,7 +35,7 @@ const EditDepartment = () => {
       };
 
     // Fetch department details
-    const loadDepartment = async () => {
+    const loadDepartment = async (id) => {
         const token = getToken();
         if (!token) {
             errorToaster("Authentication required!");
@@ -60,7 +62,7 @@ const EditDepartment = () => {
     };
 
     // Fetch library list
-    const loadLibrary = async () => {
+    const loadLibrary = async (instituteId) => {
         const token = getToken();
         if (!token) {
             errorToaster("Authentication required!");
@@ -68,7 +70,7 @@ const EditDepartment = () => {
         }
 
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/libraries`, {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/libraries?institute_id=${instituteId}`, {
                 headers: { Authorization: `${token}` },
             });
 
@@ -81,9 +83,11 @@ const EditDepartment = () => {
     };
 
     useEffect(() => {
-        loadDepartment();
-        loadLibrary();
-    }, [id]);
+        if(id & instituteId){
+            loadDepartment(id);
+            loadLibrary(instituteId);
+        }
+    }, [id,instituteId]);
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;

@@ -15,6 +15,7 @@
     const q = searchParams.get("q");
     const redirect = searchParams.get("redirect");
     const book = searchParams.get("book");
+    const extra = searchParams.get("extra");
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -125,6 +126,8 @@
           window.open(publisherUrls[redirect], "_blank");
         }else if(book != null){ 
           window.open(`${book}`, "_blank")
+        }else if(extra != null){
+          window.open(`${extra}`, "_blank")
         } else {
           router.push(userData.role === "STUDENT" ? "/" : "/dashboard");
         }

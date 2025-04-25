@@ -169,6 +169,7 @@ const Navbar = ({ show, setShow }) => {
         ...(landingPageData?.landingPageData?.metas || []),
         ...(landingPageData?.landingPageData?.dynamic_page || []),
       ],
+      isImportantLink:true,
     },
     {
       type: "dropdown",
