@@ -84,6 +84,7 @@ const Navbar = ({ show, setShow }) => {
     document.cookie =
       "session_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     setShow = false;
+    setToken(null)
     router.push("/");
   };
 
@@ -139,154 +140,17 @@ const Navbar = ({ show, setShow }) => {
 
   const navItems = [
     { type: "link", title: t("Home"), href: "/" },
-    // {
-    //   type: "dropdown",
-    //   title: t("eResources"),
-    //   items: landingPageData?.landingPageData?.publishers || [],
-    //   isPublisher: true,
-    // },
-    // {
-    //   type: "dropdown",
-    //   title: t("Categories"),
-    //   items: [
-    //     {
-    //       configuration_category_id: "a15ed045-a3ba-46ea-b480-088061f2a34a",
-    //       category_name: "Biotechnology",
-    //       image: `${baseUrl}/api/media/configuration_category/image_a15ed045-a3ba-46ea-b480-088061f2a34a.png`,
-    //       description: "",
-    //       created_at: "2025-04-24T06:14:49.752734Z",
-    //       updated_at: "2025-04-24T06:14:49.752767Z",
-    //     },
-    //     {
-    //       configuration_category_id: "e86eda5b-7e10-49de-8628-0b25458292be",
-    //       category_name: "Chemical Engineering",
-    //       image: `${baseUrl}/api/media/configuration_category/image_e86eda5b-7e10-49de-8628-0b25458292be.png`,
-    //       description: "",
-    //       created_at: "2025-04-24T06:14:50.891779Z",
-    //       updated_at: "2025-04-24T06:14:50.891818Z",
-    //     },
-    //     {
-    //       configuration_category_id: "5116e43b-cebd-44df-a7ee-0bcf8f2c364c",
-    //       category_name: "Civil Engineering",
-    //       image: `${baseUrl}/api/media/configuration_category/image_5116e43b-cebd-44df-a7ee-0bcf8f2c364c.png`,
-    //       description: "",
-    //       created_at: "2025-04-24T06:14:50.968288Z",
-    //       updated_at: "2025-04-24T06:14:50.968319Z",
-    //     },
-    //     {
-    //       configuration_category_id: "095e10a7-4e72-4447-90ff-1dd64626f011",
-    //       category_name: "Computer Sciences",
-    //       image: `${baseUrl}/api/media/configuration_category/image_095e10a7-4e72-4447-90ff-1dd64626f011.png`,
-    //       description: "",
-    //       created_at: "2025-04-24T06:14:50.700319Z",
-    //       updated_at: "2025-04-24T06:14:50.700377Z",
-    //     },
-    //     {
-    //       configuration_category_id: "b15177a0-155b-448e-9af7-22bad7137337",
-    //       category_name: "Electrical Engineering",
-    //       image: `${baseUrl}/api/media/configuration_category/image_b15177a0-155b-448e-9af7-22bad7137337.png`,
-    //       description: "",
-    //       created_at: "2025-04-24T06:14:50.601327Z",
-    //       updated_at: "2025-04-24T06:14:50.601357Z",
-    //     },
-    //     {
-    //       configuration_category_id: "7efe319f-2b25-4c2b-8b1b-267780ac9ba7",
-    //       category_name: "Electronics & Communicatiion",
-    //       image: `${baseUrl}/api/media/configuration_category/image_7efe319f-2b25-4c2b-8b1b-267780ac9ba7.png`,
-    //       description: "",
-    //       created_at: "2025-04-24T06:14:50.290363Z",
-    //       updated_at: "2025-04-24T06:14:50.290395Z",
-    //     },
-    //     {
-    //       configuration_category_id: "429ea20e-059e-43c9-8ccc-2e231dc6fb5f",
-    //       category_name: "Finance Management",
-    //       image: `${baseUrl}/api/media/configuration_category/image_429ea20e-059e-43c9-8ccc-2e231dc6fb5f.png`,
-    //       description: "",
-    //       created_at: "2025-04-24T06:14:50.272801Z",
-    //       updated_at: "2025-04-24T06:14:50.272832Z",
-    //     },
-    //     {
-    //       configuration_category_id: "e175d31d-acef-43a3-bf35-2e830c500d02",
-    //       category_name: "Human Resource Management",
-    //       image: `${baseUrl}/api/media/configuration_category/image_e175d31d-acef-43a3-bf35-2e830c500d02.png`,
-    //       description: "",
-    //       created_at: "2025-04-24T06:14:51.184513Z",
-    //       updated_at: "2025-04-24T06:14:51.184543Z",
-    //     },
-    //     {
-    //       configuration_category_id: "ef7ff645-588f-4d29-9c59-2eb6ccd7c18c",
-    //       category_name: "Law",
-    //       image: `${baseUrl}/api/media/configuration_category/image_ef7ff645-588f-4d29-9c59-2eb6ccd7c18c.png`,
-    //       description: "",
-    //       created_at: "2025-04-24T06:14:51.101574Z",
-    //       updated_at: "2025-04-24T06:14:51.101607Z",
-    //     },
-    //     {
-    //       configuration_category_id: "9e2dca3c-224a-4e9b-aad6-314ca15d7e35",
-    //       category_name: "Management (General)",
-    //       image: `${baseUrl}/api/media/configuration_category/image_9e2dca3c-224a-4e9b-aad6-314ca15d7e35.png`,
-    //       description: "",
-    //       created_at: "2025-04-24T06:14:51.168081Z",
-    //       updated_at: "2025-04-24T06:14:51.168112Z",
-    //     },
-    //     {
-    //       configuration_category_id: "2808ec19-33e0-4739-ac4b-39f43e704051",
-    //       category_name: "Marketing Management",
-    //       image: `${baseUrl}/api/media/configuration_category/image_2808ec19-33e0-4739-ac4b-39f43e704051.png`,
-    //       description: "",
-    //       created_at: "2025-04-24T06:14:50.151202Z",
-    //       updated_at: "2025-04-24T06:14:50.151237Z",
-    //     },
-    //     {
-    //       configuration_category_id: "8819c97f-49b3-484f-bdba-3b5ba8e1578d",
-    //       category_name: "Mathematics",
-    //       image: `${baseUrl}/api/media/configuration_category/image_8819c97f-49b3-484f-bdba-3b5ba8e1578d.png`,
-    //       description: "",
-    //       created_at: "2025-04-24T06:14:50.108208Z",
-    //       updated_at: "2025-04-24T06:14:50.108271Z",
-    //     },
-    //     {
-    //       configuration_category_id: "6e97a822-87e3-4602-86b6-43474bbbe7ff",
-    //       category_name: "Mechanical Engineering ",
-    //       image: `${baseUrl}/api/media/configuration_category/image_6e97a822-87e3-4602-86b6-43474bbbe7ff.png`,
-    //       description: "",
-    //       created_at: "2025-04-24T06:14:50.951155Z",
-    //       updated_at: "2025-04-24T06:14:50.951185Z",
-    //     },
-    //     {
-    //       configuration_category_id: "5807826e-4acb-4ba7-aa9f-4e7a02ad670e",
-    //       category_name: "Philosophy, Religion",
-    //       image: `${baseUrl}/api/media/configuration_category/image_5807826e-4acb-4ba7-aa9f-4e7a02ad670e.png`,
-    //       description: "",
-    //       created_at: "2025-04-24T06:14:50.508140Z",
-    //       updated_at: "2025-04-24T06:14:50.508184Z",
-    //     },
-    //     {
-    //       configuration_category_id: "7ecab279-f00e-4c79-acf3-5d3d634608d7",
-    //       category_name: "Physics",
-    //       image: `${baseUrl}/api/media/configuration_category/image_7ecab279-f00e-4c79-acf3-5d3d634608d7.png`,
-    //       description: "",
-    //       created_at: "2025-04-24T06:14:50.258146Z",
-    //       updated_at: "2025-04-24T06:14:50.258176Z",
-    //     },
-    //     {
-    //       configuration_category_id: "7596fc4a-23fe-4d30-8fa3-63cb46ea4332",
-    //       category_name: "Production & Operations Management",
-    //       image: `${baseUrl}/api/media/configuration_category/image_7596fc4a-23fe-4d30-8fa3-63cb46ea4332.png`,
-    //       description: "",
-    //       created_at: "2025-04-24T06:14:50.543058Z",
-    //       updated_at: "2025-04-24T06:14:50.543087Z",
-    //     },
-    //     {
-    //       configuration_category_id: "2dcbc16e-fdc9-4cc2-9461-64fac094ac3d",
-    //       category_name: "Social Science",
-    //       image: `${baseUrl}/api/media/configuration_category/image_2dcbc16e-fdc9-4cc2-9461-64fac094ac3d.png`,
-    //       description: "",
-    //       created_at: "2025-04-24T06:14:50.075448Z",
-    //       updated_at: "2025-04-24T06:14:50.075478Z",
-    //     },
-    //   ],
-    // },
+    {
+      type: "dropdown",
+      title: t("eResources"),
+      items: landingPageData?.landingPageData?.publishers || [],
+      isPublisher: true,
+    },
+    {
+      type: "dropdown",
+      title: t("Categories"),
+      items: landingPageData?.landingPageData?.categories || [],
+    },
     {
       type: "dropdown",
       title: t("Media"),
@@ -299,7 +163,7 @@ const Navbar = ({ show, setShow }) => {
     // },
     {
       type: "dropdown",
-      title: t('Important Link'),
+      title: t("Important Link"),
       href: "/",
       items: [
         ...(landingPageData?.landingPageData?.metas || []),
@@ -416,6 +280,8 @@ const Navbar = ({ show, setShow }) => {
                               ) : (
                                 <DropdownMenu
                                   title={item.title}
+                                  show={show}
+                                  setShow={setShow}
                                   items={item.items}
                                   isPublisher={item.isPublisher}
                                   handlePublisherClick={handlePublisherClick}

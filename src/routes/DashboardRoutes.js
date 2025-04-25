@@ -34,7 +34,6 @@ export const useDashboardMenu = () => {
         children: [
           { id: uuid(), link: "/user-management/users", name: t("Manage User") },
           { id: uuid(), link: "/user-management/admin", name: t("Manage Admin") },
-
         ],
       }
     );
@@ -48,17 +47,18 @@ export const useDashboardMenu = () => {
       ],
     });
   }
+
   if (userRole === "ADMIN") {
     menu.push({
       id: uuid(),
       title: t("Library & Department"),
       icon: "clipboard",
       children: [
-        {
-          id: uuid(),
-          link: "/library-department/institute",
-          name: t("Institutes"),
-        },
+        // {
+        //   id: uuid(),
+        //   link: "/library-department/institute",
+        //   name: t("Institutes"),
+        // },
         { id: uuid(), link: "/library-department/library", name: t("Library") },
         {
           id: uuid(),

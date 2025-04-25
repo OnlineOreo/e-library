@@ -33,10 +33,10 @@ const Home = () => {
       router.push("/authentication/sign-in");
       return;
     }
-
+    const hostname = typeof window !== "undefined" ? window.location.hostname : "";
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users?admin=true&institute_id=${instituteId}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users?admin=true&sub_domain=${hostname}`,
         {
           headers: { Authorization: `${token}` },
           method: "GET",

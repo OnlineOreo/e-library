@@ -14,7 +14,8 @@ export function middleware(req) {
     "/notification",
     "/reports",
     "/search",
-    "/student-profile"
+    "/student-profile",
+    "/advance-search-filter"
   ];
   
   const isProtectedRoute = protectedRoutes.some((route) => req.nextUrl.pathname.startsWith(route));
@@ -38,6 +39,7 @@ export const config = {
     "/notification/:path*",
     "/reports/:path*",
     "/search/:path*",
+    "/advance-search-filter/:path*",
     "/student-profile/:path*"
   ],
 };
