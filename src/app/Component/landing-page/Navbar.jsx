@@ -171,27 +171,27 @@ const Navbar = ({ show, setShow }) => {
       ],
       isImportantLink: true,
     },
-    {
-      type: "dropdown",
-      title: t("Account"),
-      items: [
-        {
-          image: "/images/avatar/saved_icon.png",
-          name: t("Saved Article"),
-          href: "/saved-catalog/print-collection",
-        },
-        // {
-        //   image: "/images/avatar/search_history_icon.png",
-        //   name: t("Search History"),
-        //   href: "#",
-        // },
-        // {
-        //   image: "/images/avatar/read_history.png",
-        //   name: t("Read History"),
-        //   href: "#",
-        // },
-      ],
-    },
+    // {
+    //   type: "dropdown",
+    //   title: t("Account"),
+    //   items: [
+    //     {
+    //       image: "/images/avatar/saved_icon.png",
+    //       name: t("Saved Article"),
+    //       href: "/saved-catalog/print-collection",
+    //     },
+    //     {
+    //       image: "/images/avatar/search_history_icon.png",
+    //       name: t("Search History"),
+    //       href: "#",
+    //     },
+    //     {
+    //       image: "/images/avatar/read_history.png",
+    //       name: t("Read History"),
+    //       href: "#",
+    //     },
+    //   ],
+    // },
   ];
 
   const getUserRole = () => {

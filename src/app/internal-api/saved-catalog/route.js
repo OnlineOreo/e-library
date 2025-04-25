@@ -1,4 +1,3 @@
-// app/api/load-more-print-collection/route.js
 import axios from "axios";
 
 export async function GET(request) {

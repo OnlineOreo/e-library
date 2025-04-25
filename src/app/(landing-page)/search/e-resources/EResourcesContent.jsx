@@ -67,7 +67,7 @@ export default function EResourcesContent({
         const nextStart = startIndex;
 
         try {
-            const res = await fetch(`/api/load-more?q=${urlParams}&start=${nextStart}&catalogCore=e-resources`);
+            const res = await fetch(`/internal-api/load-more?q=${urlParams}&start=${nextStart}&catalogCore=e-resources`);
             const data = await res.json();
 
             const newDocs = data.results || [];
