@@ -60,7 +60,7 @@ export default function ECollectionContentAdv({
         const nextStart = startIndex;
       
         try {
-          const res = await fetch(`/api/load-more?q=${urlParams}&start=${nextStart}&catalogCore=e-collection&rows=20`);
+          const res = await fetch(`/internal-api/load-more?q=${urlParams}&start=${nextStart}&catalogCore=e-collection&rows=20`);
           const data = await res.json();
       
           const newDocs = data.results || [];

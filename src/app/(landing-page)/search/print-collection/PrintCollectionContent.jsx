@@ -69,7 +69,7 @@ export default function PrintCollectionContent({
         const nextStart = startIndex;
 
         try {
-            const res = await fetch(`/api/load-more?q=${urlParams}&start=${nextStart}&catalogCore=Print-collection`);
+            const res = await fetch(`/internal-api/load-more?q=${urlParams}&start=${nextStart}&catalogCore=Print-collection`);
             const data = await res.json();
 
             const newDocs = data.results || [];
