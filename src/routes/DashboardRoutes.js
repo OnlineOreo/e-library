@@ -150,7 +150,7 @@ export const useDashboardMenu = () => {
       icon: "layout",
       children: [
         { id: uuid(), link: "/reports/total-users", name: t("User Report") },
-        { id: uuid(), link: "/reports/Resource-reports", name: t("Resource Reports") },
+        // { id: uuid(), link: "/reports/Resource-reports", name: t("Resource Reports") },
         // { id: uuid(), link: '/reports/top-users', name: 'Top Users' },
       ],
     },

@@ -88,17 +88,15 @@ export default function PrintCollectionSavedCatalog() {
         const userId = getUserID();
         console.log("user_id", userId);
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-saved-article?user=${userId}`, {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-saved-article?user_id=${userId}`, {
                 headers: { Authorization: `${token}` },
             });
             setUserSavedCatalogs(response.data);
-
             const catalogIds = response.data[0].saved_p_collection_ids;
             console.log("user saved catalog : ", catalogIds);
             const responce_catalog = await axios.get(`/api/saved-catalog?catalogIds=${catalogIds}&catalogCore="Print-collection"`)
             setResults(responce_catalog.data.results)
             setResultsCount(responce_catalog.data.resultsCount)
-
             console.log("user saved catalog detail : ", responce_catalog);
 
 
@@ -165,6 +163,7 @@ export default function PrintCollectionSavedCatalog() {
                                             url={item.url}
                                             resource_type={item.resource_types_string}
                                             user_saved_catalog={userSavedCatalogs}
+                                            thumbnail = {item.thumbnail}
                                             catalogCore={"Print-collection"}
                                             onShow={handleShow}
                                             onSelect={() => setSelectCatalog(item)}

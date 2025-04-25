@@ -3,10 +3,8 @@ import { Suspense } from 'react';
 import axios from "axios";
 import ECollectionContent from './ECollectionContent';
 import LanguageSelector from '@/app/Component/landing-page/languageselector';
-// import { useTranslation } from 'react-i18next';
 
 function combineFacetData(facetData) {
-   const { t, i18n } = useTranslation();
   const combined = [];
   
   for (let i = 0; i < facetData.length; i += 2) {
