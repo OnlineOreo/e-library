@@ -84,6 +84,7 @@ const Navbar = ({ show, setShow }) => {
     document.cookie =
       "session_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     setShow = false;
+    setToken(null)
     router.push("/");
   };
 
@@ -141,13 +142,13 @@ const Navbar = ({ show, setShow }) => {
     { type: "link", title: t("Home"), href: "/" },
     {
       type: "dropdown",
-      title: "eResources",
+      title: t("eResources"),
       items: landingPageData?.landingPageData?.publishers || [],
       isPublisher: true,
     },
     {
       type: "dropdown",
-      title: "Categories",
+      title: t("Categories"),
       items: landingPageData?.landingPageData?.categories || [],
     },
     {
@@ -279,6 +280,8 @@ const Navbar = ({ show, setShow }) => {
                               ) : (
                                 <DropdownMenu
                                   title={item.title}
+                                  show={show}
+                                  setShow={setShow}
                                   items={item.items}
                                   isPublisher={item.isPublisher}
                                   handlePublisherClick={handlePublisherClick}

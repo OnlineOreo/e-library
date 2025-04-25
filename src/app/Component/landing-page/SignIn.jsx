@@ -119,11 +119,11 @@
         });
         
         if (q != null) {
-          router.push(`/search/print-collection?q=${q}`);
+          router.push(`?q=${q}`);
         }else if(redirect != null){
           router.push(`/`);
           window.open(publisherUrls[redirect], "_blank");
-        }else if(book != null){
+        }else if(book != null){ 
           window.open(`${book}`, "_blank")
         } else {
           router.push(userData.role === "STUDENT" ? "/" : "/dashboard");

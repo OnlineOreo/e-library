@@ -67,7 +67,7 @@ const AuthButtons = ({ token, setToken, handleLogout, show, setShow , publisherU
           <LanguageSelector/>
         </>
       ) : (
-        <div>
+        <div className="d-flex">
           <div
             onClick={() => setShow(true)}
             className="mx-1 hover-underline cursor-pointer"

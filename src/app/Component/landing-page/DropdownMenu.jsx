@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo,useEffect } from "react";
 import { IoChevronDown } from "react-icons/io5";
 import AZFilter from "./AZFilter";
 import Image from "next/image";
@@ -11,6 +11,8 @@ const DropdownMenu = ({
   title,
   items,
   isPublisher = false,
+  show,
+  setShow,
   handlePublisherClick,
 }) => {
   const [search, setSearch] = useState("");
@@ -27,6 +29,19 @@ const DropdownMenu = ({
       );
   }, [search]);
 
+  const getToken = () => {
+    const cookieString = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("access_token="));
+    return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+  };
+
+  const [token, setToken] = useState(null);
+
+  useEffect(() => {
+    setToken(getToken());
+  }, []);
+
   const mediaMapping = {
     "eBooks": "/search/e-resources?q=resource_types_string%3A(e-book)",
     "Video Resources": "/search/multimedia?q=resource_types_string%3A(Video)",
@@ -36,7 +51,7 @@ const DropdownMenu = ({
   }
 
   const categoriesMapping = {
-    "Biotechnology": "/search/print-collection?q=college_category%3A(biotechnology)",
+    "BioTechnology": "/search/print-collection?q=college_category%3A(biotechnology)",
     "Chemical Engineering": "/search/print-collection?q=college_category%3A(chemical)",
     "Civil Engineering": "/search/print-collection?q=college_category%3A(civil)",
     "Computer Sciences": "/search/print-collection?q=college_category%3A(computer)",
@@ -146,15 +161,30 @@ const DropdownMenu = ({
                 className="nav"
                 style={{ minWidth: "33%" }}
               >
-                <a className="dropdown-link cursor_pointer_underline"
-                  href={
-                    item.configuration_category_id && categoriesMapping[item.category_name] ||
-                    item.configuration_media_id && mediaMapping[item.media_name] ||
-                    item.link_url ||
-                    (item.page_id && `/dynamic-page/${item.page_id}`) ||
-                    item.href ||
-                    "#"
-                  }
+                <a
+                  className="dropdown-link cursor_pointer_underline"
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+
+                    const href =
+                      (item.configuration_category_id && categoriesMapping[item.category_name]) ||
+                      (item.configuration_media_id && mediaMapping[item.media_name]) ||
+                      item.link_url ||
+                      (item.page_id && `/dynamic-page/${item.page_id}`) ||
+                      item.href ||
+                      "#";
+
+                    if (token) {
+                      // if user is logged in, go to the link
+                      window.location.href = href;
+                    } else {
+                      // show login modal and store redirect
+                      setShow(true);
+                      const encodedRedirect = encodeURIComponent(href);
+                      window.history.replaceState(null, "", `?q=${encodedRedirect}`);
+                    }
+                  }}
                 >
                   <img
                     src={item.image || item.page_image}

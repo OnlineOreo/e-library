@@ -45,7 +45,7 @@ const SearchBar = ({show,setShow}) => {
     const token = getToken();
     if(!token){
       setShow(true)
-      router.push(`/?q=${filterType}%3A(${encodeURIComponent(searchText)})`);
+      router.push(`/?q=/search/print-collection${filterType}%3A(${encodeURIComponent(searchText)})`);
       return 
     }
     router.push(`/search/print-collection?q=${filterType}%3A(${encodeURIComponent(searchText)})`);
