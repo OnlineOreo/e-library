@@ -156,11 +156,11 @@ const Navbar = ({ show, setShow }) => {
       title: t("Media"),
       items: landingPageData?.landingPageData?.medias || [],
     },
-    {
-      type: "dropdown",
-      title: t("Collection"),
-      items: landingPageData?.landingPageData?.collections || [],
-    },
+    // {
+    //   type: "dropdown",
+    //   title: t("Collection"),
+    //   items: landingPageData?.landingPageData?.collections || [],
+    // },
     {
       type: "dropdown",
       title: t("Important Link"),
