@@ -43,7 +43,7 @@ const EditConfigurationMeta = () => {
   };
 
   useEffect(() => {
-    const fetchPageData = async () => {
+    const fetchPageData = async (id,instituteId) => {
       const token = getToken();
       if (!token) {
         router.push("/authentication/sign-in");
@@ -51,7 +51,7 @@ const EditConfigurationMeta = () => {
       }
       try {
         const { data } = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dynamic-page?page_id=${id}&institute_id=${instituteId}`,
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dynamic-page?page_id=${id}&institute=${instituteId}`,
           {
             headers: { Authorization: token },
           }
@@ -67,8 +67,10 @@ const EditConfigurationMeta = () => {
         toast.error("Failed to load page data.");
       }
     };
-    fetchPageData();
-  }, [id]);
+    if(id && instituteId){
+      fetchPageData(id,instituteId);
+    }
+  }, [id,instituteId]);
 
   const handleInputChange = (event) => {
     if (!event || !event.target) return; // Prevents error if event is undefined

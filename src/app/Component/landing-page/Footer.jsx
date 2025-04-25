@@ -72,16 +72,16 @@ export default function Footer() {
                                 {t('Submit Feedback')}
                             </a>
                             <div className="d-flex pt-2">
-                                <a className="btn btn-outline-light btn-social" href={footer?.x_url}>
+                                <a className="btn btn-outline-light btn-social" target="_blank" href={footer?.x_url}>
                                 <FaTwitter />
                                 </a>
-                                <a className="btn btn-outline-light btn-social" href={footer?.fb_url}>
+                                <a className="btn btn-outline-light btn-social" target="_blank" href={footer?.fb_url}>
                                 <FaFacebookF />
                                 </a>
-                                <a className="btn btn-outline-light btn-social" href={footer?.insta_url}>
+                                <a className="btn btn-outline-light btn-social" target="_blank" href={footer?.insta_url}>
                                 <FaInstagram />
                                 </a>
-                                <a className="btn btn-outline-light btn-social" href={(footer?.li_url)
+                                <a className="btn btn-outline-light btn-social" target="_blank" href={(footer?.li_url)
                                 }>
                                 <FaLinkedinIn />
                                 </a>

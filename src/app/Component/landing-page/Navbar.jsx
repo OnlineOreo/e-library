@@ -179,16 +179,16 @@ const Navbar = ({ show, setShow }) => {
           name: t("Saved Article"),
           href: "/saved-catalog/print-collection",
         },
-        {
-          image: "/images/avatar/search_history_icon.png",
-          name: t("Search History"),
-          href: "#",
-        },
-        {
-          image: "/images/avatar/read_history.png",
-          name: t("Read History"),
-          href: "#",
-        },
+        // {
+        //   image: "/images/avatar/search_history_icon.png",
+        //   name: t("Search History"),
+        //   href: "#",
+        // },
+        // {
+        //   image: "/images/avatar/read_history.png",
+        //   name: t("Read History"),
+        //   href: "#",
+        // },
       ],
     },
   ];
