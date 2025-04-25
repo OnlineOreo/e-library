@@ -15,14 +15,14 @@ const SearchSideFilter = (props) => {
 
     const [solrCore, setSolrCore] = useState(props.catalogCore || "Print-collection")
     const solrCoreArr = {
-        "Print-collection" : "print-collection",
-        "e-resources" : "e-resources",
-        "e-collection" : "e-collection",
-        "multimedia-n" : "multimedia"
+        "Print-collection": "print-collection",
+        "e-resources": "e-resources",
+        "e-collection": "e-collection",
+        "multimedia-n": "multimedia"
     }
 
     const [parsedUrl, setParsedUrl] = useState([])
-    
+
 
     // console.log("solrCore", props.catalogCore);
 
@@ -57,7 +57,7 @@ const SearchSideFilter = (props) => {
         const decoded = decodeURIComponent(urlParams);
         const parsed = parseSolrQuery(decoded);
         setParsedUrl(parsed)
-        console.log("parsed url ",parsed);
+        console.log("parsed url ", parsed);
         // console.log("parsed url length",Object.keys(parsed).length);
     }, [searchParams, router])
 
@@ -139,17 +139,17 @@ const SearchSideFilter = (props) => {
 
     const handelClearFilter = () => {
         const fullQuery = decodeURIComponent(searchParams.get("q") || "");
-    
+
         const baseMatch = fullQuery.match(/^([a-zA-Z0-9_*]+:(\([^)]+\)|[^ ]+))/);
         const baseQuery = baseMatch ? baseMatch[1] : "";
-    
+
         const parsed = parseSolrQuery(baseQuery);
         console.log("parsed after clear:", parsed);
-    
+
         setParsedUrl(parsed);
         router.push(`/search/${solrCoreArr[solrCore]}?q=${encodeURIComponent(baseQuery)}`);
     };
-    
+
 
 
     return (
@@ -230,13 +230,20 @@ const SearchSideFilter = (props) => {
                                 {parsedUrl?.dc_publishers_string?.length > 0 ? (
                                     parsedUrl.dc_publishers_string.map((selectedName, index) => {
                                         const matched = dcPublisher.find(pub => pub.name === selectedName);
+                                        const id = `selected-${index}`;
+
                                         return (
-                                            <div className="d-flex justify-content-between" key={`selected-${index}`}>
+                                            <div className="d-flex justify-content-between" key={id}>
                                                 <Form.Check
                                                     type="checkbox"
+                                                    id={id}
                                                     className="one_line_ellipses thats_filter"
                                                     style={{ width: "90%" }}
-                                                    label={selectedName || "Unknown"}
+                                                    label={
+                                                        <label htmlFor={id} style={{ cursor: 'pointer', width: "100%" }}>
+                                                            {selectedName || "Unknown"}
+                                                        </label>
+                                                    }
                                                     data-filtertype="dc_publishers_string"
                                                     data-label={selectedName || "Unknown"}
                                                     onChange={filterChange}
@@ -247,21 +254,30 @@ const SearchSideFilter = (props) => {
                                         );
                                     })
                                 ) : (
-                                    dcPublisher.slice(0, 5).map((item, index) => (
-                                        <div className="d-flex justify-content-between" key={`unselected-${index}`}>
-                                            <Form.Check
-                                                type="checkbox"
-                                                className="one_line_ellipses thats_filter"
-                                                style={{ width: "90%" }}
-                                                label={item?.name || "Unknown"}
-                                                data-filtertype="dc_publishers_string"
-                                                data-label={item?.name || ""}
-                                                onChange={filterChange}
-                                                checked={false}
-                                            />
-                                            <span className="text-secondary">{item?.count || 0}</span>
-                                        </div>
-                                    ))
+                                    dcPublisher.slice(0, 5).map((item, index) => {
+                                        const id = `unselected-${index}`;
+
+                                        return (
+                                            <div className="d-flex justify-content-between" key={id}>
+                                                <Form.Check
+                                                    type="checkbox"
+                                                    id={id}
+                                                    className="one_line_ellipses thats_filter"
+                                                    style={{ width: "90%" }}
+                                                    label={
+                                                        <label htmlFor={id} style={{ cursor: 'pointer', width: "100%" }}>
+                                                            {item?.name || "Unknown"}
+                                                        </label>
+                                                    }
+                                                    data-filtertype="dc_publishers_string"
+                                                    data-label={item?.name || ""}
+                                                    onChange={filterChange}
+                                                    checked={false}
+                                                />
+                                                <span className="text-secondary">{item?.count || 0}</span>
+                                            </div>
+                                        );
+                                    })
                                 )}
                             </Form.Group>
 
@@ -277,18 +293,29 @@ const SearchSideFilter = (props) => {
                             {/* Content */}
                             <Form.Group className="border-bottom p-3">
                                 <Form.Label className="fw-bold mb-2">Content</Form.Label>
-                                {resourceTypes.map((item, index) => (
-                                    <div className="d-flex justify-content-between" key={index}>
-                                        <Form.Check type="checkbox" className='one_line_ellipses thats_filter'
-                                            style={{ width: "90%" }} label={item?.name || "Unknown"}
-                                            data-filtertype="resource_types_string"
-                                            data-label={item?.name || ""}
-                                            onChange={filterChange}
-                                            checked={parsedUrl?.resource_types_string?.includes(item?.name) ?? false}
-                                        />
-                                        <span className="text-secondary">{item?.count || 0}</span>
-                                    </div>
-                                ))}
+                                {resourceTypes.map((item, index) => {
+                                    const id = `resource-type-${index}`;
+                                    return (
+                                        <div className="d-flex justify-content-between" key={id}>
+                                            <Form.Check
+                                                type="checkbox"
+                                                id={id}
+                                                className="one_line_ellipses thats_filter"
+                                                style={{ width: "90%" }}
+                                                label={
+                                                    <label htmlFor={id} style={{ cursor: 'pointer', width: "100%" }}>
+                                                        {item?.name || "Unknown"}
+                                                    </label>
+                                                }
+                                                data-filtertype="resource_types_string"
+                                                data-label={item?.name || ""}
+                                                onChange={filterChange}
+                                                checked={parsedUrl?.resource_types_string?.includes(item?.name) ?? false}
+                                            />
+                                            <span className="text-secondary">{item?.count || 0}</span>
+                                        </div>
+                                    );
+                                })}
                             </Form.Group>
 
                             {/* Author Filter */}
@@ -345,95 +372,117 @@ const SearchSideFilter = (props) => {
                                         </div>
                                     </div>
                                 </div>
-                                {dcCreators.slice(0, 5).map((item, index) => (
-                                    <div className="d-flex justify-content-between" key={index}>
-                                        <Form.Check
-                                            type="checkbox"
-                                            label={item?.name || "Unknown"}
-                                            className="thats_filter one_line_ellipses"
-                                            data-filtertype="datacite_creators_string"
-                                            data-label={item?.name || ""}
-                                            onChange={filterChange}
-                                            checked={parsedUrl?.datacite_creators_string?.includes(item?.name) ?? false}
-                                        />
-                                        <span className="text-secondary">{item?.count || 0}</span>
-                                    </div>
-                                ))}
+                                {dcCreators.slice(0, 5).map((item, index) => {
+                                    const id = `dc-creator-${index}`;
+                                    return (
+                                        <div className="d-flex justify-content-between" key={id}>
+                                            <Form.Check
+                                                type="checkbox"
+                                                id={id}
+                                                className="thats_filter one_line_ellipses"
+                                                style={{ width: "90%" }}
+                                                label={
+                                                    <label htmlFor={id} style={{ cursor: 'pointer', width: "100%" }}>
+                                                        {item?.name || "Unknown"}
+                                                    </label>
+                                                }
+                                                data-filtertype="datacite_creators_string"
+                                                data-label={item?.name || ""}
+                                                onChange={filterChange}
+                                                checked={parsedUrl?.datacite_creators_string?.includes(item?.name) ?? false}
+                                            />
+                                            <span className="text-secondary">{item?.count || 0}</span>
+                                        </div>
+                                    );
+                                })}
+
                             </Form.Group>
 
                             {/* Publish Year */}
                             {solrCore !== "multimedia-n" && (
-                            <Form.Group className="border-bottom p-3">
-                                <div className="d-flex justify-content-between align-items-center mb-2" style={{ position: "relative" }}>
-                                    <Form.Label className="fw-bold mb-0">Publish Year</Form.Label>
-                                    <span className='fw-bold cursor_pointer_underline' onClick={() => setShowDDropdown(pre => !pre)} >View All</span>
+                                <Form.Group className="border-bottom p-3">
+                                    <div className="d-flex justify-content-between align-items-center mb-2" style={{ position: "relative" }}>
+                                        <Form.Label className="fw-bold mb-0">Publish Year</Form.Label>
+                                        <span className='fw-bold cursor_pointer_underline' onClick={() => setShowDDropdown(pre => !pre)} >View All</span>
 
-                                    <div className={`shadow card ${showDDropdown === false ? "d-none" : ""}`}
-                                        style={{ position: "absolute", top: "150%", zIndex: "999", maxHeight: "50vh", width: "50vw", overflowY: "auto" }}
-                                    >
-                                        <div className="p-2 border-bottom">
-                                            <Form.Control
-                                                type="text"
-                                                placeholder="Search Year..."
-                                                value={searchTermD}
-                                                onChange={(e) => setSearchTermD(e.target.value)}
-                                            />
-                                        </div>
-
-                                        <div
-                                            className="px-2 pt-4 d-flex flex-column flex-wrap align-items-start gap-1"
-                                            style={{ height: "100%", width: "100%", overflowX: "scroll" }}
+                                        <div className={`shadow card ${showDDropdown === false ? "d-none" : ""}`}
+                                            style={{ position: "absolute", top: "150%", zIndex: "999", maxHeight: "50vh", width: "50vw", overflowY: "auto" }}
                                         >
-                                            {filteredDates.filter(item => !parsedUrl?.dc_date?.includes(item?.name)).map((item, index) => (
-                                                <div
-                                                    className="d-flex justify-content-between text-secondary ms-4"
-                                                    style={{ width: "200px", fontSize: "11pt" }}
-                                                    key={index}
-                                                >
-                                                    <Form.Check
-                                                        type="checkbox"
-                                                        className="one_line_ellipses thats_filter"
-                                                        style={{ width: "90%" }}
-                                                        label={item?.name || "Unknown"}
-                                                        data-filtertype="dc_date"
-                                                        data-label={item?.name || ""}
-                                                    />
-                                                    <span>({item?.count || 0})</span>
-                                                </div>
-                                            ))}
-                                            {filteredDates.length === 0 && (
-                                                <p className="text-muted">This Year Data Not found.</p>
-                                            )}
-                                        </div>
+                                            <div className="p-2 border-bottom">
+                                                <Form.Control
+                                                    type="text"
+                                                    placeholder="Search Year..."
+                                                    value={searchTermD}
+                                                    onChange={(e) => setSearchTermD(e.target.value)}
+                                                />
+                                            </div>
 
-                                        <div className="bottom p-3 d-flex justify-content-end border-top">
-                                            <Button variant="secondary" className="me-2" onClick={() => setShowDDropdown(pre => !pre)}>
-                                                Cancel
-                                            </Button>
-                                            <Button variant="primary" onClick={handleApply}>
-                                                Apply
-                                            </Button>
+                                            <div
+                                                className="px-2 pt-4 d-flex flex-column flex-wrap align-items-start gap-1"
+                                                style={{ height: "100%", width: "100%", overflowX: "scroll" }}
+                                            >
+                                                {filteredDates.filter(item => !parsedUrl?.dc_date?.includes(item?.name)).map((item, index) => (
+                                                    <div
+                                                        className="d-flex justify-content-between text-secondary ms-4"
+                                                        style={{ width: "200px", fontSize: "11pt" }}
+                                                        key={index}
+                                                    >
+                                                        <Form.Check
+                                                            type="checkbox"
+                                                            className="one_line_ellipses thats_filter"
+                                                            style={{ width: "90%" }}
+                                                            label={item?.name || "Unknown"}
+                                                            data-filtertype="dc_date"
+                                                            data-label={item?.name || ""}
+                                                        />
+                                                        <span>({item?.count || 0})</span>
+                                                    </div>
+                                                ))}
+                                                {filteredDates.length === 0 && (
+                                                    <p className="text-muted">This Year Data Not found.</p>
+                                                )}
+                                            </div>
+
+                                            <div className="bottom p-3 d-flex justify-content-end border-top">
+                                                <Button variant="secondary" className="me-2" onClick={() => setShowDDropdown(pre => !pre)}>
+                                                    Cancel
+                                                </Button>
+                                                <Button variant="primary" onClick={handleApply}>
+                                                    Apply
+                                                </Button>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                {dcDate.slice(0, 5).map((item, index) => (
-                                    <div className="d-flex justify-content-between" key={index}>
-                                        <Form.Check type="checkbox" label={item?.name || "Unknown"}
-                                            className='thats_filter'
-                                            data-filtertype="dc_date"
-                                            data-label={item?.name || "Unknown"}
-                                            onChange={filterChange}
-                                            checked={parsedUrl.dc_date?.includes(item?.name) ?? false}
-                                        />
-                                        <span className="text-secondary">{item?.count || 0}</span>
-                                    </div>
-                                ))}
-                            </Form.Group>
+                                    {dcDate.slice(0, 5).map((item, index) => {
+                                        const id = `dc-date-${index}`;
+                                        return (
+                                            <div className="d-flex justify-content-between" key={id}>
+                                                <Form.Check
+                                                    type="checkbox"
+                                                    id={id}
+                                                    className="thats_filter"
+                                                    style={{ width: "90%" }}
+                                                    label={
+                                                        <label htmlFor={id} style={{ cursor: 'pointer', width: "100%" }}>
+                                                            {item?.name || "Unknown"}
+                                                        </label>
+                                                    }
+                                                    data-filtertype="dc_date"
+                                                    data-label={item?.name || "Unknown"}
+                                                    onChange={filterChange}
+                                                    checked={parsedUrl.dc_date?.includes(item?.name) ?? false}
+                                                />
+                                                <span className="text-secondary">{item?.count || 0}</span>
+                                            </div>
+                                        );
+                                    })}
+
+                                </Form.Group>
                             )}
                         </Form>
                     </div>
                 ) : (
-                    <SideFilterSkelton/>
+                    <SideFilterSkelton />
                 )}
             </div>
         </>
