@@ -115,7 +115,7 @@ const ViewCollection = () => {
       flex: 1,
       renderCell: (params) => (
         <div className="avatar avatar-md">
-          <Image
+          <img
             src={params.value || ""}
             alt="Publisher"
             width={50}

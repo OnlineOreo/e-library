@@ -169,7 +169,7 @@ const Navbar = ({ show, setShow }) => {
         ...(landingPageData?.landingPageData?.metas || []),
         ...(landingPageData?.landingPageData?.dynamic_page || []),
       ],
-      isImportantLink:true,
+      isImportantLink: true,
     },
     {
       type: "dropdown",
@@ -193,6 +193,20 @@ const Navbar = ({ show, setShow }) => {
       ],
     },
   ];
+
+  const getUserRole = () => {
+    if (typeof window !== "undefined") {
+      const cookieString = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("user_role="));
+      return cookieString
+        ? decodeURIComponent(cookieString.split("=")[1])
+        : null;
+    }
+    return null;
+  };
+
+  const userRole = getUserRole();
 
   const visibleNavItems = navItems.filter((item) =>
     item.type === "dropdown"
@@ -222,10 +236,9 @@ const Navbar = ({ show, setShow }) => {
                   <Link href="/">
                     <img
                       src={
-                        `${
-                          landingPageData?.landingPageData?.configurations?.[0]?.latest_logos.find(
-                            (config) => config.is_active
-                          )?.logo
+                        `${landingPageData?.landingPageData?.configurations?.[0]?.latest_logos.find(
+                          (config) => config.is_active
+                        )?.logo
                         }` || "default"
                       }
                       alt="App Icon"
@@ -244,6 +257,41 @@ const Navbar = ({ show, setShow }) => {
                     <LuSlidersHorizontal />
                   </Link>
                 </div>
+                {(userRole == "STUDENT" || userRole == "FACULTY") && (
+                  <div className="mx-2">
+                    <Link
+                      href="/student-profile"
+                      className="mx-1 hover-underline"
+                      title="Profile"
+                    >
+                      Profile
+                    </Link>
+                  </div>
+                )}
+                {(userRole == "ADMIN" || userRole == "INSTITUTE ADMIN") && (
+                  <div className="mx-2">
+                    <Link
+                      href="/profile/view"
+                      className="mx-1 hover-underline"
+                      title="Profile"
+                    >
+                      Admin
+                    </Link>
+                  </div>
+                )}
+                {
+                  !token && (
+                    <div className="mx-2">
+                    {/* <Link
+                      href="/student-profile"
+                      className="mx-1 hover-underline"
+                      title="Profile"
+                    >
+                      Admin
+                    </Link> */}
+                  </div>
+                  )
+                }
               </div>
             </div>
           </div>
@@ -290,6 +338,7 @@ const Navbar = ({ show, setShow }) => {
                               )}
                             </li>
                           ))}
+
                         </ul>
                       </nav>
                     </div>

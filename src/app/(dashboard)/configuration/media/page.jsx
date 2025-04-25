@@ -113,15 +113,15 @@ const ViewMedia = () => {
       flex: 1,
       renderCell: (params) => (
         <div className="avatar avatar-md">
-          <Image
-            src={params.value || ""}
+          <img
+            src={params.row.image || "https://via.placeholder.com/50"}
             alt="Publisher"
             width={50}
             height={50}
             className="rounded-circle"
           />
         </div>
-      ),
+      ),      
     },
     { field: "media_name", headerName: "Media Name", flex: 2 },
     { field: "description", headerName: "Description", flex: 3 },
