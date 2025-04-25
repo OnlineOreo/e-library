@@ -25,6 +25,7 @@ export default function AddItem() {
     place: "",
     year: "",
     description: "",
+    institute:'',
     language: "",
     url: "",
     tags: [""],
@@ -138,6 +139,8 @@ export default function AddItem() {
   const handleSubmit = async (e,instituteId) => {
     e.preventDefault();
     setErrors({});
+    console.log(instituteId)
+    return 
 
     const token = getToken();
     
@@ -159,7 +162,9 @@ export default function AddItem() {
     }
 
     setLoading(true);
+    
 
+    console.log(instituteId)
     try {
       // Transform mappings into an array of objects
       const mappingsArray = formData.mappings.package.map((pkg, index) => ({
@@ -168,10 +173,12 @@ export default function AddItem() {
       }));
       // formData.append('institute',instituteId)
       
+      
 
       const payload = {
         ...formData,
-        mappings: mappingsArray, // Now it's an array of objects
+        mappings: mappingsArray, 
+        institute: instituteId,
       };
 
       const response = await axios.post(
