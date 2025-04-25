@@ -77,7 +77,7 @@ const CatalogGridCard = (props) => {
     }
     return (
         <Card>
-            <div className="image text-center" style={{ height:"200px;"}}>
+            <div className="image text-center">
                 <BookCover title={props.datacite_titles} author={props.datacite_creators} thumbnail={props.thumbnail}/>
             </div>
             <Card.Body className='text-secondary'>

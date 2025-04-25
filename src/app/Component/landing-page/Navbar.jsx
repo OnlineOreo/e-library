@@ -139,7 +139,7 @@ const Navbar = ({ show, setShow }) => {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   const navItems = [
-    { type: "link", title: t("Homee"), href: "/" },
+    { type: "link", title: t("Home"), href: "/" },
     {
       type: "dropdown",
       title: t("eResources"),

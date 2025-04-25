@@ -99,43 +99,41 @@ const SearchSideFilter = (props) => {
 
     const filterChange = () => {
         const filterMap = {};
-
+    
         const checkboxes = document.querySelectorAll('.thats_filter input[type="checkbox"]:checked');
-
+    
         checkboxes.forEach((checkbox) => {
             const label = checkbox.dataset.label;
             const filterType = checkbox.dataset.filtertype;
-
+    
             if (!filterMap[filterType]) {
                 filterMap[filterType] = [];
             }
             filterMap[filterType].push(label);
         });
-
-        // const searchParams = new URLSearchParams(window.location.search);
+    
         const fullQuery = decodeURIComponent(searchParams.get("q") || "");
-
+    
         const baseMatch = fullQuery.match(/^([a-zA-Z0-9_*]+:(\([^)]+\)|[^ ]+))/);
         const baseQuery = baseMatch ? baseMatch[1] : "";
-        // console.log("base query : ", baseQuery);
-
-
+    
         const filterConditions = Object.entries(filterMap)
             .map(([type, values]) => {
-                const joinedValues = values.map((v) => `"${v}"`).join(" OR ");
-                return `${encodeURIComponent(type)}%3A(${encodeURIComponent(joinedValues)})`;
+                const joinedValues = values
+                    .map((v) => `"${v.replace(/"/g, '\\"')}"`) // Escape quotes inside labels
+                    .join(" OR ");
+                return `${encodeURIComponent(type)}:${encodeURIComponent(`(${joinedValues})`)}`;
             })
-            .join("%20AND%20");
-
+            .join(" AND ");
+    
         const encodedBaseQuery = encodeURIComponent(baseQuery);
         const filterUrl = filterConditions
-            ? `${encodedBaseQuery}%20AND%20${filterConditions}`
+            ? `${encodedBaseQuery} AND ${encodeURIComponent(filterConditions)}`
             : encodedBaseQuery;
-
-        // console.log("Filter Change URL:", filterUrl);
-
+    
         router.push(`/search/${solrCoreArr[solrCore]}?q=${filterUrl}`);
     };
+    
 
     const handelClearFilter = () => {
         const fullQuery = decodeURIComponent(searchParams.get("q") || "");

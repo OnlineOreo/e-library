@@ -13,7 +13,7 @@ import SearchSideFilter from '../components/SearchSideFilter';
 import CatalogDetailModal from '../components/CatalogDetailModal';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
-// import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 export default function ECollectionContent({
     initialResults,
@@ -25,7 +25,7 @@ export default function ECollectionContent({
     error_trace
 }) {
     
-    // const { t, i18n } = useTranslation();
+    const { t, i18n } = useTranslation();
     const Router = useRouter();
     const searchParams = useSearchParams();
     const urlParams = searchParams.get("q");
@@ -190,10 +190,10 @@ export default function ECollectionContent({
                     <Row className="mb-3">
                         <Col md={6}>
                             <p>
-                                {/* {t('Showing')}  */}
-                                Showing<strong>{resultsCount}</strong>
-                                 {/* {t('results from data')} */}
-                                 results from data
+                                {t('Showing ')} 
+                                <strong>{resultsCount}</strong>
+                                 {t(' results from data')}
+                                 {/* results from data */}
                                  </p>
                         </Col>
                         <Col md={6}>

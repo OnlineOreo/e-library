@@ -8,6 +8,9 @@ const BookmarkCatalog = ({ id, catalogType, user_saved_catalogs }) => {
     const [isBookmarked, setIsBookmarked] = useState(false);
     const [isLoading, setIsLoading] = useState(false); 
 
+    // console.log(catalogType);
+    
+
     // console.log("user saved catalog throgh props : ",user_saved_catalogs);
     
 
@@ -98,7 +101,7 @@ const BookmarkCatalog = ({ id, catalogType, user_saved_catalogs }) => {
         if (user_saved_catalogs?.length > 0 && id != null) {
             savedBookmarked();
         }
-    }, []);
+    }, [catalogType, user_saved_catalogs]);
     
 
     return (
