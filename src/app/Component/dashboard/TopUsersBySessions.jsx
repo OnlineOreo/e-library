@@ -3,8 +3,12 @@ import React, { useEffect, useState } from "react";
 import { Card, Table, Spinner, Button } from "react-bootstrap";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { useTranslation } from 'react-i18next';
+import '@/i18n'; // cleaner using path alias `@`
+import LanguageSelector from "@/app/Component/landing-page/languageselector";
 
 export default function TopUsersBySessions() {
+  const { t, i18n } = useTranslation();
   const [userSessions, setUserSessions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -76,7 +80,7 @@ export default function TopUsersBySessions() {
   return (
     <Card className="my-4 shadow">
       <Card.Header className="bg-white py-4 d-flex justify-content-between align-items-center">
-        <h4 className="mb-0">Logged In Users (Latest Sessions)</h4>
+        <h4 className="mb-0">{t('Logged In Users (Latest Sessions)')}</h4>
         <div>
           <Button
             variant="outline-secondary"
@@ -84,7 +88,7 @@ export default function TopUsersBySessions() {
             disabled={currentPage === 1}
             onClick={() => setCurrentPage((prev) => prev - 1)}
           >
-            Prev
+            {t('Prev')}
           </Button>{" "}
           <Button
             variant="outline-secondary"
@@ -92,7 +96,7 @@ export default function TopUsersBySessions() {
             disabled={currentPage === totalPages}
             onClick={() => setCurrentPage((prev) => prev + 1)}
           >
-            Next
+            {t('Next')}
           </Button>
         </div>
       </Card.Header>
@@ -105,12 +109,12 @@ export default function TopUsersBySessions() {
         <Table responsive className="text-nowrap mb-0">
           <thead className="table-light">
             <tr>
-              <th>User ID</th>
-              <th>Browser</th>
-              <th>Device type</th>
-              <th>Ip Address</th>
-              <th>Last Login Time</th>
-              <th>Last Logout Time</th>
+              <th>{t('User ID')}</th>
+              <th>{t('Browser')}</th>
+              <th>{t('Device type')}</th>
+              <th>{t('Ip Address')}</th>
+              <th>{t('Last Login Time')}</th>
+              <th>{t('Last Logout Time')}</th>
             </tr>
           </thead>
           <tbody>

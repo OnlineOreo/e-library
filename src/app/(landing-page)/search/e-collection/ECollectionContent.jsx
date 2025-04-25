@@ -13,10 +13,7 @@ import SearchSideFilter from '../components/SearchSideFilter';
 import CatalogDetailModal from '../components/CatalogDetailModal';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
-import { useTranslation } from 'react-i18next';
-import '@/i18n'; // cleaner using path alias `@`
-import LanguageSelector from '@/app/Component/landing-page/languageselector';
-
+// import { useTranslation } from 'react-i18next';
 
 export default function ECollectionContent({
     initialResults,
@@ -27,11 +24,11 @@ export default function ECollectionContent({
     status_code,
     error_trace
 }) {
-    const { t, i18n } = useTranslation();
+    
+    // const { t, i18n } = useTranslation();
     const Router = useRouter();
     const searchParams = useSearchParams();
     const urlParams = searchParams.get("q");
-
     // Use state with initialization from props
     const [gridView, setGridView] = useState(true);
     const [searchWithinSearch, setSearchWithinSearch] = useState("")
@@ -192,7 +189,12 @@ export default function ECollectionContent({
                 <Col md={9} className='pe-0 ps-4'>
                     <Row className="mb-3">
                         <Col md={6}>
-                            <p>{t('Showing')} <strong>{resultsCount}</strong> {t('results from data')}</p>
+                            <p>
+                                {/* {t('Showing')}  */}
+                                Showing<strong>{resultsCount}</strong>
+                                 {/* {t('results from data')} */}
+                                 results from data
+                                 </p>
                         </Col>
                         <Col md={6}>
                             <div className="d-flex align-items-center justify-content-end">

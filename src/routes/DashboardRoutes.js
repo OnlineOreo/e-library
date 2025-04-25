@@ -1,6 +1,11 @@
+import LanguageSelector from "@/app/Component/landing-page/languageselector";
 import { v4 as uuid } from "uuid";
 
+import { useTranslation } from 'react-i18next';
+import '@/i18n'; // cleaner using path alias `@`
+
 export const useDashboardMenu = () => {
+  const { t, i18n } = useTranslation();
   const getUserRole = () => {
     if (typeof window !== "undefined") {
       const cookieString = document.cookie
@@ -16,7 +21,7 @@ export const useDashboardMenu = () => {
   const userRole = getUserRole();
 
   const menu = [
-    { id: uuid(), title: "Dashboard", icon: "home", link: "/dashboard" },
+    { id: uuid(), title: t('Dashboard'), icon: "home", link: "/dashboard" },
   ];
 
   if (userRole === "ADMIN") {
@@ -24,11 +29,11 @@ export const useDashboardMenu = () => {
       
       {
         id: uuid(),
-        title: "User Management",
+        title: t("User Management"),
         icon: "user",
         children: [
-          { id: uuid(), link: "/user-management/users", name: "Manage User" },
-          { id: uuid(), link: "/user-management/admin", name: "Manage Admin" },
+          { id: uuid(), link: "/user-management/users", name: t("Manage User") },
+          { id: uuid(), link: "/user-management/admin", name: t("Manage Admin") },
 
         ],
       }
@@ -36,75 +41,75 @@ export const useDashboardMenu = () => {
   } else {
     menu.push({
       id: uuid(),
-      title: "User Management",
+      title: t("User Management"),
       icon: "user",
       children: [
-        { id: uuid(), link: "/user-management/users", name: "Manage User" },
+        { id: uuid(), link: "/user-management/users", name: t("Manage User") },
       ],
     });
   }
   if (userRole === "ADMIN") {
     menu.push({
       id: uuid(),
-      title: "Library & Department",
+      title: t("Library & Department"),
       icon: "clipboard",
       children: [
         {
           id: uuid(),
           link: "/library-department/institute",
-          name: "Institutes",
+          name: t("Institutes"),
         },
-        { id: uuid(), link: "/library-department/library", name: "Library" },
+        { id: uuid(), link: "/library-department/library", name: t("Library") },
         {
           id: uuid(),
           link: "/library-department/department",
-          name: "Department",
+          name: t("Department"),
         },
         {
           id: uuid(),
           link: "/library-department/user-type",
-          name: "User Type",
+          name: t("User Type"),
         },
         {
           id: uuid(),
           link: "/library-department/content-group",
-          name: "Content Group",
+          name: t("Content Group"),
         },
-        { id: uuid(), link: "/library-department/program", name: "Program" },
+        { id: uuid(), link: "/library-department/program", name: t("Program") },
         {
           id: uuid(),
           link: "/library-department/service-group",
-          name: "Service Group",
+          name: t("Service Group"),
         },
       ],
     });
   } else {
     menu.push({
       id: uuid(),
-      title: "Library & Department",
+      title: t("Library & Department"),
       icon: "clipboard",
       children: [
-        { id: uuid(), link: "/library-department/library", name: "Library" },
+        { id: uuid(), link: "/library-department/library", name: t("Library") },
         {
           id: uuid(),
           link: "/library-department/department",
-          name: "Department",
+          name: t("Department"),
         },
         {
           id: uuid(),
           link: "/library-department/user-type",
-          name: "User Type",
+          name: t("User Type"),
         },
         {
           id: uuid(),
           link: "/library-department/content-group",
-          name: "Content Group",
+          name: t("Content Group"),
         },
-        { id: uuid(), link: "/library-department/program", name: "Program" },
+        { id: uuid(), link: "/library-department/program", name: t("Program") },
         {
           id: uuid(),
           link: "/library-department/service-group",
-          name: "Service Group",
+          name: t("Service Group"),
         },
       ],
     });
@@ -112,17 +117,17 @@ export const useDashboardMenu = () => {
   if (userRole === "ADMIN") {
     menu.push({
       id: uuid(),
-      title: "Resources",
+      title: t("Resources"),
       icon: "layers",
       children: [
-        { id: uuid(), link: "/resources/item-types", name: "Item Types" },
-        { id: uuid(), link: "/resources/item", name: "Items" },
-        { id: uuid(), link: "/resources/publishers", name: "Publishers" },
+        { id: uuid(), link: "/resources/item-types", name: t("Item Types") },
+        { id: uuid(), link: "/resources/item", name: t("Items") },
+        { id: uuid(), link: "/resources/publishers", name: t("Publishers")},
         
         {
           id: uuid(),
           link: "/resources/publisher-package",
-          name: "Publisher Package",
+          name: t("Publisher Package"),
         },
        
       ],
@@ -130,10 +135,10 @@ export const useDashboardMenu = () => {
   }else{
     menu.push({
       id: uuid(),
-      title: "Resources",
+      title: t("Resources"),
       icon: "layers",
       children: [
-        { id: uuid(), link: "/resources/item", name: "Items" },
+        { id: uuid(), link: "/resources/item", name: t("Items") },
       ],
     });
   }
@@ -141,60 +146,60 @@ export const useDashboardMenu = () => {
   menu.push(
     {
       id: uuid(),
-      title: "Reports",
+      title: t("Reports"),
       icon: "layout",
       children: [
-        { id: uuid(), link: "/reports/total-users", name: "User Report" },
-        { id: uuid(), link: "/reports/Resource-reports", name: "Resource Reports" },
+        { id: uuid(), link: "/reports/total-users", name: t("User Report") },
+        { id: uuid(), link: "/reports/Resource-reports", name: t("Resource Reports") },
         // { id: uuid(), link: '/reports/top-users', name: 'Top Users' },
       ],
     },
     {
       id: uuid(),
-      title: "Notification",
+      title: t("Notification"),
       icon: "bell",
       children: [
-        { id: uuid(), link: "/notification/send-email", name: "Send Mail" },
+        { id: uuid(), link: "/notification/send-email", name: t("Send Mail") },
         {
           id: uuid(),
           link: "/notification/emails-sent",
-          name: "View Send Mails",
+          name: t("View Send Mails"),
         },
       ],
     }
   );
 
   const configMenu = [
-    { id: uuid(), link: "/configuration/landing-page", name: "Landing Page" },
-    { id: uuid(), link: "/configuration/metas", name: "Important Link" },
+    { id: uuid(), link: "/configuration/landing-page", name: t("Landing Page") },
+    { id: uuid(), link: "/configuration/metas", name: t("Important Link") },
     {
       id: uuid(),
       link: "/configuration/trending-books",
-      name: "Trending Books",
+      name: t("Trending Books"),
     },
-    { id: uuid(), link: "/configuration/dynamic-page", name: "Dynamic Page" },
-    { id: uuid(), link: "/configuration/footer", name: "Footer" },
-    { id: uuid(), link: "/configuration/notice", name: "Notices" },
+    { id: uuid(), link: "/configuration/dynamic-page", name: t("Dynamic Page") },
+    { id: uuid(), link: "/configuration/footer", name: t("Footer") },
+    { id: uuid(), link: "/configuration/notice", name: t("Notices") },
     // { id: uuid(), link: '/configuration/harvest-data', name: 'Harvest Data' },
-    { id: uuid(), link: "/resources/news-clippings", name: "News Clipping" },
+    { id: uuid(), link: "/resources/news-clippings", name: t("News Clipping") },
     {
       id: uuid(),
       link: "/configuration/staff-recommendation",
-      name: "Staff Pick",
+      name: t("Staff Pick"),
     },
   ];
 
   if (userRole === "ADMIN") {
     configMenu.unshift(
-      { id: uuid(), link: "/configuration/categories", name: "Categories" },
-      { id: uuid(), link: "/configuration/collection", name: "Collection" },
-      { id: uuid(), link: "/configuration/media", name: "Media" }
+      { id: uuid(), link: "/configuration/categories", name: t("Categories") },
+      { id: uuid(), link: "/configuration/collection", name: t("Collection") },
+      { id: uuid(), link: "/configuration/media", name: t("Media") }
     );
   }
 
   menu.push({
     id: uuid(),
-    title: "Configuration",
+    title: t("Configuration"),
     icon: "lock",
     children: configMenu,
   });

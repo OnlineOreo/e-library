@@ -9,6 +9,9 @@ import { ListGroup, Card, Image, Badge } from 'react-bootstrap';
 import Accordion from 'react-bootstrap/Accordion';
 import AccordionContext from 'react-bootstrap/AccordionContext';
 import { useAccordionButton } from 'react-bootstrap/AccordionButton';
+import LanguageSelector from "@/app/Component/landing-page/languageselector";
+import { useTranslation } from 'react-i18next';
+import '@/i18n'; // cleaner using path alias `@`
 
 // import simple bar scrolling used for notification item scrolling
 import SimpleBar from 'simplebar-react';
@@ -18,6 +21,7 @@ import 'simplebar/dist/simplebar.min.css';
 import useDashboardMenu from '@/routes/DashboardRoutes';
 
 const NavbarVertical = (props) => {
+	const { t, i18n } = useTranslation();
 	const DashboardMenu = useDashboardMenu();
 	const location = usePathname();
 	const isMobile = useMediaQuery({ maxWidth: 767 });
@@ -97,7 +101,7 @@ const NavbarVertical = (props) => {
 			<SimpleBar style={{ maxHeight: '100vh' }}>
 				<div className="nav-scroller">
 					<Link href="/" className="navbar-brand text-light fw-2 fs-3">
-						Libvirtuua
+						{t('Libvirtuua')}
 					</Link>
 				</div>
 				<Accordion defaultActiveKey="0" as="ul" className="navbar-nav flex-column">

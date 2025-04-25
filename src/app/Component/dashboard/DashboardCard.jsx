@@ -4,8 +4,12 @@ import { Briefcase } from 'react-feather';
 import { ListTask, People, Bullseye, PersonCheck, Stack, Subtract } from "react-bootstrap-icons";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { useTranslation } from 'react-i18next';
+import '@/i18n'; // cleaner using path alias `@`
+import LanguageSelector from "@/app/Component/landing-page/languageselector";
 
 const DashboardOverview = () => {
+  const { t, i18n } = useTranslation();
   const [reportCounts, setReportCounts] = useState(null);
   const instituteId = useSelector((state) => state.institute.instituteId);
 
@@ -39,49 +43,49 @@ const DashboardOverview = () => {
   const DashboardCardData = [
     {
       id: 1,
-      title: "Total Users",
+      title: t("Total Users"),
       value: reportCounts?.total_users ?? "-",
       icon: <People size={18} />,
     },
     {
       id: 2,
-      title: "Mobile Users",
+      title: t("Mobile Users"),
       value: reportCounts?.mobile_users ?? "-",
       icon: <Briefcase size={18} />,
     },
     {
       id: 3,
-      title: "Desktop Users",
+      title: t("Desktop Users"),
       value: reportCounts?.desktop_users ?? "-",
       icon: <ListTask size={18} />,
     },
     {
       id: 4,
-      title: "Inactive Users",
+      title: t("Inactive Users"),
       value: reportCounts?.inactive_users ?? "-",
       icon: <Bullseye size={18} />,
     },
     {
       id: 5,
-      title: "Active Users",
+      title: t("Active Users"),
       value: reportCounts?.active_users ?? "-",
       icon: <Bullseye size={18} />,
     },
     {
       id: 5,
-      title: "Verified Users",
+      title: t("Verified Users"),
       value: reportCounts?.verified_users ?? "-",
       icon: <PersonCheck size={18} />,
     },
     {
       id: 7,
-      title: "Today Loggedin user",
+      title: t("Today Loggedin user"),
       value: reportCounts?.today_logged_in_users ?? "-",
       icon: <Stack size={18} />,
     },
     {
       id: 8,
-      title: "Total Publishers",
+      title: t("Total Publishers"),
       value: reportCounts?.total_publishers ?? "-",
       icon: <Subtract size={18} />,
     },

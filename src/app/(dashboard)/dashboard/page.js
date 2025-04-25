@@ -4,8 +4,13 @@ import { Container, Col, Row } from 'react-bootstrap';
 import DashboardCard from "@/app/Component/dashboard/DashboardCard";
 import Link from "next/link";
 import TopUsersBySessions from "@/app/Component/dashboard/TopUsersBySessions";
+import { useTranslation } from 'react-i18next';
+import '@/i18n'; // cleaner using path alias `@`
+import LanguageSelector from "@/app/Component/landing-page/languageselector";
+
 
 const Home = () => {
+     const { t, i18n } = useTranslation();
     return (
         <Fragment>
             <div className="bg-primary pt-10 pb-21"></div>
@@ -15,7 +20,7 @@ const Home = () => {
                         <div>
                             <div className="d-flex justify-content-between align-items-center">
                                 <div className="mb-2 mb-lg-0">
-                                    <h3 className="mb-0 text-dark">Dashboard  </h3>
+                                    <h3 className="mb-0 text-dark">{t('Dashboard')}  </h3>
                                 </div>
                             </div>
                         </div>

@@ -133,7 +133,67 @@
     "E Resources": "الموارد الإلكترونية",
     "Multimedia": "وسائط متعددة",
     "results from data" : "نتائج من البيانات",
-    "Showing" : "يُظهر البيانات"
+    "Showing" : "يُظهر البيانات",
+    "User Management" : "إدارة المستخدمين",
+    "Library & Department": "المكتبة والقسم",
+    "Resources": "الموارد",
+    "Reports": "التقارير",
+    "Notification": "الإشعارات",
+    "Configuration": "الإعدادات",
+    "Institutes" : "المكتبة-والقسم",
+    "user-type" : "المكتبة-والقسم",
+    "content-group" :  "المكتبة-والقسم",
+    "Program" : "المكتبة-والقسم",
+    "service-group" : "المكتبة-والقس",
+    "Manage Admin" : "إدارة المشرف",
+    "Library" : "المكتبة",
+    "Department" : "القسم",
+    "User Type" : "نوع المستخدم",
+    "Content Group" : "مجموعة المحتوى",
+    "Service Group" : "مجموعة الخدمات",
+    "Publisher Package": "حزمة الناشر",
+    "Items": "العناصر",
+    "User Report": "تقرير المستخدم",
+    "Resource Reports": "تقارير الموارد",
+    "Send Mail": "إرسال البريد",
+    "View Send Mails": "عرض الرسائل المرسلة",
+    "Landing Page": "الصفحة الرئيسية",
+    "Important Link": "رابط مهم",
+  "Trending Books": "الكتب الرائجة",
+  "Dynamic Page": "صفحة ديناميكية",
+  "Footer": "تذييل",
+  "Notices": "إشعارات",
+  "News Clipping": "قصاصات إخبارية",
+  "Staff Pick": "اختيار الموظف",
+  "Collection": "مجموعة",
+  "Logged In Users (Latest Sessions)": "المستخدمون المسجلون (أحدث الجلسات)",
+  "Item Types" : "أنواع العناصر",
+   "Manage User": "إدارة المستخدم",
+   "User ID": "معرف المستخدم",
+  "Browser": "المتصفح",
+  "Device type": "نوع الجهاز",
+  "Ip Address": "عنوان IP",
+  "Last Login Time": "آخر وقت لتسجيل الدخول",
+  "Last Logout Time": "آخر وقت لتسجيل الخروج",
+   "Prev": "السابق",
+  "Next": "التالي",
+  "Total Users": "إجمالي المستخدمين",
+  "Mobile Users": "مستخدمو الجوال",
+  "Desktop Users": "مستخدمو الكمبيوتر",
+  "Inactive Users": "المستخدمون غير النشطين",
+  "Active Users": "المستخدمون النشطون",
+  "Verified Users": "المستخدمون المُحققون",
+  "Today Loggedin user": "المستخدمون المسجلون اليوم",
+  "Total Publishers": "إجمالي الناشرين",
+  "Switch to student Dashboard": "التبديل إلى لوحة تحكم الطالب",
+  "Logs": "السجلات"
+ 
+  
+    
+   
+    
+
+  
     
     
   }

@@ -5,8 +5,13 @@ import QuickMenu from "../QuickMenu";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useTranslation } from 'react-i18next';
+import '@/i18n'; // cleaner using path alias `@`
+import LanguageSelector from "@/app/Component/landing-page/languageselector";
+
 
 const NavbarTop = (props) => {
+  const { t, i18n } = useTranslation();
   const instituteId = useSelector((state) => state.institute.instituteId);
   const router = useRouter();
   const getToken = () => {
@@ -90,14 +95,14 @@ const NavbarTop = (props) => {
               title="Open frontend of student in new window"
             >
               <button className="custom-nav-btn d-flex align-items-center gap-1">
-                <Home size="16px" /> Switch to student Dashboard
+                <Home size="16px" /> {t('Switch to student Dashboard')}
               </button>
             </Link>
 
             {/* Logs */}
             <Link href="/logs" passHref title="Logs">
               <button className="custom-nav-btn d-flex align-items-center gap-1">
-                <FileText size="16px" /> Logs
+                <FileText size="16px" /> {t('Logs')}
               </button>
             </Link>
 
@@ -107,7 +112,7 @@ const NavbarTop = (props) => {
               title="Log Out"
               onClick={() => handleLogout(instituteId)}
             >
-              <LogOut size="16px" /> Logout
+              <LogOut size="16px" /> {t('Logout')}
             </button>
             <QuickMenu />
           </Nav>

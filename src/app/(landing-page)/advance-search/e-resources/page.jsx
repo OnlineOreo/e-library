@@ -38,7 +38,7 @@ export default async function PrintCollectionPage({ searchParams }) {
   const data = await fetachSolrData(searchQuery, 0);
 
   return (
-    <Suspense fallback={<div>Loading search results...</div>}>
+    <Suspense fallback={<div>{t('Loading search results...')}</div>}>
       <EResourcesContentAdv
         initialResults={data.results}
         initialResultsCount={data.resultsCount}

@@ -1,9 +1,9 @@
+
 import { Suspense } from 'react';
 import axios from "axios";
 import ECollectionContent from './ECollectionContent';
 import LanguageSelector from '@/app/Component/landing-page/languageselector';
-import { useTranslation } from 'react-i18next';
-import '@/i18n'; // cleaner using path alias `@`
+// import { useTranslation } from 'react-i18next';
 
 function combineFacetData(facetData) {
    const { t, i18n } = useTranslation();
