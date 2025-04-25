@@ -43,7 +43,7 @@ export default function StudentProfile() {
 
   return (
     <>
-      <div className="student-profile" style={{ paddingBlock: "50px" }}>
+      <div className="student-profile" style={{ paddingBlock: "100px" }}>
         <div className="container">
           <h3 className="mb-0 text-center mb-3">General Information</h3>
           <div className="row">

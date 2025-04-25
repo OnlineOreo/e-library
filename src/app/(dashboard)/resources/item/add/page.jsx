@@ -7,6 +7,7 @@ import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
 import { FaMinusCircle, FaPlusCircle } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 export default function AddItem() {
   const router = useRouter();

@@ -42,7 +42,7 @@ const AuthButtons = ({ token, setToken, handleLogout, show, setShow , publisherU
               </Link>
             </div>
           )}
-          {(userRole == "STUDENT" || userRole == "FACULTY") && (
+          {/* {(userRole == "STUDENT" || userRole == "FACULTY") && (
             <div className="mx-2">
               <Link
                 href="/student-profile"
@@ -52,7 +52,7 @@ const AuthButtons = ({ token, setToken, handleLogout, show, setShow , publisherU
                 Profile
               </Link>
             </div>
-          )}
+          )} */}
           <div>
             <a
               onClick={handleLogout}
