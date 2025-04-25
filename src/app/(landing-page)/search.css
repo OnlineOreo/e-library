@@ -52,7 +52,9 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: normal;
-}
+    line-height: 1.3em;
+    max-height: calc(1.4em * 4);
+  }
 
 .width-200 {
     width: 200px;

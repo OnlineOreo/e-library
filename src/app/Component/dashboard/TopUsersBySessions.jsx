@@ -114,7 +114,7 @@ export default function TopUsersBySessions() {
               <th>{t('Device type')}</th>
               <th>{t('Ip Address')}</th>
               <th>{t('Last Login Time')}</th>
-              <th>{t('Last Logout Time')}</th>
+              {/* <th>{t('Last Logout Time')}</th> */}
             </tr>
           </thead>
           <tbody>
@@ -134,7 +134,7 @@ export default function TopUsersBySessions() {
                     second: "2-digit",
                   })}
                 </td>
-                <td>
+                {/* <td>
                   {new Date(user.ended_at).toLocaleString(undefined, {
                     year: "numeric",
                     month: "short",
@@ -143,7 +143,7 @@ export default function TopUsersBySessions() {
                     minute: "2-digit",
                     second: "2-digit",
                   })}
-                </td>
+                </td> */}
               </tr>
             ))}
           </tbody>
