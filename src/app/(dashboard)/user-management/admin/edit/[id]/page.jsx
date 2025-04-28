@@ -2,13 +2,7 @@
 import { Fragment, useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import {
-  Container,
-  Col,
-  Row,
-  Form,
-  Button,
-} from "react-bootstrap";
+import { Container, Col, Row, Form, Button } from "react-bootstrap";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import { FaMinusCircle } from "react-icons/fa";
@@ -34,9 +28,9 @@ const EditAdmin = () => {
   useEffect(() => {
     const token = getToken();
     if (!token) return;
-    const fetchAdmin = async(id,instituteId)=>{
-        axios
-        .get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users?user_id=${id}&institute_id=${instituteId}&admin=true`, {
+    const fetchAdmin = async (id, instituteId) => {
+      axios
+        .get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users?user_id=${id}&sub_domain=mriirs.libvirtuua.com&admin=true`, {
           headers: {
             Authorization: `${token}`,
           },
@@ -45,11 +39,11 @@ const EditAdmin = () => {
           setFormData(res.data);
         })
         .catch(() => toast.error("Failed to fetch user data"));
+    };
+    if (id && instituteId) {
+      fetchAdmin(id, instituteId);
     }
-    if(id && instituteId){
-        fetchAdmin(id,instituteId)
-    }
-  }, [id,instituteId]);
+  }, [id, instituteId]);
 
   const getToken = () => {
     const cookieString = document.cookie
@@ -60,13 +54,18 @@ const EditAdmin = () => {
 
   const handleInputChange = (e) => {
     const { name, value, type, files } = e.target;
+    // if (type === "file") {
+    //   setFormData({
+    //     ...formData,
+    //     [name]: files[0],
+    //   });
     if (type === "file") {
       setFormData((prev) => ({ ...prev, [name]: files[0] }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -76,26 +75,41 @@ const EditAdmin = () => {
       setLoading(false);
       return;
     }
-
+  
     const formDataToSend = new FormData();
+  
+    // List of allowed fields
+    const allowedFields = [
+      "name",
+      "email",
+      "phone_number",
+      "role",
+      "address",
+      "gender",
+      "image",
+    ];
+  
+    // Iterate over formData and add only the allowed fields
     Object.entries(formData).forEach(([key, value]) => {
-      if (key === "image") {
-        if (value instanceof File) {
+      if (allowedFields.includes(key)) {
+        if (key === "image" && value instanceof File) {
+          // Only append image if it's a file
           formDataToSend.append(key, value);
+        } else if (key !== "image") {
+          // Append other fields as string
+          formDataToSend.append(key, value || "");
         }
-      } else {
-        formDataToSend.append(key, value);
       }
     });
-
+  
     try {
       const response = await axios.put(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users/${id}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users?user_id=${id}`,
         formDataToSend,
         {
           headers: {
             Authorization: `${token}`,
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "multipart/form-data", // Ensure the correct content type for file uploads
           },
         }
       );
@@ -112,6 +126,7 @@ const EditAdmin = () => {
       setLoading(false);
     }
   };
+  
 
   return (
     <Fragment>
@@ -129,7 +144,7 @@ const EditAdmin = () => {
         </Row>
         <div className="card p-6 mt-5">
           <Form onSubmit={handleSubmit} encType="multipart/form-data">
-            <Row>
+            <Row className="align-items-center">
               {[
                 { label: "Name", name: "name", type: "text" },
                 { label: "Email", name: "email", type: "email" },
@@ -168,11 +183,12 @@ const EditAdmin = () => {
 
               <Col lg={6}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Gender</Form.Label>
+                  <Form.Label className="me-5">Gender</Form.Label>
                   {["MALE", "FEMALE", "OTHER"].map((gender) => (
                     <Form.Check
                       inline
                       key={gender}
+                      id={gender}
                       label={gender}
                       name="gender"
                       type="radio"

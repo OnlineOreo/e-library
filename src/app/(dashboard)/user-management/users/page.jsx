@@ -1,14 +1,15 @@
 "use client";
+
 import { Fragment, useEffect, useState } from "react";
 import Link from "next/link";
-import { Container, Col, Row, Modal, Button } from "react-bootstrap";
+import { Container, Col, Row, Modal, Button, Form } from "react-bootstrap";
 import axios from "axios";
 import Box from "@mui/material/Box";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useRouter } from "next/navigation";
 import { BiBarChart } from "react-icons/bi";
-import { FaPlusCircle, FaEdit } from "react-icons/fa";
+import { FaPlusCircle, FaEdit, FaKey } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
 import ImportUser from "./ImportUser";
@@ -21,21 +22,34 @@ const Home = () => {
   const [searchText, setSearchText] = useState("");
   const instituteId = useSelector((state) => state.institute.instituteId);
   const [showImportModal, setShowImportModal] = useState(false);
+  const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null); // Store full user object
+  const [newPassword, setNewPassword] = useState("");
+  const [passwordLoading, setPasswordLoading] = useState(false);
 
   const handleOpenModal = () => setShowImportModal(true);
   const handleCloseModal = () => setShowImportModal(false);
+
+  const handleOpenChangePasswordModal = (user) => {
+    setSelectedUser(user);
+    setShowChangePasswordModal(true);
+  };
+
+  const handleCloseChangePasswordModal = () => {
+    setSelectedUser(null);
+    setNewPassword("");
+    setShowChangePasswordModal(false);
+  };
 
   const getToken = () => {
     const cookieString = document.cookie
       .split("; ")
       .find((row) => row.startsWith("access_token="));
-
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
   const loadUser = async (instituteId) => {
     const token = getToken();
-
     if (!token) {
       router.push("/authentication/sign-in");
       return;
@@ -44,17 +58,16 @@ const Home = () => {
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users?institute_id=${instituteId}`,
-        {
-          headers: { Authorization: `${token}` },
-          method: "GET",
-        }
+        { headers: { Authorization: `${token}` } }
       );
 
       if (response.status === 200) {
         setUsers(response.data);
         setFilteredUsers(response.data);
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   useEffect(() => {
@@ -66,6 +79,7 @@ const Home = () => {
   const handleSearch = (event) => {
     const searchValue = event.target.value;
     setSearchText(searchValue);
+
     if (searchValue === "") {
       setFilteredUsers(users);
     } else {
@@ -78,6 +92,7 @@ const Home = () => {
 
   const handleDelete = async (params) => {
     const token = getToken();
+
     Swal.fire({
       title: "Are you sure?",
       text: "Delete user with all mapping!",
@@ -89,29 +104,19 @@ const Home = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const deleteMappingIdArr = params.mappings.map(
-            (element) => element.user_mapping_id
-          );
-          const deleteMappingParam = deleteMappingIdArr.join(",");
-
           await axios.delete(
             `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users?user_id=${params.id}&delete_all=True`,
-            {
-              headers: { Authorization: `${token}` },
-            }
+            { headers: { Authorization: `${token}` } }
           );
 
-          Swal.fire({
-            title: "Success!",
-            text: "User deleted successfully!",
-            icon: "success",
-            confirmButtonText: "OK",
-          });
+          Swal.fire("Deleted!", "User deleted successfully.", "success");
           setFilteredUsers((prev) =>
             prev.filter((item) => item.id !== params.id)
           );
           setUsers((prev) => prev.filter((item) => item.id !== params.id));
-        } catch (error) {}
+        } catch (error) {
+          console.error(error);
+        }
       }
     });
   };
@@ -126,7 +131,11 @@ const Home = () => {
 
   const handleToggleActive = async (user) => {
     const token = getToken();
-    const updatedUser = { ...user, is_active: !user.is_active };
+    const updatedUser = {
+      ...user,
+      is_active: !user.is_active,
+      role: user.role,
+    }; // <-- include role
 
     try {
       await axios.put(
@@ -149,18 +158,52 @@ const Home = () => {
         confirmButtonText: "OK",
       });
 
-      setUsers((prev) => prev.map((u) => (u.id === user.id ? updatedUser : u)));
+      setUsers((prev) =>
+        prev.map((u) =>
+          u.id === user.id ? { ...u, is_active: updatedUser.is_active } : u
+        )
+      );
       setFilteredUsers((prev) =>
-        prev.map((u) => (u.id === user.id ? updatedUser : u))
+        prev.map((u) =>
+          u.id === user.id ? { ...u, is_active: updatedUser.is_active } : u
+        )
       );
     } catch (error) {
-      Swal.fire({
-        title: "Error!",
-        text: "Could not update user status.",
-        icon: "error",
-        confirmButtonText: "OK",
-      });
+      console.error(error);
+      Swal.fire("Error", "Could not update user status.", "error");
     }
+  };
+
+  const handlePasswordChange = async () => {
+    if (!selectedUser) return;
+    const token = getToken();
+    setPasswordLoading(true);
+
+    const updatedUser = {
+      ...selectedUser, // Spread all the user data
+      password: newPassword, // Include the new password
+    };
+
+    try {
+      await axios.put(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users?user_id=${selectedUser.id}`,
+        JSON.stringify(updatedUser),
+        {
+          headers: {
+            Authorization: `${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      Swal.fire("Success", "Password updated successfully!", "success");
+      handleCloseChangePasswordModal();
+    } catch (error) {
+      console.error("Password change error:", error);
+      Swal.fire("Error", "Failed to update password!", "error");
+    }
+
+    setPasswordLoading(false);
   };
 
   const columns = [
@@ -202,9 +245,15 @@ const Home = () => {
     {
       field: "action",
       headerName: "Action",
-      flex: 2,
+      flex: 3,
       renderCell: (params) => (
         <>
+          <button
+            onClick={() => handleOpenChangePasswordModal(params.row)}
+            className="btn btn-info mx-2 btn-sm"
+          >
+            <FaKey />
+          </button>
           <button
             onClick={() => handleEdit(params.row)}
             className="btn btn-primary mx-2 btn-sm"
@@ -213,7 +262,7 @@ const Home = () => {
           </button>
           <button
             onClick={() => handleDelete(params.row)}
-            className="btn btn-danger btn-sm"
+            className="btn btn-danger btn-sm mx-2"
           >
             <RiDeleteBin6Line />
           </button>
@@ -268,27 +317,58 @@ const Home = () => {
         </div>
       </Container>
 
-      {/* Modal with ImportUser */}
+      {/* Import User Modal */}
       <Modal show={showImportModal} onHide={handleCloseModal} centered>
         <Modal.Header closeButton>
-          <Modal.Title className="w-25">Import User</Modal.Title>
-          
+          <Modal.Title>Import User</Modal.Title>
         </Modal.Header>
-        
         <Modal.Body>
           <ImportUser
             onSuccess={() => {
               handleCloseModal();
               loadUser(instituteId);
-              Swal.fire({
-                title: "Success!",
-                text: "Users added successfully!",
-                icon: "success",
-                confirmButtonText: "OK",
-              });
+              Swal.fire("Success", "Users added successfully!", "success");
             }}
           />
         </Modal.Body>
+      </Modal>
+
+      {/* Change Password Modal */}
+      <Modal
+        show={showChangePasswordModal}
+        onHide={handleCloseChangePasswordModal}
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Change Password</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Group>
+            <Form.Label>New Password</Form.Label>
+            <Form.Control
+              type="password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              placeholder="Enter new password"
+            />
+          </Form.Group>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            disabled={passwordLoading}
+            onClick={handleCloseChangePasswordModal}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            onClick={handlePasswordChange}
+            disabled={passwordLoading || !newPassword}
+          >
+            {passwordLoading ? "Saving..." : "Save"}
+          </Button>
+        </Modal.Footer>
       </Modal>
     </Fragment>
   );

@@ -1,21 +1,27 @@
 "use client";
+
 import { Fragment, useEffect, useState } from "react";
 import Link from "next/link";
-import { Container, Col, Row } from "react-bootstrap";
+import { Container, Col, Row, Modal, Button, Form } from "react-bootstrap";
 import axios from "axios";
 import Box from "@mui/material/Box";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useRouter } from "next/navigation";
-import { FaPlusCircle, FaEdit } from "react-icons/fa";
+import { FaPlusCircle, FaEdit, FaKey } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
+import { Spinner } from "react-bootstrap"; // Import Spinner for loading indicator
 
 const Home = () => {
   const router = useRouter();
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [searchText, setSearchText] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [currentUserId, setCurrentUserId] = useState(null);
+  const [loading, setLoading] = useState(false); // Add loading state
   const instituteId = useSelector((state) => state.institute.instituteId);
 
   const getToken = () => {
@@ -59,7 +65,7 @@ const Home = () => {
   };
 
   useEffect(() => {
-    if(instituteId){
+    if (instituteId) {
       loadUser(instituteId);
     }
   }, [instituteId]);
@@ -117,30 +123,78 @@ const Home = () => {
     router.push(`/user-management/admin/edit/${params.id}`);
   };
 
+  const handleChangePassword = (id) => {
+    setCurrentUserId(id);
+    setShowModal(true);
+  };
+
+  const handleSavePassword = async () => {
+    const token = getToken();
+
+    if (!newPassword) {
+      Swal.fire("Error", "Please enter a new password", "error");
+      return;
+    }
+
+    // Find the user to be updated from the users array
+    const userToUpdate = users.find(user => user.id === currentUserId);
+
+    if (!userToUpdate) {
+      Swal.fire("Error", "User not found", "error");
+      return;
+    }
+
+    // Exclude the 'image' field from the updated user data
+    const { image, ...updatedUserData } = userToUpdate;
+
+    // Add the new password to the updated user data
+    updatedUserData.password = newPassword;
+
+    try {
+      // Set loading to true to disable button and show spinner
+      setLoading(true);
+
+      // Send the updated user data including the new password in the PUT request body
+      await axios.put(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users?user_id=${currentUserId}`,
+        updatedUserData,
+        {
+          headers: { Authorization: `${token}` },
+        }
+      );
+      Swal.fire("Success", "Password updated successfully", "success");
+      setShowModal(false);
+      setNewPassword("");
+    } catch (error) {
+      console.log(error);
+      Swal.fire("Error", "Failed to update password", "error");
+    } finally {
+      // Set loading to false once the request is done
+      setLoading(false);
+    }
+  };
+
   const columns = [
     { field: "id", headerName: "User ID", flex: 2 },
     {
       field: "image",
       headerName: "Photo",
-      flex: 2,
-      renderCell: (params) => (
-        <img
-          src={params.value || "/images/avatar/avatar-1.jpg"}
-          alt="User"
-          style={{
-            width: "50px",
-            height: "50px",
-            borderRadius: "50%",
-            objectFit: "cover",
-          }}
-          onError={(e) => {
-            e.target.onerror = null;
-            e.target.src = "/images/avatar/avatar-1.jpg";
-          }}
-        />
-      ),
-    },    
-    
+      flex: 1,
+      renderCell: (params) => {
+        return (
+          <img
+            src={params.value || params.value}
+            alt="User"
+            style={{
+              width: "50px",
+              height: "50px",
+              borderRadius: "50%",
+              objectFit: "cover",
+            }}
+          />
+        );
+      },
+    },
     { field: "name", headerName: "Name", flex: 2 },
     { field: "email", headerName: "Email", flex: 2 },
     { field: "phone_number", headerName: "Number", flex: 2 },
@@ -151,15 +205,21 @@ const Home = () => {
       flex: 2,
       renderCell: (params) => (
         <>
-          {/* <button
+          <button
+            onClick={() => handleChangePassword(params.id)}
+            className="btn btn-info btn-sm mx-2"
+          >
+            <FaKey />
+          </button>
+          <button
             onClick={() => handleEdit(params)}
             className="btn btn-primary mx-2 btn-sm"
           >
             <FaEdit />
-          </button> */}
+          </button>
           <button
             onClick={() => handleDelete(params)}
-            className="btn btn-danger btn-sm"
+            className="btn btn-danger btn-sm mx-2"
           >
             <RiDeleteBin6Line />
           </button>
@@ -202,6 +262,36 @@ const Home = () => {
           </Box>
         </div>
       </Container>
+
+      {/* Change Password Modal */}
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Change Password</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Group>
+            <Form.Label>New Password</Form.Label>
+            <Form.Control
+              type="password"
+              placeholder="Enter new password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+          </Form.Group>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" disabled={loading} onClick={() => setShowModal(false)}>
+            Close
+          </Button>
+          <Button 
+            variant="primary" 
+            onClick={handleSavePassword} 
+            disabled={loading} // Disable the button when loading
+          >
+            {loading ? 'Updating' : "Save Changes"}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Fragment>
   );
 };
