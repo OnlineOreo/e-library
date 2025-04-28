@@ -28,14 +28,12 @@ export default function Home() {
   const configData = landingPageData2?.landingPageData?.configurations?.[0] || {};
   const sectionOrder = configData?.section_order || {};
 
-  // Dispatch once on mount
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchInstituteId());
     }
   }, [dispatch, status]);
 
-  // Handle dynamic font styles once configData is ready
   useEffect(() => {
     if (configData) {
       document.documentElement.style.setProperty("--dynamic-font-family", configData?.font_style || "inherit");
@@ -44,16 +42,14 @@ export default function Home() {
     }
   }, [configData]);
 
-  // Wait for both data and status to finish
   useEffect(() => {
     if (status !== "idle" && Object.keys(configData).length > 0) {
-      // Add a slight delay for better UX if needed
       const timer = setTimeout(() => {
         setLoading(false);
-      }, 500); // optional: 500ms delay
+      }, 100); // optional: 500ms delay
       return () => clearTimeout(timer);
     }
-  }, [status, configData]);
+  }, [configData]);
 
   // Components Map
   const componentsMap = useMemo(() => ({
