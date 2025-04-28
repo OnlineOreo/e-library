@@ -273,7 +273,7 @@ const Navbar = ({ show, setShow }) => {
                       className="mx-1 hover-underline"
                       title="Profile"
                     >
-                      Profile
+                      <img src="/images/avatar/avatar-1.jpg" className="avatar avatar-sm rounded" alt="" />
                     </Link>
                   </div>
                 )}
@@ -284,7 +284,7 @@ const Navbar = ({ show, setShow }) => {
                       className="mx-1 hover-underline"
                       title="Profile"
                     >
-                      Admin
+                      <img src="/images/avatar/avatar-1.jpg" className="avatar avatar-sm rounded" alt="" />
                     </Link>
                   </div>
                 )}
