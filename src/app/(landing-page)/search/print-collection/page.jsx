@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import PrintCollectionContent from './PrintCollectionContent';
 import axios from "axios";
+import { headers } from 'next/headers';
 
 function combineFacetData(facetData) {
   const combined = [];
@@ -58,11 +59,21 @@ async function fetachSolrData(searchQuery, startIndex = 0, pubPkg) {
 export default async function PrintCollectionPage({ searchParams }) {
   const searchParamsObj = await searchParams || {};
   const searchQuery = searchParamsObj.q || "";
-  // const fullHostname = searchParams?.hostname || "";
-  // const hostname = fullHostname.split('.')[0];
-  // console.log("host name : ", hostname);
-  
-  const pubPkg = `11%2043%2049`;
+  const headersList = headers();
+  const fullHostname = headersList.get('host') || ""; 
+  const hostname = fullHostname.split('.')[0];
+  // console.log("host name:", hostname);
+
+  const pkgIdMapping = {
+    "mriirs" : "11%2043",
+    "fri" : "45%2048",
+    "lhlb" : "11%2046",
+    "dev" : "44%2047",
+    "demo" : "44%2047",
+  }
+
+  const pubPkg = pkgIdMapping[hostname];
+
 
   const data = await fetachSolrData(searchQuery, 0, pubPkg);
 

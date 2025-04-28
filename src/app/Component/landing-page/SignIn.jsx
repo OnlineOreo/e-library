@@ -13,7 +13,7 @@
     const dispatch = useDispatch();
     const instituteId = useSelector((state) => state.institute.instituteId);
     const searchParams = useSearchParams();
-    const q = searchParams.get("q");
+    const search = searchParams.get("search");
     const redirect = searchParams.get("redirect");
     const book = searchParams.get("book");
     const extra = searchParams.get("extra");
@@ -120,8 +120,8 @@
             .catch((err) => console.error("Session save failed:", err));
         });
         
-        if (q != null) {
-          router.push(`?q=${q}`);
+        if (search != null) {
+          router.push(search);
         }else if(redirect != null){
           router.push(`/`);
           window.open(publisherUrls[redirect], "_blank");

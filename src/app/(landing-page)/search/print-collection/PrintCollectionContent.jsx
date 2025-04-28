@@ -66,10 +66,23 @@ export default function PrintCollectionContent({
         if (!urlParams) return;
 
         setIsLoading(true);
+
+        const fullHostname = window.location.hostname || "";
+          const hostname = fullHostname.split('.')[0];
+          console.log("host name:", hostname);
+        
+          const pkgIdMapping = {
+            "mriirs" : "11%2043",
+            "fri" : "45%2048",
+            "lhlb" : "11%2046",
+            "dev" : "44%2047",
+            "demo" : "44%2047",
+          }
+        
         const nextStart = startIndex;
 
         try {
-            const res = await fetch(`/internal-api/load-more?q=${urlParams}&start=${nextStart}&catalogCore=Print-collection`);
+            const res = await fetch(`/internal-api/load-more?pkgId=${pkgIdMapping[hostname]}&q=${urlParams}&start=${nextStart}&catalogCore=Print-collection`);
             const data = await res.json();
 
             const newDocs = data.results || [];
