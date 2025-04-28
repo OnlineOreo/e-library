@@ -5,16 +5,13 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslation } from 'react-i18next';
 import '@/i18n'; // cleaner using path alias `@`
 
-
-
-const SearchBar = ({show,setShow}) => {
+const SearchBar = ({ show, setShow }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { t, i18n } = useTranslation();
-
+  const { t } = useTranslation();
 
   const [filterType, setFilterType] = useState("datacite_titles");
-  const [searchText, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState(filterType == "resource_types_string" ? "book" : "");
 
   const getToken = () => {
     const cookieString = document.cookie
@@ -23,32 +20,51 @@ const SearchBar = ({show,setShow}) => {
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
-
   useEffect(() => {
-  // const searchParams = new URLSearchParams(window.location.search);
-  const fullQuery = decodeURIComponent(searchParams.get("q") || "");
+    const fullQuery = searchParams.get("q") || "";
+    const baseMatch = fullQuery.match(/^([a-zA-Z0-9_]+):\(([^)]+)\)/);
 
-  const baseMatch = fullQuery.match(/^([a-zA-Z0-9_]+):\(([^)]+)\)/);
-
-  if (baseMatch) {
-    const type = baseMatch[1];
-    const text = baseMatch[2]; 
-    // console.log("type:", type);
-    // console.log("text:", text);
-    setFilterType(type);
-    setSearchText(text);
-  }
+    if (baseMatch) {
+      const type = baseMatch[1];
+      const text = baseMatch[2];
+      setFilterType(type);
+      setSearchText(text);
+    }
   }, [searchParams]);
 
   const handleSubmit = (event) => {
-    event.preventDefault(); 
-    const token = getToken();
-    if(!token){
-      setShow(true)
-      router.push(`/?q=/search/print-collection${filterType}%3A(${encodeURIComponent(searchText)})`);
-      return 
+    event.preventDefault();
+
+    let catalogCore = "";
+    if (filterType === "resource_types_string") {
+      switch (searchText) {
+        case "book":
+          catalogCore = "print-collection";
+          break;
+        case "e-book":
+        case "e-journals":
+          catalogCore = "e-resources";
+          break;
+        case "Video":
+        case "audio":
+          catalogCore = "multimedia";
+          break;
+        default:
+          catalogCore = "print-collection";
+      }
     }
-    router.push(`/search/print-collection?q=${filterType}%3A(${encodeURIComponent(searchText)})`);
+
+    const token = getToken();
+
+    const query = `${filterType}%3A(${encodeURIComponent(searchText)})`;
+
+    if (!token) {
+      setShow(true);
+      router.push(`/?search=/search/${catalogCore}?q=${query}`);
+      return;
+    }
+
+    router.push(`/search/${catalogCore}?q=${query}`);
   };
 
   return (
@@ -60,8 +76,31 @@ const SearchBar = ({show,setShow}) => {
           <option value="resource_types_string">{t('Resource Types')}</option>
           <option value="college_category">{t('Subject')}</option>
         </select>
-        <input type="text" value={searchText} placeholder={t('Search with/without any keyword')} onChange={(e) => setSearchText(e.target.value)} />
-        <button type="submit"><img alt="Search" src="https://wp.alithemes.com/html/evara/evara-frontend/assets/imgs/theme/icons/search.png" /></button>
+
+        {filterType === "resource_types_string" ? (
+          <select value={searchText} onChange={(e) => setSearchText(e.target.value)} style={{ width: "60%" }}>
+            <option value="book">{t('Print Collection')}</option>
+            <option value="e-book">{t('e-book')}</option>
+            <option value="e-journals">{t('e-journals')}</option>
+            <option value="Video">{t('Video')}</option>
+            <option value="audio">{t('Audio')}</option>
+          </select>
+        ) : (
+          <input
+            type="text"
+            value={searchText}
+            placeholder={t('Search with/without any keyword')}
+            onChange={(e) => setSearchText(e.target.value)}
+            style={{ width: "60%" }}
+          />
+        )}
+
+        <button type="submit">
+          <img
+            alt="Search"
+            src="https://wp.alithemes.com/html/evara/evara-frontend/assets/imgs/theme/icons/search.png"
+          />
+        </button>
       </form>
     </div>
   );

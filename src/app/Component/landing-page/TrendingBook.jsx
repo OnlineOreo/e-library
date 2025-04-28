@@ -113,8 +113,7 @@ export default function TrendingBook({
                             }}
                           />
                         ) : (
-                          
-                           <div className="mx-3 mt-3 mb-3 border" style={{ position: 'relative' }}>
+                           <div className="mx-3" style={{ position: 'relative',height:"100%",width:"100%" }}>
                                 <h3
                                   className='fw-bold fs-6 f-italic four_line_ellipses'
                                   style={{
@@ -130,21 +129,6 @@ export default function TrendingBook({
                                 >
                                   {book.book_title?.toUpperCase()}
                                 </h3>
-                          
-                                {/* Author at the bottom */}
-                                <div
-                                  className='mt-2 fw-bold one_line_ellipses'
-                                  style={{
-                                    position: 'absolute',
-                                    bottom: '25%',
-                                    right: '3%',
-                                    color: '#272626',
-                                    padding: '8px',
-                                    textAlign: 'center',
-                                    zIndex: 2,
-                                  }}
-                                >
-                                </div>
                           
                                 {/* Book cover image */}
                                 <Image
