@@ -247,7 +247,7 @@ const Profile = () => {
             <div className="d-flex align-items-center justify-content-between pt-4 pb-6 px-4">
               <div className="d-flex align-items-center">
                 <div className="avatar-xxl avatar-indicators avatar-online me-2 position-relative d-flex justify-content-end align-items-end mt-n10">
-                  <Image
+                  <img
                     src={
                       authUser.image !== ""
                         ? authUser.image
@@ -397,7 +397,7 @@ const Profile = () => {
                   </Form.Group>
                   {authUser.image && (
                     <div className="mt-3 avatar">
-                      <Image
+                      <img
                         src={authUser.image}
                         alt="Preview"
                         width={150}

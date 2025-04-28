@@ -1,36 +1,25 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { FaAngleDown } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 
-const MobileNav = ({ menuOpen, toggleMenu ,publisherUrls }) => {
+const MobileNav = ({
+  menuOpen,
+  toggleMenu,
+  publisherUrls,
+  setShow,
+  handleLogout,
+  handlePublisherClick,
+  token,
+}) => {
   const [activeDropdown, setActiveDropdown] = useState(null);
-  const [token, setToken] = useState(null);
-
-  useEffect(() => {
-    const getToken = () => {
-      const cookieString = document.cookie
-        .split("; ")
-        .find((row) => row.startsWith("access_token="));
-      return cookieString
-        ? decodeURIComponent(cookieString.split("=")[1])
-        : null;
-    };
-    setToken(getToken());
-  }, []);
 
   const toggleDropdown = (menu) => {
     setActiveDropdown(activeDropdown === menu ? null : menu);
   };
 
   const landingPageData = useSelector((state) => state.landingPageDataSlice);
-
   const bannerData = landingPageData?.landingPageData?.configurations?.[0] || [];
-
-  // const publisherUrls = {
-  //   "EBSCO Academic Collection": `https://research-ebsco-com.mriirs.libvirtuua.com:8811/login.aspx?authtype=ip,uid&custid=ns193200&groupid=main&profile=ehost&defaultdb=bsh&token=${token}`,
-  //   Manupatra: `https://www-manupatrafast-in.mriirs.libvirtuua.com:8811/LoginSwitch/ipRedirect.aspx?token=${token}`,
-  // };
 
   const sections = [
     {
@@ -52,41 +41,45 @@ const MobileNav = ({ menuOpen, toggleMenu ,publisherUrls }) => {
       field: "media_name",
     },
     {
-      key: "collections",
-      label: "Collections",
-      data: landingPageData?.landingPageData?.collections || [],
-      field: "collection_name",
+      key: "Important link",
+      label: "Important Link",
+      href: "/",
+      data: [
+        ...(landingPageData?.landingPageData?.metas || []),
+        ...(landingPageData?.landingPageData?.dynamic_page || []),
+      ],
+      field: "important_link",
     },
+    // {
+    //   key: "collections",
+    //   label: "Collections",
+    //   data: landingPageData?.landingPageData?.collections || [],
+    //   field: "collection_name",
+    // },
   ];
 
   return (
-    <div
-      className={`offcanvas offcanvas-start ${menuOpen ? "show" : ""}`}
-      tabIndex="-1"
-    >
-      <div
-        className="offcanvas-header text-white"
-        style={{ backgroundColor: bannerData?.color1 }}
-      >
-        {/* <h5 className="offcanvas-title text-dark">
-          LibVirtuUa
-          </h5> */}
-           <div className="logo logo-width-1 d-block d-lg-none">
-                  <Link href="/">
-                    <img
-                      src={
-                        landingPageData?.landingPageData?.configurations?.[0]?.logo || "default"
-                      }
-                      alt="App Icon"
-                    />
-                  </Link>
-                </div>
+    <div className={`offcanvas offcanvas-start ${menuOpen ? "show" : ""}`} tabIndex="-1">
+      <div className="offcanvas-header text-white" style={{ backgroundColor: bannerData?.color1 }}>
+        <div className="logo logo-width-1 d-block d-lg-none">
+          <Link href="/">
+            <img
+              src={
+                `${landingPageData?.landingPageData?.configurations?.[0]?.latest_logos.find(
+                  (config) => config.is_active
+                )?.logo}` || "default"
+              }
+              alt="App Icon"
+            />
+          </Link>
+        </div>
         <button
           type="button"
           className="btn-close btn-close-dark"
           onClick={toggleMenu}
         ></button>
       </div>
+
       <div className="offcanvas-body p-3">
         <ul className="list-unstyled">
           <li>
@@ -97,41 +90,35 @@ const MobileNav = ({ menuOpen, toggleMenu ,publisherUrls }) => {
               Home
             </Link>
           </li>
-          <li>
-            {/* <button 
-              className="btn w-100 text-start px-3 py-2 d-block fw-normal text-dark text-decoration-underline" 
-              onClick={() => toggleDropdown("resources")}
-              style={{ background: "none", border: "none" }}
-            >
-              eResources <FaAngleDown className="ms-1" />
-            </button> */}
-            {/* {activeDropdown === "resources" && (
-              <ul className="list-unstyled ms-3">
-                <li>
-                  <Link href="/check-auth" className="nav-link px-3 py-1 d-block text-muted">
-                    Academic Journals
-                  </Link>
-                </li>
-              </ul>
-            )} */}
-          </li>
 
-          {sections.map(
-            ({ key, label, data, field }) =>
-              data.length > 0 && (
-                <li key={key}>
-                  <button
-                    className="btn w-100 text-start px-3 py-2 d-block fw-normal text-dark text-decoration-underline"
-                    onClick={() => toggleDropdown(key)}
-                    style={{ background: "none", border: "none" }}
-                  >
-                    {label} <FaAngleDown className="ms-1" />
-                  </button>
-                  {activeDropdown === key && (
-                    <ul className="list-unstyled ms-3">
-                      {data.map((item, index) => (
-                        <li key={index} className="px-3 py-1 text-muted">
-                          {publisherUrls[item[field]] ? (
+          {sections.map(({ key, label, data, field }) =>
+            data.length > 0 ? (
+              <li key={key}>
+                <button
+                  className="btn w-100 text-start px-3 py-2 d-block fw-normal text-dark text-decoration-underline"
+                  onClick={() => toggleDropdown(key)}
+                  style={{ background: "none", border: "none" }}
+                >
+                  {label} <FaAngleDown className="ms-1" />
+                </button>
+
+                {activeDropdown === key && (
+                  <ul className="list-unstyled ms-3">
+                    {data.map((item, index) => (
+                      <li key={index} className="px-3 py-1 text-muted">
+                        {publisherUrls[item[field]] ? (
+                          field === "publisher_name" ? (
+                            <a
+                              href="#"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handlePublisherClick(item);
+                              }}
+                              className="text-muted"
+                            >
+                              {item[field]}
+                            </a>
+                          ) : (
                             <a
                               href={publisherUrls[item[field]]}
                               target="_blank"
@@ -140,16 +127,30 @@ const MobileNav = ({ menuOpen, toggleMenu ,publisherUrls }) => {
                             >
                               {item[field]}
                             </a>
-                          ) : (
-                            item[field]
-                          )}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </li>
-              )
+                          )
+                        ) : (
+                          // item[field]
+                          <a
+                              href='##'
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-muted"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handlePublisherClick(item);
+                              }}
+                            >
+                              {item[field]}
+                            </a>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            ) : null
           )}
+
           <li>
             <Link
               href="/advance-search"
@@ -158,6 +159,21 @@ const MobileNav = ({ menuOpen, toggleMenu ,publisherUrls }) => {
               Advance Search
             </Link>
           </li>
+
+          {token && (
+            <li>
+              <Link
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleLogout();
+                }}
+                className="nav-link px-3 py-2 d-block text-dark fw-normal text-decoration-underline"
+              >
+                Log Out
+              </Link>
+            </li>
+          )}
         </ul>
       </div>
     </div>

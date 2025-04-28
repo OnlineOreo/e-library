@@ -7,6 +7,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useTranslation } from 'react-i18next';
 import '@/i18n'; // cleaner using path alias `@`
+import Swal from "sweetalert2";
 import LanguageSelector from "@/app/Component/landing-page/languageselector";
 
 
@@ -42,13 +43,20 @@ const NavbarTop = (props) => {
     const token = getToken();
     const session_id = getSession();
     const userId = getUserId();
+  
+    // Utility to get Indian date-time
+    const getIndianDateTime = () => {
+      const indianTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" });
+      return new Date(indianTime).toISOString();
+    };
+  
     if (session_id) {
       try {
         await axios.put(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-session?session_id=${session_id}&institute_id=${institute_id}&user_id=${userId}`,
           {
-            ended_at: new Date().toISOString(),
-            institute: instituteId,
+            ended_at: getIndianDateTime(), // Using IST for ended_at
+            institute: institute_id, // Make sure you pass the correct institute_id (fixed variable name)
             user: userId,
           },
           {
@@ -57,18 +65,25 @@ const NavbarTop = (props) => {
             },
           }
         );
+        Swal.fire({
+          icon: 'success',
+          title: 'Logged Out',
+          text: 'You have been successfully logged out.',
+          confirmButtonText: 'OK',
+        });
       } catch (error) {
         console.error("Failed to update user session:", error);
       }
     }
-
+  
     // Clear cookies
     document.cookie = `access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
     document.cookie = `user_role=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
     document.cookie = `session_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
-
+  
     router.push("/");
   };
+  
 
   return (
     <>

@@ -104,31 +104,31 @@ const QuickMenu = () => {
     } catch (error) {}
   };
 
-  const Notifications = () => {
-    return (
-      <SimpleBar style={{ maxHeight: "300px" }}>
-        <ListGroup variant="flush">
-          {NotificationList.map(function (item, index) {
-            return (
-              <ListGroup.Item
-                className={index === 0 ? "bg-light" : ""}
-                key={index}
-              >
-                <Row>
-                  <Col>
-                    <Link href="#" className="text-muted">
-                      <h5 className=" mb-1">{item.sender}</h5>
-                      <p className="mb-0"> {item.message}</p>
-                    </Link>
-                  </Col>
-                </Row>
-              </ListGroup.Item>
-            );
-          })}
-        </ListGroup>
-      </SimpleBar>
-    );
-  };
+  // const Notifications = () => {
+  //   return (
+  //     <SimpleBar style={{ maxHeight: "300px" }}>
+  //       <ListGroup variant="flush">
+  //         {NotificationList.map(function (item, index) {
+  //           return (
+  //             <ListGroup.Item
+  //               className={index === 0 ? "bg-light" : ""}
+  //               key={index}
+  //             >
+  //               <Row>
+  //                 <Col>
+  //                   <Link href="#" className="text-muted">
+  //                     <h5 className=" mb-1">{item.sender}</h5>
+  //                     <p className="mb-0"> {item.message}</p>
+  //                   </Link>
+  //                 </Col>
+  //               </Row>
+  //             </ListGroup.Item>
+  //           );
+  //         })}
+  //       </ListGroup>
+  //     </SimpleBar>
+  //   );
+  // };
 
   const QuickMenuDesktop = () => {
     return (
@@ -176,7 +176,7 @@ const QuickMenu = () => {
             id="dropdownUser"
           >
             <div className="avatar avatar-md avatar-indicators avatar-online">
-              <Image
+              <img
                 alt="Verified"
                 src={
                   authUser?.image && authUser.image !== ""

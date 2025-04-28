@@ -13,7 +13,7 @@ import { LuSlidersHorizontal } from "react-icons/lu";
 import "../../../../public/landingPageAsset/css/style2.css";
 import "../../../../public/landingPageAsset/css/header.css";
 import { useTranslation } from "react-i18next";
-import "@/i18n"; // cleaner using path alias `@`
+import "@/i18n";
 
 const Navbar = ({ show, setShow }) => {
   const { t, i18n } = useTranslation();
@@ -72,6 +72,13 @@ const Navbar = ({ show, setShow }) => {
             },
           }
         );
+        Swal.fire({
+          icon: 'success',
+          title: 'Logged Out',
+          text: 'You have been successfully logged out.',
+          confirmButtonText: 'OK'
+        });
+        // toggleMenu(false)
       } catch (error) {
         console.error("Failed to update user session:", error);
         router.push("/");
@@ -101,6 +108,8 @@ const Navbar = ({ show, setShow }) => {
 
   const handlePublisherClick = (publisher) => {
     const token = getToken();
+    toggleMenu(false)
+    setMenuOpen(false)
 
     if (!publisherUrls[publisher.publisher_name]) {
       Swal.fire({
@@ -301,15 +310,17 @@ const Navbar = ({ show, setShow }) => {
                 <div className="logo logo-width-1 d-block d-lg-none">
                   <Link href="/">
                     <img
-                      src={
-                        landingPageData?.landingPageData?.configurations?.[0]
-                          ?.logo || "default"
+                       src={
+                        `${landingPageData?.landingPageData?.configurations?.[0]?.latest_logos.find(
+                          (config) => config.is_active
+                        )?.logo
+                        }` || "default"
                       }
                       alt="App Icon"
                     />
                   </Link>
                 </div>
-                <div className="d-flex justify-content-between w-100">
+                <div className="d-flex justify-content-sm-between justify-content-end w-100">
                   <div className="header-nav d-none d-lg-flex">
                     <div className="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block">
                       <nav className="menu">
@@ -375,6 +386,9 @@ const Navbar = ({ show, setShow }) => {
         menuOpen={menuOpen}
         publisherUrls={publisherUrls}
         toggleMenu={toggleMenu}
+        token={token}
+        handlePublisherClick={handlePublisherClick}
+        handleLogout={() => handleLogout(instituteId, setShow)}
       />
     </>
   );

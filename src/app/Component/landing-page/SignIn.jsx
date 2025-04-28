@@ -5,6 +5,7 @@
   import { useRouter , useSearchParams } from "next/navigation";
   import { useSelector, useDispatch } from "react-redux";
   // import { setUser } from "@/redux/slices/userSlice";
+  import Swal from "sweetalert2";
   import { setUser } from "../../../redux/slices/userSlice";
 
   const SignIn = ({show, publisherUrls , setShow, setToken}) => {
@@ -137,6 +138,12 @@
         setToken(token);
         setEmail('');
         setPassword('');
+        Swal.fire({
+          icon: 'success',
+          title: 'Logged In',
+          text: 'You have been successfully logged in.',
+          confirmButtonText: 'OK'
+        });
       } catch (err) {
         setError(err.message || "Login failed. Something went wrong!");
         setIsLoading(false);
@@ -148,7 +155,7 @@
     return (
       <Row className="align-items-center justify-content-center g-0">
         <Col xxl={12} lg={12} md={12} xs={12} className="py-8 py-xl-0">
-          <Card className="shadow p-4">
+          <Card className="shadow p-lg-4 p-2">
             <Card.Body className="p-3">
               <Form onSubmit={handleSignIn}>
                 {error && <div className="text-danger mb-3">{error}</div>}

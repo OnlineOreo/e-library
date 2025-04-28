@@ -186,7 +186,7 @@ export default function ECollectionContent({
                 <Col md={3} className="px-0 bg-white">
                     <SearchSideFilter {...sideFilterResults} catalogCore={"e-collection"} />
                 </Col>
-                <Col md={9} className='pe-0 ps-4'>
+                <Col md={9} className='pe-0 ps-lg-4 ps-0'>
                     <Row className="mb-3">
                         <Col md={6}>
                             <p>

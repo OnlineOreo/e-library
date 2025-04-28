@@ -4,15 +4,21 @@ import Link from "next/link";
 import SignIn from "./SignIn";
 import { useRouter, usePathname } from "next/navigation"; // at the top
 import LanguageSelector from "./languageselector.jsx";
-import { useTranslation } from 'react-i18next';
-import '@/i18n'; // cleaner using path alias `@`
+import { useTranslation } from "react-i18next";
+import "@/i18n"; // cleaner using path alias `@`
 
-
-const AuthButtons = ({ token, setToken, handleLogout, show, setShow , publisherUrls }) => {
+const AuthButtons = ({
+  token,
+  setToken,
+  handleLogout,
+  show,
+  setShow,
+  publisherUrls,
+}) => {
   const { t, i18n } = useTranslation();
   const router = useRouter();
   const pathname = usePathname();
-  
+
   const getUserRole = () => {
     if (typeof window !== "undefined") {
       const cookieString = document.cookie
@@ -38,33 +44,35 @@ const AuthButtons = ({ token, setToken, handleLogout, show, setShow , publisherU
                 className="mx-1 hover-underline"
                 title="Dashboard"
               >
-                {t('Dashboard')}
+                {t("Dashboard")}
               </Link>
             </div>
           )}
-          {/* {(userRole == "STUDENT" || userRole == "FACULTY") && (
+          {(userRole == "STUDENT" || userRole == "FACULTY") && (
             <div className="mx-2">
               <Link
                 href="/student-profile"
-                className="mx-1 hover-underline"
+                className="mx-1 hover-underline d-lg-none d-block"
                 title="Profile"
               >
                 Profile
               </Link>
             </div>
-          )} */}
+          )}
           <div>
             <a
               onClick={handleLogout}
-              className="mx-1 hover-underline cursor-pointer"
+              className="mx-1 hover-underline cursor-pointer d-lg-block d-none "
               style={{ cursor: "pointer" }}
               title="Log Out"
             >
-              {t('Logout')}
+              {t("Logout")}
             </a>
           </div>
 
-          <LanguageSelector/>
+          <div className="d-sm-block d-none"> 
+            <LanguageSelector />
+          </div>
         </>
       ) : (
         <div className="d-flex">
@@ -74,12 +82,12 @@ const AuthButtons = ({ token, setToken, handleLogout, show, setShow , publisherU
             style={{ cursor: "pointer" }}
             title="Sign In"
           >
-            {t('Sign In')}
+            {t("Sign In")}
           </div>
-            <LanguageSelector/>
+          <div className="d-sm-block d-none"> 
+          <LanguageSelector />
+          </div>
         </div>
-
-
       )}
       <div
         className={`modal fade ${show ? "show d-block" : ""}`}
@@ -103,7 +111,12 @@ const AuthButtons = ({ token, setToken, handleLogout, show, setShow , publisherU
                   router.replace(pathname); // removes all query params
                 }}
               ></button>
-              <SignIn show={show} setShow={setShow} publisherUrls={publisherUrls} setToken={setToken} />
+              <SignIn
+                show={show}
+                setShow={setShow}
+                publisherUrls={publisherUrls}
+                setToken={setToken}
+              />
             </div>
           </div>
         </div>

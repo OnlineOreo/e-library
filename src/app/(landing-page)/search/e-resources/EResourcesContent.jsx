@@ -188,7 +188,7 @@ export default function EResourcesContent({
                 <Col md={3} className="px-0 bg-white">
                     <SearchSideFilter {...sideFilterResults} catalogCore={"e-resources"} />
                 </Col>
-                <Col md={9} className='pe-0 ps-4'>
+                <Col md={9} className='pe-0 ps-lg-4 ps-0'>
                     <Row className="mb-3">
                         <Col md={6}>
                             <p>{t('Showing')} <strong>{resultsCount}</strong> {t('results from data')}</p>
