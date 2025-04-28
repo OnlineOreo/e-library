@@ -11,7 +11,7 @@ const SearchBar = ({ show, setShow }) => {
   const { t } = useTranslation();
 
   const [filterType, setFilterType] = useState("datacite_titles");
-  const [searchText, setSearchText] = useState(filterType == "resource_types_string" ? "book" : "");
+  const [searchText, setSearchText] = useState(filterType === "resource_types_string" ? "book" : "");
 
   const getToken = () => {
     const cookieString = document.cookie
@@ -26,16 +26,24 @@ const SearchBar = ({ show, setShow }) => {
 
     if (baseMatch) {
       const type = baseMatch[1];
-      const text = baseMatch[2];
       setFilterType(type);
+      const text = baseMatch[2];
       setSearchText(text);
     }
   }, [searchParams]);
 
+  useEffect(()=>{
+    if (filterType === "resource_types_string") {
+      setSearchText("book"); 
+    }else {
+      setSearchText("");
+    }
+  },[filterType])
+
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    let catalogCore = "";
+    let catalogCore = "print-collection";
     if (filterType === "resource_types_string") {
       switch (searchText) {
         case "book":
@@ -56,7 +64,7 @@ const SearchBar = ({ show, setShow }) => {
 
     const token = getToken();
 
-    const query = `${filterType}%3A(${encodeURIComponent(searchText)})`;
+    const query = `${filterType}%3A(${encodeURIComponent(searchText === "" ? "*:*" : searchText)})`;
 
     if (!token) {
       setShow(true);

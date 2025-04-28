@@ -42,8 +42,20 @@ export default function TrendingBook({
       router.push(`?book=${bookUrl}`);
       return;
     }
-    window.open(`${bookUrl}`, "_blank");
+  
+    const screenWidth = window.screen.width;
+    const screenHeight = window.screen.height;
+    const width = screenWidth / 2;
+    const height = screenHeight;
+    const left = screenWidth / 2;
+  
+    window.open(
+      bookUrl,
+      'targetWindow',
+      `toolbar=no,location=no,menubar=no,scrollbars=yes,resizable=yes,width=${width},height=${height},left=${left},top=0`
+    );
   };
+  
   return (
     <div style={{ backgroundColor: bannerData?.color1 }}>
       <div
@@ -113,7 +125,7 @@ export default function TrendingBook({
                             }}
                           />
                         ) : (
-                           <div className="mx-3" style={{ position: 'relative',height:"100%",width:"100%" }}>
+                           <div className="" style={{ position: 'relative',height:"100%",width:"100%" }}>
                                 <h3
                                   className='fw-bold fs-6 f-italic four_line_ellipses'
                                   style={{
@@ -131,12 +143,10 @@ export default function TrendingBook({
                                 </h3>
                           
                                 {/* Book cover image */}
-                                <Image
+                                <img
                                   src={'/images/avatar/1.png'}
                                   alt={book.book_title}
-                                  width={300}
-                                  height={300}
-                                  style={{ width: '100%', height: 'auto', objectFit: 'fill' }}
+                                  style={{ width: '100%', height: '100%', objectFit: 'fill' }}
                                 />
                               </div>
                         )}

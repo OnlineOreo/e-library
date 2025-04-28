@@ -1,15 +1,8 @@
 "use client"
 import axios from "axios";
 import React, { useState, useRef, useEffect } from "react";
-import {
-    FaShareAlt,
-    FaRegBookmark,
-    FaFileDownload,
-    FaFacebookSquare,
-    FaLinkedin,
-    FaTwitterSquare,
+import { FaFileDownload,
 } from "react-icons/fa";
-import { IoMail } from "react-icons/io5";
 
 
 
@@ -35,12 +28,13 @@ const CitationDownload = ({ id, catalogType }) => {
 
     const downloadCitation = async (format) => {
         try {
-            const response = await axios.get(
-                `${process.env.NEXT_PUBLIC_SOLR_BASE_URL}/solr/${catalogType}/select?indent=true&q.op=OR&q=id:%22${id}%22&rows=1`
+            const response = await axios.get(`/internal-api/citation-download?catalogId=${id}&catalogCore=${catalogType}&rows=1`
             );
-            const data = response.data.response.docs[0];
+            const data = response.data.results[0];
+            console.log(response.data);
+            
             let content = '';
-            let filename = `${data.id || 'citation'}.${format}`;
+            let filename = `${"catalog_"+data.id || 'citation'}.${format}`;
     
             switch (format) {
                 case 'text':

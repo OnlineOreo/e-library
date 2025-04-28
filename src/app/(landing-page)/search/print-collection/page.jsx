@@ -59,7 +59,7 @@ async function fetachSolrData(searchQuery, startIndex = 0, pubPkg) {
 export default async function PrintCollectionPage({ searchParams }) {
   const searchParamsObj = await searchParams || {};
   const searchQuery = searchParamsObj.q || "";
-  const headersList = headers();
+  const headersList = await headers();
   const fullHostname = headersList.get('host') || ""; 
   const hostname = fullHostname.split('.')[0];
   // console.log("host name:", hostname);
