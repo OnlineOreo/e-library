@@ -125,8 +125,18 @@
         }else if(redirect != null){
           router.push(`/`);
           window.open(publisherUrls[redirect], "_blank");
-        }else if(book != null){ 
-          window.open(`${book}`, "_blank")
+        }else if (book != null) { 
+          const screenWidth = window.screen.width;
+          const screenHeight = window.screen.height;
+          const width = screenWidth / 2;
+          const height = screenHeight;
+          const left = screenWidth / 2;
+        
+          window.open(
+            book,
+            'targetWindow',
+            `toolbar=no,location=no,menubar=no,scrollbars=yes,resizable=yes,width=${width},height=${height},left=${left},top=0`
+          );
         }else if(extra != null){
           window.open(`${extra}`, "_blank")
         } else {
