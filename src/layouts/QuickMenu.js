@@ -186,6 +186,9 @@ const QuickMenu = () => {
                 className="rounded-circle"
                 width={200}
                 height={200}
+                onError={(e) => {
+                  e.target.src = "/images/avatar/avatar-1.jpg"; // Set default image on error
+                }}
               />
             </div>
           </Dropdown.Toggle>

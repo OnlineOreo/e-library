@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Container, Col, Row, Form, Button, Spinner } from "react-bootstrap";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
-import { useRouter , useParams } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import Swal from "sweetalert2";
 import { FaMinusCircle } from "react-icons/fa";
 
@@ -20,7 +20,7 @@ export default function EditInstituteComponent() {
     const cookieString = document.cookie
       .split("; ")
       .find((row) => row.startsWith("access_token="));
-  
+
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
@@ -44,7 +44,15 @@ export default function EditInstituteComponent() {
         phone: fetchedData.phone,
         domain: fetchedData.domain,
         sub_domain: fetchedData.sub_domain,
+        started_at: fetchedData.started_at
+          ? fetchedData.started_at.split("T")[0]
+          : "",
+        ended_at: fetchedData.ended_at
+          ? fetchedData.ended_at.split("T")[0]
+          : "",
       });
+      
+
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
@@ -63,6 +71,8 @@ export default function EditInstituteComponent() {
     phone: "",
     domain: "",
     sub_domain: "",
+    started_at: "",
+    ended_at: "",
   });
 
   const handleInputChange = (event) => {
@@ -85,15 +95,47 @@ export default function EditInstituteComponent() {
     setIsLoading(true);
     const token = getToken();
     if (!token) {
-      errorToaster("Authentication required!");
+      Swal.fire({
+        title: "Authentication Required",
+        text: "Please log in to continue.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+      setIsLoading(false);
       return;
     }
-
+  
+    const today = new Date().toISOString().split("T")[0];
+  
+    if (formData.started_at && formData.ended_at) {
+      if (formData.ended_at < formData.started_at) {
+        Swal.fire({
+          title: "Invalid Date",
+          text: "End date cannot be before start date!",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+        setIsLoading(false);
+        return;
+      }
+  
+      if (formData.ended_at < today) {
+        Swal.fire({
+          title: "Invalid Date",
+          text: "End date cannot be in the past!",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+        setIsLoading(false);
+        return;
+      }
+    }
+  
     let formDataToSend = new FormData();
     Object.entries(formData).forEach(([key, value]) => {
       formDataToSend.append(key, value);
     });
-
+  
     try {
       const response = await axios.put(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/institutes?institute_id=${id}`,
@@ -105,23 +147,30 @@ export default function EditInstituteComponent() {
           },
         }
       );
-
-        Swal.fire({
-            title: "Success!",
-            text: "Institute updated successfully!",
-            icon: "success",
-            confirmButtonText: "OK",
-        });
-
+  
+      Swal.fire({
+        title: "Success!",
+        text: "Institute updated successfully!",
+        icon: "success",
+        confirmButtonText: "OK",
+      });
+  
       setIsLoading(false);
       setTimeout(() => {
         router.push("../");
       }, 4000);
     } catch (error) {
       setIsLoading(false);
-      errorToaster("Something went wrong!");
+      Swal.fire({
+        title: "Error",
+        text: "Something went wrong!",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
     }
   };
+  
+  
 
   return (
     <>
@@ -217,6 +266,30 @@ export default function EditInstituteComponent() {
                     onChange={handleInputChange}
                     placeholder="Enter sub domain"
                     required
+                  />
+                </Form.Group>
+              </Col>
+              
+              <Col lg={6} className="mb-3" md={6} xs={12}>
+                <Form.Group controlId="started_at">
+                  <Form.Label>Started At</Form.Label>
+                  <Form.Control
+                    type="date"
+                    name="started_at"
+                    value={formData.started_at}
+                    onChange={handleInputChange}
+                  />
+                </Form.Group>
+              </Col>
+
+              <Col lg={6} className="mb-3" md={6} xs={12}>
+                <Form.Group controlId="ended_at">
+                  <Form.Label>Ended At</Form.Label>
+                  <Form.Control
+                    type="date"
+                    name="ended_at"
+                    value={formData.ended_at}
+                    onChange={handleInputChange}
                   />
                 </Form.Group>
               </Col>

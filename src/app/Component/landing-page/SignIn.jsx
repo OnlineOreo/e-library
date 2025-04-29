@@ -77,6 +77,8 @@
         // Save user role in cookie and redux
         document.cookie = `user_role=${userData.role}; path=/; max-age=6000; SameSite=Lax;`;
         document.cookie = `user_id=${userData.id}; path=/; max-age=6000; SameSite=Lax;`;
+        document.cookie = `user_image=${userData.image}; path=/; max-age=6000; SameSite=Lax;`;
+        document.cookie = `user_name=${userData.name}; path=/; max-age=6000; SameSite=Lax;`;
         // document.cookie = `user_id=${userData.id}; path=/; max-age=6000; SameSite=Lax;`;
         dispatch(setUser(userData));
 

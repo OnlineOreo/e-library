@@ -17,6 +17,8 @@ const ForgetPassword = () => {
   const [changePassword, setChangePassword] = useState(false);
   const [stage, setStage] = useState(1);
   const [otpError, setOtpError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+
   const [emailError, setEmailError] = useState('');
   const [resendLoading, setResendLoading] = useState(false);
 
@@ -77,14 +79,15 @@ const ForgetPassword = () => {
         router.push('/');
       }, 2000);
     } catch (err) {
-      console.error('Password reset error:', err);
-    }
+      setPasswordError(err?.response?.data?.new_password?.[0] || 'Failed to reset password.');
+    }    
     setIsLoading(false);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setEmailError('')
+    setPasswordError('');
     if (stage === 1) sendOtp();
     else if (stage === 2) verifyOtp();
     else if (stage === 3) setNewPassword();
@@ -101,7 +104,7 @@ const ForgetPassword = () => {
           <Card className="smooth-shadow-md">
             <Card.Body className="p-6">
               <div className="mb-4">
-                <p className="mb-6">
+                <strong className="mb-6">
                   {stage === 1
                     ? "Don't worry, we'll send you an email to reset your password.."
                     : stage === 2
@@ -109,7 +112,7 @@ const ForgetPassword = () => {
                     : stage === 3
                     ? 'Set new password'
                     : ''}
-                </p>
+                </strong>
               </div>
 
               <Form onSubmit={handleSubmit}>
@@ -174,6 +177,7 @@ const ForgetPassword = () => {
                       placeholder="Enter Your Password"
                       required
                     />
+                    {passwordError && <Alert variant="danger" className="mt-2">{passwordError}</Alert>}
                   </Form.Group>
                 )}
 
@@ -185,7 +189,7 @@ const ForgetPassword = () => {
 
                 <span>
                   Already have an account?{' '}
-                  <Link href="/authentication/sign-in" className="text-primary">
+                  <Link href="/" className="text-primary">
                     Sign In
                   </Link>
                 </span>

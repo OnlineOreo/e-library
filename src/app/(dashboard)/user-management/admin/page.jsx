@@ -10,8 +10,9 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { useRouter } from "next/navigation";
 import { FaPlusCircle, FaEdit, FaKey } from "react-icons/fa";
 import Swal from "sweetalert2";
+import { BiBarChart } from "react-icons/bi";
 import { useSelector } from "react-redux";
-import { Spinner } from "react-bootstrap"; // Import Spinner for loading indicator
+import "../users/custom-toggle.css";
 
 const Home = () => {
   const router = useRouter();
@@ -39,7 +40,8 @@ const Home = () => {
       router.push("/authentication/sign-in");
       return;
     }
-    const hostname = typeof window !== "undefined" ? window.location.hostname : "";
+    const hostname =
+      typeof window !== "undefined" ? window.location.hostname : "";
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users?admin=true&sub_domain=${hostname}`,
@@ -137,7 +139,7 @@ const Home = () => {
     }
 
     // Find the user to be updated from the users array
-    const userToUpdate = users.find(user => user.id === currentUserId);
+    const userToUpdate = users.find((user) => user.id === currentUserId);
 
     if (!userToUpdate) {
       Swal.fire("Error", "User not found", "error");
@@ -173,6 +175,69 @@ const Home = () => {
       setLoading(false);
     }
   };
+  const handleLogs = (params) => {
+    router.push(`/user-management/users/logs/${params.id}`);
+  };
+
+  const handleToggleActive = async (params) => {
+    const token = getToken();
+    const userToToggle = users.find((user) => user.id === params.id);
+
+    if (!userToToggle) {
+      Swal.fire("Error", "User not found", "error");
+      return;
+    }
+
+    // Exclude the 'image' field from the updated user data
+    const { image, ...updatedUserData } = userToToggle;
+
+    // Toggle the active status
+    updatedUserData.is_active = !userToToggle.is_active;
+
+    try {
+      // Set loading to true to disable button and show spinner
+      setLoading(true);
+
+      // Send the updated user data to toggle the active status
+      await axios.put(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users?user_id=${params.id}`,
+        updatedUserData,
+        {
+          headers: { Authorization: `${token}` },
+        }
+      );
+      Swal.fire({
+        title: `${updatedUserData.is_active ? "Activated" : "Deactivated"}!`,
+        text: `Admin has been ${
+          updatedUserData.is_active ? "activated" : "deactivated"
+        } successfully.`,
+        icon: "success", // Adds a success icon
+        confirmButtonText: "OK", // Optional: Customize the button text
+      });
+
+      // Update the state with the new active status
+      setUsers((prev) =>
+        prev.map((user) =>
+          user.id === params.id
+            ? { ...user, is_active: updatedUserData.is_active }
+            : user
+        )
+      );
+      setFilteredUsers((prev) =>
+        prev.map((user) =>
+          user.id === params.id
+            ? { ...user, is_active: updatedUserData.is_active }
+            : user
+        )
+      );
+    } catch (error) {
+      console.log(error);
+      Swal.fire("Error", "Failed to update status", "error");
+    } finally {
+      // Set loading to false once the request is done
+      setLoading(false);
+    }
+  };
 
   const columns = [
     { field: "id", headerName: "User ID", flex: 2 },
@@ -197,8 +262,38 @@ const Home = () => {
     },
     { field: "name", headerName: "Name", flex: 2 },
     { field: "email", headerName: "Email", flex: 2 },
-    { field: "phone_number", headerName: "Number", flex: 2 },
+    // { field: "phone_number", headerName: "Number", flex: 2 },
     { field: "role", headerName: "Role", flex: 2 },
+    {
+      field: "is_active",
+      headerName: "Status",
+      flex: 1,
+      renderCell: (params) => (
+        <div className="custom-switch-wrapper mt-3">
+          <input
+            type="checkbox"
+            checked={params.value} // Set checked based on the is_active value
+            id={`toggle-${params.row.id}`}
+            onChange={() => handleToggleActive(params)} // Toggle active status
+            className="custom-switch"
+          />
+          <label htmlFor={`toggle-${params.row.id}`} />
+        </div>
+      ),
+    },
+    {
+      field: "logs",
+      headerName: "Logs",
+      flex: 1,
+      renderCell: (params) => (
+        <button
+          onClick={() => handleLogs(params.row)}
+          className="btn btn-warning fs-4 mx-2 btn-sm"
+        >
+          <BiBarChart />
+        </button>
+      ),
+    },
     {
       field: "action",
       headerName: "Action",
@@ -250,15 +345,17 @@ const Home = () => {
             placeholder="Search..."
             className="form-control mb-3"
           />
-          <Box sx={{ height: 500, width: "100%" }}>
-            <DataGrid
-              rows={filteredUsers}
-              columns={columns}
-              pageSize={5}
-              components={{ Toolbar: GridToolbar }}
-              columnVisibilityModel={{ id: false }}
-              getRowId={(row) => row.id}
-            />
+          <Box sx={{ width: "100%", overflowX: "auto" }}>
+            <Box sx={{ minWidth: 900, height: 500 }}>
+              <DataGrid
+                rows={filteredUsers}
+                columns={columns}
+                pageSize={5}
+                components={{ Toolbar: GridToolbar }}
+                columnVisibilityModel={{ id: false }}
+                getRowId={(row) => row.id}
+              />
+            </Box>
           </Box>
         </div>
       </Container>
@@ -280,15 +377,19 @@ const Home = () => {
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" disabled={loading} onClick={() => setShowModal(false)}>
+          <Button
+            variant="secondary"
+            disabled={loading}
+            onClick={() => setShowModal(false)}
+          >
             Close
           </Button>
-          <Button 
-            variant="primary" 
-            onClick={handleSavePassword} 
+          <Button
+            variant="primary"
+            onClick={handleSavePassword}
             disabled={loading} // Disable the button when loading
           >
-            {loading ? 'Updating' : "Save Changes"}
+            {loading ? "Updating" : "Save Changes"}
           </Button>
         </Modal.Footer>
       </Modal>

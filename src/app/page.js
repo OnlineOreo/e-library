@@ -61,6 +61,8 @@ export default function Home() {
     notice_board: NoticeBoard,
   }), []);
 
+  
+
   if (loading) {
     return (
       <div style={{
@@ -72,6 +74,23 @@ export default function Home() {
       }}>
         <div className="spinner-border text-primary" role="status">
           <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if(!landingPageData2.landingPageData.is_active){
+    return (
+      <div style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        backgroundColor: "#fffbfb78",
+      }}>
+        <div className=" text-center text-primary" role="status">
+          <h3 className="w-75 mx-auto text-dark" style={{ lineHeight:'1.5' }}>Your LibVirtuUA e-Library access is forbidden due to end of subscription period !!! <br></br>
+          Please contact with LibVirtuUA Support to extend or renew your e-Library subscription.</h3>
         </div>
       </div>
     );

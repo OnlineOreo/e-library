@@ -4,15 +4,44 @@ import Ebook from './Ebook';
 import Ejournal from './Ejournal';
 import Video from './Video';
 import { useTranslation } from 'react-i18next';
+import { useRouter } from "next/navigation";
 import '@/i18n'; // cleaner using path alias `@`
 
 
-
-export default function StaffPick({headingName}) {
+export default function StaffPick({headingName,setShow,show}) {
     const { t, i18n } = useTranslation();
+    const router = useRouter();
     const [book, setBook] = useState(true)
     const [journal, setJournal] = useState(false)
     const [video, setVideo] = useState(false)
+
+    const getToken = () => {
+        const cookieString = document.cookie
+          .split("; ")
+          .find((row) => row.startsWith("access_token="));
+        return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+      };
+
+    const handleRedirect = (bookUrl) => {
+        const token = getToken();
+        if (!token) {
+          setShow(true);
+          router.push(`?book=${bookUrl}`);
+          return;
+        }
+      
+        const screenWidth = window.screen.width;
+        const screenHeight = window.screen.height;
+        const width = screenWidth / 2;
+        const height = screenHeight;
+        const left = screenWidth / 2;
+      
+        window.open(
+          bookUrl,
+          'targetWindow',
+          `toolbar=no,location=no,menubar=no,scrollbars=yes,resizable=yes,width=${width},height=${height},left=${left},top=0`
+        );
+      };
 
     const handleChange = (e)=> {
         if(e == 'book'){
@@ -59,9 +88,9 @@ export default function StaffPick({headingName}) {
                     {t('Video')}
                 </div>
             </div>
-            <Ebook toggle={book} />
-            <Ejournal toggle={journal} />
-            <Video toggle={video} />
+            <Ebook toggle={book}  handleRedirect={handleRedirect} />
+            <Ejournal toggle={journal} handleRedirect={handleRedirect} />
+            <Video toggle={video} handleRedirect={handleRedirect} />
         </div>
     )
 }

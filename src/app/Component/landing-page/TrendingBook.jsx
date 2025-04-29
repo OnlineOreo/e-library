@@ -28,6 +28,7 @@ export default function TrendingBook({
   const { t, i18n } = useTranslation();
   const books = landingPageData?.landingPageData?.trending_books;
   const router = useRouter();
+  
   const getToken = () => {
     const cookieString = document.cookie
       .split("; ")

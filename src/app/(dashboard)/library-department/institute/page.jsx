@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { FaEdit, FaEye, FaPlusCircle } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
+import "../../user-management/users/custom-toggle.css";
 
 const ViewInstitute = () => {
   const router = useRouter();
@@ -108,12 +109,132 @@ const ViewInstitute = () => {
       inst.phone.toLowerCase().includes(search.toLowerCase())
   );
 
+  const handleToggleStatus = async (params) => {
+    const token = getToken();
+    const newStatus = !params.is_active;
+
+    // Destructure to remove institute_id and prepare updated payload
+    const { institute_id, ...rest } = params;
+    const updatedData = { ...rest, is_active: newStatus };
+
+    try {
+      await axios.put(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/institutes?institute_id=${institute_id}`,
+        updatedData,
+        {
+          headers: {
+            Authorization: `${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      // Update local state
+      setInstitutes((prev) =>
+        prev.map((item) =>
+          item.institute_id === institute_id
+            ? { ...item, is_active: newStatus }
+            : item
+        )
+      );
+
+      Swal.fire({
+        icon: "success",
+        title: "Success",
+        text: `Institute updated successfully`,
+        timer: 2000,
+        showConfirmButton: true,
+      });
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Failed to update status.",
+        showConfirmButton: true,
+      });
+    }
+  };
+
   const columns = [
-    { field: "institute_id", headerName: "ID", flex: 1 },
     { field: "institute_name", headerName: "Institute Name", flex: 2 },
-    { field: "email", headerName: "Email", flex: 2 },
+    // { field: "email", headerName: "Email", flex: 2 },
     { field: "phone", headerName: "Phone", flex: 1 },
     { field: "domain", headerName: "Domain", flex: 1 },
+    {
+      field: "expiry_status",
+      headerName: "Status",
+      flex: 1,
+      renderCell: (params) => {
+        const startedAt = new Date(params.row.started_at);
+        const endedAt = new Date(params.row.ended_at);
+        const today = new Date();
+    
+        const formatDate = (date) =>
+          date.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          });
+    
+        if (isNaN(startedAt) || isNaN(endedAt)) {
+          return (
+            <div title="Date not available">
+              <span className="badge bg-secondary" style={{ fontSize: "13px" }}>
+                N/A
+              </span>
+            </div>
+          );
+        }
+    
+        const diffInDays = Math.ceil((endedAt - today) / (1000 * 60 * 60 * 24));
+    
+        if (diffInDays < 0) {
+          return (
+            <div title={`Expired on ${formatDate(endedAt)}`}>
+              <span className="badge bg-danger" style={{ fontSize: "13px" }}>
+                Expired
+              </span>
+            </div>
+          );
+        } else if (diffInDays <= 10) {
+          return (
+            <div title={`Will expire in ${diffInDays} day(s) on ${formatDate(endedAt)}`}>
+              <span
+                className="badge bg-warning text-dark"
+                style={{ fontSize: "13px" }}
+              >
+                Expiring Soon
+              </span>
+            </div>
+          );
+        } else {
+          return (
+            <div title={`Active - expires on ${formatDate(endedAt)}`}>
+              <span className="badge bg-success" style={{ fontSize: "13px" }}>
+                Active
+              </span>
+            </div>
+          );
+        }
+      },
+    },
+    {
+      field: "is_active",
+      headerName: "Status",
+      flex: 1,
+      renderCell: (params) => (
+        <div className="custom-switch-wrapper mt-3">
+          <input
+            type="checkbox"
+            className="custom-switch"
+            id={`toggle-${params.row.institute_id}`} // Ensure the ID matches
+            checked={params.row.is_active}
+            onChange={() => handleToggleStatus(params.row)}
+          />
+          <label htmlFor={`toggle-${params.row.institute_id}`} /> {/* Ensure the htmlFor matches */}
+        </div>
+      ),
+    },    
     {
       field: "action",
       headerName: "Action",

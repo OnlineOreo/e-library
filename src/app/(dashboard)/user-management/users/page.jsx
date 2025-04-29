@@ -348,6 +348,7 @@ const Home = () => {
             <Form.Control
               type="password"
               value={newPassword}
+              required
               onChange={(e) => setNewPassword(e.target.value)}
               placeholder="Enter new password"
             />

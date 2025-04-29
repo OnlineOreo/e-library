@@ -48,6 +48,8 @@ export default function TopUser({ headingName, bannerData, landingPageData, inst
 
   if (loading || !topUsers.length) return null;
 
+  // console.log(topUsers+"vjkdfhvkdfbvjkdfb")
+
   return (
     <>
       <div className="container-xxl py-5 section" id="top_user_section">

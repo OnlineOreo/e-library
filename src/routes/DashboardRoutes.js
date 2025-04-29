@@ -54,11 +54,11 @@ export const useDashboardMenu = () => {
       title: t("Library & Department"),
       icon: "clipboard",
       children: [
-        // {
-        //   id: uuid(),
-        //   link: "/library-department/institute",
-        //   name: t("Institutes"),
-        // },
+        {
+          id: uuid(),
+          link: "/library-department/institute",
+          name: t("Institutes"),
+        },
         { id: uuid(), link: "/library-department/library", name: t("Library") },
         {
           id: uuid(),

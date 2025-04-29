@@ -59,7 +59,7 @@ const AuthButtons = ({
               </Link>
             </div>
           )}
-          <div>
+          {/* <div>
             <a
               onClick={handleLogout}
               className="mx-1 hover-underline cursor-pointer d-lg-block d-none "
@@ -68,7 +68,7 @@ const AuthButtons = ({
             >
               {t("Logout")}
             </a>
-          </div>
+          </div> */}
 
           <div className="d-sm-block d-none"> 
             <LanguageSelector />

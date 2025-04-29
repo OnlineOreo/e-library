@@ -9,11 +9,10 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 
-export default function Ebook({ toggle }) {
+export default function Ebook({ toggle,handleRedirect }) {
     const landingPageData = useSelector((state) => state.landingPageDataSlice);
-    const bookImages = landingPageData?.landingPageData?.staff_picks
-    ?.filter(staff_pick => staff_pick.article_type_name.toLowerCase() === "e-books") 
-    ?.map(staff_pick => staff_pick.image) || [];
+    const bookData = landingPageData?.landingPageData?.staff_picks
+    ?.filter(staff_pick => staff_pick.article_type_name.toLowerCase() === "e-books") || [];
 
     return (
         <div
@@ -45,9 +44,9 @@ export default function Ebook({ toggle }) {
                     }
                 }}
             >
-                {bookImages.map((image, index) => (
+                {bookData.map((book, index) => (
                     <SwiperSlide key={index}>
-                        <div className="book-items" style={{ height: 'auto' }}>
+                        <div className="book-items" style={{ height: 'auto' }} onClick={() => handleRedirect(book.url)} >
                             <div className="main-book-wrap" style={{ height: '100%' }}>
                                 <div className="book-cover" style={{ 
                                     height: '100%',
@@ -63,7 +62,7 @@ export default function Ebook({ toggle }) {
                                         overflow: 'hidden'
                                     }}>
                                         <img 
-                                            src={image} 
+                                            src={book.image} 
                                             alt={`Book ${index + 1}`} 
                                             style={{
                                                 width: 'auto',

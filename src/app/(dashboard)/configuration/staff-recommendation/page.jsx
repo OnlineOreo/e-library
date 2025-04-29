@@ -18,7 +18,6 @@ export default function Configurationmeta() {
   const [isLoading, setIsLoading] = useState(true);
   const instituteId = useSelector((state) => state.institute.instituteId);
 
-
   const getToken = () => {
     const cookieString = document.cookie
       .split("; ")
@@ -60,8 +59,7 @@ export default function Configurationmeta() {
   }, [instituteId]);
 
   const columns = [
-    { field: "institute", headerName: "Institute", flex: 2 },
-    { field: "article_type", headerName: "Article Type", flex: 2 },
+    { field: "article_type_name", headerName: "Article Type", flex: 2 },
     { field: "title", headerName: "Title", flex: 3 },
     {
       field: "image",
