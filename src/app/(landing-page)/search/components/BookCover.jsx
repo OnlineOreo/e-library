@@ -65,7 +65,7 @@ const BookCover = ({ title, author, thumbnail }) => {
       >
         By: {author}
       </div>
-      <Image
+      <img
         src={currentImage}
         alt={title}
         width={300}

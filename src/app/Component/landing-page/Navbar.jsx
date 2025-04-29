@@ -564,6 +564,9 @@ const Navbar = ({ show, setShow }) => {
         token={token}
         handlePublisherClick={handlePublisherClick}
         handleLogout={() => handleLogout(instituteId, setShow)}
+        setShow={setShow}
+        setMenuOpen={setMenuOpen}
+        show={show}
       />
     </>
   );

@@ -33,29 +33,29 @@ const DropdownMenu = ({
   }, []);
 
   const mediaMapping = {
-    eBooks: "/search/e-resources?q=resource_types_string%3A(e-book)",
+    "eBooks": "/search/e-resources?q=resource_types_string%3A(e-book)",
     "Video Resources": "/search/multimedia?q=resource_types_string%3A(Video)",
     "Audio Resources": "/search/multimedia?q=resource_types_string%3A(audio)",
     "Print Collection": "/search/print-collection?q=resource_types_string%3A(book)",
-    eJournals: "/search/e-resources?q=resource_types_string%3A(e-journals)",
+    "eJournals": "/search/e-resources?q=resource_types_string%3A(e-journals)",
   };
 
   const categoriesMapping = {
-    BioTechnology: "/search/print-collection?q=college_category%3A(biotechnology)",
-    Chemical: "/search/print-collection?q=college_category%3A(chemical)",
+    "BioTechnology": "/search/print-collection?q=college_category%3A(biotechnology)",
+    "Chemical": "/search/print-collection?q=college_category%3A(chemical)",
     "Civil Engineering": "/search/print-collection?q=college_category%3A(civil)",
     "Computer Engineering": "/search/print-collection?q=college_category%3A(computer)",
     "Electrical Engineering": "/search/print-collection?q=college_category%3A(electrical)",
     "Electronics Engineering": "/search/print-collection?q=college_category%3A(electronics)",
     "Finance Management": "/search/print-collection?q=college_category%3A(finance)",
     "Human Resource Management": "/search/print-collection?q=college_category%3A(human)",
-    Law: "/search/print-collection?q=college_category%3A(law)",
+    "Law": "/search/print-collection?q=college_category%3A(law)",
     "Management (General)": "/search/print-collection?q=college_category%3A(management)",
     "Marketing Management": "/search/print-collection?q=college_category%3A(marketing)",
-    Mathematics: "/search/print-collection?q=college_category%3A(mathematics)",
+    "Mathematics": "/search/print-collection?q=college_category%3A(mathematics)",
     "Mechanical Engineering": "/search/print-collection?q=college_category%3A(mechanical)",
     "Philosophy, Psychology & Religion": "/search/print-collection?q=college_category%3A(philosophy)",
-    Physics: "/search/print-collection?q=college_category%3A(physics)",
+    "Physics": "/search/print-collection?q=college_category%3A(physics)",
     "Production & Operations Management": "/search/print-collection?q=college_category%3A(production)",
     "Social Science": "/search/print-collection?q=college_category%3A(social)",
   };
@@ -112,7 +112,7 @@ const DropdownMenu = ({
                 ))}
             </div>
           </div>
-          <AZFilter />
+          <AZFilter  token={token} setShow={setShow}/>
         </>
       );
     }
@@ -122,8 +122,8 @@ const DropdownMenu = ({
       <div
         className="nav_menu"
         style={{
-          height: title === "Categories" ? "50vh" : "auto",
-          overflowY: title === "Categories" ? "scroll" : "visible",
+          height: title === "auto",
+          // overflowY: title === "Categories" ? "scroll" : "visible",
           paddingBottom: title === "Media" ? 20 : 0,
         }}
       >
