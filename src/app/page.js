@@ -46,12 +46,11 @@ export default function Home() {
     if (status !== "idle" && Object.keys(configData).length > 0) {
       const timer = setTimeout(() => {
         setLoading(false);
-      }, 100); // optional: 500ms delay
+      }, 500);
       return () => clearTimeout(timer);
     }
-  }, [configData]);
+  }, [status, configData]);
 
-  // Components Map
   const componentsMap = useMemo(() => ({
     publisher: Publisher,
     books: TrendingBook,
@@ -84,7 +83,6 @@ export default function Home() {
         <Navbar show={show} setShow={setShow} />
         <Banner bannerData={configData} />
 
-        {/* Dynamic Section Render */}
         {Object.values(sectionOrder)
           .filter((section) => section.active)
           .map((section, index) => {
