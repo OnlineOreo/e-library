@@ -273,7 +273,7 @@ const Navbar = ({ show, setShow }) => {
                       className="mx-1 hover-underline"
                       title="Profile"
                     >
-                      <img src="/images/avatar/avatar-1.jpg" className="avatar avatar-sm rounded" alt="" />
+                      {/* <img src="/images/avatar/avatar-1.jpg" className="avatar avatar-sm rounded" alt="" /> */}
                     </Link>
                   </div>
                 )}
@@ -284,7 +284,7 @@ const Navbar = ({ show, setShow }) => {
                       className="mx-1 hover-underline"
                       title="Profile"
                     >
-                      <img src="/images/avatar/avatar-1.jpg" className="avatar avatar-sm rounded" alt="" />
+                      {/* <img src="/images/avatar/avatar-1.jpg" className="avatar avatar-sm rounded" alt="" /> */}
                     </Link>
                   </div>
                 )}
@@ -389,6 +389,9 @@ const Navbar = ({ show, setShow }) => {
         token={token}
         handlePublisherClick={handlePublisherClick}
         handleLogout={() => handleLogout(instituteId, setShow)}
+        setShow={setShow}
+        setMenuOpen={setMenuOpen}
+        show={show}
       />
     </>
   );

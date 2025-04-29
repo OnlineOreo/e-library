@@ -86,7 +86,7 @@ export default function Home() {
     <div className={styles.page}>
       <div id="main_widget_section">
         <Navbar show={show} setShow={setShow} />
-        <Banner bannerData={configData} />
+        <Banner bannerData={configData} show={show} setShow={setShow} />
 
         {/* Dynamic Section Render */}
         {Object.values(sectionOrder)

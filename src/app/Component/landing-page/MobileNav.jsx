@@ -7,7 +7,9 @@ const MobileNav = ({
   menuOpen,
   toggleMenu,
   publisherUrls,
+  show,
   setShow,
+  setMenuOpen,
   handleLogout,
   handlePublisherClick,
   token,
@@ -20,6 +22,34 @@ const MobileNav = ({
 
   const landingPageData = useSelector((state) => state.landingPageDataSlice);
   const bannerData = landingPageData?.landingPageData?.configurations?.[0] || [];
+
+  const mediaMapping = {
+    "eBooks": "/search/e-resources?q=resource_types_string%3A(e-book)",
+    "Video Resources": "/search/multimedia?q=resource_types_string%3A(Video)",
+    "Audio Resources": "/search/multimedia?q=resource_types_string%3A(audio)",
+    "Print Collection": "/search/print-collection?q=resource_types_string%3A(book)",
+    "eJournals": "/search/e-resources?q=resource_types_string%3A(e-journals)",
+  };
+
+  const categoriesMapping = {
+    "BioTechnology": "/search/print-collection?q=college_category%3A(biotechnology)",
+    "Chemical": "/search/print-collection?q=college_category%3A(chemical)",
+    "Civil Engineering": "/search/print-collection?q=college_category%3A(civil)",
+    "Computer Engineering": "/search/print-collection?q=college_category%3A(computer)",
+    "Electrical Engineering": "/search/print-collection?q=college_category%3A(electrical)",
+    "Electronics Engineering": "/search/print-collection?q=college_category%3A(electronics)",
+    "Finance Management": "/search/print-collection?q=college_category%3A(finance)",
+    "Human Resource Management": "/search/print-collection?q=college_category%3A(human)",
+    "Law": "/search/print-collection?q=college_category%3A(law)",
+    "Management (General)": "/search/print-collection?q=college_category%3A(management)",
+    "Marketing Management": "/search/print-collection?q=college_category%3A(marketing)",
+    "Mathematics": "/search/print-collection?q=college_category%3A(mathematics)",
+    "Mechanical Engineering": "/search/print-collection?q=college_category%3A(mechanical)",
+    "Philosophy, Psychology & Religion": "/search/print-collection?q=college_category%3A(philosophy)",
+    "Physics": "/search/print-collection?q=college_category%3A(physics)",
+    "Production & Operations Management": "/search/print-collection?q=college_category%3A(production)",
+    "Social Science": "/search/print-collection?q=college_category%3A(social)",
+  };
 
   const sections = [
     {
@@ -104,56 +134,93 @@ const MobileNav = ({
 
                 {activeDropdown === key && (
                   <ul className="list-unstyled ms-3">
-                    {data.map((item, index) => (
-                      <li key={index} className="px-3 py-1 text-muted">
-                        {publisherUrls[item[field]] ? (
-                          field === "publisher_name" ? (
+                    {data.map((item, index) => {
+                      const value = item[field];
+                      const knownUrl = publisherUrls[value];
+
+                      let href = null;
+                      if (!knownUrl) {
+                        if (label === "Categories") {
+                          href = categoriesMapping[value] || null;
+                        } else if (label === "Media") {
+                          href = mediaMapping[value] || null;
+                        }
+                      }
+
+                      return (
+                        <li key={index} className="px-3 py-1 text-muted">
+                          {
+                          // publisherUrls[item[field]] ? (
+                          //   label === "eResources" ? (
+                          //     <a
+                          //       href="#"
+                          //       onClick={(e) => {
+                          //         e.preventDefault();
+                          //         handlePublisherClick(item);
+                          //       }}
+                          //       className="text-muted"
+                          //     >
+                          //       {value}
+                          //     </a>
+                          //   ) : (
+                          //     <a
+                          //       href={knownUrl}
+                          //       target="_blank"
+                          //       rel="noopener noreferrer"
+                          //       className="text-muted"
+                          //     >
+                          //       {value}
+                          //     </a>
+                          //   )
+                          // ) : 
+                          href ? (
                             <a
                               href="#"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-muted"
                               onClick={(e) => {
                                 e.preventDefault();
-                                handlePublisherClick(item);
+                                if (token) {
+                                  if (
+                                    href === "https://bestbookbuddies.com/index.php/contact" ||
+                                    href === "https://bestbookbuddies.com/index.php/aboutus"
+                                  ) {
+                                    window.open(href, "_blank");
+                                  } else {
+                                    router.push(href);
+                                  }
+                                } else {
+                                  setShow(true);
+                                  setMenuOpen(false)
+                                  const encodedRedirect = encodeURIComponent(href);
+                                  window.history.replaceState(null, "", `?extra=${encodedRedirect}`);
+                                }
                               }}
-                              className="text-muted"
                             >
-                              {item[field]}
+                              {value}
                             </a>
                           ) : (
-                            <a
-                              href={publisherUrls[item[field]]}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-muted"
-                            >
-                              {item[field]}
-                            </a>
-                          )
-                        ) : (
-                          // item[field]
-                          <a
-                              href='##'
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-muted"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                handlePublisherClick(item);
-                              }}
-                            >
-                              {item[field]}
-                            </a>
-                        )}
-                      </li>
-                    ))}
+                            <span className="text-muted"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handlePublisherClick(item);
+                            }}
+                            >{value}</span>
+                          )}
+                        </li>
+                      );
+                    })}
                   </ul>
                 )}
               </li>
             ) : null
           )}
 
+
           <li>
             <Link
-              href="/advance-search"
+              href="/advance-search-filter"
               className="nav-link px-3 py-2 d-block text-dark fw-normal text-decoration-underline"
             >
               Advance Search
