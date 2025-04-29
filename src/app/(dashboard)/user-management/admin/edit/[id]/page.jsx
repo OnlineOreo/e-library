@@ -29,8 +29,9 @@ const EditAdmin = () => {
     const token = getToken();
     if (!token) return;
     const fetchAdmin = async (id, instituteId) => {
+      const hostname = typeof window !== "undefined" ? window.location.hostname : "";
       axios
-        .get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users?user_id=${id}&sub_domain=mriirs.libvirtuua.com&admin=true`, {
+        .get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users?user_id=${id}&sub_domain=${hostname}&admin=true`, {
           headers: {
             Authorization: `${token}`,
           },
