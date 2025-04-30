@@ -8,8 +8,8 @@ import Link from "next/link";
 import SearchBar from "./SearchBar";
 import DropdownMenu from "./DropdownMenu";
 import AuthButtons from "./AuthButtons";
+import UserProfile from "./UserProfile";
 import Swal from "sweetalert2";
-import { FaUser, FaLock, FaSignOutAlt, FaUserTag } from "react-icons/fa";
 import { LuSlidersHorizontal } from "react-icons/lu";
 import "../../../../public/landingPageAsset/css/style2.css";
 import "../../../../public/landingPageAsset/css/header.css";
@@ -24,7 +24,6 @@ const Navbar = ({ show, setShow }) => {
   const [token, setToken] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
-  const [showDropdown2, setShowDropdown2] = useState(false);
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
@@ -256,44 +255,6 @@ const Navbar = ({ show, setShow }) => {
     // },
   ];
 
-  const getUserRole = () => {
-    if (typeof window !== "undefined") {
-      const cookieString = document.cookie
-        .split("; ")
-        .find((row) => row.startsWith("user_role="));
-      return cookieString
-        ? decodeURIComponent(cookieString.split("=")[1])
-        : null;
-    }
-    return null;
-  };
-
-  const getUserName = () => {
-    if (typeof window !== "undefined") {
-      const cookieString = document.cookie
-        .split("; ")
-        .find((row) => row.startsWith("user_name="));
-      return cookieString
-        ? decodeURIComponent(cookieString.split("=")[1])
-        : null;
-    }
-    return null;
-  };
-  const getUserImage = () => {
-    if (typeof window !== "undefined") {
-      const cookieString = document.cookie
-        .split("; ")
-        .find((row) => row.startsWith("user_image="));
-      return cookieString
-        ? decodeURIComponent(cookieString.split("=")[1])
-        : null;
-    }
-    return null;
-  };
-
-  const userRole = getUserRole();
-  const userName = getUserName();
-  const userImage = getUserImage();
 
   const visibleNavItems = navItems.filter((item) =>
     item.type === "dropdown"
@@ -345,126 +306,7 @@ const Navbar = ({ show, setShow }) => {
                     <LuSlidersHorizontal />
                   </Link>
                 </div>
-                {(userRole == "STUDENT" || userRole == "FACULTY") && (
-                  <div className="mx-2">
-                    <div
-                      className="mx-1 hover-underline cursor-pointer"
-                      title="Profile"
-                      onMouseEnter={() => setShowDropdown2(true)}
-                    >
-                      <div className="avatar avatar-md">
-                        <img
-                          src={userImage || "/images/avatar/avatar-1.jpg"}
-                          alt="Image"
-                          width={50}
-                          height={50}
-                          className="rounded-circle"
-                          onError={(e) => {
-                            e.target.onerror = null; // Prevents infinite loop
-                            e.target.src = "/images/avatar/avatar-1.jpg"; // Default image
-                          }}
-                        />
-                      </div>
-                    </div>
-
-                    <div
-                      onMouseLeave={() => setShowDropdown2(false)}
-                      className={`dropdown-menu shadow end-0 ${
-                        showDropdown2 ? "show" : ""
-                      }`}
-                      style={{ minWidth: "200px" }}
-                    >
-                      {(userName || userRole) && (
-                        <>
-                          <div className="dropdown-header fw-semibold text-dark">
-                            {userName}
-                            <div className="d-flex align-items-center text-muted small mt-1">
-                              <FaUserTag className="me-1" /> {userRole}
-                            </div>
-                          </div>
-                          <div className="dropdown-divider"></div>
-                        </>
-                      )}
-
-                      <Link
-                        className="dropdown-item d-flex align-items-center gap-2"
-                        href="/student-profile"
-                      >
-                        <FaUser /> Profile
-                      </Link>
-                      <Link
-                        className="dropdown-item d-flex align-items-center gap-2"
-                        href="/authentication/change-password"
-                      >
-                        <FaLock /> Change Password
-                      </Link>
-                      <Link
-                      onClick={() => handleLogout(instituteId, setShow)}
-                        className="dropdown-item d-flex align-items-center gap-2"
-                        href="#"
-                      >
-                        <FaSignOutAlt />
-                        <span
-                          className="mx-1 hover-underline cursor-pointer d-lg-block d-none"
-                          title="Log Out"
-                        >
-                          {t("Logout")}
-                        </span>
-                      </Link>
-                    </div>
-                  </div>
-                )}
-                {(userRole == "ADMIN" || userRole == "INSTITUTE ADMIN") && (
-                  <div className="mx-2">
-                    <div
-                      className="mx-1 hover-underline cursor-pointer"
-                      title="Profile"
-                      onMouseEnter={() => setShowDropdown2(true)}
-                    >
-                      <div className="avatar avatar-md">
-                        <img
-                          src="/images/avatar/avatar-1.jpg"
-                          alt="Publisher"
-                          width={50}
-                          height={50}
-                          className="rounded-circle"
-                        />
-                      </div>
-                    </div>
-                    <div
-                      onMouseLeave={() => setShowDropdown2(false)}
-                      className={`dropdown-menu shadow end-0 ${
-                        showDropdown2 ? "show" : ""
-                      }`}
-                    >
-                      <Link
-                        className="dropdown-item d-flex align-items-center gap-2"
-                        href="/profile/view"
-                      >
-                        <FaUser /> Profile
-                      </Link> 
-                      <Link
-                        className="dropdown-item d-flex align-items-center gap-2"
-                        href="/authentication/change-password"
-                      >
-                        <FaLock /> Change Password
-                      </Link>
-                      <Link
-                      onClick={() => handleLogout(instituteId, setShow)}
-                        className="dropdown-item d-flex align-items-center gap-2"
-                        href="#"
-                      >
-                        <FaSignOutAlt />
-                        <span
-                          className="mx-1 hover-underline cursor-pointer d-lg-block d-none"
-                          title="Log Out"
-                        >
-                          {t("Logout")}
-                        </span>
-                      </Link>
-                    </div>
-                  </div>
-                )}
+                <UserProfile handleLogout={handleLogout} instituteId={instituteId} setShow={setShow}/>
                 {!token && (
                   <div className="mx-2">
                     {/* <Link

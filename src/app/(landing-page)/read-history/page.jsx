@@ -88,7 +88,7 @@ export default function PrintCollectionSavedCatalog() {
         const userId = getUserID();
         // console.log("user_id", userId);
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/log?user_id=${userId}&read_history="true"`, {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/logs?user_id=${userId}&read_history="true"`, {
                 headers: { Authorization: `${token}` },
             });
 

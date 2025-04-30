@@ -35,8 +35,6 @@ const SearchBar = ({ show, setShow }) => {
   useEffect(()=>{
     if (filterType === "resource_types_string") {
       setSearchText("book"); 
-    }else {
-      setSearchText("");
     }
   },[filterType])
 

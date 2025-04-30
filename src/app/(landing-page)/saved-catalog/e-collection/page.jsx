@@ -95,7 +95,7 @@ export default function PrintCollectionSavedCatalog() {
 
             const catalogIds = response.data[0].saved_e_collection_ids;
             console.log("user saved catalog : ", catalogIds);
-            const responce_catalog = await axios.get(`/api/saved-catalog?catalogIds=${catalogIds}&catalogCore="e-collection"`)
+            const responce_catalog = await axios.get(`/internal-api/saved-catalog?catalogIds=${catalogIds}&catalogCore=e-collection`)
             setResults(responce_catalog.data.results)
             setResultsCount(responce_catalog.data.resultsCount)
 
@@ -166,7 +166,7 @@ export default function PrintCollectionSavedCatalog() {
                                             thumbnail = {item.thumbnail}
                                             resource_type={item.resource_types_string}
                                             user_saved_catalog={userSavedCatalogs}
-                                            catalogCore={"Print-collection"}
+                                            catalogCore={"e-collection"}
                                             onShow={handleShow}
                                             onSelect={() => setSelectCatalog(item)}
                                         />
@@ -201,7 +201,7 @@ export default function PrintCollectionSavedCatalog() {
                                             url={item.url}
                                             resource_type={item.resource_types_string}
                                             user_saved_catalog={userSavedCatalogs}
-                                            catalogCore={"Print-collection"}
+                                            catalogCore={"e-collection"}
                                             onShow={handleShow}
                                             onSelect={() => setSelectCatalog(item)}
                                         />

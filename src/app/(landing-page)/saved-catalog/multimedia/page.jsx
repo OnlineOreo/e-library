@@ -88,14 +88,14 @@ export default function PrintCollectionSavedCatalog() {
         const userId = getUserID();
         console.log("user_id", userId);
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-saved-article?user=${userId}`, {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-saved-article?user_id=${userId}`, {
                 headers: { Authorization: `${token}` },
             });
             setUserSavedCatalogs(response.data);
 
             const catalogIds = response.data[0].saved_multimedia_ids;
             console.log("user saved catalog : ", catalogIds);
-            const responce_catalog = await axios.get(`/api/saved-catalog?catalogIds=${catalogIds}&catalogCore="multimedia-n"`)
+            const responce_catalog = await axios.get(`/internal-api/saved-catalog?catalogIds=${catalogIds}&catalogCore=multimedia-n`)
             setResults(responce_catalog.data.results)
             setResultsCount(responce_catalog.data.resultsCount)
 
@@ -163,9 +163,10 @@ export default function PrintCollectionSavedCatalog() {
                                             description={item.description}
                                             uploader={item.uploader}
                                             url={item.url}
+                                            thumbnail = {item.thumbnail}
                                             resource_type={item.resource_types_string}
                                             user_saved_catalog={userSavedCatalogs}
-                                            catalogCore={"Print-collection"}
+                                            catalogCore={"multimedia-n"}
                                             onShow={handleShow}
                                             onSelect={() => setSelectCatalog(item)}
                                         />
@@ -198,9 +199,10 @@ export default function PrintCollectionSavedCatalog() {
                                             description={item.description}
                                             uploader={item.uploader}
                                             url={item.url}
+                                            thumbnail = {item.thumbnail}
                                             resource_type={item.resource_types_string}
                                             user_saved_catalog={userSavedCatalogs}
-                                            catalogCore={"Print-collection"}
+                                            catalogCore={"multimedia-n"}
                                             onShow={handleShow}
                                             onSelect={() => setSelectCatalog(item)}
                                         />

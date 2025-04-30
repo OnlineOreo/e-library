@@ -6,8 +6,8 @@ import 'react-loading-skeleton/dist/skeleton.css'
 const GridViewSkelton = () => {
     return (
         <Card>
-            <div>
-                <Skeleton height={150} />
+            <div className='p-3'>
+                <Skeleton height={300} />
             </div>
             <Card.Body className="text-secondary">
                 <Skeleton height={20} width="80%" className="mb-2" />

@@ -5,7 +5,6 @@ export async function GET(request) {
 
   const catalogIds = searchParams.get("catalogIds") || "";
   const catalogCore = searchParams.get("catalogCore") || "Print-collection";
-  const formattedCatalogCore = catalogCore.replace(/^"|"$/g, "");
 
   // Solr-compatible comma-separated quoted IDs: "4395","5084","6367"
   const formattedCatalogIds = catalogIds
@@ -16,7 +15,7 @@ export async function GET(request) {
   // id:("4395","5084","6367")
   const solrQuery = `id:(${formattedCatalogIds})`;
 
-  const solrUrl = `${process.env.NEXT_PUBLIC_SOLR_BASE_URL}/solr/${formattedCatalogCore}/select?indent=true&q.op=OR&q=${encodeURIComponent(solrQuery)}`;
+  const solrUrl = `${process.env.NEXT_PUBLIC_SOLR_BASE_URL}/solr/${catalogCore}/select?indent=true&q.op=OR&q=${encodeURIComponent(solrQuery)}`;
 
   console.log("solr url : ",solrUrl);
   

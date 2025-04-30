@@ -60,7 +60,7 @@ const BookmarkCatalog = ({ id, catalogType, user_saved_catalogs }) => {
                 headers: { Authorization: `${token}` },
             });
 
-            if (res.status === 200) {
+            if (res.status === 200 || res.status === 201) {
                 setIsBookmarked(prev => !prev);
             }
         } catch (error) {

@@ -92,17 +92,18 @@ export default function PrintCollectionSavedCatalog() {
                 headers: { Authorization: `${token}` },
             });
             setUserSavedCatalogs(response.data);
+
             const catalogIds = response.data[0].saved_p_collection_ids;
-            console.log("user saved catalog : ", catalogIds);
-            const responce_catalog = await axios.get(`/api/saved-catalog?catalogIds=${catalogIds}&catalogCore="Print-collection"`)
+            // console.log("userr saved catalog : ", catalogIds);
+            const responce_catalog = await axios.get(`/internal-api/saved-catalog?catalogIds=${catalogIds}&catalogCore=Print-collection`)
             setResults(responce_catalog.data.results)
             setResultsCount(responce_catalog.data.resultsCount)
-            console.log("user saved catalog detail : ", responce_catalog);
+            console.log("userr saved catalog detail : ", responce_catalog);
 
 
         } catch (error) {
             console.error(error)
-        }finally{
+        } finally {
             setIsLoading(false)
         }
     }
@@ -143,11 +144,11 @@ export default function PrintCollectionSavedCatalog() {
                     {gridView ? (
                         <Row id='grid-view' className={`grid-view`}>
                             {isLoading && results.length === 0 ? (
-                                Array.from({ length: 4 }).map((_, index) => (
-                                    <Col md={3} key={`loading-skeleton-${index}`} className='mb-4'>
-                                        <GridViewSkelton />
-                                    </Col>
-                                ))
+                                <div className='w-100 h-25 d-flex align-items-center justify-content-center'>
+                                    <Spinner animation="border" role="status" className='mt-5'>
+                                        <span className="visually-hidden">Loading...</span>
+                                    </Spinner>
+                                </div>
                             ) : results.length > 0 ? (
                                 results.map((item) => (
                                     <Col md={3} key={item.id} className="mb-4">
@@ -163,7 +164,7 @@ export default function PrintCollectionSavedCatalog() {
                                             url={item.url}
                                             resource_type={item.resource_types_string}
                                             user_saved_catalog={userSavedCatalogs}
-                                            thumbnail = {item.thumbnail}
+                                            thumbnail={item.thumbnail}
                                             catalogCore={"Print-collection"}
                                             onShow={handleShow}
                                             onSelect={() => setSelectCatalog(item)}

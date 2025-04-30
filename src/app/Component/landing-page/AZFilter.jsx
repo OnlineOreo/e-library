@@ -17,6 +17,7 @@ const AZFilter = ({ token, setShow }) => {
         {letters.map((letter) => (
 
           <span
+          key={letter}
             onClick={(e) => {
               e.preventDefault();
               if (token) {
