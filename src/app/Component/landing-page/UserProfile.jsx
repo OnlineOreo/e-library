@@ -91,7 +91,7 @@ const UserProfile = ({ handleLogout, instituteId, setShow }) => {
                             </Link>
                             <Link
                                 className="dropdown-item d-flex align-items-center gap-2"
-                                href="/read-history"
+                                href="/read-history/print-collection"
                             >
                                 <HiDocumentSearch /> Read History
                             </Link>

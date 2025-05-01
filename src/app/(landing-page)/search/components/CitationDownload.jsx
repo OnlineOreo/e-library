@@ -70,6 +70,7 @@ const CitationDownload = ({ id, catalogType }) => {
 
     return (
         <div
+            title="Download"
             className=""
             style={{ position: "relative" }}
             ref={containerRef}
@@ -92,7 +93,7 @@ const CitationDownload = ({ id, catalogType }) => {
                     minWidth: "150px",
                 }}
             >
-                <div className="fw-bold border-bottom px-2 py-1">Download Citaion</div>
+                <div className="fw-bold border-bottom px-2 py-1">Download Citation</div>
                 <div className="d-flex gap-2 flex-column text-secondary px-2 py-1">
                     <a onClick={() => downloadCitation("text")} className="cursor_pointer_underline">Text Format</a>
                     <a onClick={() => downloadCitation("bib")} className="cursor_pointer_underline">BIB Format</a>

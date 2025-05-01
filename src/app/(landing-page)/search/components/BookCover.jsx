@@ -71,6 +71,7 @@ const BookCover = ({ title, author, thumbnail }) => {
         width={300}
         height={300}
         style={{ width: '100%', height: '320px', objectFit: 'fill' }}
+        loading="lazy"
       />
     </div>
   );

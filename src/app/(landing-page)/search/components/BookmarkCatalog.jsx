@@ -105,7 +105,9 @@ const BookmarkCatalog = ({ id, catalogType, user_saved_catalogs }) => {
     
 
     return (
-        <div style={{ width: "20px", height: "20px" }}>
+        <div 
+        title='Saved Catalog'
+        style={{ width: "20px", height: "20px" }}>
             {isLoading ? (
                 <Spinner animation="border" size="sm" />
             ) : isBookmarked ? (
