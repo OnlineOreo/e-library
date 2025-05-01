@@ -79,6 +79,7 @@ const SearchBar = ({ show, setShow }) => {
         <select value={filterType} onChange={(e) => setFilterType(e.target.value)}>
           <option value="datacite_titles">{t('Title')}</option>
           <option value="datacite_creators">{t('Author')}</option>
+          <option value="dc_publishers">{t('Publisher')}</option>
           <option value="resource_types_string">{t('Resource Types')}</option>
           <option value="college_category">{t('Subject')}</option>
         </select>

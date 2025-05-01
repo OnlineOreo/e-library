@@ -81,7 +81,7 @@ const CatalogGridCard = (props) => {
                 <BookCover title={props.datacite_titles} author={props.datacite_creators} thumbnail={props.thumbnail}/>
             </div>
             <Card.Body className='text-secondary'>
-                <div className='fw-bold one_line_ellipses'>{props.datacite_titles}</div>
+                <div className='fw-bold one_line_ellipses' title={props.datacite_titles}>{props.datacite_titles}</div>
                 <div className='one_line_ellipses'>{props.datacite_creators}</div>
                 <div className='one_line_ellipses text-primary'>{props.publisher || "N/A"}</div>
                 <div>{props.dc_date}</div>

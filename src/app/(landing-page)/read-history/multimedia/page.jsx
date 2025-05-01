@@ -24,34 +24,11 @@ export default function PrintCollectionSavedCatalog() {
     const [show, setShow] = useState(false);
     const [selectCatalog, setSelectCatalog] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
-    // const [startIndex, setStartIndex] = useState(0);
     const [userSavedCatalogs, setUserSavedCatalogs] = useState({});
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    // Load more results using server action
-    // const handleLoadMore = async () => {
-    //     if (!urlParams) return;
-
-    //     setIsLoading(true);
-    //     const nextStart = startIndex;
-
-    //     try {
-    //         const res = await fetch(`/internal-api/load-more?q=${urlParams}&start=${nextStart}&catalogCore=Print-collection&rows=20`);
-    //         const data = await res.json();
-
-    //         const newDocs = data.results || [];
-
-    //         setResults(prevResults => [...prevResults, ...newDocs]);
-    //         setStartIndex(nextStart + newDocs.length);
-
-    //     } catch (error) {
-    //         console.error("Load More Error:", error);
-    //     } finally {
-    //         setIsLoading(false);
-    //     }
-    // };
 
     const handelSearchWithinSearch = (e) => {
         e.preventDefault()
@@ -79,38 +56,83 @@ export default function PrintCollectionSavedCatalog() {
         return null;
     };
 
-    const loadSavedCatalog = async () => {
+    const loadReadHistory = async () => {
         const token = getToken();
         if (!token) {
             console.error("Authentication required!");
             return;
         }
         const userId = getUserID();
-        console.log("user_id", userId);
+        // console.log("user_id", userId);
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-saved-article?user_id=${userId}`, {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/logs?user_id=${userId}&read_history=true`, {
                 headers: { Authorization: `${token}` },
             });
-            setUserSavedCatalogs(response.data);
 
-            const catalogIds = response.data[0].saved_e_resources_ids;
+            // console.log("read history : ",response.data);
+
+
+            const logs = response.data.logs;
+
+            const result = {
+                saved_p_collection_ids: new Set(),
+                saved_e_collection_ids: new Set(),
+                saved_multimedia_ids: new Set(),
+                saved_e_resources_ids: new Set()
+            };
+
+            logs.forEach(log => {
+                const bookId = log.book_id;
+                const core = log.core;
+
+                if (!bookId) return; // skip if book_id is missing
+
+                switch (core) {
+                    case "Print-collection":
+                        result.saved_p_collection_ids.add(bookId);
+                        break;
+                    case "e-collection":
+                        result.saved_e_collection_ids.add(bookId);
+                        break;
+                    case "multimedia-n":
+                        result.saved_multimedia_ids.add(bookId);
+                        break;
+                    case "e-resources":
+                        result.saved_e_resources_ids.add(bookId);
+                        break;
+                }
+            });
+
+            // Convert sets to comma-separated strings
+            const finalResult = {
+                saved_p_collection_ids: Array.from(result.saved_p_collection_ids).join(','),
+                saved_e_collection_ids: Array.from(result.saved_e_collection_ids).join(','),
+                saved_multimedia_ids: Array.from(result.saved_multimedia_ids).join(','),
+                saved_e_resources_ids: Array.from(result.saved_e_resources_ids).join(',')
+            };
+
+            console.log(finalResult);
+
+            setUserSavedCatalogs(finalResult);
+
+            const catalogIds = finalResult.saved_multimedia_ids;
             console.log("user saved catalog : ", catalogIds);
-            const responce_catalog = await axios.get(`/internal-api/saved-catalog?catalogIds=${catalogIds}&catalogCore=e-resources`)
+            const responce_catalog = await axios.get(`/internal-api/saved-catalog?catalogIds=${catalogIds}&catalogCore=multimedia-n`)
             setResults(responce_catalog.data.results)
             setResultsCount(responce_catalog.data.resultsCount)
 
-            console.log("user saved catalog detail : ", responce_catalog);
+            // console.log("user saved catalog detail : ", responce_catalog);
 
 
         } catch (error) {
             console.error(error)
-        }finally{
+        } finally {
             setIsLoading(false)
         }
     }
 
     useEffect(() => {
-        loadSavedCatalog()
+        loadReadHistory()
     }, [])
 
     return (
@@ -119,7 +141,8 @@ export default function PrintCollectionSavedCatalog() {
                 <Col md={12} className='pe-0 ps-4'>
                     <Row className="mb-3">
                         <Col md={6}>
-                            <p>Showing <strong>{resultsCount}</strong> results from data</p>
+                            {/* <p>Showing <strong>{resultsCount}</strong> results from data</p> */}
+                            <h3>Read History</h3>
                         </Col>
                         <Col md={6}>
                             <div className="d-flex align-items-center justify-content-end">
@@ -166,7 +189,7 @@ export default function PrintCollectionSavedCatalog() {
                                             thumbnail = {item.thumbnail}
                                             resource_type={item.resource_types_string}
                                             user_saved_catalog={userSavedCatalogs}
-                                            catalogCore={"e-resources"}
+                                            catalogCore={"multimedia-n"}
                                             onShow={handleShow}
                                             onSelect={() => setSelectCatalog(item)}
                                         />
@@ -174,7 +197,7 @@ export default function PrintCollectionSavedCatalog() {
                                 ))
                             ) : (
                                 <Col md={12} className="text-center text-muted py-5">
-                                    <h5>No Catalog Saved.</h5>
+                                    <h5>You have not read yet anything from Multimedia.</h5>
                                 </Col>
                             )}
                         </Row>
@@ -202,7 +225,7 @@ export default function PrintCollectionSavedCatalog() {
                                             thumbnail = {item.thumbnail}
                                             resource_type={item.resource_types_string}
                                             user_saved_catalog={userSavedCatalogs}
-                                            catalogCore={"e-resources"}
+                                            catalogCore={"multimedia-n"}
                                             onShow={handleShow}
                                             onSelect={() => setSelectCatalog(item)}
                                         />
@@ -210,7 +233,7 @@ export default function PrintCollectionSavedCatalog() {
                                 ))
                             ) : (
                                 <Col md={12} className="text-center text-muted py-5">
-                                    <h5>No Catalog Saved.</h5>
+                                       <h5>You have not read yet anything from Multimedia.</h5>
                                 </Col>
                             )}
                         </Row>

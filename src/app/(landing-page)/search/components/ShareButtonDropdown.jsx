@@ -39,6 +39,7 @@ const ShareButtonDropdown = ({ id, catalogType }) => {
 
   return (
     <div
+      title="Share"
       className=""
       style={{ position: "relative" }}
       ref={containerRef}
