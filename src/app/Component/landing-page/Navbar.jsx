@@ -180,6 +180,12 @@ const Navbar = ({ show, setShow }) => {
       ],
       isImportantLink: true,
     },
+    {
+      type: "link",
+      title: t("E-news-clipping"),
+      href: "/e-news-clipping", // Change this to your actual path
+    },
+    
     // {
     //   type: "dropdown",
     //   title: t("Account"),
