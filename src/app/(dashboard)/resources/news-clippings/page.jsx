@@ -115,7 +115,7 @@ const NewsClipping = () => {
         <div className="avatar avatar-md">
           <img
             src={params.value || ""}
-            alt="Publisher"
+            alt="news-clipping"
             width={50}
             height={50}
             className="rounded-circle"

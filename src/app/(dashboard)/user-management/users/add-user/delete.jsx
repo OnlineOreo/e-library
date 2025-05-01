@@ -16,7 +16,6 @@ import { FaMinusCircle } from "react-icons/fa";
 import { ImCross } from "react-icons/im";
 import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
-import { FaTimesCircle } from "react-icons/fa";
 
 const Home = () => {
   const router = useRouter();
@@ -24,8 +23,6 @@ const Home = () => {
   const successToaster = (text) => toast(text);
   const errorToaster = (text) => toast.error(text);
   var instituteId = useSelector((state) => state.institute.instituteId);
-  const [image, setImage] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState(null);
 
   const [step, setStep] = useState(1);
   const [serviceGroup, setServiceGroup] = useState([]);
@@ -126,51 +123,209 @@ const Home = () => {
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
+//   const handleSubmit = async (event) => {
+//     event.preventDefault();
+//     setLoading(true);
+  
+//     const token = getToken();
+//     if (!token) {
+//       errorToaster("Authentication required!");
+//       return;
+//     }
+  
+//     const formDataToSend = new FormData();
+  
+//     // Ensure mappings are populated with necessary fields
+//     const enrichedMappings = formData.mappings.map((mapping) => ({
+//       content_group: mapping.content_group || "", // Ensure it has a valid value
+//       user_type: mapping.user_type || "", // Ensure it has a valid value
+//       service_group: mapping.service_group || "", // Ensure it has a valid value
+//       department: mapping.department || "", // Ensure it has a valid value
+//       program: mapping.program || "", // Ensure it has a valid value
+//       institute: instituteId || "", // Ensure it has a valid value
+//       library: formData.library || "", // Ensure it has a valid value
+//     }));
+  
+//     // Append form data including enriched mappings
+//     Object.entries({ ...formData, mappings: enrichedMappings }).forEach(([key, value]) => {
+//       if (key === "image" && value instanceof File) {
+//         // Append the image file (binary data)
+//         formDataToSend.append("image", value);
+//       } else if (key === "mappings" && Array.isArray(value)) {
+//         // Append mappings as nested fields
+//         value.forEach((item, index) => {
+//           Object.entries(item).forEach(([subKey, subValue]) => {
+//             formDataToSend.append(`mappings[${index}][${subKey}]`, subValue);
+//           });
+//         });
+//       } else {
+//         // Append other form fields directly
+//         formDataToSend.append(key, value);
+//       }
+//     });
+  
+//     // Add subdomain
+//     const hostname = typeof window !== "undefined" ? window.location.hostname : "";
+//     formDataToSend.append("sub_domain", hostname);
+  
+//     console.log(formDataToSend); // For debugging, check form data content before sending
+  
+//     try {
+//       const response = await axios.post(
+//         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users`,
+//         formDataToSend,
+//         {
+//           headers: {
+//             Authorization: `${token}`,
+//             // "Content-Type": "multipart/form-data",  // Correct content type for file uploads
+//             "Content-Type": "multipart/form-data",  // Correct content type for file uploads
+//           },
+//         }
+//       );
+  
+//       if (response.status === 201) {
+//         Swal.fire({
+//           title: "Success!",
+//           text: "User added successfully!",
+//           icon: "success",
+//           confirmButtonText: "OK",
+//         });
+  
+//         // Reset form data
+//         setFormData({
+//           name: "",
+//           email: "",
+//           phone_number: "",
+//           role: "",
+//           address: "",
+//           gender: "",
+//           user_u_id: "",
+//           designation: "",
+//           institute: "",
+//           library: "",
+//           admission_year: "",
+//           image: null, // Reset image
+//           mappings: {},
+//         });
+  
+//         router.push("/user-management/users");
+//       }
+//     } catch (error) {
+//       const errorData = error.response?.data;
+//       if (typeof errorData === "object") {
+//         Object.keys(errorData).forEach((key) => {
+//           let message = Array.isArray(errorData[key])
+//             ? errorData[key].join(", ")
+//             : errorData[key];
+  
+//           if (message === '"" is not a valid choice.') {
+//             message = `${key} cannot be empty or is invalid`;
+//           } else if (message === "This field may not be blank.") {
+//             message = `${key} may not be blank`;
+//           }
+  
+//           errorToaster(message);
+//         });
+//       } else {
+//         errorToaster(errorData?.message || "Something went wrong!");
+//       }
+//       setLoading(false);
+//     }
+// };
+
+  
+  const handleLibraryChange = (event) => {
+    const { name, value } = event.target;
+    const allLibrayChild = library.find((lib) => lib.library_id === value);
+    setDepartments(allLibrayChild.departments || []);
+    setPrograms(allLibrayChild.programs || []);
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+  const handleMappingChange = (event, index) => {
+    const { name, value } = event.target;
+  
+    setFormData((prevFormData) => {
+      const updatedMappings = [...prevFormData.mappings];
+      updatedMappings[index] = {
+        ...updatedMappings[index],
+        [name]: value || "",  // Ensure empty string if no value selected
+      };
+      return {
+        ...prevFormData,
+        mappings: updatedMappings,
+      };
+    });
+  };
+  
+  const addNewMapping = () => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      mappings: [
+        ...(prevFormData.mappings || []),
+        {
+          content_group: "",   // Initialize with empty value
+          user_type: "",       // Initialize with empty value
+          service_group: "",   // Initialize with empty value
+          department: "",      // Initialize with empty value
+          program: "",         // Initialize with empty value
+          institute: instituteId || "", // Ensure it has a valid value
+          library: formData.library || "", // Ensure it has a valid value
+        },
+      ],
+    }));
+  };
+  
+  // Ensure that the mappings are being correctly populated in handleSubmit
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
-
+  
     const token = getToken();
     if (!token) {
       errorToaster("Authentication required!");
       return;
     }
-
+  
     const formDataToSend = new FormData();
-
-    // Enrich mappings with fallback/defaults
+  
+    // Ensure mappings are populated with necessary fields
     const enrichedMappings = formData.mappings.map((mapping) => ({
-      content_group: mapping.content_group || "",
-      user_type: mapping.user_type || "",
-      service_group: mapping.service_group || "",
-      department: mapping.department || "",
-      program: mapping.program || "",
-      institute: instituteId || formData.institute || "",
-      library: formData.library || "",
+      content_group: mapping.content_group || "", // Ensure it has a valid value
+      user_type: mapping.user_type || "", // Ensure it has a valid value
+      service_group: mapping.service_group || "", // Ensure it has a valid value
+      department: mapping.department || "", // Ensure it has a valid value
+      program: mapping.program || "", // Ensure it has a valid value
+      institute: instituteId || "", // Ensure it has a valid value
+      library: formData.library || "", // Ensure it has a valid value
     }));
-
-    Object.entries(formData).forEach(([key, value]) => {
+  
+    // Append form data including enriched mappings
+    Object.entries({ ...formData, mappings: enrichedMappings }).forEach(([key, value]) => {
       if (key === "image" && value instanceof File) {
-        formDataToSend.append(key, value);
-      } else if (key === "image") {
-        formDataToSend.append(key, new Blob([]));
-      } else if (key !== "mappings") {
+        // Append the image file (binary data)
+        formDataToSend.append("image", value);
+      } else if (key === "mappings" && Array.isArray(value)) {
+        // Append mappings as nested fields
+        value.forEach((item, index) => {
+          Object.entries(item).forEach(([subKey, subValue]) => {
+            formDataToSend.append(`mappings[${index}][${subKey}]`, subValue);
+          });
+        });
+      } else {
+        // Append other form fields directly
         formDataToSend.append(key, value);
       }
     });
-
-    // Use enrichedMappings instead of formData.mappings
-    enrichedMappings.forEach((item, index) => {
-      Object.entries(item).forEach(([subKey, subValue]) => {
-        formDataToSend.append(`mappings[${index}][${subKey}]`, subValue);
-      });
-    });
-
-    // Append subdomain
-    var hostname =
-      typeof window !== "undefined" ? window.location.hostname : "";
+  
+    // Add subdomain
+    const hostname = typeof window !== "undefined" ? window.location.hostname : "";
     formDataToSend.append("sub_domain", hostname);
-
+  
+    console.log(formDataToSend); // For debugging, check form data content before sending
+  
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users`,
@@ -178,39 +333,20 @@ const Home = () => {
         {
           headers: {
             Authorization: `${token}`,
-            "Content-type": "application/json",
-            // Don't set Content-Type manually when using FormData
+            "Content-Type": "multipart/form-data", // Correct content type for file uploads
           },
         }
       );
-
-      if (response.status === 201 || response.status === 200) {
-        const userId = response.data?.user_id;
-
-        if (image) {
-          const imageFormData = new FormData();
-          imageFormData.append("image", image);
-          // image.append
-
-          await axios.patch(
-            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users?user_id=${userId}&sub_domain=${hostname}`,
-            imageFormData,
-            {
-              headers: {
-                Authorization: `${token}`,
-                // "Content-Type": "multipart/form-data",
-              },
-            }
-          );
-        }
-
+  
+      if (response.status === 201) {
         Swal.fire({
           title: "Success!",
           text: "User added successfully!",
           icon: "success",
           confirmButtonText: "OK",
         });
-
+  
+        // Reset form data
         setFormData({
           name: "",
           email: "",
@@ -223,9 +359,10 @@ const Home = () => {
           institute: "",
           library: "",
           admission_year: "",
-          mappings: [],
+          image: null, // Reset image
+          mappings: [], // Reset mappings array
         });
-
+  
         router.push("/user-management/users");
       }
     } catch (error) {
@@ -235,13 +372,13 @@ const Home = () => {
           let message = Array.isArray(errorData[key])
             ? errorData[key].join(", ")
             : errorData[key];
-
+  
           if (message === '"" is not a valid choice.') {
             message = `${key} cannot be empty or is invalid`;
           } else if (message === "This field may not be blank.") {
             message = `${key} may not be blank`;
           }
-
+  
           errorToaster(message);
         });
       } else {
@@ -250,40 +387,8 @@ const Home = () => {
       setLoading(false);
     }
   };
-
-  const handleLibraryChange = (event) => {
-    const { name, value } = event.target;
-    const allLibrayChild = library.find((lib) => lib.library_id === value);
-    setDepartments(allLibrayChild.departments || []);
-    setPrograms(allLibrayChild.programs || []);
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
-  const handleMappingChange = (event, index) => {
-    const { name, value } = event.target;
-
-    setFormData((prevFormData) => {
-      const updatedMappings = [...prevFormData.mappings];
-      updatedMappings[index] = {
-        ...updatedMappings[index],
-        [name]: value,
-      };
-      return {
-        ...prevFormData,
-        mappings: updatedMappings,
-      };
-    });
-  };
-
-  const addNewMapping = () => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      mappings: [...(prevFormData.mappings || []), {}],
-    }));
-  };
+  
+  
 
   const removeMapping = (index) => {
     if (index != 0) {
@@ -453,39 +558,8 @@ const Home = () => {
                       type="file"
                       name="image"
                       accept="image/*"
-                      onChange={(e) => {
-                        const file = e.target.files[0];
-                        if (file) {
-                          setImage(file);
-                          setPreviewUrl(URL.createObjectURL(file));
-                        }
-                      }}
+                      onChange={handleInputChange}
                     />
-                    {previewUrl && (
-                      <div className="mt-3 position-relative" style={{ maxWidth:'100px' }}>
-                        <img
-                          src={previewUrl}
-                          alt="Image Preview"
-                          style={{
-                            width: "100px",
-                            height: "100px",
-                            borderRadius: "10px",
-                            objectFit: "cover",
-                          }}
-                        />
-                        <Button
-                          variant="link"
-                          className="position-absolute"
-                          style={{ fontSize: "30px", color: "red", top:'-25px', right:'-25px' }}
-                          onClick={()=>{
-                            setImage(null);
-                            setPreviewUrl(null);
-                          }}
-                        >
-                          <FaTimesCircle />
-                        </Button>
-                      </div>
-                    )}
                   </Form.Group>
                   <Form.Group className="mb-3">
                     <Form.Label>Library</Form.Label>

@@ -108,7 +108,18 @@ export default function PathAccessStatsTable({ logs = [] }) {
                       {item.method}
                     </Badge>
                   </td>
-                  <td className="align-middle text-break">{item.path}</td>
+                  <td className="align-middle">
+                    <div
+                      style={{
+                        maxWidth: "550px",
+                        overflowX: "auto",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {item.path}
+                    </div>
+                  </td>
+
                   <td className="align-middle" style={{ minWidth: "200px" }}>
                     <ProgressBar
                       now={(item.count / maxCount) * 100}

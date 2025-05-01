@@ -114,7 +114,7 @@ const ViewInstitute = () => {
     const newStatus = !params.is_active;
 
     // Destructure to remove institute_id and prepare updated payload
-    const { institute_id, ...rest } = params;
+    const { institute_id, ip_addresses, ...rest } = params;
     const updatedData = { ...rest, is_active: newStatus };
 
     try {

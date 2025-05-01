@@ -16,16 +16,14 @@ import { FaMinusCircle } from "react-icons/fa";
 import { ImCross } from "react-icons/im";
 import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
-import { FaTimesCircle } from "react-icons/fa";
 
 const Home = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const successToaster = (text) => toast(text);
   const errorToaster = (text) => toast.error(text);
-  var instituteId = useSelector((state) => state.institute.instituteId);
-  const [image, setImage] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState(null);
+
+  const instituteIds = useSelector((state) => state.institute.instituteId);
 
   const [step, setStep] = useState(1);
   const [serviceGroup, setServiceGroup] = useState([]);
@@ -34,7 +32,9 @@ const Home = () => {
 
   const [departments, setDepartments] = useState([]);
   const [programs, setPrograms] = useState([]);
+  const [institute, setInstitute] = useState([]);
   const [library, setLibrary] = useState([]);
+  const [instituteId, setInstituteId] = useState(instituteIds);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -46,9 +46,8 @@ const Home = () => {
     user_u_id: "",
     designation: "",
     institute: "",
-    library: "",
     admission_year: "",
-    mappings: [],
+    mappings: [{}],
   });
 
   useEffect(() => {
@@ -89,10 +88,11 @@ const Home = () => {
       }
     };
 
-    if (instituteId) {
-      fetchData(instituteId);
+    if (instituteIds) {
+      fetchData(instituteIds);
+      setInstituteId(instituteIds); // Set local state as well
     }
-  }, [instituteId]);
+  }, [instituteIds]);
 
   const handleNext = () => {
     setStep(step + 1);
@@ -115,6 +115,7 @@ const Home = () => {
         ...formData,
         [name]: value,
       });
+      // console.log(formData);
     }
   };
 
@@ -129,7 +130,6 @@ const Home = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
-
     const token = getToken();
     if (!token) {
       errorToaster("Authentication required!");
@@ -138,38 +138,24 @@ const Home = () => {
 
     const formDataToSend = new FormData();
 
-    // Enrich mappings with fallback/defaults
-    const enrichedMappings = formData.mappings.map((mapping) => ({
-      content_group: mapping.content_group || "",
-      user_type: mapping.user_type || "",
-      service_group: mapping.service_group || "",
-      department: mapping.department || "",
-      program: mapping.program || "",
-      institute: instituteId || formData.institute || "",
-      library: formData.library || "",
-    }));
-
+    // Append all form fields
     Object.entries(formData).forEach(([key, value]) => {
       if (key === "image" && value instanceof File) {
         formDataToSend.append(key, value);
       } else if (key === "image") {
         formDataToSend.append(key, new Blob([]));
-      } else if (key !== "mappings") {
+      } else if (key === "mappings" && Array.isArray(value)) {
+        value.forEach((item, index) => {
+          Object.entries(item).forEach(([subKey, subValue]) => {
+            formDataToSend.append(`${key}[${index}][${subKey}]`, subValue);
+          });
+        });
+      } else {
         formDataToSend.append(key, value);
       }
     });
-
-    // Use enrichedMappings instead of formData.mappings
-    enrichedMappings.forEach((item, index) => {
-      Object.entries(item).forEach(([subKey, subValue]) => {
-        formDataToSend.append(`mappings[${index}][${subKey}]`, subValue);
-      });
-    });
-
-    // Append subdomain
-    var hostname =
-      typeof window !== "undefined" ? window.location.hostname : "";
-    formDataToSend.append("sub_domain", hostname);
+    const hostname = typeof window !== "undefined" ? window.location.hostname : "";
+    formDataToSend.append('sub_domain',hostname);
 
     try {
       const response = await axios.post(
@@ -178,39 +164,17 @@ const Home = () => {
         {
           headers: {
             Authorization: `${token}`,
-            "Content-type": "application/json",
-            // Don't set Content-Type manually when using FormData
+            "Content-Type": "application/json",
           },
         }
       );
-
-      if (response.status === 201 || response.status === 200) {
-        const userId = response.data?.user_id;
-
-        if (image) {
-          const imageFormData = new FormData();
-          imageFormData.append("image", image);
-          // image.append
-
-          await axios.patch(
-            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users?user_id=${userId}&sub_domain=${hostname}`,
-            imageFormData,
-            {
-              headers: {
-                Authorization: `${token}`,
-                // "Content-Type": "multipart/form-data",
-              },
-            }
-          );
-        }
-
+      if (response.status === 201) {
         Swal.fire({
           title: "Success!",
           text: "User added successfully!",
           icon: "success",
           confirmButtonText: "OK",
         });
-
         setFormData({
           name: "",
           email: "",
@@ -221,13 +185,13 @@ const Home = () => {
           user_u_id: "",
           designation: "",
           institute: "",
-          library: "",
           admission_year: "",
           mappings: [],
         });
-
-        router.push("/user-management/users");
+        setLoading(false);
       }
+
+      router.push("/user-management/users");
     } catch (error) {
       const errorData = error.response?.data;
       if (typeof errorData === "object") {
@@ -251,30 +215,63 @@ const Home = () => {
     }
   };
 
-  const handleLibraryChange = (event) => {
-    const { name, value } = event.target;
-    const allLibrayChild = library.find((lib) => lib.library_id === value);
-    setDepartments(allLibrayChild.departments || []);
-    setPrograms(allLibrayChild.programs || []);
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
   const handleMappingChange = (event, index) => {
     const { name, value } = event.target;
 
     setFormData((prevFormData) => {
-      const updatedMappings = [...prevFormData.mappings];
-      updatedMappings[index] = {
-        ...updatedMappings[index],
+      const updatedFormData = { ...prevFormData };
+
+      if (!updatedFormData.mappings) {
+        updatedFormData.mappings = [];
+      }
+
+      if (name === "institute") {
+        setInstituteId(value);
+        console.log(institute);
+        const allChildData = institute.find(
+          (ins) => ins.institute_id === value
+        );
+
+        if (allChildData) {
+          setLibrary(allChildData.libraries || []);
+          setDepartments([]);
+          setPrograms([]);
+
+          // Update every mapping with the selected institute
+          updatedFormData.mappings = updatedFormData.mappings.map(
+            (mapping) => ({
+              ...mapping,
+              institute: instituteId,
+              library:
+                allChildData.libraries.length > 0
+                  ? allChildData.libraries[0].library_id
+                  : "",
+            })
+          );
+        }
+      }
+
+      if (name === "library") {
+        const allLibrayChild = library.find((lib) => lib.library_id === value);
+        if (allLibrayChild) {
+          setDepartments(allLibrayChild.departments || []);
+          setPrograms(allLibrayChild.programs || []);
+        }
+      }
+
+      // Ensure index exists before updating (if new, create a new object)
+      if (!updatedFormData.mappings[index]) {
+        updatedFormData.mappings[index] = {};
+      }
+
+      // Update the specific mapping
+      updatedFormData.mappings[index] = {
+        ...updatedFormData.mappings[index],
         [name]: value,
+        institute: instituteId,
       };
-      return {
-        ...prevFormData,
-        mappings: updatedMappings,
-      };
+
+      return updatedFormData;
     });
   };
 
@@ -447,62 +444,35 @@ const Home = () => {
             {step === 4 && (
               <>
                 <Row className="mt-5">
-                  <Form.Group className="mb-3" controlId="formImage">
-                    <Form.Label>Upload Image</Form.Label>
-                    <Form.Control
-                      type="file"
-                      name="image"
-                      accept="image/*"
-                      onChange={(e) => {
-                        const file = e.target.files[0];
-                        if (file) {
-                          setImage(file);
-                          setPreviewUrl(URL.createObjectURL(file));
-                        }
-                      }}
-                    />
-                    {previewUrl && (
-                      <div className="mt-3 position-relative" style={{ maxWidth:'100px' }}>
-                        <img
-                          src={previewUrl}
-                          alt="Image Preview"
-                          style={{
-                            width: "100px",
-                            height: "100px",
-                            borderRadius: "10px",
-                            objectFit: "cover",
-                          }}
-                        />
-                        <Button
-                          variant="link"
-                          className="position-absolute"
-                          style={{ fontSize: "30px", color: "red", top:'-25px', right:'-25px' }}
-                          onClick={()=>{
-                            setImage(null);
-                            setPreviewUrl(null);
-                          }}
-                        >
-                          <FaTimesCircle />
-                        </Button>
-                      </div>
-                    )}
-                  </Form.Group>
-                  <Form.Group className="mb-3">
-                    <Form.Label>Library</Form.Label>
-                    <Form.Select
-                      name="library"
-                      value={formData.library || ""}
-                      onChange={(e) => handleLibraryChange(e)}
-                      required
-                    >
-                      <option value="">Select library</option>
-                      {library.map((item) => (
-                        <option key={item.library_id} value={item.library_id}>
-                          {item.library_name}
-                        </option>
-                      ))}
-                    </Form.Select>
-                  </Form.Group>
+                  {/* <Form.Group className="mb-3" controlId="formImage">
+                  <Form.Label>Upload Image</Form.Label>
+                  <Form.Control
+                    type="file"
+                    name="image"
+                    accept="image/*"
+                    onChange={handleInputChange}
+                  />
+                </Form.Group> */}
+                  {/* <Col lg={12} className="mb-5">
+                    <Form.Group className="mb-3" controlId="formDesignation">
+                      <Form.Label>Institute</Form.Label>
+                      <Form.Select
+                        name="institute"  
+                        value={instituteId}
+                        onChange={handleMappingChange}
+                        required
+                      >
+                        <option value="">Select institute</option>
+                        {institute.map((item, index) => {
+                          return (
+                            <option key={index} value={item.institute_id}>
+                              {item.institute_name}
+                            </option>
+                          );
+                        })}
+                      </Form.Select>
+                    </Form.Group>
+                  </Col> */}
                   {formData.mappings?.map((mapping, index) => (
                     <Fragment key={index}>
                       <Col lg={6}>
@@ -578,6 +548,29 @@ const Home = () => {
                       >
                         <Form.Group
                           className="mb-3"
+                          controlId={`formLibrary${index}`}
+                        >
+                          <Form.Label>Library</Form.Label>
+                          <Form.Select
+                            name="library"
+                            value={mapping.library || ""}
+                            onChange={(e) => handleMappingChange(e, index)}
+                            required
+                          >
+                            <option value="">Select library</option>
+                            {library.map((item) => (
+                              <option
+                                key={item.library_id}
+                                value={item.library_id}
+                              >
+                                {item.library_name}
+                              </option>
+                            ))}
+                          </Form.Select>
+                        </Form.Group>
+
+                        <Form.Group
+                          className="mb-3"
                           controlId={`formDepartment${index}`}
                         >
                           <Form.Label>Department</Form.Label>
@@ -623,15 +616,15 @@ const Home = () => {
                         </Form.Group>
 
                         {index !== 0 && (
-                          <Button
-                            variant="danger"
-                            size="sm"
-                            className="position-absolute top-0 end-0"
-                            onClick={() => removeMapping(index)}
-                          >
-                            <ImCross /> Remove
-                          </Button>
-                        )}
+                            <Button
+                              variant="danger"
+                              size="sm"
+                              className="position-absolute top-0 end-0"
+                              onClick={() => removeMapping(index)}
+                            >
+                              <ImCross /> Remove
+                            </Button>
+                          )}
                       </Col>
                     </Fragment>
                   ))}

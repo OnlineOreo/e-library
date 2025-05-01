@@ -110,9 +110,9 @@ const ViewDynamicPages = () => {
       flex: 0.5,
       renderCell: (params) => (
         <div className="avatar avatar-md">
-          <Image
+          <img
             src={params.value || ""}
-            alt="Publisher"
+            alt="Dynamic pages"
             width={50}
             height={50}
             className="rounded-circle"
@@ -121,14 +121,46 @@ const ViewDynamicPages = () => {
       ),
     },
     { field: "page_name", headerName: "Page Name", flex: 2 },
-    { field: "created_at", headerName: "Created At", flex: 2 },
-    { field: "updated_at", headerName: "Updated At", flex: 2 },
+    {
+      field: "created_at",
+      headerName: "Created At",
+      flex: 2,
+      renderCell: (params) => {
+        const date = new Date(params.value);
+        const formatted = date.toLocaleString("en-IN", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        });
+        return <span>{formatted}</span>;
+      },
+    },
+    {
+      field: "updated_at",
+      headerName: "Updated At",
+      flex: 2,
+      renderCell: (params) => {
+        const date = new Date(params.value);
+        const formatted = date.toLocaleString("en-IN", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        });
+        return <span>{formatted}</span>;
+      },
+    },    
     {
       field: "action",
       headerName: "Action",
       flex: 1,
       renderCell: (params) => (
-        <div className="d-flex gap-2">
+        <div className="d-flex pt-2 gap-2">
           {" "}
           {/* Ensures spacing */}
           <button

@@ -246,10 +246,15 @@ const Home = () => {
       headerName: "Photo",
       flex: 1,
       renderCell: (params) => {
+        const handleError = (e) => {
+          e.target.src = "/images/avatar/avatar-1.jpg";
+        };
+      
         return (
           <img
-            src={params.value || params.value}
+            src={params.value || "/images/avatar/avatar-1.jpg"}
             alt="User"
+            onError={handleError}
             style={{
               width: "50px",
               height: "50px",

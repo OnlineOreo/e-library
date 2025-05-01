@@ -62,7 +62,7 @@ export default function Configurationmeta() {
     { field: "article_type_name", headerName: "Article Type", flex: 2 },
     { field: "title", headerName: "Title", flex: 3 },
     {
-      field: "image",
+      field: "image", 
       headerName: "Image",
       flex: 1,
       renderCell: (params) =>
@@ -70,7 +70,7 @@ export default function Configurationmeta() {
           <div className="avatar avatar-md">
             <img
               src={params.value}
-              alt="Meta"
+              alt="staff-picks"
               className="rounded-circle"
               style={{
                 width: 50,

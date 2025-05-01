@@ -135,7 +135,7 @@ const Home = () => {
       ...user,
       is_active: !user.is_active,
       role: user.role,
-    }; // <-- include role
+    };
 
     try {
       await axios.put(
@@ -208,6 +208,30 @@ const Home = () => {
 
   const columns = [
     { field: "id", headerName: "User ID", flex: 2 },
+    {
+      field: "image",
+      headerName: "Photo",
+      flex: 1,
+      renderCell: (params) => {
+        const handleError = (e) => {
+          e.target.src = "/images/avatar/avatar-1.jpg";
+        };
+      
+        return (
+          <img
+            src={params.value || "/images/avatar/avatar-1.jpg"}
+            alt="User"
+            onError={handleError}
+            style={{
+              width: "50px",
+              height: "50px",
+              borderRadius: "50%",
+              objectFit: "cover",
+            }}
+          />
+        );
+      },
+    },
     { field: "name", headerName: "Name", flex: 2 },
     { field: "email", headerName: "Email", flex: 2 },
     { field: "phone_number", headerName: "Number", flex: 2 },

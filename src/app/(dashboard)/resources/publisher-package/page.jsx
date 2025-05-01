@@ -13,7 +13,7 @@ import Swal from "sweetalert2";
 import ImportPublisherPackage from "./ImportPublisherPackage";
 import { useSelector } from "react-redux";
 
-const ViewItemTypes = () => {
+const ViewPublisher = () => {
   const router = useRouter();
   const successToaster = (text) => toast(text);
   const errorToaster = (text) => toast.error(text);
@@ -175,7 +175,6 @@ const ViewItemTypes = () => {
         }
       },
     },
-    
     {
       field: "action",
       headerName: "Action",
@@ -205,7 +204,6 @@ const ViewItemTypes = () => {
     },
   ];
 
-  // Ensure DataGrid receives correctly formatted rows
   const formattedItemTypes = publisherPkg.map((item) => ({
     id: item.package_id,
     ...item,
@@ -245,7 +243,9 @@ const ViewItemTypes = () => {
           <Box sx={{ width: "100%", overflowX: "auto" }}>
             <Box sx={{ minWidth: "800px", height: 500 }}>
               <DataGrid
-                rows={formattedItemTypes}
+                rows={formattedItemTypes.filter((pkg) =>
+                  pkg.package_name.toLowerCase().includes(search.toLowerCase())
+                )}
                 columns={columns}
                 pageSize={5}
                 components={{ Toolbar: GridToolbar }}
@@ -255,6 +255,7 @@ const ViewItemTypes = () => {
           </Box>
         </div>
       </Container>
+
       {/* Modal with ImportPublisher */}
       <Modal show={showImportModal} onHide={handleCloseModal} centered>
         <Modal.Header closeButton>
@@ -264,7 +265,7 @@ const ViewItemTypes = () => {
           <ImportPublisherPackage
             onSuccess={() => {
               handleCloseModal();
-              loadPublishers(instituteId);
+              loadPublisherPkg(instituteId); // Fixed: correct function name
               Swal.fire({
                 title: "Success!",
                 text: "Publishers added successfully!",
@@ -281,4 +282,4 @@ const ViewItemTypes = () => {
   );
 };
 
-export default ViewItemTypes;
+export default ViewPublisher;
