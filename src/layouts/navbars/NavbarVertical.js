@@ -96,7 +96,6 @@ const NavbarVertical = (props) => {
 			) : null}
 		</Link>
 	);
-	console.log(landingPageData?.landingPageData?.configurations?.[0])
 
 	return (
 		<Fragment>

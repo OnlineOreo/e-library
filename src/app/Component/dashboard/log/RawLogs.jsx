@@ -92,7 +92,7 @@ export default function RawLogs({ logs = [] }) {
                       }}
                     >
                       <img
-                        src={log.user_image || './images/avatar/avatar-1.jpg'}
+                        src={log.image || './images/avatar/avatar-1.jpg'}
                         alt={log.user || "User"}
                         style={{
                           width: "100%",

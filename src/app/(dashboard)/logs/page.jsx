@@ -11,6 +11,7 @@ import StatusCodeDistributionChart from "@/app/Component/dashboard/log/StatusCod
 import RecentLogsTable from "@/app/Component/dashboard/log/RecentLogsTable";
 import RawLogs from "@/app/Component/dashboard/log/RawLogs";
 import PathDistributionChartHorizontal from "@/app/Component/dashboard/log/PathDistributionChartHorizontal";
+import { GRID_COLUMN_MENU_SLOT_PROPS } from "@mui/x-data-grid";
 
 const Logs = () => {
   const [logs, setLogs] = useState([]);

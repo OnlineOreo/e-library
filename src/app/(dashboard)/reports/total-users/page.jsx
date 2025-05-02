@@ -29,11 +29,11 @@ const ViewReports = () => {
 
   useEffect(() => {
     if (instituteId) {
-      loadReports();
+      loadReports(instituteId);
     }
   }, [instituteId, filter]);
 
-  const loadReports = async () => {
+  const loadReports = async (instituteId) => {
     const token = getToken();
     if (!token) {
       errorToaster("Authentication required!");
