@@ -59,20 +59,13 @@ const NavbarTop = (props) => {
     const session_id = getSession();
     const userId = getUserId();
 
-    // Utility to get Indian date-time
-    const getIndianDateTime = () => {
-      const indianTime = new Date().toLocaleString("en-US", {
-        timeZone: "Asia/Kolkata",
-      });
-      return new Date(indianTime).toISOString();
-    };
 
     if (session_id) {
       try {
         await axios.put(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-session?session_id=${session_id}&institute_id=${institute_id}&user_id=${userId}`,
           {
-            ended_at: getIndianDateTime(), // Using IST for ended_at
+            ended_at: new Date().toISOString(),
             institute: institute_id, // Make sure you pass the correct institute_id (fixed variable name)
             user: userId,
           },

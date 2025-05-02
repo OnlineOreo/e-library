@@ -4,7 +4,7 @@ export function middleware(req) {
   const accessToken = req.cookies.get("access_token")?.value;
 
   const protectedRoutes = [
-    "/dashboard", 
+    "/dashboard",
     "/user-management",
     "/library-department",
     "/resources",
@@ -16,8 +16,7 @@ export function middleware(req) {
     "/search",
     "/student-profile",
     "/advance-search-filter",
-    "/change-password",
-    "/e-news-clipping"
+    "change-password"
   ];
   
   const isProtectedRoute = protectedRoutes.some((route) => req.nextUrl.pathname.startsWith(route));
@@ -43,7 +42,6 @@ export const config = {
     "/search/:path*",
     "/advance-search-filter/:path*",
     "/student-profile/:path*",
-    "/change-password/:path*",
-    "/e-news-clipping/:path*"
+    "/change-password/:path*"
   ],
 };

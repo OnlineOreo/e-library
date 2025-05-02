@@ -54,40 +54,18 @@ const Navbar = ({ show, setShow }) => {
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
-  const getISTFormattedTime = () => {
-    const now = new Date();
-  
-    const istTime = new Intl.DateTimeFormat("en-IN", {
-      timeZone: "Asia/Kolkata",
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: true,
-    }).format(now);
-  
-    return istTime;
-  };
-  
-
   const handleLogout = async (institute_id, setShow) => {
     const token = getToken();
     const session_id = getSession();
     const userId = getUserId();
-  
-    // Get IST formatted time
-    const endedAt = getISTFormattedTime();
-  
     if (session_id) {
       try {
         await axios.put(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-session?session_id=${session_id}&institute_id=${institute_id}&user_id=${userId}`,
           {
-            ended_at: endedAt,
-            institute: institute_id,
-            user: userId, 
+            ended_at: new Date().toISOString(),
+            institute: instituteId,
+            user: userId,
           },
           {
             headers: {
@@ -95,29 +73,28 @@ const Navbar = ({ show, setShow }) => {
             },
           }
         );
-  
         Swal.fire({
           icon: "success",
           title: "Logged Out",
           text: "You have been successfully logged out.",
           confirmButtonText: "OK",
         });
+        // toggleMenu(false)
       } catch (error) {
         console.error("Failed to update user session:", error);
         router.push("/");
       }
     }
-  
-    // Clear cookies
-    document.cookie = "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    document.cookie = "user_role=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    document.cookie = "session_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-  
-    setShow(false); // corrected from assignment
+    document.cookie =
+      "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie =
+      "user_role=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie =
+      "session_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    setShow = false;
     setToken(null);
     router.push("/");
   };
-  
 
   const baseDomain = getBaseDomain();
 
