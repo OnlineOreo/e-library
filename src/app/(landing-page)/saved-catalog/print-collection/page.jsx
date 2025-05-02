@@ -144,7 +144,7 @@ export default function PrintCollectionSavedCatalog() {
                     {gridView ? (
                         <Row id='grid-view' className={`grid-view`}>
                             {isLoading && results.length === 0 ? (
-                                <div className='w-100 h-25 d-flex align-items-center justify-content-center'>
+                                <div className='w-100 d-flex align-items-start justify-content-center' style={{ height:'100vh' }}>
                                     <Spinner animation="border" role="status" className='mt-5'>
                                         <span className="visually-hidden">Loading...</span>
                                     </Spinner>
@@ -214,7 +214,7 @@ export default function PrintCollectionSavedCatalog() {
                             )}
                         </Row>
                     )}
-                    <div className='d-flex justify-content-center my-5'>
+                    {/* <div className='d-flex justify-content-center my-5'>
                         {results.length > 0 && results.length < resultsCount && (
                             <Button
                                 variant='success'
@@ -229,7 +229,7 @@ export default function PrintCollectionSavedCatalog() {
                                 ) : "Load More"}
                             </Button>
                         )}
-                    </div>
+                    </div> */}
                 </Col>
             </Row>
 

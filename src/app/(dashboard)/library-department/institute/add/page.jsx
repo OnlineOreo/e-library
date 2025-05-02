@@ -95,14 +95,12 @@ const AddInstitute = () => {
                 sub_domain: "",
             });
 
-            setTimeout(() => {
-                router.push('../institute')
-            }, 3000);
+            router.push('../institute')
 
         } catch (error) {
             setIsLoading(false);
             if (error.response && error.response.data) {
-                setErrors(error.response.data); // Store API errors
+                setErrors(error.response.data);
             } else {
                 errorToaster("Something went wrong!");
             }

@@ -117,7 +117,7 @@ const NavbarTop = (props) => {
             </button>
 
             {showReminder && (
-              <div className="reminder-banner text-center text-dark py-2 fs-5">
+              <div className="reminder-banner text-center text-white py-2 fs-5">
                 ⚠️ {t("Your access will expire soon. Please renew before")}{" "}
                 {new Date(endDate).toLocaleDateString("en-IN")}
               </div>
@@ -179,7 +179,7 @@ const NavbarTop = (props) => {
         }
 
         .reminder-banner {
-          background: linear-gradient(90deg, #dbc581d9, #8f392b82);
+          background: linear-gradient(90deg, #7d6c7c, #637381);
           color: #856404;
           font-weight: 500;
           padding: 8px 16px;

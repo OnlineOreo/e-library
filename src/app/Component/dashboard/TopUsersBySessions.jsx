@@ -3,8 +3,8 @@ import React, { useEffect, useState } from "react";
 import { Card, Table, Spinner, Button } from "react-bootstrap";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { useTranslation } from 'react-i18next';
-import '@/i18n'; // cleaner using path alias `@`
+import { useTranslation } from "react-i18next";
+import "@/i18n"; // cleaner using path alias `@`
 import LanguageSelector from "@/app/Component/landing-page/languageselector";
 
 export default function TopUsersBySessions() {
@@ -75,12 +75,15 @@ export default function TopUsersBySessions() {
   // Pagination logic
   const totalPages = Math.ceil(userSessions.length / recordsPerPage);
   const startIdx = (currentPage - 1) * recordsPerPage;
-  const currentRecords = userSessions.slice(startIdx, startIdx + recordsPerPage);
+  const currentRecords = userSessions.slice(
+    startIdx,
+    startIdx + recordsPerPage
+  );
 
   return (
     <Card className="my-4 shadow">
       <Card.Header className="bg-white py-4 d-flex justify-content-between align-items-center">
-        <h4 className="mb-0">{t('Logged In Users (Latest Sessions)')}</h4>
+        <h4 className="mb-0">{t("Logged In Users (Latest Sessions)")}</h4>
         <div>
           <Button
             variant="outline-secondary"
@@ -88,7 +91,7 @@ export default function TopUsersBySessions() {
             disabled={currentPage === 1}
             onClick={() => setCurrentPage((prev) => prev - 1)}
           >
-            {t('Prev')}
+            {t("Prev")}
           </Button>{" "}
           <Button
             variant="outline-secondary"
@@ -96,7 +99,7 @@ export default function TopUsersBySessions() {
             disabled={currentPage === totalPages}
             onClick={() => setCurrentPage((prev) => prev + 1)}
           >
-            {t('Next')}
+            {t("Next")}
           </Button>
         </div>
       </Card.Header>
@@ -109,12 +112,12 @@ export default function TopUsersBySessions() {
         <Table responsive className="text-nowrap mb-0">
           <thead className="table-light">
             <tr>
-              <th>{t('User ID')}</th>
-              <th>{t('Browser')}</th>
-              <th>{t('Device type')}</th>
-              <th>{t('Ip Address')}</th>
-              <th>{t('Last Login Time')}</th>
-              {/* <th>{t('Last Logout Time')}</th> */}
+              <th>{t("User ID")}</th>
+              <th>{t("Browser")}</th>
+              <th>{t("Device type")}</th>
+              <th>{t("Ip Address")}</th>
+              <th>{t("Last Login Time")}</th>
+              <th>{t("Last Logout Time")}</th>
             </tr>
           </thead>
           <tbody>
@@ -134,16 +137,20 @@ export default function TopUsersBySessions() {
                     second: "2-digit",
                   })}
                 </td>
-                {/* <td>
-                  {new Date(user.ended_at).toLocaleString(undefined, {
-                    year: "numeric",
-                    month: "short",
-                    day: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    second: "2-digit",
-                  })}
-                </td> */}
+                <td>
+                  <td>
+                    {user.ended_at
+                      ? new Date(user.ended_at).toLocaleString(undefined, {
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          second: "2-digit",
+                        })
+                      : "Still log in"}
+                  </td>
+                </td>
               </tr>
             ))}
           </tbody>

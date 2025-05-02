@@ -35,7 +35,7 @@ const UserProfile = ({ handleLogout, instituteId, setShow }) => {
         <>
             {userRole && (
                 <div
-                    className="position-relative d-inline-block"
+                    className="d-inline-block"
                     onMouseEnter={() => setShowDropdown2(true)}
                     onMouseLeave={closeDropdown}
                 >

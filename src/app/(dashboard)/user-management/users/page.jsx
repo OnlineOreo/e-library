@@ -179,8 +179,10 @@ const Home = () => {
     const token = getToken();
     setPasswordLoading(true);
 
+    const { image, ...userWithoutImage } = selectedUser;
+
     const updatedUser = {
-      ...selectedUser, // Spread all the user data
+      ...userWithoutImage, // Spread all the user data
       password: newPassword, // Include the new password
     };
 
