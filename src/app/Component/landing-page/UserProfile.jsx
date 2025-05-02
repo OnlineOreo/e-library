@@ -36,6 +36,7 @@ const UserProfile = ({ handleLogout, instituteId, setShow }) => {
             {userRole && (
                 <div
                     className="d-inline-block"
+                    style={{position:"relative"}}
                     onMouseEnter={() => setShowDropdown2(true)}
                     onMouseLeave={closeDropdown}
                 >
@@ -61,8 +62,8 @@ const UserProfile = ({ handleLogout, instituteId, setShow }) => {
 
                     {showDropdown2 && (
                         <div
-                            className="dropdown-menu shadow end-5 show"
-                            style={{ minWidth: "200px" }}
+                            className="dropdown-menu shadow show"
+                            style={{ minWidth: "200px", position: "absolute", right: "0%" }}
                             onClick={(e) => e.stopPropagation()} // prevent toggle when clicking inside
                         >
                             {(userName || userRole) && (

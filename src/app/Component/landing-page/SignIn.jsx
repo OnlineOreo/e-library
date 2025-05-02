@@ -6,7 +6,7 @@
   import { useSelector, useDispatch } from "react-redux";
   // import { setUser } from "@/redux/slices/userSlice";
   import Swal from "sweetalert2";
-  import { setUser } from "../../../redux/slices/userSlice";
+
 
   const SignIn = ({show, publisherUrls , setShow, setToken}) => {
     const router = useRouter();
@@ -80,7 +80,7 @@
         document.cookie = `user_image=${userData.image}; path=/; max-age=6000; SameSite=Lax;`;
         document.cookie = `user_name=${userData.name}; path=/; max-age=6000; SameSite=Lax;`;
         // document.cookie = `user_id=${userData.id}; path=/; max-age=6000; SameSite=Lax;`;
-        dispatch(setUser(userData));
+        // dispatch(setUser(userData));
 
         // Get device & browser info
         const userAgent = navigator.userAgent;

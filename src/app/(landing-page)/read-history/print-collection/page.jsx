@@ -6,6 +6,7 @@ import { FaListUl, FaSearch } from "react-icons/fa";
 import { useState, useEffect } from 'react';
 import { useRouter } from "next/navigation";
 import axios from 'axios';
+import { useSelector } from "react-redux";
 
 import CatalogGridCard from '../../search/components/CatalogGridCard';
 import CatalogListCard from '../../search/components/CatalogListCard';
@@ -15,6 +16,7 @@ import CatalogDetailModal from '../../search/components/CatalogDetailModal';
 
 export default function PrintCollectionSavedCatalog() {
     const Router = useRouter();
+    const instituteId = useSelector((state) => state.institute.instituteId);
 
     // Use state with initialization from props
     const [gridView, setGridView] = useState(true);
@@ -65,7 +67,7 @@ export default function PrintCollectionSavedCatalog() {
         const userId = getUserID();
         // console.log("user_id", userId);
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/logs?user_id=${userId}&read_history=true`, {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/logs?user_id=${userId}&institute_id=${instituteId}&read_history=true`, {
                 headers: { Authorization: `${token}` },
             });
 

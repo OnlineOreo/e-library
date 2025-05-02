@@ -215,7 +215,7 @@ export default function PrintCollectionSavedCatalog() {
                             )}
                         </Row>
                     )}
-                    <div className='d-flex justify-content-center my-5'>
+                    {/* <div className='d-flex justify-content-center my-5'>
                         {results.length > 0 && results.length < resultsCount && (
                             <Button
                                 variant='success'
@@ -230,7 +230,7 @@ export default function PrintCollectionSavedCatalog() {
                                 ) : "Load More"}
                             </Button>
                         )}
-                    </div>
+                    </div> */}
                 </Col>
             </Row>
 

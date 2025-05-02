@@ -6,6 +6,7 @@ import { FaListUl, FaSearch } from "react-icons/fa";
 import { useState, useEffect } from 'react';
 import { useRouter } from "next/navigation";
 import axios from 'axios';
+import { useSelector } from "react-redux";
 
 import CatalogGridCard from '../../search/components/CatalogGridCard';
 import CatalogListCard from '../../search/components/CatalogListCard';
@@ -15,6 +16,7 @@ import CatalogDetailModal from '../../search/components/CatalogDetailModal';
 
 export default function PrintCollectionSavedCatalog() {
     const Router = useRouter();
+    const instituteId = useSelector((state) => state.institute.instituteId);
 
     // Use state with initialization from props
     const [gridView, setGridView] = useState(true);
@@ -65,7 +67,7 @@ export default function PrintCollectionSavedCatalog() {
         const userId = getUserID();
         // console.log("user_id", userId);
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/logs?user_id=${userId}&read_history=true`, {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/logs?user_id=${userId}&institute_id=${instituteId}&read_history=true`, {
                 headers: { Authorization: `${token}` },
             });
 
@@ -186,7 +188,7 @@ export default function PrintCollectionSavedCatalog() {
                                             description={item.description}
                                             uploader={item.uploader}
                                             url={item.url}
-                                            thumbnail = {item.thumbnail}
+                                            thumbnail={item.thumbnail}
                                             resource_type={item.resource_types_string}
                                             user_saved_catalog={userSavedCatalogs}
                                             catalogCore={"e-collection"}
@@ -197,7 +199,7 @@ export default function PrintCollectionSavedCatalog() {
                                 ))
                             ) : (
                                 <Col md={12} className="text-center text-muted py-5">
-                                     <h5>You have not read yet anything from E-collection.</h5>
+                                    <h5>You have not read yet anything from E-collection.</h5>
                                 </Col>
                             )}
                         </Row>
@@ -222,7 +224,7 @@ export default function PrintCollectionSavedCatalog() {
                                             description={item.description}
                                             uploader={item.uploader}
                                             url={item.url}
-                                            thumbnail = {item.thumbnail}
+                                            thumbnail={item.thumbnail}
                                             resource_type={item.resource_types_string}
                                             user_saved_catalog={userSavedCatalogs}
                                             catalogCore={"e-collection"}
@@ -238,7 +240,7 @@ export default function PrintCollectionSavedCatalog() {
                             )}
                         </Row>
                     )}
-                    <div className='d-flex justify-content-center my-5'>
+                    {/* <div className='d-flex justify-content-center my-5'>
                         {results.length > 0 && results.length < resultsCount && (
                             <Button
                                 variant='success'
@@ -253,7 +255,7 @@ export default function PrintCollectionSavedCatalog() {
                                 ) : "Load More"}
                             </Button>
                         )}
-                    </div>
+                    </div> */}
                 </Col>
             </Row>
 
