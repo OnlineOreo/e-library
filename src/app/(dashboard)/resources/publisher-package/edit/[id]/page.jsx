@@ -45,6 +45,7 @@ const EditPublisherPackage = () => {
         return;
       }
 
+      const hostname = typeof window !== "undefined" ? window.location.hostname : "";
       try {
         const [pubRes, deptRes, progRes, packageRes] = await Promise.all([
           axios.get(
@@ -66,7 +67,7 @@ const EditPublisherPackage = () => {
             }
           ),
           axios.get(
-            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/publisher-packages?package_id=${id}`,
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/publisher-packages?package_id=${id}&sub_domain=${hostname}`,
             {
               headers: { Authorization: token },
             }
