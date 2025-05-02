@@ -3,50 +3,37 @@
 import React, { useEffect, useState } from "react"
 import { useParams } from "next/navigation"
 import axios from "axios"
-import { Container } from "react-bootstrap"
-
-
+import { Container, Row, Col, Card } from "react-bootstrap"
+import { useSelector } from "react-redux"
 
 const DynamicPage = () => {
   const { id } = useParams()
   const [pageData, setPageData] = useState("")
 
-  const getToken = () => {
-    const cookieString = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("access_token="));
-    return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
-  };
-
-  const loadDynamicPage = async () => {
-    const token = getToken();
-    if (!token) {
-      router.push("/authentication/sign-in");
-      return;
-    }
-    try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dynamic-page?page_id=${id}`,
-        { headers: { Authorization: `${token}` } }
-      );
-      if (response.status === 200 && Array.isArray(response.data)) {
-        setPageData(response.data.page_content);
-      }
-    } catch (error) {
-      console.error("Failed to load item types.");
-    }
-  }
+  const landingPageData = useSelector((state) => state.landingPageDataSlice);
+  const dynamicPageData = landingPageData?.landingPageData?.dynamic_page || []
 
   useEffect(() => {
-    loadDynamicPage()
-  }, [id])
-
-  // console.log(id);
+    if (id && dynamicPageData.length > 0) {
+      const matchedPage = dynamicPageData.find(page => String(page.page_id) === String(id))
+      if (matchedPage) {
+        setPageData(matchedPage.page_content)
+      } else {
+        setPageData("No content found for this page.")
+      }
+    }
+  }, [id, dynamicPageData])
 
   return (
     <div>
       <Container>
-        {pageData}
+        <Row className="justify-content-center my-3 ">
+          <Col lg={11}>
+            <Card className="p-lg-2 p-2 p-lg-2 p-1" style={{ minHeight:'400px' }}>
+              <div dangerouslySetInnerHTML={{ __html: pageData }} />
+            </Card>
+          </Col>
+        </Row>
       </Container>
     </div>
   )
