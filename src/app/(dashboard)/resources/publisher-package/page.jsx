@@ -50,9 +50,11 @@ const ViewPublisher = () => {
       return;
     }
 
+    const hostname = typeof window !== "undefined" ? window.location.hostname : "";
+
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/publisher-packages?institute_id=${instituteId}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/publisher-packages?sub_domain=${hostname}`,
         {
           headers: { Authorization: `${token}` },
         }
