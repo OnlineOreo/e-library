@@ -83,7 +83,7 @@ const EditDepartment = () => {
     };
 
     useEffect(() => {
-        if(id & instituteId){
+        if(id && instituteId){
             loadDepartment(id);
             loadLibrary(instituteId);
         }
@@ -120,6 +120,7 @@ const EditDepartment = () => {
                 confirmButtonText: "OK",
             });
 
+            setIsLoading(false);
             setTimeout(() => router.push("../"), 2000);
         } catch (error) {
             setIsLoading(false);

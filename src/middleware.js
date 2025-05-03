@@ -3,18 +3,38 @@ import { NextResponse } from 'next/server'
 // Define route access
 const accessRules = {
   '/dashboard': ['ADMIN', 'INSTITUTE ADMIN'],
+
   '/user-management/users': ['ADMIN', 'INSTITUTE ADMIN'],
   '/user-management/admin': ['ADMIN'],
+
   '/library-department/institute': ['ADMIN'],
-  '/library-department': ['ADMIN', 'INSTITUTE ADMIN'],
-  '/resources': ['ADMIN', 'INSTITUTE ADMIN'],
-  '/resources/item-types': ['ADMIN'],
+  '/library-department/library/add': ['ADMIN'],
+  '/library-department/library': ['ADMIN','INSTITUTE ADMIN'],
+  '/library-department/department/add': ['ADMIN'],
+  '/library-department/department': ['ADMIN','INSTITUTE ADMIN'],
+  '/library-department/user-type/add': ['ADMIN'],
+  '/library-department/user-type': ['ADMIN', 'INSTITUTE ADMIN'],
+  '/library-department/content-group/add': ['ADMIN'],
+  '/library-department/content-group': ['ADMIN', 'INSTITUTE ADMIN'],
+  '/library-department/program/add': ['ADMIN'],
+  '/library-department/program': ['ADMIN', 'INSTITUTE ADMIN'],
+  '/library-department/service-group/add': ['ADMIN'],
+  '/library-department/service-group': ['ADMIN','INSTITUTE ADMIN'],
+  // '/library-department': ['ADMIN', 'INSTITUTE ADMIN'],
+
+  '/resources/item': ['ADMIN', 'INSTITUTE ADMIN'],
+  '/resources/item/add': ['ADMIN'],
+  '/resources/': ['ADMIN'],
   '/resources/publishers': ['ADMIN'],
   '/resources/publisher-package': ['ADMIN'],
+
   '/reports': ['ADMIN', 'INSTITUTE ADMIN'],
+
   '/configuration': ['ADMIN', 'INSTITUTE ADMIN'],
+
   '/profile/view': ['ADMIN', 'INSTITUTE ADMIN'],
   '/profile/edit': ['ADMIN', 'INSTITUTE ADMIN'],
+
   '/student-profile': ['STUDENT','STAFF','FACULTY'],
   '/logs': ['ADMIN', 'INSTITUTE ADMIN'],
   '/notification': ['ADMIN', 'INSTITUTE ADMIN'],

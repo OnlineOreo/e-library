@@ -57,7 +57,7 @@ const ChangePassword = () => {
       // console.log(response.data)
 
       if (response.status == 200 || response.status == 201) {
-        ({
+        Swal.fire({
           title: "Success!",
           text: "Password changed successfully!",
           icon: "success",
@@ -73,8 +73,7 @@ const ChangePassword = () => {
       }
     } catch (err) {
       setError(
-        err.response?.data?.message ||
-          "An error occurred while changing the password."
+        err.response?.data?.detail
       );
     }
 

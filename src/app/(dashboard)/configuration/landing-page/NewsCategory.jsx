@@ -1,3 +1,4 @@
+'use client'
 import { Col, Row, Card, Button, Form, Badge } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";

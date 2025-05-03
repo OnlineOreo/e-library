@@ -138,18 +138,16 @@ export default function TopUsersBySessions() {
                   })}
                 </td>
                 <td>
-                  <td>
-                    {user.ended_at
-                      ? new Date(user.ended_at).toLocaleString(undefined, {
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                          second: "2-digit",
-                        })
-                      : "Still log in"}
-                  </td>
+                  {user.ended_at
+                    ? new Date(user.ended_at).toLocaleString(undefined, {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        second: "2-digit",
+                      })
+                    : "Still log in"}
                 </td>
               </tr>
             ))}

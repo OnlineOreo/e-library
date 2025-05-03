@@ -28,9 +28,11 @@ export default function Page({ params }) {
     setIsLoading(true);
     const token = getToken();
 
+    const hostname = typeof window !== "undefined" ? window.location.hostname : "";
+
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/publisher-packages?package_id=${instituteId}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/publisher-packages?package_id=${instituteId}&sub_domain=${hostname}`,
         {
           headers: { Authorization: `${token}` },
         }
@@ -75,7 +77,7 @@ export default function Page({ params }) {
             <>
               <Row className="mb-4">
                 <Col md={4}>
-                  <h6 className="text-muted">Package Name</h6>
+                  <h5 className="text-dark">Package Name</h5>
                 </Col>
                 <Col md={8}>
                   <h5 className="fw-semibold">
@@ -86,7 +88,7 @@ export default function Page({ params }) {
 
               <Row className="mb-4">
                 <Col md={4}>
-                  <h6 className="text-muted">Publisher name</h6>
+                  <h5 className="text-dark">Publisher name</h5>
                 </Col>
                 <Col md={8}>{formData.publisher_name || "N/A"}</Col>
               </Row>
@@ -119,7 +121,7 @@ export default function Page({ params }) {
                     </tbody>
                   </Table>
                 ) : (
-                  <div className="text-muted">No mappings available.</div>
+                  <div className="text-dark">No mappings available.</div>
                 )}
               </div>
             </>

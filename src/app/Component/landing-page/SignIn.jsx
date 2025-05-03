@@ -2,7 +2,7 @@
   import { Row, Col, Card, Form, Button, Spinner } from "react-bootstrap";
   import Link from "next/link";
   import { useState, useEffect } from "react";
-  import { useRouter , useSearchParams } from "next/navigation";
+  import { useRouter , useSearchParams, usePathname } from "next/navigation";
   import { useSelector, useDispatch } from "react-redux";
   // import { setUser } from "@/redux/slices/userSlice";
   import Swal from "sweetalert2";
@@ -10,6 +10,7 @@
 
   const SignIn = ({show, publisherUrls , setShow, setToken}) => {
     const router = useRouter();
+    const pathname = usePathname();
     const dispatch = useDispatch();
     const instituteId = useSelector((state) => state.institute.instituteId);
     const searchParams = useSearchParams();
@@ -139,6 +140,7 @@
             'targetWindow',
             `toolbar=no,location=no,menubar=no,scrollbars=yes,resizable=yes,width=${width},height=${height},left=${left},top=0`
           );
+          router.replace(pathname);
         }else if(extra != null){
           window.open(`${extra}`, "_blank")
         } else {

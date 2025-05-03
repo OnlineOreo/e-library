@@ -1,5 +1,4 @@
-"use client";
-
+'use client'
 import { Col, Row, Card, Tab, Nav, Container, Button, Form, } from "react-bootstrap";
 import "./Checkbox.css";
 import Menu from "./Menu";

@@ -4,6 +4,11 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";                                                                                           
 
 export default function Header() {
   const [logo, setLogo] = useState(null);
@@ -53,6 +58,7 @@ export default function Header() {
       router.push("/authentication/sign-in");
       return;
     }
+    
     if (!instituteId) {
       return;
     }
@@ -67,13 +73,13 @@ export default function Header() {
 
       if (response.status === 200) {
         const mainData = response.data[0];
-        
+
         const logos = mainData?.latest_logos || [];
-        const activeLogoUrl = logos.find(logo => logo.is_active)?.logo;
-      
+        const activeLogoUrl = logos.find((logo) => logo.is_active)?.logo;
+
         setAllLogo(logos);
         setLogo(activeLogoUrl);
-      
+
         setConfigId(mainData.conf_id);
         setElibraryData({
           font_style: mainData.font_style,
@@ -81,16 +87,16 @@ export default function Header() {
           font_weight: mainData.font_weight,
           font_color: mainData.font_color,
         });
-      
+
         setColorThemeData({
           color1: mainData.color1 || "#ffffff",
           color2: mainData.color2 || "#000000",
           show_banner: mainData.so_banner || false,
           upper_cover_image: mainData.upper_cover_image || "",
         });
-      
+
         setCoverImage(mainData.upper_cover_image);
-      
+
         setCoverHeadlineData({
           firstQuote: mainData.cover_headline.firstQuote,
           subHeadline: mainData.cover_headline.subHeadline,
@@ -100,7 +106,6 @@ export default function Header() {
           banner_text_color: mainData.cover_headline.banner_text_color,
         });
       }
-      
     } catch (error) {
       console.error("Error fetching logo:", error);
     } finally {
@@ -125,6 +130,11 @@ export default function Header() {
       Swal.fire("Error", "Please select an image", "error");
       return;
     }
+    
+    if (!(logo instanceof File)) {
+      Swal.fire("Error", "Please upload a valid logo file", "error");
+      return;
+    }    
 
     const token = getToken();
     const formData = new FormData();
@@ -145,7 +155,7 @@ export default function Header() {
 
       if (response.status === 200 || response.status === 201) {
         Swal.fire("Success", "Logo updated successfully!", "success");
-        LoadConfigData(); // Reload the logo after upload
+        LoadConfigData();
       }
     } catch (error) {
       console.error("Error updating logo:", error);
@@ -153,17 +163,40 @@ export default function Header() {
     }
   };
 
+  const handleActivateLogo = async(logo_id,instituteId)=>{
+    const token = getToken();
+    const formData = new FormData();
+    formData.append("is_active", true);
+    formData.append("institute", instituteId);
+
+    try {
+      const response = await axios.patch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/logos?logo_id=${logo_id}&institute_id=${instituteId}`,
+        formData,
+        {
+          headers: {
+            Authorization: `${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (response.status === 200 || response.status === 201) {
+        Swal.fire("Success", "Logo activated successfully!", "success");
+        // setAllLogo(allLogo.filter((logo) => !logo.is_active))
+        LoadConfigData();
+      }
+    } catch (error) {
+      console.error("Error updating logo:", error);
+      Swal.fire("Error", "Failed to update logo", "error");
+    }
+  };
+  
+
   // eLibrary Configuration
 
   const handleElibraryChange = (event) => {
     const { name, value, type } = event.target;
-    // if(name == 'font_size'){
-    //   const numericValue = Number(value)
-    //   if (numericValue > 18) {
-
-    //   }
-    // }
-
     setElibraryData((prevState) => ({
       ...prevState,
       [name]: type === "radio" ? value : value,
@@ -197,7 +230,7 @@ export default function Header() {
           "eLibrary Configuration updated successfully!",
           "success"
         );
-        LoadConfigData(); // Reload the logo after upload
+        LoadConfigData();
       }
     } catch (error) {
       console.error("Error updating eLibrary :", error);
@@ -218,10 +251,7 @@ export default function Header() {
     const formData = new FormData();
     formData.append("color1", colorThemeData.color1);
     formData.append("color2", colorThemeData.color2);
-    formData.append(
-      "so_banner",
-      colorThemeData.show_banner ? "true" : "false"
-    );
+    formData.append("so_banner", colorThemeData.show_banner ? "true" : "false");
     formData.append("institute", instituteId);
 
     try {
@@ -281,7 +311,14 @@ export default function Header() {
         LoadConfigData(); // Reload the image after upload
       }
     } catch (error) {
-      Swal.fire("Error", `${error?.response?.data.upper_cover_image[0] || 'Failed to update upper cover image' }`, "error");
+      Swal.fire(
+        "Error",
+        `${
+          error?.response?.data.upper_cover_image[0] ||
+          "Failed to update upper cover image"
+        }`,
+        "error"
+      );
     }
   };
 
@@ -339,43 +376,116 @@ export default function Header() {
           <Card>
             <Card.Body className="p-0">
               <h5 className="p-2 bg-dark text-white rounded-top-3">Logo</h5>
-              <Form>
-                <label htmlFor="photo-upload" className="custom-file-upload">
-                  <div className="img-wrap img-upload">
-                    {isLoading ? (
-                      <p>Loading...</p>
-                    ) : (
-                      <img
-                        src={preview || `${logo}` || logo || "/default-logo.png"}
-                        alt="Logo"
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                        }}
-                      />
-                    )}
-                  </div>
-                  <input
-                    id="photo-upload"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                  />
-                </label>
-                <Row className="justify-content-center">
-                  <Col md={10} className="text-center">
-                    <Button
-                      variant="primary"
-                      size="sm"
-                      className="mx-auto my-3"
-                      onClick={() => handleSaveLogo(configId)}
+              <Swiper
+                modules={[Navigation]}
+                navigation
+                pagination={{ clickable: true }}
+                autoplay={{ delay: 3000 }}
+                loop={true}
+                spaceBetween={30}
+                slidesPerView={1}
+                className="custom-swiper"
+              >
+                <SwiperSlide>
+                  <Form>
+                    <label
+                      htmlFor="photo-upload"
+                      className="custom-file-upload"
                     >
-                      Save Logo
-                    </Button>
-                  </Col>
-                </Row>
-              </Form>
+                      <div className="img-wrap img-upload">
+                        {isLoading ? (
+                          <p>Loading...</p>
+                        ) : (
+                          <img
+                            src={
+                              preview ||
+                              `${
+                                allLogo.find((config) => config.is_active)?.logo
+                              }` ||
+                              allLogo.find((config) => config.is_active)
+                                ?.logo ||
+                              "/default-logo.png"
+                            }
+                            alt="Logo"
+                            style={{
+                              width: "100%",
+                              height: "100%",
+                              objectFit: "cover",
+                            }}
+                          />
+                        )}
+                      </div>
+                      <input
+                        id="photo-upload"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleFileChange}
+                      />
+                    </label>
+                    <Row className="justify-content-center">
+                      <Col md={10} className="text-center">
+                        <Button
+                          variant="primary"
+                          size="sm"
+                          className="mx-auto my-3"
+                          onClick={() => handleSaveLogo(configId)}
+                        >
+                          Change Logo
+                        </Button>
+                      </Col>
+                    </Row>
+                  </Form>
+                </SwiperSlide>
+                {allLogo &&
+                  allLogo
+                    .filter((logo) => logo.is_active === false)
+                    .map((logo, index) => (
+                      <SwiperSlide key={index}>
+                        <Form>
+                          <div
+                            className="custom-file-upload"
+                          >
+                            <div className="img-wrap">
+                              {isLoading ? (
+                                <p>Loading...</p>
+                              ) : (
+                                <img
+                                  src={
+                                    preview ||
+                                    logo.logo ||
+                                    "/default-logo.png"
+                                  }
+                                  alt="Logo"
+                                  style={{
+                                    width: "100%",
+                                    height: "100%",
+                                    objectFit: "cover",
+                                  }}
+                                />
+                              )}
+                            </div>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={handleFileChange}
+                            />
+                          </div>
+                          <Row className="justify-content-center">
+                            <Col md={10} className="text-center">
+                              <Button
+                                variant="primary"
+                                size="sm"
+                                className="mx-auto my-3"
+                                onClick={() => handleActivateLogo(logo.logo_id,instituteId)}
+                              >
+                                Activate
+                              </Button>
+                            </Col>
+                          </Row>
+                        </Form>
+                      </SwiperSlide>
+                    ))}
+              </Swiper>
             </Card.Body>
           </Card>
         </Col>

@@ -90,6 +90,9 @@ const NavbarTop = (props) => {
     document.cookie = `access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
     document.cookie = `user_role=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
     document.cookie = `session_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+    document.cookie = `user_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+    document.cookie = `user_name=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+    document.cookie = `user_image=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
 
     router.push("/");
   };
