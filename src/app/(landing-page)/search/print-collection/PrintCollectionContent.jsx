@@ -201,7 +201,7 @@ export default function PrintCollectionContent({
         <Container className="px-4 text-secondary">
             <Row>
                 <Col md={3} className="px-0 bg-white">
-                    <SearchSideFilter {...sideFilterResults} catalogCore={"Print-collection"} />
+                    <SearchSideFilter {...sideFilterResults} catalogCore={"Print-collection"} setIsLoading={setIsLoading}/>
                 </Col>
                 <Col md={9} className='pe-0 ps-lg-4 ps-0'>
                     <Row className="mb-3">

@@ -1,25 +1,24 @@
-// src/redux/slices/userVisitSlice.js
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  sessionStarted: false,
-  sessionStartTime: null,
   sessionId: null,
+  started: false,
+  startTime: null,
 };
 
 const userVisitSlice = createSlice({
-  name: "userVisit",
+  name: 'userVisit',
   initialState,
   reducers: {
     startSession: (state, action) => {
-      state.sessionStarted = true;
-      state.sessionStartTime = action.payload.startTime;
       state.sessionId = action.payload.sessionId;
+      state.started = true;
+      state.startTime = action.payload.startTime;
     },
     endSession: (state) => {
-      state.sessionStarted = false;
-      state.sessionStartTime = null;
+      state.started = false;
       state.sessionId = null;
+      state.startTime = null;
     },
   },
 });

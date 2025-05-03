@@ -6,6 +6,7 @@ import { fetchInstituteId } from "./../redux/slices/instituteSlice";
 import Navbar from "./Component/landing-page/Navbar";
 import styles from "./page.module.css";
 import './dynamic.css'
+import {useUserSession} from "@/hooks/useUserSession";
 
 import Banner from "./Component/landing-page/Banner";
 import Publisher from "./Component/landing-page/Publisher";
@@ -18,6 +19,8 @@ import Footer from "./Component/landing-page/Footer";
 import Headline from "./Component/landing-page/(Headlines)/Headline";
 
 export default function Home() {
+  useUserSession();
+
   const dispatch = useDispatch();
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(true);
