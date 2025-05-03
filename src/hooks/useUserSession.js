@@ -48,7 +48,7 @@ export const useUserSession = () => {
             visit_start_time: startTime,
           };
 
-          fetch("http://192.168.1.59:8080/api/user-visit", {
+          fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-visit`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),
@@ -67,7 +67,7 @@ export const useUserSession = () => {
         const blob = new Blob([data], { type: "application/json" });
 
         navigator.sendBeacon(
-          `http://192.168.1.59:8080/api/user-visit/${sessionId}`,
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-visit/${sessionId}`,
           blob
         );
 

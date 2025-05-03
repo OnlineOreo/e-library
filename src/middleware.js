@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server'
 
-// Define route access
 const accessRules = {
   '/dashboard': ['ADMIN', 'INSTITUTE ADMIN'],
 
@@ -47,7 +46,6 @@ const accessRules = {
   '/read-history': ['ADMIN', 'INSTITUTE ADMIN','STUDENT','STAFF','FACULTY'],
 }
 
-// Helper to decode JWT without verifying (base64 only)
 function decodeJwt(token) {
   try {
     const payload = token.split('.')[1]

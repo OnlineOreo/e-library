@@ -94,7 +94,7 @@ const Navbar = ({ show, setShow }) => {
     document.cookie = `user_image=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
 
     setShow = false;
-    setToken(null);
+    setToken('');
     router.push("/");
   };
 

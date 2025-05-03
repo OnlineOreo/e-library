@@ -101,9 +101,7 @@ const AddCategory = () => {
                 image: null,
             });
 
-            setTimeout(() => {
-                router.push("../categories");
-            }, 2000);
+            router.push("../categories");
 
         } catch (error) {
             if (error.response && error.response.data) {
