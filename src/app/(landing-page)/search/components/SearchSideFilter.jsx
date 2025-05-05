@@ -13,6 +13,7 @@ const SearchSideFilter = (props) => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [solrCore, setSolrCore] = useState(props.catalogCore || "Print-collection")
+    const [reset, setReset] = useState(false)
 
     useEffect(() => {
         setSolrCore(props.catalogCore || "Print-collection");
@@ -26,7 +27,6 @@ const SearchSideFilter = (props) => {
     }
 
     const [parsedUrl, setParsedUrl] = useState([])
-    // console.log("solrCore", props.catalogCore);
     // console.log("url params : ", encodeURIComponent(urlParams));
     function parseSolrQuery(query) {
         const filters = {};
@@ -116,9 +116,10 @@ const SearchSideFilter = (props) => {
         const baseQuery = baseMatch ? baseMatch[1] : "";
 
         const parsed = parseSolrQuery(baseQuery);
-        console.log("parsed after clear:", parsed);
+        // console.log("parsed after clear:", parsed);
 
         setParsedUrl(parsed);
+        setReset(true); 
         router.push(`/search/${solrCoreArr[solrCore]}?q=${encodeURIComponent(baseQuery)}`);
     };
 
@@ -145,6 +146,7 @@ const SearchSideFilter = (props) => {
                                 handleApply={handleApply}
                                 parsedUrl={parsedUrl}
                                 filterChange={filterChange}
+                                reset={reset}
                             />
 
                             {/* Content */}
@@ -152,6 +154,7 @@ const SearchSideFilter = (props) => {
                                 resourcetypes={props.resource_types_string || []}
                                 parsedUrl={parsedUrl}
                                 filterChange={filterChange}
+                                reset={reset}
                             />
 
                             {/* Author Filter */}
@@ -162,6 +165,7 @@ const SearchSideFilter = (props) => {
                                 handleApply={handleApply}
                                 parsedUrl={parsedUrl}
                                 filterChange={filterChange}
+                                reset={reset}
                             />
 
                             {/* Publish Year */}
@@ -173,6 +177,7 @@ const SearchSideFilter = (props) => {
                                     handleApply={handleApply}
                                     parsedUrl={parsedUrl}
                                     filterChange={filterChange}
+                                    reset={reset}
                                 />
                             )}
                         </Form>

@@ -2,18 +2,32 @@ import React from 'react'
 import { useState, useEffect } from 'react';
 import { Form, Dropdown, Button } from 'react-bootstrap';
 
-const DateSideFilter = ({dates, setShowDDropdown, showDDropdown, handleApply, parsedUrl, filterChange}) => {
-        const [dcDate, setDcDate] = useState(dates || []);
+const DateSideFilter = ({ dates, setShowDDropdown, showDDropdown, handleApply, parsedUrl, filterChange, reset }) => {
+    const [dcDate, setDcDate] = useState(dates || []);
+    const [selectedDate, setSelectedDate] = useState([])
 
-        useEffect(() => {
-            setDcDate(dates || []);
-        }, [dates]);
+    useEffect(() => {
+        setDcDate(dates || []);
+    }, [dates]);
 
-        const [searchTermD, setSearchTermD] = useState("");
+    const [searchTermD, setSearchTermD] = useState("");
 
-        const filteredDates = dcDate.filter(item =>
-            item?.name?.toLowerCase().includes(searchTermD.toLowerCase())
-        );
+    const filteredDates = dcDate.filter(item =>
+        item?.name?.toLowerCase().includes(searchTermD.toLowerCase())
+    );
+
+    const inputDateChange = (e) => {
+        const label = e.target.dataset.label;
+        if (e.target.checked) {
+            setSelectedDate(prev => [...prev, label]);
+        } else {
+            setSelectedDate(prev => prev.filter(item => item !== label));
+        }
+    };
+
+    useEffect(() => {
+        setSelectedDate([]);
+    }, [reset])
     return (
         <Form.Group className="border-bottom p-3">
             <div className="d-flex justify-content-between align-items-center mb-2" style={{ position: "relative" }}>
@@ -49,6 +63,8 @@ const DateSideFilter = ({dates, setShowDDropdown, showDDropdown, handleApply, pa
                                     label={item?.name || "Unknown"}
                                     data-filtertype="dc_date"
                                     data-label={item?.name || ""}
+                                    onChange={inputDateChange}
+                                    checked={selectedDate.includes(item?.name)}
                                 />
                                 <span>({item?.count || 0})</span>
                             </div>

@@ -1,21 +1,36 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
-import { Form, Dropdown, Button } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 
-const PublisherSideFilter = ({publishers, setShowPDropdown, showPDropdown, handleApply, parsedUrl, filterChange}) => {
-        const [dcPublisher, setDcPublisher] = useState(publishers || []);
+const PublisherSideFilter = ({ publishers, setShowPDropdown, showPDropdown, handleApply, parsedUrl, filterChange, reset }) => {
+    const [dcPublisher, setDcPublisher] = useState(publishers || []);
+    const [selectedPublishers, setSelectedPublishers] = useState([]);
 
-        // console.log("publisher : ", publishers);
+    // console.log("publisher : ", publishers);
 
-        useEffect(() => {
-            setDcPublisher(publishers || []);
-        }, [publishers]);
+    useEffect(() => {
+        setDcPublisher(publishers || []);
+    }, [publishers]);
 
-        const [searchTermP, setSearchTermP] = useState("");
+    const [searchTermP, setSearchTermP] = useState("");
 
-        const filteredPublishers = dcPublisher.filter(item =>
-            item?.name?.toLowerCase().includes(searchTermP.toLowerCase())
-        );
+    const filteredPublishers = dcPublisher.filter(item =>
+        item?.name?.toLowerCase().includes(searchTermP.toLowerCase())
+    );
+
+    const inputPubChange = (e) => {
+        const label = e.target.dataset.label;
+        if (e.target.checked) {
+            setSelectedPublishers(prev => [...prev, label]);
+        } else {
+            setSelectedPublishers(prev => prev.filter(item => item !== label));
+        }
+    };
+
+    useEffect(() => {
+        setSelectedPublishers([]);
+    }, [reset])
+
     return (
         <Form.Group className="border-bottom p-3">
             <div className="d-flex justify-content-between align-items-center mb-2" style={{ position: "relative" }}>
@@ -53,6 +68,8 @@ const PublisherSideFilter = ({publishers, setShowPDropdown, showPDropdown, handl
                                         label={item?.name || "Unknown"}
                                         data-filtertype="dc_publishers_string"
                                         data-label={item?.name || "Unknown"}
+                                        onChange={inputPubChange}
+                                        checked={selectedPublishers.includes(item?.name)}
                                     />
                                     <span>({item?.count || 0})</span>
                                 </div>

@@ -183,7 +183,7 @@ export default function PrintCollectionContent({
             return;
         }
         const userId = getUserID();
-        console.log("user_id", userId);
+        // console.log("user_id", userId);
         try {
             const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-saved-article?user_id=${userId}`, {
                 headers: { Authorization: `${token}` },

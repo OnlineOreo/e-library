@@ -2,8 +2,9 @@ import React from 'react'
 import { useState, useEffect } from 'react';
 import { Form, Dropdown, Button } from 'react-bootstrap';
 
-const AuthorSideFilter = ({creators, setShowADropdown, showADropdown, handleApply, parsedUrl, filterChange}) => {
+const AuthorSideFilter = ({ creators, setShowADropdown, showADropdown, handleApply, parsedUrl, filterChange, reset }) => {
     const [dcCreators, setDcCreators] = useState(creators || []);
+    const [selectedCreators, setSelectedCreators] = useState([])
 
     useEffect(() => {
         setDcCreators(creators || []);
@@ -14,6 +15,19 @@ const AuthorSideFilter = ({creators, setShowADropdown, showADropdown, handleAppl
     const filteredCreators = dcCreators.filter(item =>
         item?.name?.toLowerCase().includes(searchTermA.toLowerCase())
     );
+
+    const inputAuthorChange = (e) => {
+        const label = e.target.dataset.label;
+        if (e.target.checked) {
+            setSelectedCreators(prev => [...prev, label]);
+        } else {
+            setSelectedCreators(prev => prev.filter(item => item !== label));
+        }
+    };
+
+    useEffect(() => {
+        setSelectedCreators([]);
+    }, [reset])
 
     return (
         <Form.Group className="border-bottom p-3">
@@ -50,6 +64,8 @@ const AuthorSideFilter = ({creators, setShowADropdown, showADropdown, handleAppl
                                     label={item?.name || "Unknown"}
                                     data-filtertype="datacite_creators_string"
                                     data-label={item?.name || ""}
+                                    onChange={inputAuthorChange}
+                                    checked={selectedCreators.includes(item?.name)}
                                 />
                                 <span>({item?.count || 0})</span>
                             </div>
@@ -69,29 +85,56 @@ const AuthorSideFilter = ({creators, setShowADropdown, showADropdown, handleAppl
                     </div>
                 </div>
             </div>
-            {dcCreators.slice(0, 5).map((item, index) => {
-                const id = `dc-creator-${index}`;
-                return (
-                    <div className="d-flex justify-content-between" key={id}>
-                        <Form.Check
-                            type="checkbox"
-                            id={id}
-                            className="thats_filter one_line_ellipses"
-                            style={{ width: "90%" }}
-                            label={
-                                <label htmlFor={id} style={{ cursor: 'pointer', width: "100%" }}>
-                                    {item?.name || "Unknown"}
-                                </label>
-                            }
-                            data-filtertype="datacite_creators_string"
-                            data-label={item?.name || ""}
-                            onChange={filterChange}
-                            checked={parsedUrl?.datacite_creators_string?.includes(item?.name) ?? false}
-                        />
-                        <span className="text-secondary">{item?.count || 0}</span>
-                    </div>
-                );
-            })}
+            {parsedUrl?.datacite_creators_string?.length > 2 ? (
+                parsedUrl.datacite_creators_string.map((selectedName, index) => {
+                    const matched = dcCreators.find(author => author.name === selectedName);
+                    const id = `selected-${index}`;
+
+                    return (
+                        <div className="d-flex justify-content-between" key={id}>
+                            <Form.Check
+                                type="checkbox"
+                                id={id}
+                                className="one_line_ellipses thats_filter"
+                                style={{ width: "90%" }}
+                                label={
+                                    <label htmlFor={id} style={{ cursor: 'pointer', width: "100%" }}>
+                                        {selectedName || "Unknown"}
+                                    </label>
+                                }
+                                data-filtertype="datacite_creators_string"
+                                data-label={selectedName || "Unknown"}
+                                onChange={filterChange}
+                                checked
+                            />
+                            <span className="text-secondary">{matched?.count || 0}</span>
+                        </div>
+                    );
+                })
+            ) : (
+                dcCreators.slice(0, 5).map((item, index) => {
+                    const id = `dc-creator-${index}`;
+                    return (
+                        <div className="d-flex justify-content-between" key={id}>
+                            <Form.Check
+                                type="checkbox"
+                                id={id}
+                                className="thats_filter one_line_ellipses"
+                                style={{ width: "90%" }}
+                                label={
+                                    <label htmlFor={id} style={{ cursor: 'pointer', width: "100%" }}>
+                                        {item?.name || "Unknown"}
+                                    </label>
+                                }
+                                data-filtertype="datacite_creators_string"
+                                data-label={item?.name || ""}
+                                onChange={filterChange}
+                                checked={parsedUrl?.datacite_creators_string?.includes(item?.name) ?? false}
+                            />
+                            <span className="text-secondary">{item?.count || 0}</span>
+                        </div>
+                    );
+                }))}
 
         </Form.Group>
     )

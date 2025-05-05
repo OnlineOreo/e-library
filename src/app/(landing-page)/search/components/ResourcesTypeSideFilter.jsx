@@ -2,7 +2,7 @@ import React from 'react'
 import { useState, useEffect } from 'react';
 import { Form, Dropdown, Button } from 'react-bootstrap';
 
-const ResourcesTypeSideFilter = ({ resourcetypes, parsedUrl, filterChange }) => {
+const ResourcesTypeSideFilter = ({ resourcetypes, parsedUrl, filterChange, reset }) => {
     const [resourceTypes, setResourceType] = useState(resourcetypes || []);
 
         useEffect(() => {

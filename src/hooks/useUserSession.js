@@ -62,15 +62,18 @@ export const useUserSession = () => {
           timeZone: "Asia/Kolkata",
           hour12: false,
         });
-
-        const data = JSON.stringify({ ended_at: endTime });
-        const blob = new Blob([data], { type: "application/json" });
-
+    
+        const payload = JSON.stringify({
+          ended_at: endTime,
+        });
+    
+        const blob = new Blob([payload], { type: "application/json" });
+    
         navigator.sendBeacon(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-visit/${sessionId}`,
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-visit?visit_session_id=${sessionId}&is_patch=true`,
           blob
         );
-
+    
         dispatch(endSession());
         sessionStorage.removeItem("user-session");
       }
