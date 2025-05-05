@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchInstituteId } from "./../redux/slices/instituteSlice";
 import Navbar from "./Component/landing-page/Navbar";
 import styles from "./page.module.css";
-import './dynamic.css'
+import './dynamic.css';
 import {useUserSession} from "@/hooks/useUserSession";
 
 import Banner from "./Component/landing-page/Banner";
