@@ -151,7 +151,7 @@ const DropdownMenu = ({
               style={{ minWidth: "33%" }}
             >
               <a
-                className="dropdown-link cursor_pointer_underline"
+                className="dropdown-link cursor_pointer_underline text-dark"
                 href="#"
                 onClick={(e) => {
                   e.preventDefault();

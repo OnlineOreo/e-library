@@ -1,27 +1,27 @@
+// app/providers.jsx
 "use client";
 
-import { Provider } from "react-redux";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import store from "../redux/store";
-import { fetchInstituteId } from "../redux/slices/instituteSlice";
-import { landingPageData } from "../redux/slices/landingPageData";
+import { Provider, useDispatch } from "react-redux";
+import store from "@/redux/store";
+import { setInstituteId } from "@/redux/slices/instituteSlice";
 
-function FetchInstitute() {
+function InitInstitute({ instituteId }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchInstituteId()); // Fetch institute ID on startup
-    dispatch(landingPageData()); // landing page data
-  }, [dispatch]);
+    if (instituteId) {
+      dispatch(setInstituteId(instituteId));
+    }
+  }, [instituteId, dispatch]);
 
-  return null; 
+  return null;
 }
 
-export default function Providers({ children }) {
+export default function Providers({ children, instituteId }) {
   return (
     <Provider store={store}>
-      <FetchInstitute /> 
+      <InitInstitute instituteId={instituteId} />
       {children}
     </Provider>
   );

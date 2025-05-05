@@ -1,3 +1,4 @@
+'use client'
 import React, { useState } from "react";
 import { FaUser, FaLock, FaSignOutAlt, FaUserTag, FaHistory } from "react-icons/fa";
 import { MdYoutubeSearchedFor } from "react-icons/md";

@@ -132,7 +132,7 @@ const EditNewsClipping = () => {
           <Col lg={12}>
             <div className="d-flex justify-content-between align-items-center">
               <h3 className="mb-0 text-dark">Edit E-news Clipping</h3>
-              <Link href="/configuration/news-clippings" className="btn btn-white">
+              <Link href="/resources/news-clippings" className="btn btn-white">
                 <FaMinusCircle /> Back
               </Link>
             </div>

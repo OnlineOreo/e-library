@@ -4,14 +4,15 @@ import React, { useEffect, useState } from "react"
 import { useParams } from "next/navigation"
 import axios from "axios"
 import { Container, Row, Col, Card } from "react-bootstrap"
+import { useLandingPageData } from "@/app/context/LandingPageContext"; 
 import { useSelector } from "react-redux"
 
 const DynamicPage = () => {
   const { id } = useParams()
   const [pageData, setPageData] = useState("")
 
-  const landingPageData = useSelector((state) => state.landingPageDataSlice);
-  const dynamicPageData = landingPageData?.landingPageData?.dynamic_page || []
+  const landingPageData = useLandingPageData();
+  const dynamicPageData = landingPageData?.dynamic_page || []
 
   useEffect(() => {
     if (id && dynamicPageData.length > 0) {

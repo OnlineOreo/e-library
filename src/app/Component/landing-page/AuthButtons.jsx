@@ -41,7 +41,7 @@ const AuthButtons = ({
             <div className="mx-2">
               <Link
                 href="/dashboard"
-                className="mx-1 hover-underline"
+                className="mx-1 hover-underline text-dark"
                 title="Dashboard"
               >
                 {t("Dashboard")}

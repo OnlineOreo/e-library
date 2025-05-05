@@ -1,3 +1,4 @@
+'use client'
 import { useEffect, useState } from "react";
 import { Card, Col, Row } from "react-bootstrap";
 import { Briefcase } from 'react-feather';

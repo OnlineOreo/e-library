@@ -11,6 +11,7 @@ import AccordionContext from 'react-bootstrap/AccordionContext';
 import { useAccordionButton } from 'react-bootstrap/AccordionButton';
 import LanguageSelector from "@/app/Component/landing-page/languageselector";
 import { useTranslation } from 'react-i18next';
+import { useLandingPageData } from "@/app/context/LandingPageContext"; 
 import '@/i18n';
 
 import SimpleBar from 'simplebar-react';
@@ -25,7 +26,7 @@ const NavbarVertical = (props) => {
 	const DashboardMenu = useDashboardMenu();
 	const location = usePathname();
 	const isMobile = useMediaQuery({ maxWidth: 767 });
-	const landingPageData = useSelector((state) => state.landingPageDataSlice);
+	const landingPageData = useLandingPageData();
 
 	// Prevent hydration mismatch
 	const [hasMounted, setHasMounted] = useState(false);
@@ -105,7 +106,7 @@ const NavbarVertical = (props) => {
 					<img
                       src={
                         `${
-                          landingPageData?.landingPageData?.configurations?.[0]?.latest_logos.find(
+                          landingPageData?.configurations?.[0]?.latest_logos.find(
                             (config) => config.is_active
                           )?.logo
                         }` || "default"

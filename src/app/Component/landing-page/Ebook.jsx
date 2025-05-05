@@ -2,16 +2,14 @@
 import React from 'react';
 import { Navigation, Autoplay, Pagination, Scrollbar, A11y } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { useSelector } from 'react-redux';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 
-export default function Ebook({ toggle,handleRedirect }) {
-    const landingPageData = useSelector((state) => state.landingPageDataSlice);
-    const bookData = landingPageData?.landingPageData?.staff_picks
+export default function Ebook({ toggle,handleRedirect,landingPageData }) {
+    const bookData = landingPageData?.staff_picks
     ?.filter(staff_pick => staff_pick.article_type_name.toLowerCase() === "e-books") || [];
 
     return (

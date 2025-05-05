@@ -58,12 +58,10 @@
         const loginData = await loginResponse.json();
         if (!loginResponse.ok) throw new Error(loginData.detail || "Login failed");
         
-        // Store token in cookies
         document.cookie = `access_token=${loginData.access_token}; path=/; max-age=6000; SameSite=Lax;`;
         const token = getToken();
         if (!token) throw new Error("Token retrieval failed");
 
-        // Fetch User Profile & IP in Parallel
         const [userResponse, ipResponse] = await Promise.all([
           fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/profile`, {
             method: "GET",
@@ -77,15 +75,11 @@
 
         const cookies_age = 6000;
         
-        // Save user role in cookie and redux
         document.cookie = `user_role=${userData.role}; path=/; max-age=${cookies_age}; SameSite=Lax;`;
         document.cookie = `user_id=${userData.id}; path=/; max-age=${cookies_age}; SameSite=Lax;`;
         document.cookie = `user_image=${userData.image}; path=/; max-age=${cookies_age}; SameSite=Lax;`;
         document.cookie = `user_name=${userData.name}; path=/; max-age=${cookies_age}; SameSite=Lax;`;
-        // document.cookie = `user_id=${userData.id}; path=/; max-age=6000; SameSite=Lax;`;
-        // dispatch(setUser(userData));
 
-        // Get device & browser info
         const userAgent = navigator.userAgent;
         const browserName = /Chrome/.test(userAgent)
           ? "Chrome"
@@ -101,7 +95,6 @@
           ? "Mobile"
           : "Desktop";
 
-        // Save session in background
         ipResponse.json().then((ipData) => {
           fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-session`, {
             method: "POST",

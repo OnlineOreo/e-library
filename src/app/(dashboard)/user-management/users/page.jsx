@@ -131,8 +131,10 @@ const Home = () => {
 
   const handleToggleActive = async (user) => {
     const token = getToken();
+    const { image, ...rest } = user;
+
     const updatedUser = {
-      ...user,
+      ...rest,
       is_active: !user.is_active,
       role: user.role,
     };
@@ -163,6 +165,7 @@ const Home = () => {
           u.id === user.id ? { ...u, is_active: updatedUser.is_active } : u
         )
       );
+
       setFilteredUsers((prev) =>
         prev.map((u) =>
           u.id === user.id ? { ...u, is_active: updatedUser.is_active } : u
@@ -182,8 +185,8 @@ const Home = () => {
     const { image, ...userWithoutImage } = selectedUser;
 
     const updatedUser = {
-      ...userWithoutImage, // Spread all the user data
-      password: newPassword, // Include the new password
+      ...userWithoutImage, 
+      password: newPassword,
     };
 
     try {

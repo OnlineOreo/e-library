@@ -1,3 +1,4 @@
+'use client'
 import React from "react";
 import {
   Navigation,
@@ -23,10 +24,11 @@ export default function TrendingBook({
   bannerData,
   show,
   setShow,
+  landingPageData
 }) {
-  const landingPageData = useSelector((state) => state.landingPageDataSlice);
+  // const landingPageData = useSelector((state) => state.landingPageDataSlice);
   const { t, i18n } = useTranslation();
-  const books = landingPageData?.landingPageData?.trending_books;
+  const books = landingPageData?.trending_books;
   const router = useRouter();
   
   const getToken = () => {

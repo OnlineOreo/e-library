@@ -11,7 +11,6 @@ import { FaMinusCircle } from "react-icons/fa";
 import { useSelector } from "react-redux";
 
 const AddNewsClipping = () => {
-
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
@@ -22,7 +21,7 @@ const AddNewsClipping = () => {
     url: "",
     thumbnail: null,
     attachment: null,
-    description:'',
+    description: "",
   });
 
   const getToken = () => {
@@ -57,11 +56,22 @@ const AddNewsClipping = () => {
 
     try {
       const formDataToSend = new FormData();
-      Object.entries(formData).forEach(([key, value]) => {
-        formDataToSend.append(key, value);
-      });
 
-      formDataToSend.append('institute',instituteId)
+      // Append text fields
+      formDataToSend.append("title", formData.title);
+      formDataToSend.append("url", formData.url);
+      formDataToSend.append("description", formData.description);
+      formDataToSend.append("institute", instituteId);
+
+      // Append thumbnail only if it's a File object
+      if (formData.thumbnail instanceof File) {
+        formDataToSend.append("thumbnail", formData.thumbnail);
+      }
+
+      // Append attachment only if it's a File object
+      if (formData.attachment instanceof File) {
+        formDataToSend.append("attachment", formData.attachment);
+      }
 
       await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/e-news-clips`,
@@ -81,7 +91,7 @@ const AddNewsClipping = () => {
         confirmButtonText: "OK",
       });
 
-      setTimeout(() => router.push("/resources/news-clippings"), 2000);
+      router.push("/resources/news-clippings");
     } catch (error) {
       setErrors(error.response?.data || {});
     } finally {
@@ -115,7 +125,6 @@ const AddNewsClipping = () => {
                     value={formData.title}
                     onChange={handleInputChange}
                     placeholder="Enter title here.."
-                    
                     isInvalid={!!errors.title}
                   />
                   <Form.Control.Feedback type="invalid">
@@ -132,7 +141,6 @@ const AddNewsClipping = () => {
                     value={formData.url}
                     onChange={handleInputChange}
                     placeholder="Enter url here.."
-                    
                     isInvalid={!!errors.url}
                   />
                   <Form.Control.Feedback type="invalid">
@@ -146,9 +154,9 @@ const AddNewsClipping = () => {
                   <Form.Control
                     type="file"
                     name="thumbnail"
+                    accept=".jpg,.jpeg,.png,.webp"
                     onChange={handleInputChange}
                     isInvalid={!!errors.thumbnail}
-                    
                   />
                   <Form.Control.Feedback type="invalid">
                     {errors.thumbnail?.join(", ")}
@@ -160,11 +168,12 @@ const AddNewsClipping = () => {
                   <Form.Label>Attachment</Form.Label>
                   <Form.Control
                     type="file"
-                    name="attachment"
+                    name="thumbnail"
+                    accept=".pdf,.json,.docx,.xlsx"
                     onChange={handleInputChange}
-                    isInvalid={!!errors.attachment}
-                    
+                    isInvalid={!!errors.thumbnail}
                   />
+
                   <Form.Control.Feedback type="invalid">
                     {errors.attachment?.join(", ")}
                   </Form.Control.Feedback>

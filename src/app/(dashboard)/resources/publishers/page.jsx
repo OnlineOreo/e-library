@@ -187,7 +187,7 @@ const ViewPublishers = () => {
             onChange={(e) => setSearch(e.target.value)}
           />
           <Box sx={{ width: "100%", overflowX: "auto" }}>
-            <Box sx={{ minWidth: "800px", height: 500 }}>
+            <Box sx={{ minWidth: "800px", height: 800 }}>
               <DataGrid
                 rows={filteredContentGroup}
                 columns={columns}

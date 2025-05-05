@@ -180,9 +180,9 @@ h6,
     margin-bottom: 0%;
 }
 
-a {
+.index_page a {
     text-decoration: none;
-    color: inherit;
+    color: inherit !important;
 }
 
 .nav-btn {

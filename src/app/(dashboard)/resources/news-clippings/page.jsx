@@ -131,12 +131,16 @@ const NewsClipping = () => {
       flex: 2,
       renderCell: (params) => (
         <div>
-          <Link target="_blank" href={params.value}>
-            View Attachment
-          </Link>
+          {params.value ? (
+            <Link href={params.value} target="_blank" rel="noopener noreferrer">
+              View Attachment
+            </Link>
+          ) : (
+            "No Attachment"
+          )}
         </div>
       ),
-    },
+    },    
     { field: "description", headerName: "Description", width: 200 },
     {
       field: "action",

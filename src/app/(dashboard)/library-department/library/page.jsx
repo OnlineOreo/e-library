@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Container, Col, Row, Form } from "react-bootstrap";
 import axios from "axios";
@@ -11,6 +10,7 @@ import { FaEdit, FaEye, FaPlusCircle } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
+import Link from "next/link";
 
 const ViewLibrary = () => {
   const router = useRouter();
@@ -23,7 +23,6 @@ const ViewLibrary = () => {
     const cookieString = document.cookie
       .split("; ")
       .find((row) => row.startsWith("access_token="));
-
 
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
@@ -61,7 +60,7 @@ const ViewLibrary = () => {
         toast.error("Error loading libraries.");
       }
     };
-    if(instituteId){
+    if (instituteId) {
       loadLibrary(instituteId);
     }
   }, [instituteId]);
@@ -163,8 +162,6 @@ const ViewLibrary = () => {
         <Row>
           <Col
             lg={12}
-            md={12}
-            xs={12}
             className="d-flex justify-content-between align-items-center"
           >
             <h3 className="mb-0 text-dark">Manage Library</h3>
