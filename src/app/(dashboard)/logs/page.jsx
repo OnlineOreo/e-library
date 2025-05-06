@@ -11,14 +11,12 @@ import StatusCodeDistributionChart from "@/app/Component/dashboard/log/StatusCod
 import RecentLogsTable from "@/app/Component/dashboard/log/RecentLogsTable";
 import RawLogs from "@/app/Component/dashboard/log/RawLogs";
 import PathDistributionChartHorizontal from "@/app/Component/dashboard/log/PathDistributionChartHorizontal";
-import { GRID_COLUMN_MENU_SLOT_PROPS } from "@mui/x-data-grid";
 
 const Logs = () => {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const instituteId = useSelector((state) => state.institute.instituteId);
   const router = useRouter();
-  const [horizontal , setHorizontal] = useState(false)
 
   const getToken = () => {
     const cookieString = document.cookie
@@ -29,12 +27,12 @@ const Logs = () => {
 
   useEffect(() => {
     const token = getToken();
-    if(!token){
+    if (!token) {
       router.push("/authentication/sign-in");
-      return
+      return;
     }
 
-    const fetchLogs = async () => {
+    const fetchLogs = async (instituteId) => {
       try {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/logs?institute_id=${instituteId}`,
@@ -53,7 +51,7 @@ const Logs = () => {
     };
 
     if (instituteId) {
-      fetchLogs();
+      fetchLogs(instituteId);
     }
   }, [instituteId]);
 
