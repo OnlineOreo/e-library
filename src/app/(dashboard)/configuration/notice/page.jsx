@@ -132,7 +132,6 @@ const Department = () => {
           Swal.fire("Deleted!", "Notices has been deleted.", "success");
           loadNotices();
         } catch (error) {
-          console.log(error);
           Swal.fire({
             icon: "warning",
             title: "Delete Failed!",

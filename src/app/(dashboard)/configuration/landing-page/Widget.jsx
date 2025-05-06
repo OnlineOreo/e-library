@@ -128,7 +128,7 @@ export default function Widget() {
         setSections(
           Array.isArray(data[0].section_order) ? data[0].section_order : Object.values(data[0].section_order)
         );
-        console.log(typeof data[0].section_order);
+        // console.log(typeof data[0].section_order);
         setConfigId(data[0].conf_id);
       } catch (error) {
         console.error("Error fetching sections:", error);

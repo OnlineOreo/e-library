@@ -125,7 +125,7 @@ export default function Item() {
           );
           setItem((prev) => prev.filter((item) => item.item_id !== params.id));
         } catch (error) {
-          console.log(error);
+          // console.log(error);
           // errorToaster("Something went wrong!");
         }
       }

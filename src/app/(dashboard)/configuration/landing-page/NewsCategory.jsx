@@ -93,7 +93,7 @@ export default function NewsCategory() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(configId)
+    // console.log(configId)
 
     if (selectedCategories.length === 0) {
       Swal.fire("Validation Error", "Please select at least one category", "warning");

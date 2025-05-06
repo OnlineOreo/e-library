@@ -54,7 +54,6 @@ const ViewMedia = () => {
         setMedia(response.data);
       }
     } catch (error) {
-      console.log(error);
     }
   };
 
@@ -87,7 +86,7 @@ const ViewMedia = () => {
           );
         } catch (error) {
           errorToaster("Something went wrong!");
-          console.log(error);
+          // console.log(error);
         }
       }
     });

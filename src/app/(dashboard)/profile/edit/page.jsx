@@ -160,7 +160,7 @@ const Profile = () => {
           authUserData.append(key, value);
         }
       } else if (key === "groups" || key === "user_permissions") {
-        console.log(typeof value);
+        // console.log(typeof value);
         return;
       } else {
         authUserData.append(key, value);

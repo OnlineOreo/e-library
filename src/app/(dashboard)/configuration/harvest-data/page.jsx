@@ -54,7 +54,6 @@ const ViewHarvestData = () => {
       );
 
       if (response.status === 200) {
-        console.log("this harvest Data:", response.data);
         setHarvestData(response.data);
       }
     } catch (error) {

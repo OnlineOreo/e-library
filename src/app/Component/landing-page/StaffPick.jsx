@@ -15,8 +15,6 @@ export default function StaffPick({headingName,landingPageData,setShow,show}) {
     const [journal, setJournal] = useState(false)
     const [video, setVideo] = useState(false)
 
-    console.log(landingPageData)
-
     const getToken = () => {
         const cookieString = document.cookie
           .split("; ")
