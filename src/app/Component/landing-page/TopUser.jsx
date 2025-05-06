@@ -18,37 +18,36 @@ import "swiper/css/scrollbar";
 
 export default function TopUser({ headingName, bannerData, landingPageData, instituteId, token }) {
   const swiperRef = useRef(null);
-  const [topUsers, setTopUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchTopUsers = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/reports?institute_id=${instituteId}&top_users=true`,
-          {
-            headers: { Authorization: `${token}` },
-          }
-        );
+  const topUsers = landingPageData?.top_users || []
 
-        if (response.status === 200) {
-          setTopUsers(response.data?.top_users || []);
-        }
-      } catch (error) {
-        console.error("Error fetching top users:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchTopUsers = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/reports?institute_id=${instituteId}&top_users=true`,
+  //         {
+  //           headers: { Authorization: `${token}` },
+  //         }
+  //       );
 
-    if (instituteId && token) {
-      fetchTopUsers();
-    }
-  }, [instituteId, token]);
+  //       if (response.status === 200) {
+  //         setTopUsers(response.data?.top_users || []);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching top users:", error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-  if (loading || !topUsers.length) return null;
+  //   if (instituteId && token) {
+  //     fetchTopUsers();
+  //   }
+  // }, [instituteId, token]);
 
-  // console.log(topUsers+"vjkdfhvkdfbvjkdfb")
+  // console.log(landingPageData)
 
   return (
     <>
@@ -90,12 +89,12 @@ export default function TopUser({ headingName, bannerData, landingPageData, inst
                         background: "#000",
                       }}
                     >
-                      {user.initials || user.name?.slice(0, 2).toUpperCase()}
+                      {user.name?.slice(0, 2).toUpperCase()}
                     </div>
                     <div className="ms-4">
                       <h5 className="mb-1 custom-banner">{user.name}</h5>
-                      <p className="mb-1 custom-banner">{user.role}</p>
-                      <p className="mb-1 custom-banner">Rank : {user.rank}</p>
+                      {/* <p className="mb-1 custom-banner">{user.role}</p>
+                      <p className="mb-1 custom-banner">Rank : {user.rank}</p> */}
                     </div>
                   </div>
                 </div>

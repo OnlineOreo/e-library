@@ -17,7 +17,7 @@ import { useLandingPageData } from "@/app/context/LandingPageContext";
 import { useTranslation } from "react-i18next";
 import "@/i18n";
 
-const Navbar = () => {
+const Navbar = ({show, setShow}) => {
   const { t, i18n } = useTranslation();
   const router = useRouter();
   const landingPageData = useLandingPageData();
@@ -25,7 +25,7 @@ const Navbar = () => {
   const [token, setToken] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
-  const [show, setShow] = useState(false)
+  // const [show, setShow] = useState(false)
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
 

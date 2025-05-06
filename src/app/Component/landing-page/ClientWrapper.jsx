@@ -10,11 +10,11 @@ import TopUser from "./TopUser";
 import Headline from './(Headlines)/Headline';
 import { useUserSession } from '@/hooks/useUserSession';
 
-export default function ClientWrapper({ sectionOrder, configData, landingPageData }) {
+export default function ClientWrapper({ sectionOrder, configData, landingPageData, show, setShow }) {
   useUserSession();
 
-  const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
+  
 
   useEffect(() => {
     if (configData) {
