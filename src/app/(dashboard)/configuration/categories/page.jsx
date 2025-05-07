@@ -89,7 +89,7 @@ const Department = () => {
         <div className="avatar avatar-md">
           <img
             src={params.value}
-            alt="Publisher"
+            alt="categories"
             width={50}
             height={50}
             className="rounded-circle"

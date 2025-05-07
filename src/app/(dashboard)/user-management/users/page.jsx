@@ -306,8 +306,8 @@ const Home = () => {
       <Container fluid className="mt-n22 px-6">
         <Row>
           <Col lg={12} md={12} xs={12}>
-            <div className="d-flex justify-content-between align-items-center">
-              <h3 className="mb-0 text-dark">Manage User</h3>
+            <div className="d-flex justify-content-between flex-wrap align-items-center">
+              <h3 className="mb-lg-0 mb-3 text-dark">Manage User</h3>
               <div>
                 <Button
                   variant="white"

@@ -70,7 +70,7 @@ const AuthButtons = ({
             </a>
           </div> */}
 
-          <div className="d-sm-block d-none"> 
+          <div className="d-sm-block d-none">
             <LanguageSelector />
           </div>
         </>
@@ -84,8 +84,8 @@ const AuthButtons = ({
           >
             {t("Sign In")}
           </div>
-          <div className="d-sm-block d-none"> 
-          <LanguageSelector />
+          <div className="d-sm-block d-none">
+            <LanguageSelector />
           </div>
         </div>
       )}
@@ -104,13 +104,14 @@ const AuthButtons = ({
           >
             <div className="modal-body position-relative">
               <button
-                className="btn-close position-absolute fs-5"
-                style={{ zIndex: "99", right: "20px" }}
+                className="btn-close position-absolute fs-5 mobile-top"
+                style={{ zIndex: 99, right: "20px" }}
                 onClick={() => {
                   setShow(false);
                   router.replace(pathname); // removes all query params
                 }}
               ></button>
+
               <SignIn
                 show={show}
                 setShow={setShow}
@@ -127,6 +128,13 @@ const AuthButtons = ({
           onClick={() => setShow(false)}
         ></div>
       )}
+      <style jsx>{`
+        @media (max-width: 767.98px) {
+          .mobile-top {
+            top: 20px;
+          }
+        }
+      `}</style>
     </>
   );
 };

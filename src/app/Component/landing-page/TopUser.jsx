@@ -56,7 +56,7 @@ export default function TopUser({ headingName, bannerData, landingPageData, inst
           <div className="text-center wow fadeInUp" data-wow-delay="0.1s">
             <h2 className="mb-5" id="top_user_heading">
               {headingName}
-            </h2>
+            </h2> 
           </div>
 
           <Swiper

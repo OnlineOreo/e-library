@@ -272,6 +272,16 @@ const Navbar = ({show, setShow}) => {
       : true
   );
 
+  const handleAdvanceSearch = (e)=> {
+      if(!token){
+        e.preventDefault();
+        setShow(true);
+        const searchParam = new URLSearchParams();
+        searchParam.set("search", '/advance-search-filter');
+        router.push(`/?${searchParam.toString()}`);
+      }
+  }
+
   return (
     <>
       <div className="container-fluid mt-2 bg-white p-0">
@@ -312,6 +322,7 @@ const Navbar = ({show, setShow}) => {
                     href="/advance-search-filter"
                     title="Advance search"
                     className="fs-2 ps-5 text-dark"
+                    onClick={handleAdvanceSearch}
                   >
                     <LuSlidersHorizontal />
                   </Link>

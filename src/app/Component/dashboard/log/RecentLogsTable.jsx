@@ -62,8 +62,8 @@ export default function PathAccessStatsTable({ logs = [] }) {
 
   return (
     <Card className="my-4 shadow">
-      <Card.Header className="bg-white py-4 d-flex justify-content-between align-items-center">
-        <h4 className="mb-0">Path Access Statistics</h4>
+      <Card.Header className="bg-white py-4 d-flex justify-content-between flex-wrap align-items-center">
+        <h4 className="mb-lg-0 mb-3">Path Access Statistics</h4>
         <div>
           <Button
             variant="outline-secondary"

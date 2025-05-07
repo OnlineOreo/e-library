@@ -123,7 +123,7 @@ export default function PathDistributionChartHorizontal({ logs = [] }) {
 
   return (
     <Card className="my-3 shadow w-100">
-      <div className="p-4">
+      <div className="p-4 overflow-auto">
         <h5 className="text-center fw-semibold mb-3">Path Distribution</h5>
         {loading ? (
           <div className="text-center">
@@ -132,7 +132,7 @@ export default function PathDistributionChartHorizontal({ logs = [] }) {
         ) : finalSeries?.[0]?.data?.length === 0 ? (
           <p className="text-center text-muted">No path data available</p>
         ) : (
-          <div style={{ width: "100%" }}>
+          <div style={{ minWidth: "800px" }}>
             <Chart
               options={chartOptions}
               series={finalSeries}
