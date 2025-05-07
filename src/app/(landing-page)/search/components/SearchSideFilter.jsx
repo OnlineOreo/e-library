@@ -71,7 +71,6 @@ const SearchSideFilter = (props) => {
     };
 
     const filterChange = () => {
-        // props.setIsLoading(true)
         const filterMap = {};
 
         const checkboxes = document.querySelectorAll('.thats_filter input[type="checkbox"]:checked');

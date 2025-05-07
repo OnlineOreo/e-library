@@ -1,7 +1,10 @@
+import { Container, Row, Col } from 'react-bootstrap';
 import { Suspense } from 'react';
-import PrintCollectionContent from './PrintCollectionContent';
-import axios from "axios";
+import SearchSideFilter from '../components/SearchSideFilter';
+import axios from 'axios';
 import { headers } from 'next/headers';
+import LogUpdateClient from '../components/LogUpdateClient';
+import ShowResults from '../components/ShowResults';
 
 function combineFacetData(facetData) {
   const combined = [];
@@ -15,79 +18,118 @@ function combineFacetData(facetData) {
   return combined;
 }
 
-async function fetachSolrData(searchQuery, startIndex = 0, pubPkg) {
-  if (!searchQuery) return { results: [], resultsCount: 0, sideFilterResults: {} };
+async function fetchSolrData(searchQuery, startIndex = 0, pubPkg) {
+  if (!searchQuery) {
+    return {
+      results: [],
+      resultsCount: 0,
+      sideFilterResults: {},
+      path: '',
+      status_code: 200,
+      response_body: '[]',
+      error_trace: '',
+    };
+  }
 
   try {
-    const solrUrl = `${process.env.NEXT_PUBLIC_SOLR_BASE_URL}/solr/Print-collection/select?fq=pkg_id%3A(${pubPkg})&indent=true&q.op=OR&q=${searchQuery}&rows=15&start=${startIndex}`;
-    console.log("solr url : ", solrUrl);
-    
-    const response = await axios.get(solrUrl);
+    const baseUrl = process.env.NEXT_PUBLIC_SOLR_BASE_URL;
+    const solrQuery = `fq=pkg_id%3A(${pubPkg})&indent=true`;
 
-    const docs = response.data.response.docs || [];
-    const numFound = response.data.response.numFound || 0;
+    const mainUrl = `${baseUrl}/solr/Print-collection/select?${solrQuery}&q.op=OR&q=${searchQuery}&rows=15&start=${startIndex}`;
+    const sideUrl = `${baseUrl}/solr/Print-collection/select?${solrQuery}&q=*:*&fq=${searchQuery}&facet=true&facet.field=dc_publishers_string&facet.field=datacite_rights_string&facet.field=resource_types_string&facet.field=dc_date&facet.field=datacite_creators_string&facet.limit=500&facet.sort=count`;
 
-    // Side filter
-    const sideFilterUrl = `${process.env.NEXT_PUBLIC_SOLR_BASE_URL}/solr/Print-collection/select?fq=pkg_id%3A(${pubPkg})&indent=true&q=*:*&fq=${searchQuery}&facet=true&facet.field=dc_publishers_string&facet.field=datacite_rights_string&facet.field=resource_types_string&facet.field=dc_date&facet.field=datacite_creators_string&facet.limit=500&facet.sort=count`;
+    const [mainRes, sideRes] = await Promise.all([
+      axios.get(mainUrl),
+      axios.get(sideUrl),
+    ]);
 
-    const sideFilterResponse = await axios.get(sideFilterUrl);
-    const sideData = sideFilterResponse.data;
+    const results = mainRes.data.response.docs || [];
+    const resultsCount = mainRes.data.response.numFound || 0;
 
-    const facets = ["dc_publishers_string", "datacite_rights_string", "resource_types_string", "datacite_creators_string", "dc_date"];
+    const facetFields = sideRes.data.facet_counts?.facet_fields || {};
+    const facetKeys = [
+      'dc_publishers_string',
+      'datacite_rights_string',
+      'resource_types_string',
+      'datacite_creators_string',
+      'dc_date',
+    ];
 
     const sideFilterResults = {};
-    facets.forEach(facet => {
-      sideFilterResults[facet] = combineFacetData(sideData.facet_counts?.facet_fields?.[facet] || []);
+    facetKeys.forEach((key) => {
+      sideFilterResults[key] = combineFacetData(facetFields[key] || []);
     });
 
     return {
-      results: docs,
-      resultsCount: numFound,
-      path:solrUrl,
-      status_code:response.status,
-      response_body:JSON.stringify(docs),
-      error_trace:response.error ? JSON.stringify(response.error) : "",
-      sideFilterResults
+      results,
+      resultsCount,
+      sideFilterResults,
+      path: mainUrl,
+      status_code: mainRes.status,
+      response_body: JSON.stringify(results),
+      error_trace: mainRes.error ? JSON.stringify(mainRes.error) : '',
     };
-
   } catch (error) {
-    console.error("API Error:", error);
-    return { results: [], resultsCount: 0, sideFilterResults: {} };
+    console.error('Solr fetch error:', error);
+    return {
+      results: [],
+      resultsCount: 0,
+      sideFilterResults: {},
+      path: '',
+      status_code: 500,
+      response_body: '[]',
+      error_trace: error?.toString() || 'Unknown error',
+    };
   }
 }
 
 export default async function PrintCollectionPage({ searchParams }) {
   const searchParamsObj = await searchParams || {};
-  const searchQuery = searchParamsObj.q || "";
+  const searchQuery = searchParamsObj.q || '';
+
   const headersList = await headers();
-  const fullHostname = headersList.get('host') || ""; 
+  const fullHostname = headersList.get('host') || '';
   const hostname = fullHostname.split('.')[0];
-  // console.log("host name:", hostname);
 
   const pkgIdMapping = {
-    "mriirs" : "11%2043",
-    "fri" : "45%2048",
-    "lhlb" : "11%2046",
-    "dev" : "44%2047",
-    "demo" : "44%2047",
-  }
+    mriirs: '11%2043',
+    fri: '45%2048',
+    lhlb: '11%2046',
+    dev: '44%2047',
+    demo: '44%2047',
+  };
 
-  const pubPkg = pkgIdMapping[hostname];
-
-
-  const data = await fetachSolrData(searchQuery, 0, pubPkg);
+  const pubPkg = pkgIdMapping[hostname] || '';
+  const data = await fetchSolrData(searchQuery, 0, pubPkg);
 
   return (
-    <Suspense fallback={<div>Loading search results...</div>}>
-      <PrintCollectionContent
-        initialResults={data.results}
-        initialResultsCount={data.resultsCount}
-        initialSideFilterResults={data.sideFilterResults}
-        searchQuery={searchQuery}
+    <Container className="px-4 text-secondary">
+      <Row>
+        <Col md={3} className="px-0 bg-white">
+          <Suspense fallback={<div>Loading filters...</div>}>
+            <SearchSideFilter
+              {...data.sideFilterResults}
+              catalogCore="Print-collection"
+            />
+          </Suspense>
+        </Col>
+        <Col md={9} className="pe-0 ps-lg-4 ps-0">
+          <Suspense fallback={<div>Loading Content...</div>}>
+            <ShowResults
+              initialResults={data.results}
+              initialResultsCount={data.resultsCount}
+              catalogCore="Print-collection"
+              pubPkg={pubPkg}
+            />
+          </Suspense>
+        </Col>
+      </Row>
+      <LogUpdateClient
         path={data.path}
         status_code={data.status_code}
+        initialResults={data.results}
         error_trace={data.error_trace}
       />
-    </Suspense>
+    </Container>
   );
 }
