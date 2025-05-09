@@ -1,9 +1,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { FaAngleDown } from "react-icons/fa6";
-import { useLandingPageData } from "@/app/context/LandingPageContext"; 
-
 import { useSelector } from "react-redux";
+
 
 const MobileNav = ({
   menuOpen,
@@ -22,7 +21,9 @@ const MobileNav = ({
     setActiveDropdown(activeDropdown === menu ? null : menu);
   };
   
-  const landingPageData = useLandingPageData();
+  // const landingPageData = useLandingPageData();
+    const landingPageData2 = useSelector((state) => state.landingPageDataSlice);
+    const landingPageData = landingPageData2?.landingPageData ?? [];
   const bannerData = landingPageData?.configurations?.[0] || [];
 
   const mediaMapping = {

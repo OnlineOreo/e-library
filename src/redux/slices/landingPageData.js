@@ -1,35 +1,38 @@
+'use client'
+
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-export const fetchInstituteId = createAsyncThunk("institute/fetchInstituteId", async () => {
+export const landingPageData = createAsyncThunk("institute/landingPageData", async () => {
   const hostname = typeof window !== "undefined" ? window.location.hostname : "";
   const API_URL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/institute?sub_domain=${hostname}`;
+  // const API_URL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/institute?sub_domain=mriirs.libvirtuua.com`;
   const response = await fetch(API_URL);
   const data = await response.json();
-  return data.institute;
+  return data;
 });
 
-const instituteSlice = createSlice({
+const landingPageDataSlice = createSlice({
   name: "institute",
   initialState: {
-    instituteId: null,
-    status: "idle", // idle | loading | succeeded | failed
+    landingPageData: [],
+    status: "idle",
     error: null,
   },
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchInstituteId.pending, (state) => {
+      .addCase(landingPageData.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(fetchInstituteId.fulfilled, (state, action) => {
+      .addCase(landingPageData.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.instituteId = action.payload;
+        state.landingPageData = action.payload;
       })
-      .addCase(fetchInstituteId.rejected, (state, action) => {
+      .addCase(landingPageData.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });
   },
 });
 
-export default instituteSlice.reducer;
+export default landingPageDataSlice.reducer;

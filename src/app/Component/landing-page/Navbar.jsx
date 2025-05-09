@@ -13,14 +13,15 @@ import Swal from "sweetalert2";
 import { LuSlidersHorizontal } from "react-icons/lu";
 import "../../../../public/landingPageAsset/css/style2.css";
 import "../../../../public/landingPageAsset/css/header.css";
-import { useLandingPageData } from "@/app/context/LandingPageContext"; 
+// import { useLandingPageData } from "@/app/context/LandingPageContext"; 
 import { useTranslation } from "react-i18next";
 import "@/i18n";
 
 const Navbar = ({show, setShow}) => {
   const { t, i18n } = useTranslation();
   const router = useRouter();
-  const landingPageData = useLandingPageData();
+  const landingPageData2 = useSelector((state) => state.landingPageDataSlice);
+  const landingPageData = landingPageData2?.landingPageData || []
   const instituteId = useSelector((state) => state.institute.instituteId);
   const [token, setToken] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -382,6 +383,7 @@ const Navbar = ({show, setShow}) => {
                                   show={show}
                                   setShow={setShow}
                                   items={item.items}
+                                  token={token}
                                   isPublisher={item.isPublisher}
                                   handlePublisherClick={handlePublisherClick}
                                 />

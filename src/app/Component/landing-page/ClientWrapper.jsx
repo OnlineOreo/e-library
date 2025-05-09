@@ -31,10 +31,10 @@ export default function ClientWrapper({ sectionOrder, configData, landingPageDat
   const componentsMap = useMemo(() => ({
     publisher: Publisher,
     books: TrendingBook,
-    staff: StaffPick,
+    staff: StaffPick,  
     headline: Headline,
     download: Download,
-    top_user: TopUser,
+    // top_user: TopUser,
     notice_board: NoticeBoard,
   }), []);
 

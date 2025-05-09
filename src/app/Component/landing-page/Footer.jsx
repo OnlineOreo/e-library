@@ -6,13 +6,16 @@ import { FaLinkedinIn, FaPhoneAlt, FaTwitter, FaFacebookF, FaMapMarkerAlt } from
 import { FaInstagram } from "react-icons/fa6";
 import { useTranslation } from 'react-i18next';
 import { useLandingPageData } from "@/app/context/LandingPageContext"; 
+import { useSelector } from "react-redux";
 import '@/i18n';
 
 export default function Footer() {
   const { t } = useTranslation();
-  const landingPageData = useLandingPageData(); // ✅ correctly used
+  const landingPageData2 = useSelector((state) => state.landingPageDataSlice);
+  const landingPageData = landingPageData2?.landingPageData
   const footer = landingPageData?.footers?.[0];
   const bannerData = landingPageData?.configurations?.[0] || {};
+
 
   const activeLogo = bannerData?.latest_logos?.find(config => config.is_active)?.logo;
 

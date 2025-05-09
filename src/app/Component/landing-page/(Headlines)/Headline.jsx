@@ -108,7 +108,6 @@ export default function Headline({ headingName, bannerData }) {
                 ) : (
                     !loading && <p className="text-center text-muted">{t('No news available.')}</p>
                 )}
-                
             </div>
 
             {/* Custom Styles */}

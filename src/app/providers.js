@@ -4,15 +4,19 @@
 import { useEffect } from "react";
 import { Provider, useDispatch } from "react-redux";
 import store from "@/redux/store";
-import { setInstituteId } from "@/redux/slices/instituteSlice";
+import { fetchInstituteId } from "@/redux/slices/instituteSlice";
+import { landingPageData } from "@/redux/slices/landingPageData";
 
-function InitInstitute({ instituteId }) {
+function InitData({ instituteId }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (instituteId) {
-      dispatch(setInstituteId(instituteId));
+    // Fetch Institute ID if not passed in props
+    if (!instituteId) {
+      dispatch(fetchInstituteId());
     }
+    // Dispatch landing page data
+    dispatch(landingPageData());
   }, [instituteId, dispatch]);
 
   return null;
@@ -21,7 +25,7 @@ function InitInstitute({ instituteId }) {
 export default function Providers({ children, instituteId }) {
   return (
     <Provider store={store}>
-      <InitInstitute instituteId={instituteId} />
+      <InitData instituteId={instituteId} />
       {children}
     </Provider>
   );
