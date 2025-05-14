@@ -5,7 +5,6 @@ import { Form, Button } from 'react-bootstrap';
 const PublisherSideFilter = ({ publishers, setShowPDropdown, showPDropdown, handleApply, parsedUrl, filterChange, reset }) => {
     const [dcPublisher, setDcPublisher] = useState(publishers || []);
     const [selectedPublishers, setSelectedPublishers] = useState([]);
-
     // console.log("publisher : ", publishers);
 
     useEffect(() => {
@@ -138,7 +137,6 @@ const PublisherSideFilter = ({ publishers, setShowPDropdown, showPDropdown, hand
                                 data-filtertype="dc_publishers_string"
                                 data-label={item?.name || ""}
                                 onChange={filterChange}
-                                checked={false}
                             />
                             <span className="text-secondary">{item?.count || 0}</span>
                         </div>
