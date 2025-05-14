@@ -36,9 +36,10 @@ async function fetchSolrData(searchQuery, startIndex = 0) {
     // const solrQuery = `fq=pkg_id%3A(${pubPkg})&indent=true`;
 
     const mainUrl = `${baseUrl}/solr/e-resources/select?q.op=OR&q=${searchQuery}&rows=15&start=${startIndex}`;
-    console.log("mainurl : ",mainUrl);
+    // console.log("mainurl : ",mainUrl);
     
     const sideUrl = `${baseUrl}/solr/e-resources/select?q=*:*&fq=${searchQuery}&facet=true&facet.field=dc_publishers_string&facet.field=datacite_rights_string&facet.field=resource_types_string&facet.field=dc_date&facet.field=datacite_creators_string&facet.limit=500&facet.sort=count`;
+    // console.log("sideurl : ",sideUrl);
 
     const [mainRes, sideRes] = await Promise.all([
       axios.get(mainUrl),
