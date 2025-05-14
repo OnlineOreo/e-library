@@ -45,8 +45,6 @@ const Report = ({ selectedDate }) => {
 
       const start_date = selectedDate.start;
       const end_date = selectedDate.end;
-      console.log(start_date);
-      console.log(end_date);
 
       try {
         // const [res1, res2, res3, res4] = await Promise.all([
@@ -137,7 +135,7 @@ const Report = ({ selectedDate }) => {
     <div className="container mt-5">
       <Row className="mb-4">
         {cardData.map(({ id, title, subtitle, icon }) => (
-          <Col key={id} xs={6} md={3}>
+          <Col key={id} xs={12} md={3}>
             <Card
               className={`h-100 shadow-sm ${
                 activeTab === id ? "bg-primary text-white border-primary" : ""

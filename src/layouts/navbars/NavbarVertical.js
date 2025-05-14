@@ -10,13 +10,13 @@ import Accordion from 'react-bootstrap/Accordion';
 import AccordionContext from 'react-bootstrap/AccordionContext';
 import { useAccordionButton } from 'react-bootstrap/AccordionButton';
 import LanguageSelector from "@/app/Component/landing-page/languageselector";
+import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { useLandingPageData } from "@/app/context/LandingPageContext"; 
+// import { useLandingPageData } from "@/app/context/LandingPageContext"; 
 import '@/i18n';
 
 import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
-import { useSelector } from 'react-redux';
 
 // import routes file
 import useDashboardMenu from '@/routes/DashboardRoutes';
@@ -26,7 +26,10 @@ const NavbarVertical = (props) => {
 	const DashboardMenu = useDashboardMenu();
 	const location = usePathname();
 	const isMobile = useMediaQuery({ maxWidth: 767 });
-	const landingPageData = useLandingPageData();
+	// const landingPageData = useLandingPageData();
+
+	  const landingPageData2 = useSelector((state) => state.landingPageDataSlice);
+	  const landingPageData = landingPageData2?.landingPageData || []
 
 	// Prevent hydration mismatch
 	const [hasMounted, setHasMounted] = useState(false);

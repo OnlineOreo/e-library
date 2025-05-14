@@ -2,7 +2,7 @@ import { headers } from "next/headers";
 
 export async function getLandingPageData() {
   
-  process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+  // process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
   const headersList = await headers();
   const fullHost = headersList.get("host") || "localhost";
   const host = fullHost.split(":")[0];

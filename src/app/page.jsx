@@ -80,7 +80,20 @@ export default function Home() {
     );
   }
 
-  if(!landingPageData2.landingPageData.is_active){
+  const isSubscriptionExpired = () => {
+    const endDateStr = landingPageData2?.landingPageData?.end_date;
+    if (!endDateStr) return false;
+  
+    const endDate = new Date(endDateStr);
+    const today = new Date();
+
+    endDate.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+  
+    return today > endDate;
+  };
+  
+  if(!landingPageData2.landingPageData.is_active || isSubscriptionExpired()){
     return (
       <div style={{
         display: "flex",

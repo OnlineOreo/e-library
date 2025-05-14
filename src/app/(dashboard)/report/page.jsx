@@ -60,11 +60,10 @@ const Reports = () => {
             onChange={(update) => {
               setDateRange(update);
             }}
-            isClearable
             placeholderText="Select date range"
             className="form-control"
           />
-          <Button variant="primary" size="md" onClick={handleApply} className="me-1">
+          <Button variant="primary" size="sm" onClick={handleApply} className="me-1">
             Apply
           </Button>
         </div>

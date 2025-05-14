@@ -23,6 +23,10 @@ const DynamicPage = () => {
     }
   }, [id, dynamicPageData])
 
+
+  console.log('dddddddddd')
+  console.log(pageData)
+
   return (
     <div>
       <Container>
