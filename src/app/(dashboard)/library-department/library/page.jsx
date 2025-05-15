@@ -98,10 +98,10 @@ const ViewLibrary = () => {
             }
           );
 
-          if (response.status === 200) {
+          if (response.status === 200 || response.status == 204) {
             Swal.fire("Deleted!", "Library has been deleted.", "success");
             setLibrary((prev) =>
-              prev.filter((item) => item.library_id !== S.id)
+              prev.filter((item) => item.library_id !== params.id)
             );
           }
         } catch (error) {

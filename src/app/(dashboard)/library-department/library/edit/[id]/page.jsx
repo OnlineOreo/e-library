@@ -188,7 +188,7 @@ const EditLibrary = () => {
                 </Col>
               ))}
 
-              <Col md={4} className="mb-3">
+              <Col md={4} className="mb-3 d-none">
                 <Form.Group>
                   <Form.Label htmlFor="institute">INSTITUTE</Form.Label>
                   <Form.Select

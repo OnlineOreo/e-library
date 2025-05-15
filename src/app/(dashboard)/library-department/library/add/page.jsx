@@ -47,6 +47,12 @@ const AddLibrary = () => {
     },
   });
 
+  useEffect(() => {
+    if (instituteId) {
+      setFormData((prev) => ({ ...prev, institute: instituteId }));
+    }
+  }, [instituteId]);
+
   const handleInputChange = (event) => {
 
     const { name, value } = event.target;
