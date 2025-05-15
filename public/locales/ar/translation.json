@@ -159,35 +159,36 @@
     "View Send Mails": "عرض الرسائل المرسلة",
     "Landing Page": "الصفحة الرئيسية",
     "Important Link": "رابط مهم",
-  "Trending Books": "الكتب الرائجة",
-  "Dynamic Page": "صفحة ديناميكية",
-  "Footer": "تذييل",
-  "Notices": "إشعارات",
-  "News Clipping": "قصاصات إخبارية",
-  "Staff Pick": "اختيار الموظف",
-  "Collection": "مجموعة",
-  "Logged In Users (Latest Sessions)": "المستخدمون المسجلون (أحدث الجلسات)",
-  "Item Types" : "أنواع العناصر",
-   "Manage User": "إدارة المستخدم",
-   "User ID": "معرف المستخدم",
-  "Browser": "المتصفح",
-  "Device type": "نوع الجهاز",
-  "Ip Address": "عنوان IP",
-  "Last Login Time": "آخر وقت لتسجيل الدخول",
-  "Last Logout Time": "آخر وقت لتسجيل الخروج",
-   "Prev": "السابق",
-  "Next": "التالي",
-  "Total Users": "إجمالي المستخدمين",
-  "Mobile Users": "مستخدمو الجوال",
-  "Desktop Users": "مستخدمو الكمبيوتر",
-  "Inactive Users": "المستخدمون غير النشطين",
-  "Active Users": "المستخدمون النشطون",
-  "Verified Users": "المستخدمون المُحققون",
-  "Today Loggedin user": "المستخدمون المسجلون اليوم",
-  "Total Publishers": "إجمالي الناشرين",
-  "Switch to student Dashboard": "التبديل إلى لوحة تحكم الطالب",
-  "Logs": "السجلات"
- 
+    "Trending Books": "الكتب الرائجة",
+    "Dynamic Page": "صفحة ديناميكية",
+    "Footer": "تذييل",
+    "Notices": "إشعارات",
+    "News Clipping": "قصاصات إخبارية",
+    "Staff Pick": "اختيار الموظف",
+    "Collection": "مجموعة",
+    "Logged In Users (Latest Sessions)": "المستخدمون المسجلون (أحدث الجلسات)",
+    "Item Types" : "أنواع العناصر",
+    "Manage User": "إدارة المستخدم",
+    "User ID": "معرف المستخدم",
+    "Browser": "المتصفح",
+    "Device type": "نوع الجهاز",
+    "Ip Address": "عنوان IP",
+    "Last Login Time": "آخر وقت لتسجيل الدخول",
+    "Last Logout Time": "آخر وقت لتسجيل الخروج",
+    "Prev": "السابق",
+    "Next": "التالي",
+    "Total Users": "إجمالي المستخدمين",
+    "Mobile Users": "مستخدمو الجوال",
+    "Desktop Users": "مستخدمو الكمبيوتر",
+    "Inactive Users": "المستخدمون غير النشطين",
+    "Active Users": "المستخدمون النشطون",
+    "Verified Users": "المستخدمون المُحققون",
+    "Today Loggedin user": "المستخدمون المسجلون اليوم",
+    "Total Publishers": "إجمالي الناشرين",
+    "Switch to student Dashboard": "التبديل إلى لوحة تحكم الطالب",
+    "Logs": "السجلات",
+    "E-news-clipping" : "قصاصات الأخبار الإلكترونية"
+  
   
     
    
@@ -198,17 +199,3 @@
     
   }
     
-
-
-
-
-
-
-
-
-
-
-  
-    
-  
-  
