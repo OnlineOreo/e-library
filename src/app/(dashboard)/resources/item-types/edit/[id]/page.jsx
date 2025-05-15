@@ -101,7 +101,7 @@ const EditItemType = () => {
                 confirmButtonText: "OK",
             });
 
-            setTimeout(() => router.push('/resources/item-types'), 2000);
+            router.push('/resources/item-types');
         } catch (error) {
             console.error("Update error:", error);
             if (error.response?.data) {

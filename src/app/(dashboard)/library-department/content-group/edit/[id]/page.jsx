@@ -96,9 +96,7 @@ const EditContentGroup = () => {
                 confirmButtonText: "OK",
             });
 
-            setTimeout(() => {
-                router.push('/library-department/content-group');
-            }, 2000);
+            router.push('/library-department/content-group');
         } catch (error) {
             if (error.response?.status === 401) {
                 router.push("/authentication/sign-in");

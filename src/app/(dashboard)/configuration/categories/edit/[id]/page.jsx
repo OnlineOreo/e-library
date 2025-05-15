@@ -134,9 +134,7 @@ import { useParams } from "next/navigation";
                 image: null,
             });
 
-            setTimeout(() => {
-                router.push("../");
-            }, 2000);
+            router.push("../");
 
         } catch (error) {
             if (error.response && error.response.data) {

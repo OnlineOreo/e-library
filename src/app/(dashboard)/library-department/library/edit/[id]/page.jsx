@@ -147,7 +147,7 @@ const EditLibrary = () => {
         confirmButtonText: "OK",
       });
       setIsLoading(false);
-      setTimeout(() => router.push("/library-department/library"), 2000);
+      router.push("/library-department/library");
     } catch (error) {
       setIsLoading(false);
       errorToaster("Something went wrong!");

@@ -98,7 +98,7 @@ const AddConfigurationMeta = () => {
         confirmButtonText: "OK",
       });
 
-      setTimeout(() => router.push("/configuration/collection"), 2000);
+      router.push("/configuration/collection");
     } catch (error) {
       setErrors(error.response?.data || {});
       Swal.fire({

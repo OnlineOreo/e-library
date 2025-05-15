@@ -121,7 +121,7 @@ const EditDepartment = () => {
             });
 
             setIsLoading(false);
-            setTimeout(() => router.push("../"), 2000);
+            router.push("../");
         } catch (error) {
             setIsLoading(false);
             if (error.response?.data) {

@@ -124,7 +124,7 @@ const EditConfigurationMeta = () => {
         confirmButtonText: "OK",
       });
 
-      setTimeout(() => router.push("/configuration/media"), 2000);
+      router.push("/configuration/media");
     } catch (error) {
       setErrors(error.response?.data || {});
       Swal.fire({

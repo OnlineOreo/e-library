@@ -93,7 +93,7 @@ const AddProgram = () => {
             });
 
             setFormData({ program_name: "", program_code: "", library: "" });
-            setTimeout(() => router.push('../program'), 2000);
+            router.push('../program');
         } catch (error) {
             if (error.response?.data) {
                 setErrors(error.response.data);

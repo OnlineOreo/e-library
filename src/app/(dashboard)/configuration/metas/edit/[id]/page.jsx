@@ -115,7 +115,7 @@ const EditConfigurationMeta = () => {
         confirmButtonText: "OK",
       });
 
-      setTimeout(() => router.push("/configuration/metas"), 2000);
+      router.push("/configuration/metas");
     } catch (error) {
       setErrors(error.response?.data || {});
       toast.error("Error updating meta!");

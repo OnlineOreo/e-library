@@ -52,7 +52,7 @@ export default function AddServiceGroup() {
                         confirmButtonText: "OK",
                     });
         
-        setTimeout(() => router.push("/library-department/service-group"), 2000);
+        router.push("/library-department/service-group");
       }
     } catch (error) {
       console.error(error);

@@ -65,7 +65,7 @@ const AddInstitute = () => {
             });
 
             setFormData({ type_name: "" });
-            setTimeout(() => router.push('../user-type'), 1000);
+            router.push('../user-type');
         } catch (error) {
             if (error.response?.data) {
                 setErrors(error.response.data);

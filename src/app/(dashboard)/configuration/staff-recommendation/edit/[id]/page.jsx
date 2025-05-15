@@ -146,7 +146,7 @@ const EditStaffRecommendation = () => {
                 confirmButtonText: "OK",
             });
 
-            setTimeout(() => router.push("/configuration/staff-recommendation"), 2000);
+            router.push("/configuration/staff-recommendation");
         } catch (error) {
             if (error.response?.data) {
                 setErrors(error.response.data);

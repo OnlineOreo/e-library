@@ -223,7 +223,7 @@ const AddPublisherPackage = () => {
         confirmButtonText: "OK",
       });
 
-      setTimeout(() => router.push("/resources/publisher-package"), 2000);
+      router.push("/resources/publisher-package");
 
     } catch (error) {
       setErrors(error.response.data);

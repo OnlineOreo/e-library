@@ -124,9 +124,7 @@ const EditPublisher = () => {
                 confirmButtonText: "OK",
             });
 
-            setTimeout(() => {
-                router.push('../');
-            }, 3000);
+            router.push('../');
         } catch (error) {
             setIsLoading(false);
             if (error.response?.data) {

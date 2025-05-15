@@ -115,7 +115,7 @@ const EditNewsClipping = () => {
         confirmButtonText: "OK",
       });
 
-      setTimeout(() => router.push("/resources/news-clippings"), 2000);
+      router.push("/resources/news-clippings");
     } catch (error) {
       setErrors(error.response?.data || {});
       toast.error("Error updating E-news clipping!");

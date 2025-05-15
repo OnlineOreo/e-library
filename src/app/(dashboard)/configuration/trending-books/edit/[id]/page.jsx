@@ -113,7 +113,7 @@ export default function EditBook() {
         confirmButtonText: "OK",
       });
 
-      setTimeout(() => router.push("/configuration/trending-books"), 2000);
+      router.push("/configuration/trending-books");
     } catch (error) {
       setErrors(error.response?.data || {});
       Swal.fire({
