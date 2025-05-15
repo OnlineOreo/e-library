@@ -6,4 +6,4 @@ export const LandingPageContext = createContext(null);
 
 export function useLandingPageData() {
   return useContext(LandingPageContext);
-}
+} 

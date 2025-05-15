@@ -93,7 +93,7 @@ const SearchSideFilter = (props) => {
         const filterConditions = Object.entries(filterMap)
             .map(([type, values]) => {
                 const joinedValues = values
-                    .map((v) => `"${v.replace(/"/g, '\\"')}"`) // Escape quotes inside labels
+                    .map((v) => `"${v.replace(/"/g, '\\"')}"`)
                     .join(" OR ");
                 return `${encodeURIComponent(type)}:${encodeURIComponent(`(${joinedValues})`)}`;
             })
