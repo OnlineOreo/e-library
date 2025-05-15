@@ -36,10 +36,11 @@ export default function NoticeBoard({headingName, bannerData, landingPageData}) 
                         768: { slidesPerView: 2 },
                         1024: { slidesPerView: 3 }
                     }}
+                    autoplay={notices?.length > 3 ? { delay: 3000, disableOnInteraction: false } : false}
                     centeredSlides={true}
-                    loop={true}
+                    loop={notices?.length > 3}
                     pagination={{ clickable: true }}
-                    autoplay={{ delay: 3000, disableOnInteraction: false }}
+                    // autoplay={{ delay: 3000, disableOnInteraction: false }}
                     onSwiper={(swiper) => (swiperRef.current = swiper)}
                 >
                     {notices?.length > 0 &&

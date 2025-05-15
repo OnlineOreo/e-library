@@ -34,18 +34,18 @@ export default function Footer() {
             <div className="col-md-6 col-lg-4 mb-4">
               <h4 className="text-white">{t('Developed By')}</h4>
               <img
-                src={activeLogo || "/default-logo.png"}
+                src="images/avatar/elib_logo.png"
                 alt="Logo"
                 style={{ width: 100, height: 100 }}
               />
               <p>{t('Copyright 2016-25')}</p>
-              <p>{t(footer?.address || '')}</p>
+              <p>{t("Green Park Extn., New Delhi 110017 INDIA")}</p>
               <div className="d-flex gap-3">
                 <a href="#" style={{ fontSize: "1em", textDecoration: "underline" }}>
                   {t('Term of use')}
                 </a>
                 <a
-                  href="https://elibrary.libvirtual.com"
+                  href="https://bestbookbuddies.com/"
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{ fontSize: "1em", textDecoration: "underline" }}
