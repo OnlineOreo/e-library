@@ -15,7 +15,7 @@ export async function GET(request) {
   // id:("4395","5084","6367")
   const solrQuery = `id:(${formattedCatalogIds})`;
 
-  const solrUrl = `${process.env.NEXT_PUBLIC_SOLR_BASE_URL}/solr/${catalogCore}/select?indent=true&q.op=OR&q=${encodeURIComponent(solrQuery)}`;
+  const solrUrl = `${process.env.NEXT_PUBLIC_SOLR_BASE_URL}/solr/${catalogCore}/select?indent=true&q.op=OR&q=${encodeURIComponent(solrQuery)}&rows=12`;
 
   console.log("solr url : ",solrUrl);
   

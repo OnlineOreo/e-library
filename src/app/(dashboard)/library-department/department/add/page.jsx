@@ -85,9 +85,7 @@ const AddDepartment = () => {
                 library: "",
             });
 
-            setTimeout(() => {
-                router.push("../department");
-            }, 2000);
+            router.push("../department");
 
         } catch (error) {
             setIsLoading(false);

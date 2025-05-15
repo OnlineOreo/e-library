@@ -2,14 +2,15 @@
   import { Row, Col, Card, Form, Button, Spinner } from "react-bootstrap";
   import Link from "next/link";
   import { useState, useEffect } from "react";
-  import { useRouter , useSearchParams } from "next/navigation";
+  import { useRouter , useSearchParams, usePathname } from "next/navigation";
   import { useSelector, useDispatch } from "react-redux";
   // import { setUser } from "@/redux/slices/userSlice";
   import Swal from "sweetalert2";
-  import { setUser } from "../../../redux/slices/userSlice";
+
 
   const SignIn = ({show, publisherUrls , setShow, setToken}) => {
     const router = useRouter();
+    const pathname = usePathname();
     const dispatch = useDispatch();
     const instituteId = useSelector((state) => state.institute.instituteId);
     const searchParams = useSearchParams();
@@ -57,12 +58,10 @@
         const loginData = await loginResponse.json();
         if (!loginResponse.ok) throw new Error(loginData.detail || "Login failed");
         
-        // Store token in cookies
         document.cookie = `access_token=${loginData.access_token}; path=/; max-age=6000; SameSite=Lax;`;
         const token = getToken();
         if (!token) throw new Error("Token retrieval failed");
 
-        // Fetch User Profile & IP in Parallel
         const [userResponse, ipResponse] = await Promise.all([
           fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/profile`, {
             method: "GET",
@@ -74,15 +73,13 @@
         if (!userResponse.ok) throw new Error("Failed to fetch user profile");
         const userData = await userResponse.json();
 
-        // Save user role in cookie and redux
-        document.cookie = `user_role=${userData.role}; path=/; max-age=6000; SameSite=Lax;`;
-        document.cookie = `user_id=${userData.id}; path=/; max-age=6000; SameSite=Lax;`;
-        document.cookie = `user_image=${userData.image}; path=/; max-age=6000; SameSite=Lax;`;
-        document.cookie = `user_name=${userData.name}; path=/; max-age=6000; SameSite=Lax;`;
-        // document.cookie = `user_id=${userData.id}; path=/; max-age=6000; SameSite=Lax;`;
-        dispatch(setUser(userData));
+        const cookies_age = 6000;
+        
+        document.cookie = `user_role=${userData.role}; path=/; max-age=${cookies_age}; SameSite=Lax;`;
+        document.cookie = `user_id=${userData.id}; path=/; max-age=${cookies_age}; SameSite=Lax;`;
+        document.cookie = `user_image=${userData.image}; path=/; max-age=${cookies_age}; SameSite=Lax;`;
+        document.cookie = `user_name=${userData.name}; path=/; max-age=${cookies_age}; SameSite=Lax;`;
 
-        // Get device & browser info
         const userAgent = navigator.userAgent;
         const browserName = /Chrome/.test(userAgent)
           ? "Chrome"
@@ -98,7 +95,6 @@
           ? "Mobile"
           : "Desktop";
 
-        // Save session in background
         ipResponse.json().then((ipData) => {
           fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-session`, {
             method: "POST",
@@ -139,6 +135,7 @@
             'targetWindow',
             `toolbar=no,location=no,menubar=no,scrollbars=yes,resizable=yes,width=${width},height=${height},left=${left},top=0`
           );
+          router.replace(pathname);
         }else if(extra != null){
           window.open(`${extra}`, "_blank")
         } else {

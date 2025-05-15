@@ -119,7 +119,7 @@ const AddLibrary = () => {
           mail_from_name: "",
         },
       });
-      setTimeout(() => router.push("../library"), 2000); 
+      router.push("../library"); 
     } catch (error) {
       setIsLoading(false);
       if (error.response && error.response.data) {

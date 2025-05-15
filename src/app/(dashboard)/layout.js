@@ -24,7 +24,7 @@ export default function DashboardLayout({ children }) {
             <NavbarTop
               data={{
                 showMenu,
-                SidebarToggleMenu: toggleMenu, // corrected here
+                SidebarToggleMenu: toggleMenu,
               }}
             />
           </div>

@@ -9,7 +9,7 @@ import Swal from "sweetalert2";
 import { FaMinusCircle } from "react-icons/fa";
 import { useParams } from "next/navigation";
 
-const EditCategory = () => {
+ const EditCategory = () => {
     const router = useRouter();
     
     const [isLoading, setIsLoading] = useState(false);
@@ -31,7 +31,7 @@ const EditCategory = () => {
 
     const fetchCategory = async (categoryId) => {
         let token = getToken();
-        console.log("idiididiid"+categoryId);
+        // console.log("idiididiid"+categoryId);
         
         try {
             const response = await axios.get(
@@ -43,10 +43,10 @@ const EditCategory = () => {
                 category_name: response.data.category_name,
                 image: response.data.image,
             });
-            console.log(response.data);
+            // console.log(response.data);
             
         } catch (error) {
-            console.error("Error fetching category:", error);
+            // console.error("Error fetching category:", error);
         }
     };
 
@@ -134,9 +134,7 @@ const EditCategory = () => {
                 image: null,
             });
 
-            setTimeout(() => {
-                router.push("../");
-            }, 2000);
+            router.push("../");
 
         } catch (error) {
             if (error.response && error.response.data) {

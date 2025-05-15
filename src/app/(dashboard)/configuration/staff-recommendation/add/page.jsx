@@ -106,7 +106,7 @@ const AddConfigurationMeta = () => {
                 confirmButtonText: "OK",
             });
 
-            setTimeout(() => router.push("/configuration/staff-recommendation"), 2000);
+            router.push("/configuration/staff-recommendation");
         } catch (error) {
             if (error.response?.data) {
                 // Only set errors from backend response

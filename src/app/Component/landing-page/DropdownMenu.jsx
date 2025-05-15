@@ -14,23 +14,24 @@ const DropdownMenu = ({
   isImportantLink = true,
   show,
   setShow,
+  token,
   handlePublisherClick,
 }) => {
   const [search, setSearch] = useState("");
   const { t } = useTranslation();
-  const [token, setToken] = useState(null);
+  // const [token, setToken] = useState(null);
 
-  const getToken = () => {
-    const cookieString = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("access_token="));
-    return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
-  };
+  // const getToken = () => {
+  //   const cookieString = document.cookie
+  //     .split("; ")
+  //     .find((row) => row.startsWith("access_token="));
+  //   return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+  // };
   const router = useRouter();
 
-  useEffect(() => {
-    setToken(getToken());
-  }, []);
+  // useEffect(() => {
+  //   setToken(getToken());
+  // }, []);
 
   const mediaMapping = {
     "eBooks": "/search/e-resources?q=resource_types_string%3A(e-book)",
@@ -151,7 +152,7 @@ const DropdownMenu = ({
               style={{ minWidth: "33%" }}
             >
               <a
-                className="dropdown-link cursor_pointer_underline"
+                className="dropdown-link cursor_pointer_underline text-dark"
                 href="#"
                 onClick={(e) => {
                   e.preventDefault();

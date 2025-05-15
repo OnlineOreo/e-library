@@ -55,8 +55,7 @@ export default function SendEmail() {
         const selectedLib = libraries.find(lib => lib.library_id === libId);
         setDepartments(selectedLib?.departments || []);
         setPrograms(selectedLib?.programs || []);
-        console.log('departments ', departments);
-        console.log('programs', programs);  
+        // console.log('programs', programs);  
     };
 
 
@@ -95,7 +94,6 @@ export default function SendEmail() {
             }
         })
         .then((res) => {
-            console.log('Email Sent:', res.data);
             Swal.fire({
             title: "Success!",
             text: "Mail Sent Successfully!",
@@ -259,7 +257,7 @@ export default function SendEmail() {
                                 placeholder="Enter Email Content"
                                 onChange={(content) => {
                                     // You can handle form data update here
-                                    console.log(content);
+
                                 }}
                             />
                         </Form.Group>

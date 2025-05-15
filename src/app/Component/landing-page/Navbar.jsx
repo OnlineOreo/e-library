@@ -13,17 +13,20 @@ import Swal from "sweetalert2";
 import { LuSlidersHorizontal } from "react-icons/lu";
 import "../../../../public/landingPageAsset/css/style2.css";
 import "../../../../public/landingPageAsset/css/header.css";
+// import { useLandingPageData } from "@/app/context/LandingPageContext"; 
 import { useTranslation } from "react-i18next";
 import "@/i18n";
 
-const Navbar = ({ show, setShow }) => {
+const Navbar = ({show, setShow}) => {
   const { t, i18n } = useTranslation();
   const router = useRouter();
-  const landingPageData = useSelector((state) => state.landingPageDataSlice);
+  const landingPageData2 = useSelector((state) => state.landingPageDataSlice);
+  const landingPageData = landingPageData2?.landingPageData || []
   const instituteId = useSelector((state) => state.institute.instituteId);
   const [token, setToken] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
+  // const [show, setShow] = useState(false)
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
@@ -85,14 +88,16 @@ const Navbar = ({ show, setShow }) => {
         router.push("/");
       }
     }
-    document.cookie =
-      "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    document.cookie =
-      "user_role=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    document.cookie =
-      "session_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    
+    document.cookie = `access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+    document.cookie = `user_role=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+    document.cookie = `session_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+    document.cookie = `user_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+    document.cookie = `user_name=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+    document.cookie = `user_image=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+
     setShow = false;
-    setToken(null);
+    setToken('');
     router.push("/");
   };
 
@@ -204,31 +209,31 @@ const Navbar = ({ show, setShow }) => {
     {
       type: "dropdown",
       title: t("eResources"),
-      items: landingPageData?.landingPageData?.publishers || [],
+      items: landingPageData?.publishers || [],
       isPublisher: true,
     },
     {
       type: "dropdown",
       title: t("Categories"),
-      items: landingPageData?.landingPageData?.categories || [],
+      items: landingPageData?.categories || [],
     },
     {
       type: "dropdown",
       title: t("Media"),
-      items: landingPageData?.landingPageData?.medias || [],
+      items: landingPageData?.medias || [],
     },
     // {
     //   type: "dropdown",
     //   title: t("Collection"),
-    //   items: landingPageData?.landingPageData?.collections || [],
+    //   items: landingPageData?.collections || [],
     // },
     {
       type: "dropdown",
       title: t("Important Link"),
       href: "/",
       items: [
-        ...(landingPageData?.landingPageData?.metas || []),
-        ...(landingPageData?.landingPageData?.dynamic_page || []),
+        ...(landingPageData?.metas || []),
+        ...(landingPageData?.dynamic_page || []),
       ],
       isImportantLink: true,
     },
@@ -268,6 +273,16 @@ const Navbar = ({ show, setShow }) => {
       : true
   );
 
+  const handleAdvanceSearch = (e)=> {
+      if(!token){
+        e.preventDefault();
+        setShow(true);
+        const searchParam = new URLSearchParams();
+        searchParam.set("search", '/advance-search-filter');
+        router.push(`/?${searchParam.toString()}`);
+      }
+  }
+
   return (
     <>
       <div className="container-fluid mt-2 bg-white p-0">
@@ -291,7 +306,7 @@ const Navbar = ({ show, setShow }) => {
                     <img
                       src={
                         `${
-                          landingPageData?.landingPageData?.configurations?.[0]?.latest_logos.find(
+                          landingPageData?.configurations?.[0]?.latest_logos.find(
                             (config) => config.is_active
                           )?.logo
                         }` || "default"
@@ -308,6 +323,7 @@ const Navbar = ({ show, setShow }) => {
                     href="/advance-search-filter"
                     title="Advance search"
                     className="fs-2 ps-5 text-dark"
+                    onClick={handleAdvanceSearch}
                   >
                     <LuSlidersHorizontal />
                   </Link>
@@ -335,7 +351,7 @@ const Navbar = ({ show, setShow }) => {
                     <img
                       src={
                         `${
-                          landingPageData?.landingPageData?.configurations?.[0]?.latest_logos.find(
+                          landingPageData?.configurations?.[0]?.latest_logos.find(
                             (config) => config.is_active
                           )?.logo
                         }` || "default"
@@ -367,6 +383,7 @@ const Navbar = ({ show, setShow }) => {
                                   show={show}
                                   setShow={setShow}
                                   items={item.items}
+                                  token={token}
                                   isPublisher={item.isPublisher}
                                   handlePublisherClick={handlePublisherClick}
                                 />

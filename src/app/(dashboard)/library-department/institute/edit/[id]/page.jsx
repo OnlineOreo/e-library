@@ -156,9 +156,7 @@ export default function EditInstituteComponent() {
       });
   
       setIsLoading(false);
-      setTimeout(() => {
-        router.push("../");
-      }, 4000);
+      router.push("../");
     } catch (error) {
       setIsLoading(false);
       Swal.fire({

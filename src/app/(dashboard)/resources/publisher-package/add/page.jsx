@@ -178,12 +178,15 @@ const AddPublisherPackage = () => {
       return;
     }
 
+    const hostname = typeof window !== "undefined" ? window.location.hostname : "";
+
     // Transform formData for correct API request
     const transformedData = {
       package_name: formData.package_name,
       publisher: formData.publisher,
       started_at: formData.started_at,
       ended_at: formData.ended_at,
+      sub_domain:hostname,
       mappings: formData.mappings.map((mapItem) => ({
         department: mapItem.department_id,
         program: mapItem.program_id,
@@ -201,7 +204,7 @@ const AddPublisherPackage = () => {
         programSet.add(mapping.program);
     }
 
-    try {
+    try { 
       await axios.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/publisher-packages?institute_id=${instituteId}`,
         transformedData,
@@ -220,7 +223,7 @@ const AddPublisherPackage = () => {
         confirmButtonText: "OK",
       });
 
-      setTimeout(() => router.push("/resources/publisher-package"), 2000);
+      router.push("/resources/publisher-package");
 
     } catch (error) {
       setErrors(error.response.data);

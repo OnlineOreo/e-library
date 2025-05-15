@@ -115,7 +115,7 @@ const EditNewsClipping = () => {
         confirmButtonText: "OK",
       });
 
-      setTimeout(() => router.push("/resources/news-clippings"), 2000);
+      router.push("/resources/news-clippings");
     } catch (error) {
       setErrors(error.response?.data || {});
       toast.error("Error updating E-news clipping!");
@@ -132,7 +132,7 @@ const EditNewsClipping = () => {
           <Col lg={12}>
             <div className="d-flex justify-content-between align-items-center">
               <h3 className="mb-0 text-dark">Edit E-news Clipping</h3>
-              <Link href="/configuration/news-clippings" className="btn btn-white">
+              <Link href="/resources/news-clippings" className="btn btn-white">
                 <FaMinusCircle /> Back
               </Link>
             </div>

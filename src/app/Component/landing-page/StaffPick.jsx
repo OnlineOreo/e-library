@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import '@/i18n'; // cleaner using path alias `@`
 
 
-export default function StaffPick({headingName,setShow,show}) {
+export default function StaffPick({headingName,landingPageData,setShow,show}) {
     const { t, i18n } = useTranslation();
     const router = useRouter();
     const [book, setBook] = useState(true)
@@ -88,9 +88,9 @@ export default function StaffPick({headingName,setShow,show}) {
                     {t('Video')}
                 </div>
             </div>
-            <Ebook toggle={book}  handleRedirect={handleRedirect} />
-            <Ejournal toggle={journal} handleRedirect={handleRedirect} />
-            <Video toggle={video} handleRedirect={handleRedirect} />
+            <Ebook toggle={book}  handleRedirect={handleRedirect} landingPageData={landingPageData} />
+            <Ejournal toggle={journal} handleRedirect={handleRedirect} landingPageData={landingPageData} />
+            <Video toggle={video} handleRedirect={handleRedirect} landingPageData={landingPageData} />
         </div>
     )
 }

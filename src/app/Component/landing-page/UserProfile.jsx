@@ -1,3 +1,4 @@
+'use client'
 import React, { useState } from "react";
 import { FaUser, FaLock, FaSignOutAlt, FaUserTag, FaHistory } from "react-icons/fa";
 import { MdYoutubeSearchedFor } from "react-icons/md";
@@ -35,7 +36,8 @@ const UserProfile = ({ handleLogout, instituteId, setShow }) => {
         <>
             {userRole && (
                 <div
-                    className="position-relative d-inline-block"
+                    className="d-inline-block"
+                    style={{position:"relative"}}
                     onMouseEnter={() => setShowDropdown2(true)}
                     onMouseLeave={closeDropdown}
                 >
@@ -61,8 +63,8 @@ const UserProfile = ({ handleLogout, instituteId, setShow }) => {
 
                     {showDropdown2 && (
                         <div
-                            className="dropdown-menu shadow end-5 show"
-                            style={{ minWidth: "200px" }}
+                            className="dropdown-menu shadow show"
+                            style={{ minWidth: "200px", position: "absolute", right: "0%" }}
                             onClick={(e) => e.stopPropagation()} // prevent toggle when clicking inside
                         >
                             {(userName || userRole) && (
@@ -91,7 +93,7 @@ const UserProfile = ({ handleLogout, instituteId, setShow }) => {
                             </Link>
                             <Link
                                 className="dropdown-item d-flex align-items-center gap-2"
-                                href="/read-history"
+                                href="/read-history/print-collection"
                             >
                                 <HiDocumentSearch /> Read History
                             </Link>

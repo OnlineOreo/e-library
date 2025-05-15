@@ -86,7 +86,7 @@ const Department = () => {
 
   const columns = [
     { field: "notice_id", headerName: "Notice Id", flex: 1 },
-    { field: "description", headerName: "Description", flex: 2 },
+    { field: "description", headerName: "Description", flex: 4 },
     {
       field: "action",
       headerName: "Action",
@@ -132,7 +132,6 @@ const Department = () => {
           Swal.fire("Deleted!", "Notices has been deleted.", "success");
           loadNotices();
         } catch (error) {
-          console.log(error);
           Swal.fire({
             icon: "warning",
             title: "Delete Failed!",
@@ -184,6 +183,7 @@ const Department = () => {
                   rows={filteredNotices}
                   columns={columns}
                   pageSize={5}
+                  columnVisibilityModel={{ notice_id:false }}
                 />
               )}
             </Box>

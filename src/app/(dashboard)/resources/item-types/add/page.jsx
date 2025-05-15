@@ -63,7 +63,7 @@ const AddItemTypes = () => {
             });
 
             setFormData({ type_name: "" });
-            setTimeout(() => router.push('../item-types'), 2000);
+            router.push('../item-types');
         } catch (error) {
             if (error.response?.data) {
                 setErrors(error.response.data);

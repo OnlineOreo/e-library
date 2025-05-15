@@ -15,6 +15,7 @@ export default function SolrSearchNav() {
 
     const isAdvanceSearch = pathname.startsWith('/advance-search');
     const isSavedCatalog = pathname.startsWith('/saved-catalog');
+    const isReadHistory = pathname.startsWith('/read-history');
 
     let links;
 
@@ -31,6 +32,13 @@ export default function SolrSearchNav() {
             { href: '/saved-catalog/e-collection', label: t('E Collection') },
             { href: '/saved-catalog/e-resources', label: t('E Resources') },
             { href: '/saved-catalog/multimedia', label: t('Multimedia') },
+        ];
+    } else if (isReadHistory){
+        links = [
+            { href: '/read-history/print-collection', label: t('Print Collection') },
+            { href: '/read-history/e-collection', label: t('E Collection') },
+            { href: '/read-history/e-resources', label: t('E Resources') },
+            { href: '/read-history/multimedia', label: t('Multimedia') },
         ];
     } else {
         links = [

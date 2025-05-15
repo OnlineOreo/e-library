@@ -139,7 +139,7 @@ export default function AddItem() {
   const handleSubmit = async (e,instituteId) => {
     e.preventDefault();
     setErrors({});
-    console.log(instituteId)
+    // console.log(instituteId)
     return 
 
     const token = getToken();

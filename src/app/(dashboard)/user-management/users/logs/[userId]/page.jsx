@@ -7,6 +7,7 @@ import { useRouter, useParams } from "next/navigation";
 import MethodDistributionChart from "@/app/Component/dashboard/log/MethodDistributionChart";
 import LogLevelDistributionChart from "@/app/Component/dashboard/log/LogLevelDistributionChart";
 import PathDistributionChart from "@/app/Component/dashboard/log/PathDistributionChart";
+import PathDistributionChartHorizontal from "@/app/Component/dashboard/log/PathDistributionChartHorizontal";
 import StatusCodeDistributionChart from "@/app/Component/dashboard/log/StatusCodeDistributionChart";
 import RecentLogsTable from "@/app/Component/dashboard/log/RecentLogsTable";
 import RawLogs from "@/app/Component/dashboard/log/RawLogs";
@@ -76,8 +77,11 @@ const UserLogs = () => {
               <Col xl={4} lg={4} md={12} xs={12} className="mb-6 mb-xl-0">
                 <StatusCodeDistributionChart logs={logs} />
               </Col>
-              <Col xl={6} lg={6} md={12} xs={12} className="mb-6 mb-xl-0">
+              {/* <Col xl={6} lg={6} md={12} xs={12} className="mb-6 mb-xl-0">
                 <PathDistributionChart logs={logs} />
+              </Col> */}
+              <Col xl={12} lg={12} md={12} xs={12} className="mb-6 mb-xl-0">
+                <PathDistributionChartHorizontal logs={logs} />
               </Col>
             </>
           )}

@@ -1,9 +1,10 @@
 "use client";
 import { Row, Col, Card, Form, Button, Spinner, Alert } from "react-bootstrap";
 import { useState } from "react";
-import { useRouter , useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import axios from "axios";
+import Link from "next/link";
 
 const getToken = () => {
   const cookieString = document.cookie
@@ -57,7 +58,7 @@ const ChangePassword = () => {
       // console.log(response.data)
 
       if (response.status == 200 || response.status == 201) {
-        ({
+        Swal.fire({
           title: "Success!",
           text: "Password changed successfully!",
           icon: "success",
@@ -73,8 +74,7 @@ const ChangePassword = () => {
       }
     } catch (err) {
       setError(
-        err.response?.data?.message ||
-          "An error occurred while changing the password."
+        err.response?.data?.detail
       );
     }
 
@@ -86,7 +86,10 @@ const ChangePassword = () => {
       <Col xxl={4} lg={6} md={8} xs={12} className="py-8 py-xl-0">
         <Card className="smooth-shadow-md">
           <Card.Body className="p-6">
-            <h3 className="mb-4">Change Password</h3>
+            <div className="d-flex flex-wrap justify-content-between">
+              <h4 className="mb-4">Change Password</h4>
+              <Link href="/" className="">Back</Link>
+            </div>
             {error && <Alert variant="danger">{error}</Alert>}
             <Form onSubmit={handleChangePassword}>
               <Form.Group className="mb-3" controlId="oldPassword">

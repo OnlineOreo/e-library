@@ -9,9 +9,8 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 
-export default function Video({ toggle }) {
-    const landingPageData = useSelector((state) => state.landingPageDataSlice);
-    const videos = landingPageData?.landingPageData?.staff_picks?.filter(staff_pick =>
+export default function Video({ toggle, landingPageData = [] }) {
+    const videos = landingPageData?.staff_picks?.filter(staff_pick =>
         staff_pick.article_type_name?.toLowerCase() === "video"
     ) || [];
 

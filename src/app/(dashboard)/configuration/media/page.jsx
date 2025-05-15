@@ -54,7 +54,6 @@ const ViewMedia = () => {
         setMedia(response.data);
       }
     } catch (error) {
-      console.log(error);
     }
   };
 
@@ -87,7 +86,7 @@ const ViewMedia = () => {
           );
         } catch (error) {
           errorToaster("Something went wrong!");
-          console.log(error);
+          // console.log(error);
         }
       }
     });
@@ -115,7 +114,7 @@ const ViewMedia = () => {
         <div className="avatar avatar-md">
           <img
             src={params.row.image || "https://via.placeholder.com/50"}
-            alt="Publisher"
+            alt="media"
             width={50}
             height={50}
             className="rounded-circle"
@@ -125,7 +124,23 @@ const ViewMedia = () => {
     },
     { field: "media_name", headerName: "Media Name", flex: 2 },
     { field: "description", headerName: "Description", flex: 3 },
-    { field: "created_at", headerName: "Created At", flex: 2 },
+    {
+      field: "created_at",
+      headerName: "Created At",
+      flex: 2,
+      renderCell: (params) => {
+        const date = new Date(params.value);
+        const formattedDate = date.toLocaleString("en-IN", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        });
+        return <span>{formattedDate}</span>;
+      },
+    },
     {
       field: "action",
       headerName: "Action",

@@ -89,9 +89,7 @@ const AddCategory = () => {
                 image: null,
             });
 
-            setTimeout(() => {
-                router.push("../notice");
-            }, 2000);
+            router.push("../notice");
 
         } catch (error) {
             if (error.response && error.response.data) {

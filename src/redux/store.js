@@ -1,13 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import instituteReducer from "./slices/instituteSlice";
 import landingPageDataSlice from "./slices/landingPageData";
-import userReducer from "./slices/userSlice";
+import userVisitReducer from "./slices/userVisitSlice"; 
 
 const store = configureStore({
   reducer: {
     institute: instituteReducer,
-    landingPageDataSlice:landingPageDataSlice,
-    user: userReducer,
+    landingPageDataSlice: landingPageDataSlice,
+    userVisit: userVisitReducer,
   },
 });
 

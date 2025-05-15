@@ -100,7 +100,7 @@ export default function AddTrendingBook() {
         confirmButtonText: "OK",
       });
 
-      setTimeout(() => router.push("/configuration/trending-books"), 2000);
+      router.push("/configuration/trending-books");
     } catch (error) {
       if (error.response && error.response.data) {
         const apiErrors = error.response.data;

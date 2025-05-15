@@ -6,15 +6,17 @@ import { FaListUl, FaSearch } from "react-icons/fa";
 import { useState, useEffect } from 'react';
 import { useRouter } from "next/navigation";
 import axios from 'axios';
+import { useSelector } from "react-redux";
 
-import CatalogGridCard from '../search/components/CatalogGridCard';
-import CatalogListCard from '../search/components/CatalogListCard';
-import GridViewSkelton from '../search/components/GridViewSkelton';
-import CatalogDetailModal from '../search/components/CatalogDetailModal';
+import CatalogGridCard from '../../search/components/CatalogGridCard';
+import CatalogListCard from '../../search/components/CatalogListCard';
+import GridViewSkelton from '../../search/components/GridViewSkelton';
+import CatalogDetailModal from '../../search/components/CatalogDetailModal';
 
 
 export default function PrintCollectionSavedCatalog() {
     const Router = useRouter();
+    const instituteId = useSelector((state) => state.institute.instituteId);
 
     // Use state with initialization from props
     const [gridView, setGridView] = useState(true);
@@ -24,41 +26,54 @@ export default function PrintCollectionSavedCatalog() {
     const [show, setShow] = useState(false);
     const [selectCatalog, setSelectCatalog] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
-    // const [startIndex, setStartIndex] = useState(0);
     const [userSavedCatalogs, setUserSavedCatalogs] = useState({});
+    const [startIndex, setStartIndex] = useState(12);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+    const [filterResults, setFilterResults] = useState([])
 
-    // Load more results using server action
-    // const handleLoadMore = async () => {
-    //     if (!urlParams) return;
 
-    //     setIsLoading(true);
-    //     const nextStart = startIndex;
+    useEffect(() => {
+        if (searchWithinSearch.trim() === "") {
+            setFilterResults(results);
+        } else {
+            const filtered = results.filter((item) =>
+                item?.datacite_titles?.toLowerCase().includes(searchWithinSearch.toLowerCase())
+            );
+            setFilterResults(filtered);
+        }
+    }, [searchWithinSearch, results]);
 
-    //     try {
-    //         const res = await fetch(`/internal-api/load-more?q=${urlParams}&start=${nextStart}&catalogCore=Print-collection&rows=20`);
-    //         const data = await res.json();
 
-    //         const newDocs = data.results || [];
+    const handleLoadMore = async () => {
+        setIsLoading(true);
+        const catalogIds = userSavedCatalogs.saved_e_resources_ids;
+        const formattedCatalogIds = catalogIds
+            .split(",")
+            .map(id => `"${id.trim()}"`)
+            .join(",");
+        // id:("4395","5084","6367")
+        const solrQuery = `id:(${formattedCatalogIds})`;
+        // console.log("user saved catalog : ", solrQuery);
 
-    //         setResults(prevResults => [...prevResults, ...newDocs]);
-    //         setStartIndex(nextStart + newDocs.length);
+        const nextStart = startIndex;
 
-    //     } catch (error) {
-    //         console.error("Load More Error:", error);
-    //     } finally {
-    //         setIsLoading(false);
-    //     }
-    // };
+        try {
+            const res = await fetch(`/internal-api/load-more?q=${solrQuery}&start=${nextStart}&catalogCore=e-resources&rows=12`);
+            const data = await res.json();
 
-    const handelSearchWithinSearch = (e) => {
-        e.preventDefault()
-        const searchText = searchWithinSearch;
-        // console.log(searchText);
-        Router.push(`?q=${urlParams}%20AND%20datacite_titles%3A(${searchText})`);
-    }
+            const newDocs = data.results || [];
+
+            setResults(prevResults => [...prevResults, ...newDocs]);
+            setStartIndex(nextStart + newDocs.length);
+
+        } catch (error) {
+            console.error("Load More Error:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
 
     const getToken = () => {
@@ -88,26 +103,69 @@ export default function PrintCollectionSavedCatalog() {
         const userId = getUserID();
         // console.log("user_id", userId);
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/logs?user_id=${userId}&read_history="true"`, {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/logs?user_id=${userId}&institute_id=${instituteId}&read_history=true`, {
                 headers: { Authorization: `${token}` },
             });
 
-            console.log("read history : ",response.data);
-            
-            // setUserSavedCatalogs(response.data);
+            // console.log("read history : ",response.data);
 
-            // const catalogIds = response.data[0].saved_p_collection_ids;
-            // console.log("user saved catalog : ", catalogIds);
-            // const responce_catalog = await axios.get(`/api/saved-catalog?catalogIds=${catalogIds}&catalogCore="Print-collection"`)
-            // setResults(responce_catalog.data.results)
-            // setResultsCount(responce_catalog.data.resultsCount)
+
+            const logs = response.data.logs;
+
+            const result = {
+                saved_p_collection_ids: new Set(),
+                saved_e_collection_ids: new Set(),
+                saved_multimedia_ids: new Set(),
+                saved_e_resources_ids: new Set()
+            };
+
+            logs.forEach(log => {
+                const bookId = log.book_id;
+                const core = log.core;
+
+                if (!bookId) return; // skip if book_id is missing
+
+                switch (core) {
+                    case "Print-collection":
+                        result.saved_p_collection_ids.add(bookId);
+                        break;
+                    case "e-collection":
+                        result.saved_e_collection_ids.add(bookId);
+                        break;
+                    case "multimedia-n":
+                        result.saved_multimedia_ids.add(bookId);
+                        break;
+                    case "e-resources":
+                        result.saved_e_resources_ids.add(bookId);
+                        break;
+                }
+            });
+
+            // Convert sets to comma-separated strings
+            const finalResult = {
+                saved_p_collection_ids: Array.from(result.saved_p_collection_ids).join(','),
+                saved_e_collection_ids: Array.from(result.saved_e_collection_ids).join(','),
+                saved_multimedia_ids: Array.from(result.saved_multimedia_ids).join(','),
+                saved_e_resources_ids: Array.from(result.saved_e_resources_ids).join(',')
+            };
+
+            console.log(finalResult);
+
+            setUserSavedCatalogs(finalResult);
+
+            const catalogIds = finalResult.saved_e_resources_ids;
+            console.log("user saved catalog : ", catalogIds);
+            const responce_catalog = await axios.get(`/internal-api/saved-catalog?catalogIds=${catalogIds}&catalogCore=e-resources`)
+            setResults(responce_catalog.data.results)
+            setFilterResults(responce_catalog.data.results)
+            setResultsCount(responce_catalog.data.resultsCount)
 
             // console.log("user saved catalog detail : ", responce_catalog);
 
 
         } catch (error) {
             console.error(error)
-        }finally{
+        } finally {
             setIsLoading(false)
         }
     }
@@ -122,16 +180,15 @@ export default function PrintCollectionSavedCatalog() {
                 <Col md={12} className='pe-0 ps-4'>
                     <Row className="mb-3">
                         <Col md={6}>
-                            <p>Showing <strong>{resultsCount}</strong> results from data</p>
+                            {/* <p>Showing <strong>{resultsCount}</strong> results from data</p> */}
+                            <h3>Read History</h3>
                         </Col>
                         <Col md={6}>
                             <div className="d-flex align-items-center justify-content-end">
-                                <Form onSubmit={handelSearchWithinSearch}>
-                                    <InputGroup>
-                                        <Form.Control placeholder="Search..." onChange={(e) => setSearchWithinSearch(e.target.value)} value={searchWithinSearch} />
-                                        <Button type='submit' variant="outline-secondary" ><FaSearch /></Button>
-                                    </InputGroup>
-                                </Form>
+                                <InputGroup>
+                                    <Form.Control placeholder="Search..." onChange={(e) => setSearchWithinSearch(e.target.value)} value={searchWithinSearch} />
+                                    <Button type='submit' variant="outline-secondary" ><FaSearch /></Button>
+                                </InputGroup>
                                 <BsFillGrid3X3GapFill
                                     size={40}
                                     className={`border p-1 cursor_pointer rounded mx-2 ${gridView ? "active_result_view" : ""}`}
@@ -147,14 +204,14 @@ export default function PrintCollectionSavedCatalog() {
                     </Row>
                     {gridView ? (
                         <Row id='grid-view' className={`grid-view`}>
-                            {isLoading && results.length === 0 ? (
+                            {isLoading && filterResults.length === 0 ? (
                                 Array.from({ length: 4 }).map((_, index) => (
                                     <Col md={3} key={`loading-skeleton-${index}`} className='mb-4'>
                                         <GridViewSkelton />
                                     </Col>
                                 ))
-                            ) : results.length > 0 ? (
-                                results.map((item) => (
+                            ) : filterResults.length > 0 ? (
+                                filterResults.map((item) => (
                                     <Col md={3} key={item.id} className="mb-4">
                                         <CatalogGridCard
                                             id={item.id}
@@ -166,9 +223,10 @@ export default function PrintCollectionSavedCatalog() {
                                             description={item.description}
                                             uploader={item.uploader}
                                             url={item.url}
+                                            thumbnail={item.thumbnail}
                                             resource_type={item.resource_types_string}
                                             user_saved_catalog={userSavedCatalogs}
-                                            catalogCore={"Print-collection"}
+                                            catalogCore={"e-resources"}
                                             onShow={handleShow}
                                             onSelect={() => setSelectCatalog(item)}
                                         />
@@ -176,24 +234,24 @@ export default function PrintCollectionSavedCatalog() {
                                 ))
                             ) : (
                                 <Col md={12} className="text-center text-muted py-5">
-                                    <h5>No Catalog Saved.</h5>
+                                    <h5>You have not read yet anything from E-resources.</h5>
                                 </Col>
                             )}
                         </Row>
                     ) : (
                         <Row id='grid-view' className={`grid-view`}>
-                            {isLoading && results.length === 0 ? (
+                            {isLoading && filterResults.length === 0 ? (
                                 Array.from({ length: 4 }).map((_, index) => (
                                     <Col md={4} key={`loading-skeleton-${index}`} className='mb-4'>
                                         <GridViewSkelton />
                                     </Col>
                                 ))
-                            ) : results.length > 0 ? (
-                                results.map((item) => (
+                            ) : filterResults.length > 0 ? (
+                                filterResults.map((item) => (
                                     <Col md={12} key={item.id} className="mb-4">
                                         <CatalogListCard
                                             id={item.id}
-                                            datacite_title={item.datacite_titles}
+                                            datacite_titles={item.datacite_titles}
                                             datacite_creators={item.datacite_creators}
                                             dc_date={item.dc_date}
                                             publisher={item.dc_publishers?.[0] || "Unknown Publisher"}
@@ -201,9 +259,10 @@ export default function PrintCollectionSavedCatalog() {
                                             description={item.description}
                                             uploader={item.uploader}
                                             url={item.url}
+                                            thumbnail={item.thumbnail}
                                             resource_type={item.resource_types_string}
                                             user_saved_catalog={userSavedCatalogs}
-                                            catalogCore={"Print-collection"}
+                                            catalogCore={"e-resources"}
                                             onShow={handleShow}
                                             onSelect={() => setSelectCatalog(item)}
                                         />
@@ -211,13 +270,13 @@ export default function PrintCollectionSavedCatalog() {
                                 ))
                             ) : (
                                 <Col md={12} className="text-center text-muted py-5">
-                                    <h5>No Catalog Saved.</h5>
+                                    <h5>You have not read yet anything from E-resources.</h5>
                                 </Col>
                             )}
                         </Row>
                     )}
                     <div className='d-flex justify-content-center my-5'>
-                        {results.length > 0 && results.length < resultsCount && (
+                        {filterResults.length > 0 && filterResults.length < resultsCount && (
                             <Button
                                 variant='success'
                                 style={{ width: "100%", padding: "10px" }}

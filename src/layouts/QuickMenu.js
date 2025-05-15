@@ -10,7 +10,7 @@ import "simplebar/dist/simplebar.min.css";
 import useMounted from "@/hooks/useMounted";
 import { useSelector } from "react-redux";
 
-const QuickMenu = () => {
+const QuickMenu = ({handleLogout}) => {
   const [authUser, setAuthUser] = useState({
     name: "",
     role: "",
@@ -19,60 +19,12 @@ const QuickMenu = () => {
 
   const instituteId = useSelector((state) => state.institute.instituteId);
 
-  const router = useRouter();
-
   const getToken = () => {
     const cookieString = document.cookie
       .split("; ")
       .find((row) => row.startsWith("access_token="));
 
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
-  };
-
-  const getSession = () => {
-    const cookieString = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("session_id="));
-
-    return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
-  };
-
-  const getUserId = () => {
-    const cookieString = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("user_id="));
-
-    return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
-  };
-
-  const handleLogout = async (institute_id) => {
-    try {
-      const token = getToken();
-      const session_id = getSession();
-      const userId = getUserId();
-      await axios.put(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-session?session_id=${session_id}&institute_id=${institute_id}&user_id=${userId}`,
-        {
-          ended_at: new Date().toISOString(),
-          institute: instituteId,
-          user: userId,
-        },
-        {
-          headers: {
-            Authorization: ` ${token}`,
-          },
-        }
-      );
-    } catch (error) {
-      console.error("Failed to update user session:", error);
-    }
-
-    // Clear cookies
-    document.cookie = `access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
-    document.cookie = `user_role=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
-    document.cookie = `session_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
-
-    router.push("/");
   };
 
   const hasMounted = useMounted();
@@ -83,7 +35,7 @@ const QuickMenu = () => {
 
   useEffect(() => {
     loadAuthUser();
-  }, []); // Runs whenever authUser changes
+  }, []);
 
   const loadAuthUser = async () => {
     const token = getToken();
@@ -263,7 +215,7 @@ const QuickMenu = () => {
             id="dropdownUser"
           >
             <div className="avatar avatar-md avatar-indicators avatar-online">
-              <Image
+            <img
                 alt="Verified"
                 src={
                   authUser?.image && authUser.image !== ""
@@ -273,6 +225,9 @@ const QuickMenu = () => {
                 className="rounded-circle"
                 width={200}
                 height={200}
+                onError={(e) => {
+                  e.target.src = "/images/avatar/avatar-1.jpg"; // Set default image on error
+                }}
               />
             </div>
           </Dropdown.Toggle>
@@ -316,15 +271,15 @@ const QuickMenu = () => {
               <i className="fe fe-star me-2"></i> Back to Home
             </Dropdown.Item> */}
 
-            {/* <Dropdown.Item className="text-primary">
-                        <i className="fe fe-star me-2"></i> Go Pro
-                    </Dropdown.Item>
-                    <Dropdown.Item >
-                        <i className="fe fe-settings me-2"></i> Account Settings
-                    </Dropdown.Item> */}
-            {/* <Dropdown.Item onClick={() => handleLogout(instituteId)}>
+            <Dropdown.Item as={Link} href="/" target="_blank">
+              <i className="fe fe-star me-2"></i> Student Dashboard
+            </Dropdown.Item>
+            <Dropdown.Item as={Link} href="/logs">
+              <i className="fe fe-settings me-2"></i> Logs
+            </Dropdown.Item>
+            <Dropdown.Item onClick={() => handleLogout(instituteId)}>
               <i className="fe fe-power me-2"></i>Sign Out
-            </Dropdown.Item> */}
+            </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
       </ListGroup>

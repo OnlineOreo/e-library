@@ -126,7 +126,7 @@ const EditConfigurationMeta = () => {
         confirmButtonText: "OK",
       });
 
-      setTimeout(() => router.push("/configuration/dynamic-page"), 2000);
+      router.push("/configuration/dynamic-page");
     } catch (error) {
       setErrors(error.response?.data || {});
       toast.error("Error updating page!");

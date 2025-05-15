@@ -14,11 +14,10 @@ import { useTranslation } from 'react-i18next';
 import '@/i18n'; // cleaner using path alias `@`
 
 
-export default function NoticeBoard({headingName,bannerData}) {
+export default function NoticeBoard({headingName, bannerData, landingPageData}) {
     const { t, i18n } = useTranslation();
     const swiperRef = useRef(null);
-    const landingPageData = useSelector((state) => state.landingPageDataSlice);
-    const notices = landingPageData?.landingPageData?.notices
+    const notices = landingPageData?.notices
 
     return (
         <>

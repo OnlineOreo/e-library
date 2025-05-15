@@ -62,8 +62,8 @@ export default function PathAccessStatsTable({ logs = [] }) {
 
   return (
     <Card className="my-4 shadow">
-      <Card.Header className="bg-white py-4 d-flex justify-content-between align-items-center">
-        <h4 className="mb-0">Path Access Statistics</h4>
+      <Card.Header className="bg-white py-4 d-flex justify-content-between flex-wrap align-items-center">
+        <h4 className="mb-lg-0 mb-3">Path Access Statistics</h4>
         <div>
           <Button
             variant="outline-secondary"
@@ -108,7 +108,18 @@ export default function PathAccessStatsTable({ logs = [] }) {
                       {item.method}
                     </Badge>
                   </td>
-                  <td className="align-middle text-break">{item.path}</td>
+                  <td className="align-middle">
+                    <div
+                      style={{
+                        maxWidth: "550px",
+                        overflowX: "auto",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {item.path}
+                    </div>
+                  </td>
+
                   <td className="align-middle" style={{ minWidth: "200px" }}>
                     <ProgressBar
                       now={(item.count / maxCount) * 100}

@@ -1,110 +1,138 @@
+import { Container, Row, Col } from 'react-bootstrap';
 import { Suspense } from 'react';
-import EResourcesContent from './EResourcesContent';
-import axios from "axios";
+import SearchSideFilter from '../components/SearchSideFilter';
+import axios from 'axios';
+// import { headers } from 'next/headers';
+import LogUpdateClient from '../components/LogUpdateClient';
+import ShowResults from '../components/ShowResults';
 
 function combineFacetData(facetData) {
   const combined = [];
-  
+
   for (let i = 0; i < facetData.length; i += 2) {
     const name = facetData[i];
     const count = facetData[i + 1] || 0;
     combined.push({ name, count: parseInt(count, 10) });
   }
-  
+
   return combined;
 }
 
-async function fetachSolrData(searchQuery, startIndex = 0) {
-  if (!searchQuery) return { results: [], resultsCount: 0, sideFilterResults: {} };
-  
-  try {
-    // Main search results
-    const solrUrl = `${process.env.NEXT_PUBLIC_SOLR_BASE_URL}/solr/e-resources/select?indent=true&q.op=OR&q=${searchQuery}&rows=15&start=${startIndex}`;
-    console.log("solr url : ",solrUrl);
-    
-    const response = await axios.get(solrUrl);
-
-    
-    
-    const docs = response.data.response.docs || [];
-    const numFound = response.data.response.numFound || 0;
-    
-    // Side filter data
-    const sideFilterUrl = `${process.env.NEXT_PUBLIC_SOLR_BASE_URL}/solr/e-resources/select?indent=true&q=*:*&fq=${searchQuery}&facet=true&facet.field=dc_publishers_string&facet.field=datacite_rights_string&facet.field=resource_types_string&facet.field=dc_date&facet.field=datacite_creators_string&facet.limit=500&facet.sort=count`;
-
-        console.log("solr side filter url : ",sideFilterUrl);
-    
-    const sideFilterResponse = await axios.get(sideFilterUrl);
-    const sideData = sideFilterResponse.data;
-    
-    const facets = ["dc_publishers_string", "datacite_rights_string", "resource_types_string", "datacite_creators_string","dc_date"];
-    
-    const sideFilterResults = {};
-    facets.forEach(facet => {
-      sideFilterResults[facet] = combineFacetData(sideData.facet_counts?.facet_fields?.[facet] || []);
-    });
-    
+async function fetchSolrData(searchQuery, startIndex = 0) {
+  if (!searchQuery) {
     return {
-      results: docs,
-      resultsCount: numFound,
-      path:solrUrl,
-      status_code:response.status,
-      response_body:JSON.stringify(docs),
-      error_trace:response.error ? JSON.stringify(response.error) : "",
-      sideFilterResults
+      results: [],
+      resultsCount: 0,
+      sideFilterResults: {},
+      path: '',
+      status_code: 200,
+      response_body: '[]',
+      error_trace: '',
     };
+  }
+
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_SOLR_BASE_URL;
+    // const solrQuery = `fq=pkg_id%3A(${pubPkg})&indent=true`;
+
+    const mainUrl = `${baseUrl}/solr/e-resources/select?q.op=OR&q=${searchQuery}&rows=15&start=${startIndex}`;
+    // console.log("mainurl : ",mainUrl);
     
+    const sideUrl = `${baseUrl}/solr/e-resources/select?q=*:*&fq=${searchQuery}&facet=true&facet.field=dc_publishers_string&facet.field=datacite_rights_string&facet.field=resource_types_string&facet.field=dc_date&facet.field=datacite_creators_string&facet.limit=500&facet.sort=count`;
+    // console.log("sideurl : ",sideUrl);
+
+    const [mainRes, sideRes] = await Promise.all([
+      axios.get(mainUrl),
+      axios.get(sideUrl),
+    ]);
+
+    const results = mainRes.data.response.docs || [];
+    const resultsCount = mainRes.data.response.numFound || 0;
+
+    const facetFields = sideRes.data.facet_counts?.facet_fields || {};
+    const facetKeys = [
+      'dc_publishers_string',
+      'datacite_rights_string',
+      'resource_types_string',
+      'datacite_creators_string',
+      'dc_date',
+    ];
+
+    const sideFilterResults = {};
+    facetKeys.forEach((key) => {
+      sideFilterResults[key] = combineFacetData(facetFields[key] || []);
+    });
+
+    return {
+      results,
+      resultsCount,
+      sideFilterResults,
+      path: mainUrl,
+      status_code: mainRes.status,
+      response_body: JSON.stringify(results),
+      error_trace: mainRes.error ? JSON.stringify(mainRes.error) : '',
+    };
   } catch (error) {
-    console.error("API Error:", error);
-    return { results: [], resultsCount: 0, sideFilterResults: {} };
+    console.error('Solr fetch error:', error);
+    return {
+      results: [],
+      resultsCount: 0,
+      sideFilterResults: {},
+      path: '',
+      status_code: 500,
+      response_body: '[]',
+      error_trace: error?.toString() || 'Unknown error',
+    };
   }
 }
 
-// Server action for loading more results
-// 'use server'
-// export async function loadMoreResults(searchQuery, startIndex) {
-//   if (!searchQuery) return { results: [], resultsCount: 0 };
-  
-//   try {
-//     const solrUrl = `${process.env.NEXT_PUBLIC_SOLR_BASE_URL}/solr/Print-collection/select?indent=true&q.op=OR&q=${searchQuery}&rows=15&start=${startIndex}`;
-//     const response = await axios.get(solrUrl);
-
-//     // console.log("side solr url : ",solrUrl);
-    
-    
-//     const docs = response.data.response.docs || [];
-//     const numFound = response.data.response.numFound || 0;
-    
-//     return {
-//       results: docs,
-//       resultsCount: numFound
-//     };
-//   } catch (error) {
-//     console.error("Load More Error:", error);
-//     return { results: [], resultsCount: 0 };
-//   }
-// }
-
 export default async function PrintCollectionPage({ searchParams }) {
   const searchParamsObj = await searchParams || {};
-  const searchQuery = searchParamsObj.q || "";
-    
-  const data = await fetachSolrData(searchQuery);
+  const searchQuery = searchParamsObj.q || '';
 
-  // console.log("side filter results : ",data.sideFilterResults);
-  
-  
+  // const headersList = await headers();
+  // const fullHostname = headersList.get('host') || '';
+  // const hostname = fullHostname.split('.')[0];
+
+  // const pkgIdMapping = {
+  //   mriirs: '11%2043',
+  //   fri: '45%2048',
+  //   lhlb: '11%2046',
+  //   dev: '44%2047',
+  //   demo: '44%2047',
+  // };
+
+  // const pubPkg = pkgIdMapping[hostname] || '';
+  const data = await fetchSolrData(searchQuery, 0);
+
   return (
-    <Suspense fallback={<div>Loading search results...</div>}>
-      <EResourcesContent
-        initialResults={data.results}
-        initialResultsCount={data.resultsCount}
-        initialSideFilterResults={data.sideFilterResults}
-        searchQuery={searchQuery}
+    <Container className="px-4 text-secondary">
+      <Row>
+        <Col md={3} className="px-0 bg-white">
+          <Suspense fallback={<div>Loading filters...</div>}>
+            <SearchSideFilter
+              {...data.sideFilterResults}
+              catalogCore="e-resources"
+            />
+          </Suspense>
+        </Col>
+        <Col md={9} className="pe-0 ps-lg-4 ps-0">
+          <Suspense fallback={<div>Loading Content...</div>}>
+            <ShowResults
+              initialResults={data.results}
+              initialResultsCount={data.resultsCount}
+              catalogCore="e-resources"
+              // pubPkg={pubPkg}
+            />
+          </Suspense>
+        </Col>
+      </Row>
+      <LogUpdateClient
         path={data.path}
         status_code={data.status_code}
+        initialResults={data.results}
         error_trace={data.error_trace}
       />
-    </Suspense>
+    </Container>
   );
 }

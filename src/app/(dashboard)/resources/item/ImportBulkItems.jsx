@@ -54,7 +54,7 @@ const ImportBulkItems = ({onSuccess}) => {
 
       onSuccess?.();
     } catch (error) {
-      console.log(error)
+      (error)
       setMessage(
         `Upload failed: ${error?.response?.data?.error || error.message}`
       );

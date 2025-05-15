@@ -75,9 +75,7 @@ const AddContentGroup = () => {
             setIsLoading(false);
             setFormData({ content_name: "" });
 
-            setTimeout(() => {
-                router.push('../content-group');
-            }, 3000);
+            router.push('../content-group');
         } catch (error) {
             setIsLoading(false);
             if (error.response?.data) {

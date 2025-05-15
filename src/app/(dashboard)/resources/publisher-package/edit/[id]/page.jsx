@@ -45,31 +45,34 @@ const EditPublisherPackage = () => {
         return;
       }
 
+      const hostname = typeof window !== "undefined" ? window.location.hostname : "";
       try {
-        const [pubRes, deptRes, progRes, packageRes] =
-          await Promise.all([
-            axios.get(
-              `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/publishers?institute_id=${instituteId}`,
-              {
-                headers: { Authorization: token },
-              }
-            ),
-            axios.get(
-              `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/departments?institute_id=${instituteId}`,
-              {
-                headers: { Authorization: token },
-              }
-            ),
-            axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/programs?institute_id=${instituteId}`, {
+        const [pubRes, deptRes, progRes, packageRes] = await Promise.all([
+          axios.get(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/publishers?institute_id=${instituteId}`,
+            {
               headers: { Authorization: token },
-            }),
-            axios.get(
-              `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/publisher-packages?package_id=${id}`,
-              {
-                headers: { Authorization: token },
-              }
-            ),
-          ]);
+            }
+          ),
+          axios.get(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/departments?institute_id=${instituteId}`,
+            {
+              headers: { Authorization: token },
+            }
+          ),
+          axios.get(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/programs?institute_id=${instituteId}`,
+            {
+              headers: { Authorization: token },
+            }
+          ),
+          axios.get(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/publisher-packages?package_id=${id}&sub_domain=${hostname}`,
+            {
+              headers: { Authorization: token },
+            }
+          ),
+        ]);
 
         setPublishers(pubRes.data);
         setDepartments(deptRes.data);
@@ -96,10 +99,10 @@ const EditPublisherPackage = () => {
       }
     };
 
-    if(instituteId){
+    if (instituteId) {
       fetchData(instituteId);
     }
-  }, [id,instituteId]);
+  }, [id, instituteId]);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -178,86 +181,97 @@ const EditPublisherPackage = () => {
   const removeMappings = (index) => {
     let deleteMappingId = formData.mappings[index].publisher_package_mapping_id;
     const token = getToken();
-    Swal.fire({
-      title: "Are you sure?",
-      text: "Do you want to delete this mapping?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          await axios.delete(
-            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/publisher-packages?package_id=${id}&mapping_ids=${deleteMappingId}`,
-            {
-              headers: { Authorization: `${token}` },
-            }
-          );
-          Swal.fire(
-            "Deleted!",
-            "Publisher package has been deleted.",
-            "success"
-          );
-          if (formData.mappings.length > 1) {
-            const newMappings = formData.mappings.filter((_, i) => i !== index);
-            setFormData({ ...formData, mappings: newMappings });
-          }
-        } catch (error) {
-          if (error?.response?.data?.message == "Invalid UUID: undefined") {
+    if (deleteMappingId != undefined) {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "Do you want to delete this mapping?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            await axios.delete(
+              `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/publisher-packages?package_id=${id}&mapping_ids=${deleteMappingId}`,
+              {
+                headers: { Authorization: `${token}` },
+              }
+            );
+            Swal.fire(
+              "Deleted!",
+              "Publisher package has been deleted.",
+              "success"
+            );
             if (formData.mappings.length > 1) {
               const newMappings = formData.mappings.filter(
                 (_, i) => i !== index
               );
               setFormData({ ...formData, mappings: newMappings });
             }
+          } catch (error) {
+            if (error?.response?.data?.message == "Invalid UUID: undefined") {
+              if (formData.mappings.length > 1) {
+                const newMappings = formData.mappings.filter(
+                  (_, i) => i !== index
+                );
+                setFormData({ ...formData, mappings: newMappings });
+              }
+            }
           }
         }
+      });
+    } else {
+      if (formData.mappings.length > 1) {
+        const newMappings = formData.mappings.filter((_, i) => i !== index);
+        setFormData({ ...formData, mappings: newMappings });
       }
-    });
+    }
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsLoading(true);
-  
+
     // Run validation again before submitting
     const today = new Date().toISOString().split("T")[0];
     let newErrors = {};
-  
+
     const { started_at, ended_at } = formData;
-  
+
     if (!ended_at || ended_at < today) {
       newErrors.ended_at = ["End date cannot be in the past."];
     }
-  
+
     if (started_at === ended_at) {
       newErrors.started_at = ["Start and End date can't be the same."];
       newErrors.ended_at = ["Start and End date can't be the same."];
     }
-  
+
     if (started_at && ended_at && ended_at < started_at) {
       if (!newErrors.ended_at) newErrors.ended_at = [];
       newErrors.ended_at.push("End date must be greater than Start date.");
     }
-  
+
     setErrors(newErrors);
-  
+
     // If there are any errors, stop submission
-    const hasErrors = Object.values(newErrors).some((errList) => errList.length > 0);
+    const hasErrors = Object.values(newErrors).some(
+      (errList) => errList.length > 0
+    );
     if (hasErrors) {
       setIsLoading(false);
       return;
     }
-  
+
     const token = getToken();
     if (!token) {
       router.push("/authentication/sign-in");
       setIsLoading(false);
       return;
     }
-  
+
     try {
       await axios.put(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/publisher-packages?package_id=${id}`,
@@ -269,13 +283,13 @@ const EditPublisherPackage = () => {
           },
         }
       );
-  
+
       Swal.fire(
         "Success!",
         "Publisher package updated successfully!",
         "success"
       );
-      setTimeout(() => router.push("/resources/publisher-package"), 2000);
+      router.push("/resources/publisher-package");
     } catch (error) {
       setErrors(error.response.data);
       toast.error("Something went wrong!");
@@ -283,7 +297,6 @@ const EditPublisherPackage = () => {
       setIsLoading(false);
     }
   };
-  
 
   return (
     <>
@@ -340,7 +353,11 @@ const EditPublisherPackage = () => {
                   <Form.Control
                     type="date"
                     name="started_at"
-                    value={formData.started_at ? formData.started_at.split("T")[0] : ""}
+                    value={
+                      formData.started_at
+                        ? formData.started_at.split("T")[0]
+                        : ""
+                    }
                     onChange={handleInputChange}
                     isInvalid={!!errors.started_at}
                   />
@@ -355,7 +372,9 @@ const EditPublisherPackage = () => {
                   <Form.Control
                     type="date"
                     name="ended_at"
-                    value={formData.ended_at ? formData.ended_at.split("T")[0] : ""}
+                    value={
+                      formData.ended_at ? formData.ended_at.split("T")[0] : ""
+                    }
                     onChange={handleInputChange}
                     isInvalid={!!errors.ended_at}
                   />

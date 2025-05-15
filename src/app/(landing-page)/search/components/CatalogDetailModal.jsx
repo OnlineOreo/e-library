@@ -7,7 +7,7 @@ const CatalogDetailModal = (props) => {
         <div>
             <Modal show={props.modalShow} onHide={props.handleClose} size='lg'>
                 <Modal.Header closeButton>
-                    <Modal.Title>Book Details</Modal.Title>
+                    <Modal.Title>Catalog Details</Modal.Title>
                 </Modal.Header>
                 <Modal.Body className='text-secondary'>
                     {props ? (
@@ -16,6 +16,7 @@ const CatalogDetailModal = (props) => {
                             <p className='mb-1'><strong>Author:</strong> {props.datacite_creators}</p>
                             <p className='mb-1'><strong>Date:</strong> {props.dc_date}</p>
                             <p className='mb-1'><strong>Publisher:</strong> {props.dc_publishers?.[0] || "Unknown Publisher"}</p>
+                            <p className='mb-1'><strong>Resources Type:</strong> {props.resource_types_string}</p>
                             <p className='mb-1'><strong>Subject:</strong> {props.college_category}</p>
                             <p className='mb-1'><strong>Description:</strong> {props.description}</p>
                         </>

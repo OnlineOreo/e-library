@@ -168,3 +168,28 @@
     width: 20px;
     box-shadow: 20px 0px 40px 0px  #63d3a6;
   }
+
+
+  /* styles/globals.css or a module CSS file */
+
+.swiper-button-next,
+.swiper-button-prev {
+  /* background-color:#333; */
+  background-color:#eee1e1;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50%;
+  color: #333 !important;
+  top: 40% !important;
+  /* transform: translate(-50%); */
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.swiper-button-prev:after, .swiper-button-next:after{
+  font-size: 16px !important;
+}
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  font-size: 16px;
+}

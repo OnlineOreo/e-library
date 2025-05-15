@@ -90,3 +90,8 @@
       margin-right: 30px;
   }
 }
+
+.apply_color a {
+  text-decoration: none !important;
+  color: #000 !important;
+}

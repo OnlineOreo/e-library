@@ -85,6 +85,16 @@ export default function Banner({ bannerData, show, setShow }) {
           color: ${bannerData?.cover_headline?.banner_text_color ||
         "inherit"} !important;
         }
+
+        .w-header {
+          width: 50%;
+        }
+
+        @media (max-width: 960px) {
+          .w-header {
+            width: 100%;
+          }
+        }
       `}</style>
 
       <div
@@ -99,12 +109,12 @@ export default function Banner({ bannerData, show, setShow }) {
               backgroundColor: bannerData?.color1,
             }
             : {
-              backgroundColor: bannerData?.color1,
-            }),
+                backgroundColor: bannerData?.color1,
+              }),
         }}
       >
         <div className="container-fluid hero-header d-flex align-items-center justify-content-center min-vh-50 py-4">
-          <div className="container text-center w-50 px-sm-3">
+          <div className="container text-center w-header px-sm-3">
             <h2
               className="fw-bold fs-md-2 fs-lg-3"
               style={{

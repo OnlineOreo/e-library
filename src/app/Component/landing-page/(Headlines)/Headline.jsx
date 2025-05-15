@@ -15,13 +15,13 @@ export default function Headline({ headingName, bannerData }) {
 
     useEffect(() => {
         if (!activeTab && categories.length > 0) {
-            setActiveTab(categories[0]); // ✅ Set trimmed category
+            setActiveTab(categories[0]);
         }
     }, []); 
 
     useEffect(() => {
         if (activeTab) {
-            fetchNews(activeTab.trim()); // ✅ Trim before API call
+            fetchNews(activeTab.trim());
         }
     }, [activeTab]);
 
@@ -29,7 +29,7 @@ export default function Headline({ headingName, bannerData }) {
         setLoading(true);
         setError(null);
         try {
-            const trimmedCategory = category.trim().toLowerCase(); // ✅ Trimmed again for safety
+            const trimmedCategory = category.trim().toLowerCase();
             const response = await fetch(
                 `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/news?category=${trimmedCategory}`
             );
@@ -108,7 +108,6 @@ export default function Headline({ headingName, bannerData }) {
                 ) : (
                     !loading && <p className="text-center text-muted">{t('No news available.')}</p>
                 )}
-                
             </div>
 
             {/* Custom Styles */}

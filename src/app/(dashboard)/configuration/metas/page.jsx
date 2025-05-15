@@ -95,8 +95,6 @@ export default function Configurationmeta() {
   };
 
   const columns = [
-    { field: "list", headerName: "Link name", flex: 1 },
-    { field: "sub_list", headerName: "Sub List", flex: 2 },
     {
       field: "image",
       headerName: "Image",
@@ -120,6 +118,8 @@ export default function Configurationmeta() {
           "No Image"
         ),
     },
+    { field: "list", headerName: "Link name", flex: 1 },
+    { field: "description", headerName: "Description", flex: 2 },
     { field: "link_url", headerName: "URL", flex: 2 },
     {
       field: "action",

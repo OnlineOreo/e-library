@@ -117,7 +117,7 @@ const EditProgram = () => {
                 confirmButtonText: "OK",
             });
 
-            setTimeout(() => router.push("../"), 2000);
+            router.push("../");
         } catch (error) {
             if (error.response?.data) {
                 setErrors(error.response.data);

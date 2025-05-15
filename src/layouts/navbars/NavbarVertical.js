@@ -10,10 +10,11 @@ import Accordion from 'react-bootstrap/Accordion';
 import AccordionContext from 'react-bootstrap/AccordionContext';
 import { useAccordionButton } from 'react-bootstrap/AccordionButton';
 import LanguageSelector from "@/app/Component/landing-page/languageselector";
+import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import '@/i18n'; // cleaner using path alias `@`
+// import { useLandingPageData } from "@/app/context/LandingPageContext"; 
+import '@/i18n';
 
-// import simple bar scrolling used for notification item scrolling
 import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
 
@@ -25,6 +26,10 @@ const NavbarVertical = (props) => {
 	const DashboardMenu = useDashboardMenu();
 	const location = usePathname();
 	const isMobile = useMediaQuery({ maxWidth: 767 });
+	// const landingPageData = useLandingPageData();
+
+	  const landingPageData2 = useSelector((state) => state.landingPageDataSlice);
+	  const landingPageData = landingPageData2?.landingPageData || []
 
 	// Prevent hydration mismatch
 	const [hasMounted, setHasMounted] = useState(false);
@@ -101,7 +106,18 @@ const NavbarVertical = (props) => {
 			<SimpleBar style={{ maxHeight: '100vh' }}>
 				<div className="nav-scroller">
 					<Link href="/" className="navbar-brand text-light fw-2 fs-3">
-						{t('Libvirtuua')}
+					<img
+                      src={
+                        `${
+                          landingPageData?.configurations?.[0]?.latest_logos.find(
+                            (config) => config.is_active
+                          )?.logo
+                        }` || "default"
+                      }
+                      alt="App Icon"
+					  style={{ width:'111px',height:'75px' }}
+                    />
+						{/* {t('Libvirtuua')} */}
 					</Link>
 				</div>
 				<Accordion defaultActiveKey="0" as="ul" className="navbar-nav flex-column">

@@ -48,7 +48,7 @@ const EditCategory = () => {
                 headers: { Authorization: `${token}` },
             });
             setFormData(response.data);
-            console.log(response.data);
+            // console.log(response.data);
 
         } catch (error) {
             console.error("Error fetching category:", error);

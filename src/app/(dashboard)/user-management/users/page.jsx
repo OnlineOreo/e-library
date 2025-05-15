@@ -131,11 +131,13 @@ const Home = () => {
 
   const handleToggleActive = async (user) => {
     const token = getToken();
+    const { image, ...rest } = user;
+
     const updatedUser = {
-      ...user,
+      ...rest,
       is_active: !user.is_active,
       role: user.role,
-    }; // <-- include role
+    };
 
     try {
       await axios.put(
@@ -163,6 +165,7 @@ const Home = () => {
           u.id === user.id ? { ...u, is_active: updatedUser.is_active } : u
         )
       );
+
       setFilteredUsers((prev) =>
         prev.map((u) =>
           u.id === user.id ? { ...u, is_active: updatedUser.is_active } : u
@@ -179,9 +182,11 @@ const Home = () => {
     const token = getToken();
     setPasswordLoading(true);
 
+    const { image, ...userWithoutImage } = selectedUser;
+
     const updatedUser = {
-      ...selectedUser, // Spread all the user data
-      password: newPassword, // Include the new password
+      ...userWithoutImage, 
+      password: newPassword,
     };
 
     try {
@@ -208,6 +213,30 @@ const Home = () => {
 
   const columns = [
     { field: "id", headerName: "User ID", flex: 2 },
+    {
+      field: "image",
+      headerName: "Photo",
+      flex: 1,
+      renderCell: (params) => {
+        const handleError = (e) => {
+          e.target.src = "/images/avatar/avatar-1.jpg";
+        };
+      
+        return (
+          <img
+            src={params.value || "/images/avatar/avatar-1.jpg"}
+            alt="User"
+            onError={handleError}
+            style={{
+              width: "50px",
+              height: "50px",
+              borderRadius: "50%",
+              objectFit: "cover",
+            }}
+          />
+        );
+      },
+    },
     { field: "name", headerName: "Name", flex: 2 },
     { field: "email", headerName: "Email", flex: 2 },
     { field: "phone_number", headerName: "Number", flex: 2 },
@@ -277,8 +306,8 @@ const Home = () => {
       <Container fluid className="mt-n22 px-6">
         <Row>
           <Col lg={12} md={12} xs={12}>
-            <div className="d-flex justify-content-between align-items-center">
-              <h3 className="mb-0 text-dark">Manage User</h3>
+            <div className="d-flex justify-content-between flex-wrap align-items-center">
+              <h3 className="mb-lg-0 mb-3 text-dark">Manage User</h3>
               <div>
                 <Button
                   variant="white"

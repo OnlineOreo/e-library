@@ -2,7 +2,14 @@
 import { Fragment, useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
-import { Container, Col, Row, Form, Button, ProgressBar } from "react-bootstrap";
+import {
+  Container,
+  Col,
+  Row,
+  Form,
+  Button,
+  ProgressBar,
+} from "react-bootstrap";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import { FaMinusCircle } from "react-icons/fa";
@@ -17,6 +24,9 @@ const EditUser = () => {
   const successToaster = (text) => toast(text);
   const errorToaster = (text) => toast.error(text);
   const instituteIds = useSelector((state) => state.institute.instituteId);
+  const [image2, setImage2] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [insertImage2, setInsertImage2] = useState(false);
 
   const [isUpdating, setIsUpdating] = useState(false);
   const [step, setStep] = useState(1);
@@ -103,6 +113,7 @@ const EditUser = () => {
         ]);
 
         setFormData(userRes.data);
+        setPreviewUrl(userRes.data.image);
         setInstitute(instituteRes.data);
         setServiceGroup(serviceGroupRes.data);
         setContentGroup(contentGroupRes.data);
@@ -160,18 +171,21 @@ const EditUser = () => {
       errorToaster("Authentication required!");
       return;
     }
-
-    // Ensure every mapping has institute and library
-    const normalizedFormData = {
-      ...formData,
-      mappings: formData.mappings.map((mapping) => ({
-        ...mapping,
-        institute: mapping.institute || instituteId,
-        library: mapping.library || library?.[0]?.library_id || "",
-      })),
-    };
-
+  
     try {
+      // Create a shallow copy and remove 'image' property
+      const { image, ...restFormData } = formData;
+  
+      const normalizedFormData = {
+        ...restFormData,
+        mappings: restFormData.mappings.map((mapping) => ({
+          ...mapping,
+          institute: mapping.institute || instituteId,
+          library: mapping.library || library?.[0]?.library_id || "",
+        })),
+      };
+  
+      // PUT request for user update without image
       const response = await axios.put(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users?user_id=${id}`,
         normalizedFormData,
@@ -182,7 +196,27 @@ const EditUser = () => {
           },
         }
       );
-
+  
+      // PATCH request for image upload (only if image was selected)
+      if (insertImage2 && image2) {
+        const imageFormData = new FormData();
+        imageFormData.append("image", image2);
+  
+        const hostname =
+          typeof window !== "undefined" ? window.location.hostname : "";
+  
+        await axios.patch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users?user_id=${id}&sub_domain=${hostname}`,
+          imageFormData,
+          {
+            headers: {
+              Authorization: `${token}`,
+              // Let the browser automatically set Content-Type for FormData
+            },
+          }
+        );
+      }
+  
       if (response.status === 200) {
         Swal.fire("Success!", "User updated successfully!", "success");
         setIsUpdating(false);
@@ -194,63 +228,15 @@ const EditUser = () => {
     } catch (error) {
       setIsUpdating(false);
       errorToaster(
-        error.response?.data?.message || error.response?.data?.mappings || error.response?.data?.mappings?.[0]
+        error.response?.data?.message ||
+          error.response?.data?.mappings ||
+          error.response?.data?.mappings?.[0]
       );
     }
   };
+  
 
-  //   const handleMappingChange = (event, index) => {
-  //     const { name, value } = event.target;
 
-  //     setFormData((prevFormData) => {
-  //         const updatedFormData = { ...prevFormData };
-
-  //         if (!updatedFormData.mappings) {
-  //             updatedFormData.mappings = [];
-  //         }
-
-  //         if (name === "institute") {
-  //             setInstituteId(value)
-  //             const allChildData = institute.find((ins) => ins.institute_id === value);
-
-  //             if (allChildData) {
-  //                 setLibrary(allChildData.libraries || []);
-  //                 setDepartments([]);
-  //                 setPrograms([]);
-
-  //                 // Update every mapping with the selected institute
-  //                 updatedFormData.mappings = updatedFormData.mappings.map((mapping) => ({
-  //                     ...mapping,
-  //                     institute: instituteId,
-  //                     library: allChildData.libraries.length > 0 ? allChildData.libraries[0].library_id : "",
-  //                 }));
-  //             }
-  //         }
-
-  //         if (name === "library") {
-  //             const allLibrayChild = library.find((lib) => lib.library_id === value);
-  //             if (allLibrayChild) {
-  //                 setDepartments(allLibrayChild.departments || []);
-  //                 setPrograms(allLibrayChild.programs || []);
-  //             }
-  //         }
-
-  //         // Ensure index exists before updating (if new, create a new object)
-  //         if (!updatedFormData.mappings[index]) {
-  //             updatedFormData.mappings[index] = {};
-  //         }
-
-  //         // Update the specific mapping
-  //         updatedFormData.mappings[index] = {
-  //             ...updatedFormData.mappings[index],
-  //             [name]: value,
-  //             institute: instituteId,
-  //         };
-
-  //         return updatedFormData;
-  //     });
-
-  // };
   const handleMappingChange = (event, index) => {
     const { name, value } = event.target;
 
@@ -283,10 +269,6 @@ const EditUser = () => {
 
       if (name === "library") {
         const selectedLibrary = library.find((lib) => lib.library_id === value);
-
-        // setDepartments(selectedLibrary?.departments || []);
-        // setPrograms(selectedLibrary?.programs || []);
-
         updatedFormData.mappings[index] = {
           ...updatedFormData.mappings[index],
           library: value,
@@ -309,6 +291,7 @@ const EditUser = () => {
       return updatedFormData;
     });
   };
+  
   const addNewMapping = () => {
     const selectedInstitute = institute.find(
       (ins) => ins.institute_id === instituteId
@@ -321,7 +304,6 @@ const EditUser = () => {
         ...prevFormData.mappings,
         {
           institute: instituteId,
-          library: "",
           department: "",
           program: "",
         },
@@ -330,50 +312,51 @@ const EditUser = () => {
   };
 
   const removeMapping = async (index, mapping_id, user_id) => {
-    if(mapping_id != undefined){
-
+    if (mapping_id != undefined) {
       const result = await Swal.fire({
         title: "Are you sure?",
-      text: "Do you really want to remove this mapping?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Yes, delete it!",
-    });
+        text: "Do you really want to remove this mapping?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Yes, delete it!",
+      });
 
-    if (result.isConfirmed) {
-      try {
-        const token = getToken();
+      if (result.isConfirmed) {
+        try {
+          const token = getToken();
 
-        await axios.delete(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users?user_id=${user_id}&mapping_ids=${mapping_id}`,
-          {
-            headers: {
-              Authorization: `${token}`,
-            },
-          }
-        );
-        
-        // Remove from local state
-        setFormData((prevFormData) => ({
-          ...prevFormData,
-          mappings: prevFormData.mappings.filter((_, i) => i !== index),
-        }));
-        
-        Swal.fire("Deleted!", "The mapping has been removed.", "success");
-      } catch (error) {
-        console.error("Failed to delete mapping:", error);
-        Swal.fire("Error", "Something went wrong while deleting.", "error");
+          await axios.delete(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users?user_id=${user_id}&mapping_ids=${mapping_id}`,
+            {
+              headers: {
+                Authorization: `${token}`,
+              },
+            }
+          );
+
+          // Remove from local state
+          setFormData((prevFormData) => ({
+            ...prevFormData,
+            mappings: prevFormData.mappings.filter((_, i) => i !== index),
+          }));
+
+          Swal.fire("Deleted!", "The mapping has been removed.", "success");
+        } catch (error) {
+          console.error("Failed to delete mapping:", error);
+          Swal.fire("Error", "Something went wrong while deleting.", "error");
+        }
       }
-    }
-    }else{
+    } else {
       setFormData((prevFormData) => ({
         ...prevFormData,
         mappings: prevFormData.mappings.filter((_, i) => i !== index),
       }));
     }
   };
+
+  console.log(previewUrl)
 
   return (
     <Fragment>
@@ -460,15 +443,6 @@ const EditUser = () => {
                     <option value="STAFF">Staff</option>
                   </Form.Select>
                 </Form.Group>
-                {/* <Form.Group className="mb-3" controlId="formImage">
-                  <Form.Label>Upload Image</Form.Label>
-                  <Form.Control
-                    type="file"
-                    name="image"
-                    accept="image/*"
-                    onChange={handleInputChange}
-                  />
-                </Form.Group> */}
 
                 <Form.Group className="mb-3" controlId="formGender">
                   <Form.Label>Gender</Form.Label>
@@ -554,6 +528,67 @@ const EditUser = () => {
                     </Form.Select>
                   </Form.Group>
                 </Col> */}
+                <Form.Group className="mb-3" controlId="formImage">
+                  <Form.Label>Change Image</Form.Label>
+                  <Form.Control
+                    type="file"
+                    name="image"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      if (file) {
+                        setImage2(file);
+                        setPreviewUrl(URL.createObjectURL(file));
+                        setInsertImage2(true);
+                      }
+                    }}
+                  />
+                  {previewUrl && (
+                    <div
+                      className="mt-3 position-relative"
+                      style={{ maxWidth: "100px" }}
+                    >
+                      <img
+                        src={previewUrl}
+                        alt="Image Preview"
+                        style={{
+                          width: "100px",
+                          height: "100px",
+                          borderRadius: "10px",
+                          objectFit: "cover",
+                        }}
+                      />
+                    </div>
+                  )}
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Label>Library</Form.Label>
+                  <Form.Select
+                    name="library"
+                    disabled={true}
+                    className="no-arrow-select"
+                    value={formData.mappings?.[0].library || ""}
+                    onChange={(e) => handleMappingChange(e)}
+                    required
+                  >
+                    <option value="">Select library</option>
+                    {library.map((item) => (
+                      <option key={item.library_id} value={item.library_id}>
+                        {item.library_name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
+                <style jsx>
+                  {`
+                    .no-arrow-select {
+                      appearance: none;
+                      -webkit-appearance: none;
+                      -moz-appearance: none;
+                    }
+                  `}
+                </style>
                 {formData.mappings?.map((mapping, index) => (
                   <Fragment key={index}>
                     <Col lg={6}>
@@ -616,29 +651,6 @@ const EditUser = () => {
                     <Col className="position-relative mb-5" lg={6} key={index}>
                       <Form.Group
                         className="mb-3"
-                        controlId={`formLibrary${index}`}
-                      >
-                        <Form.Label>Library</Form.Label>
-                        <Form.Select
-                          name="library"
-                          value={mapping.library || ""}
-                          onChange={(e) => handleMappingChange(e, index)}
-                          required
-                        >
-                          <option value="">Select library</option>
-                          {library.map((item) => (
-                            <option
-                              key={item.library_id}
-                              value={item.library_id}
-                            >
-                              {item.library_name}
-                            </option>
-                          ))}
-                        </Form.Select>
-                      </Form.Group>
-
-                      <Form.Group
-                        className="mb-3"
                         controlId={`formDepartment${index}`}
                       >
                         <Form.Label title={mapping.department || ""}>
@@ -697,6 +709,7 @@ const EditUser = () => {
                         </Button>
                       )}
                     </Col>
+                    <div className="w-100 border mb-5"></div>
                   </Fragment>
                 ))}
 

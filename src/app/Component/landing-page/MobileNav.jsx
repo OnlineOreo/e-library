@@ -3,6 +3,7 @@ import Link from "next/link";
 import { FaAngleDown } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 
+
 const MobileNav = ({
   menuOpen,
   toggleMenu,
@@ -19,9 +20,11 @@ const MobileNav = ({
   const toggleDropdown = (menu) => {
     setActiveDropdown(activeDropdown === menu ? null : menu);
   };
-
-  const landingPageData = useSelector((state) => state.landingPageDataSlice);
-  const bannerData = landingPageData?.landingPageData?.configurations?.[0] || [];
+  
+  // const landingPageData = useLandingPageData();
+    const landingPageData2 = useSelector((state) => state.landingPageDataSlice);
+    const landingPageData = landingPageData2?.landingPageData ?? [];
+  const bannerData = landingPageData?.configurations?.[0] || [];
 
   const mediaMapping = {
     "eBooks": "/search/e-resources?q=resource_types_string%3A(e-book)",
@@ -30,6 +33,7 @@ const MobileNav = ({
     "Print Collection": "/search/print-collection?q=resource_types_string%3A(book)",
     "eJournals": "/search/e-resources?q=resource_types_string%3A(e-journals)",
   };
+
 
   const categoriesMapping = {
     "BioTechnology": "/search/print-collection?q=college_category%3A(biotechnology)",
@@ -55,19 +59,19 @@ const MobileNav = ({
     {
       key: "publishers",
       label: "eResources",
-      data: landingPageData?.landingPageData?.publishers || [],
+      data: landingPageData?.publishers || [],
       field: "publisher_name",
     },
     {
       key: "categories",
       label: "Categories",
-      data: landingPageData?.landingPageData?.categories || [],
+      data: landingPageData?.categories || [],
       field: "category_name",
     },
     {
       key: "media",
       label: "Media",
-      data: landingPageData?.landingPageData?.medias || [],
+      data: landingPageData?.medias || [],
       field: "media_name",
     },
     {
@@ -75,15 +79,15 @@ const MobileNav = ({
       label: "Important Link",
       href: "/",
       data: [
-        ...(landingPageData?.landingPageData?.metas || []),
-        ...(landingPageData?.landingPageData?.dynamic_page || []),
+        ...(landingPageData?.metas || []),
+        ...(landingPageData?.dynamic_page || []),
       ],
       field: "important_link",
     },
     // {
     //   key: "collections",
     //   label: "Collections",
-    //   data: landingPageData?.landingPageData?.collections || [],
+    //   data: landingPageData?.collections || [],
     //   field: "collection_name",
     // },
   ];
@@ -95,7 +99,7 @@ const MobileNav = ({
           <Link href="/">
             <img
               src={
-                `${landingPageData?.landingPageData?.configurations?.[0]?.latest_logos.find(
+                `${landingPageData?.configurations?.[0]?.latest_logos.find(
                   (config) => config.is_active
                 )?.logo}` || "default"
               }

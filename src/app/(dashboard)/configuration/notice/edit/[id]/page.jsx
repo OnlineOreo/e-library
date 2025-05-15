@@ -120,9 +120,7 @@ const AddCategory = () => {
                 image: null,
             });
 
-            setTimeout(() => {
-                router.push("/configuration/notice");
-            }, 2000);
+            router.push("/configuration/notice");
 
         } catch (error) {
             if (error.response && error.response.data) {
