@@ -37,6 +37,8 @@ async function fetchSolrData(searchQuery, startIndex = 0) {
 
     const mainUrl = `${baseUrl}/solr/e-collection/select?q.op=OR&q=${searchQuery}&rows=15&start=${startIndex}`;
     const sideUrl = `${baseUrl}/solr/e-collection/select?q=*:*&fq=${searchQuery}&facet=true&facet.field=dc_publishers_string&facet.field=datacite_rights_string&facet.field=resource_types_string&facet.field=dc_date&facet.field=datacite_creators_string&facet.limit=500&facet.sort=count`;
+    console.log(sideUrl);
+    
 
     const [mainRes, sideRes] = await Promise.all([
       axios.get(mainUrl),
