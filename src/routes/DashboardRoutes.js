@@ -144,17 +144,17 @@ export const useDashboardMenu = () => {
   }
 
   menu.push(
-    // { id: uuid(), title: t("Reports"), icon: "layout", link: "/report" },
-    {
-      id: uuid(),
-      title: t("Reports"),
-      icon: "layout",
-      children: [
-        { id: uuid(), link: "/reports/total-users", name: t("User Report") },
-        // { id: uuid(), link: "/reports/Resource-reports", name: t("Resource Reports") },
-        // { id: uuid(), link: '/reports/top-users', name: 'Top Users' },
-      ],
-    },
+    { id: uuid(), title: t("Reports"), icon: "layout", link: "/report" },
+    // {
+    //   id: uuid(),
+    //   title: t("Reports"),
+    //   icon: "layout",
+    //   children: [
+    //     { id: uuid(), link: "/reports/total-users", name: t("User Report") },
+    //     { id: uuid(), link: "/reports/Resource-reports", name: t("Resource Reports") },
+    //     { id: uuid(), link: '/reports/top-users', name: 'Top Users' },
+    //   ],
+    // },
     {
       id: uuid(),
       title: t("Notification"),

@@ -5,7 +5,7 @@ import Ejournal from './Ejournal';
 import Video from './Video';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from "next/navigation";
-import '@/i18n'; // cleaner using path alias `@`
+import '@/i18n';
 
 
 export default function StaffPick({headingName,landingPageData,setShow,show}) {
@@ -33,7 +33,7 @@ export default function StaffPick({headingName,landingPageData,setShow,show}) {
         const screenWidth = window.screen.width;
         const screenHeight = window.screen.height;
         const width = screenWidth / 2;
-        const height = screenHeight;
+        const height = screenHeight / 2;
         const left = screenWidth / 2;
       
         window.open(

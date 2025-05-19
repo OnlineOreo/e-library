@@ -61,6 +61,7 @@ const Reports = () => {
               setDateRange(update);
             }}
             placeholderText="Select date range"
+            maxDate={new Date()}
             className="form-control"
           />
           <Button variant="primary" size="sm" onClick={handleApply} className="me-1">

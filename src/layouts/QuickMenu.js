@@ -40,7 +40,6 @@ const QuickMenu = ({handleLogout}) => {
   const loadAuthUser = async () => {
     const token = getToken();
     if (!token) {
-      errorToaster("Authentication required!");
       return;
     }
     try {

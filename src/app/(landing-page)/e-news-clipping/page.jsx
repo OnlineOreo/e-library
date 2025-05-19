@@ -3,12 +3,13 @@ import { useState } from "react";
 import Link from "next/link";
 import { Container, Col, Row, Card } from "react-bootstrap";
 import { ToastContainer, toast } from "react-toastify";
-import { useLandingPageData } from "@/app/context/LandingPageContext";
+// import { useLandingPageData } from "@/app/context/LandingPageContext";
+import { useSelector } from "react-redux";
 
 const NewsClipping = () => {
   const [search, setSearch] = useState("");
-
-  const landingPageData = useLandingPageData();
+  const landingPageData2 = useSelector((state) => state.landingPageDataSlice);
+  const landingPageData = landingPageData2?.landingPageData || []
 
   const newsClipping = landingPageData?.e_news_clips || [];
 
@@ -16,6 +17,7 @@ const NewsClipping = () => {
     clip.title?.toLowerCase().includes(search.toLowerCase())
   );
 
+  
   return (
     <>
       <div className="bg-primary "></div>

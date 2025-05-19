@@ -12,7 +12,7 @@ async function fetachSolrData(searchQuery, startIndex = 0) {
     const response = await axios.get(solrUrl);
 
     const docs = response.data.response.docs || [];
-    const numFound = response.data.response.numFound || 0;
+    const numFound = response.data.response.numFound || 0;  
 
 
     return {

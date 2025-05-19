@@ -28,11 +28,11 @@ const ViewInstitute = () => {
     return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
   };
 
-  const loadUser = async () => {
+  const loadInstitute = async () => {
     const token = getToken();
     if (!token) {
       errorToaster("Authentication required!");
-      // router.push('/authentication/sign-in');
+      router.push('/');
       return;
     }
 
@@ -54,7 +54,7 @@ const ViewInstitute = () => {
   };
 
   useEffect(() => {
-    loadUser();
+    loadInstitute();
   }, []);
 
   const handleDelete = async (params) => {
@@ -168,26 +168,36 @@ const ViewInstitute = () => {
         const startedAt = new Date(params.row.started_at);
         const endedAt = new Date(params.row.ended_at);
         const today = new Date();
-    
+
         const formatDate = (date) =>
           date.toLocaleDateString("en-US", {
             year: "numeric",
             month: "short",
             day: "numeric",
           });
-    
+
+        if (!params.row.ended_at) {
+          return (
+            <div>
+              <span className="badge bg-secondary" style={{ fontSize: "13px" }}>
+                Not Set
+              </span>
+            </div>
+          );
+        }
+
         if (isNaN(startedAt) || isNaN(endedAt)) {
           return (
-            <div title="Date not available">
+            <div title="Invalid date">
               <span className="badge bg-secondary" style={{ fontSize: "13px" }}>
                 N/A
               </span>
             </div>
           );
         }
-    
+
         const diffInDays = Math.ceil((endedAt - today) / (1000 * 60 * 60 * 24));
-    
+
         if (diffInDays < 0) {
           return (
             <div title={`Expired on ${formatDate(endedAt)}`}>
@@ -199,10 +209,7 @@ const ViewInstitute = () => {
         } else if (diffInDays <= 10) {
           return (
             <div title={`Will expire in ${diffInDays} day(s) on ${formatDate(endedAt)}`}>
-              <span
-                className="badge bg-warning text-dark"
-                style={{ fontSize: "13px" }}
-              >
+              <span className="badge bg-warning text-dark" style={{ fontSize: "13px" }}>
                 Expiring Soon
               </span>
             </div>
@@ -216,7 +223,8 @@ const ViewInstitute = () => {
             </div>
           );
         }
-      },
+      }
+
     },
     {
       field: "is_active",
@@ -234,7 +242,7 @@ const ViewInstitute = () => {
           <label htmlFor={`toggle-${params.row.institute_id}`} /> {/* Ensure the htmlFor matches */}
         </div>
       ),
-    },    
+    },
     {
       field: "action",
       headerName: "Action",

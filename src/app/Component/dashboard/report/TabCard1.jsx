@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import { IoFastFood } from "react-icons/io5";
 
 // Dynamically import ApexCharts
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
@@ -17,22 +18,37 @@ const TabCard1 = ({ apiData }) => {
       const sortedData = [...apiData.date_wise_counts].sort(
         (a, b) => new Date(a.day) - new Date(b.day)
       );
-
-      const labels = sortedData.map((item) => {
-        const date = new Date(item.day);
-        const dd = String(date.getDate()).padStart(2, "0");
-        const mm = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
-        const yyyy = date.getFullYear();
-        return `${dd}-${mm}-${yyyy}`;
-      });
-
+  
+      let labels = [];
+  
+      if (apiData?.day_wise_or_months === "day") {
+        labels = sortedData.map((item) => {
+          const date = new Date(item.day);
+          const dd = String(date.getDate()).padStart(2, "0");
+          const mm = String(date.getMonth() + 1).padStart(2, "0");
+          const yyyy = date.getFullYear();
+          return `${dd}-${mm}-${yyyy}`;
+        });
+      }
+  
+      const monthNames = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+      ];
+      if (apiData?.day_wise_or_months === "month") {
+        labels = sortedData.map((item) => {
+          return monthNames[item.month - 1];
+        });
+      }
+  
       const counts = sortedData.map((item) => item.count);
-
+  
       setRawLabels(labels);
       setChartLabels(labels);
       setChartSeries([{ name: "Logins", data: counts }]);
     }
   }, [apiData]);
+  
 
   const chartOptions = {
     chart: {
@@ -100,7 +116,6 @@ const TabCard1 = ({ apiData }) => {
 
   return (
     <div className="p-3 card border">
-      <h5>Tab 1 Data</h5>
       {chartSeries.length > 0 ? (
         <Chart
           options={chartOptions}
@@ -116,3 +131,4 @@ const TabCard1 = ({ apiData }) => {
 };
 
 export default TabCard1;
+

@@ -9,7 +9,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 
-export default function Ejournal({ toggle,landingPageData = [] }) {
+export default function Ejournal({ toggle,landingPageData = [], handleRedirect }) {
     const ejournals = landingPageData?.staff_picks?.filter(staff_pick => 
         staff_pick.article_type_name?.toLowerCase() === "journals"
     ) || [];
@@ -45,7 +45,7 @@ export default function Ejournal({ toggle,landingPageData = [] }) {
             >
                 {ejournals.map((journal, index) => (
                     <SwiperSlide key={index}>
-                        <div className="journal_card">
+                        <div className="journal_card" onClick={() => handleRedirect(journal.url)}>
                             <div className="card-image">
                                 <img src={journal.image} alt={journal.title} />
                             </div>

@@ -3,13 +3,16 @@
 import React, { useEffect, useState } from "react"
 import { useParams } from "next/navigation"
 import { Container, Row, Col, Card } from "react-bootstrap"
-import { useLandingPageData } from "@/app/context/LandingPageContext"; 
+import { useSelector } from "react-redux"
+// import { useLandingPageData } from "@/app/context/LandingPageContext"; 
 
 const DynamicPage = () => {
   const { id } = useParams()
-  const [pageData, setPageData] = useState("")
+  const [pageData, setPageData] = useState("")  
 
-  const landingPageData = useLandingPageData();
+  // const landingPageData = useLandingPageData();
+  const landingPageData2 = useSelector((state) => state.landingPageDataSlice);
+  const landingPageData = landingPageData2?.landingPageData || []
   const dynamicPageData = landingPageData?.dynamic_page || []
 
   useEffect(() => {

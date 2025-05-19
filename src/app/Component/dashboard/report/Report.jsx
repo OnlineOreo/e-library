@@ -14,11 +14,16 @@ import TabCard4 from "./TabCard4";
 const Report = ({ selectedDate }) => {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState(1);
+  const [totalVisit, setTotalVisits] = useState(0)
+  // const [comulative, setComulative] = useState(0)
+  const [totalCount, setTotalCount] = useState(0)
+  // const [totalCount2, setTotalCount2] = useState(0)
+
   const [cardValues, setCardValues] = useState({
-    1: "...",
-    2: "...",
-    3: "...",
-    4: "...",
+    1: 0,
+    2: 0,
+    3: 0,
+    // 4: 0,
   });
 
   const getToken = () => {
@@ -30,6 +35,10 @@ const Report = ({ selectedDate }) => {
 
   useEffect(() => {
     const fetchCardValues = async (selectedDate) => {
+      if (!selectedDate || !selectedDate.start || !selectedDate.end) {
+        return;
+      }
+
       const token = getToken();
       if (!token) {
         router.push("/");
@@ -39,57 +48,82 @@ const Report = ({ selectedDate }) => {
           text: "Session Expired! You have logged out.",
           confirmButtonText: "OK",
         });
+        return;
       }
-      const hostname =
-        typeof window !== "undefined" ? window.location.hostname : "";
+
+      const hostname = typeof window !== "undefined" ? window.location.hostname : "";
+      console.log("Selected Date:", selectedDate);
 
       const start_date = selectedDate.start;
       const end_date = selectedDate.end;
 
       try {
-        // const [res1, res2, res3, res4] = await Promise.all([
-        const [res1] = await Promise.all([
-          axios.get(
-            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/reports-login-stats?sub_domain=${hostname}&start_date=${start_date}&end_date=${end_date}`,
-            {
-              headers: { Authorization: `${token}` },
-            }
-          ),
-          // axios.get(
-          //   `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/report-2-summary?sub_domain=${hostname}&start_date=${start_date}&end_date=${end_date}`,
-          //   {
-          //     headers: { Authorization: `${token}` },
-          //   }
-          // ),
-          // axios.get(
-          //   `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/report-3-summary?sub_domain=${hostname}&start_date=${start_date}&end_date=${end_date}`,
-          //   {
-          //     headers: { Authorization: `${token}` },
-          //   }
-          // ),
-          // axios.get(
-          //   `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/report-4-summary?sub_domain=${hostname}&start_date=${start_date}&end_date=${end_date}`,
-          //   {
-          //     headers: { Authorization: `${token}` },
-          //   }
-          // ),
+        const [res1, res2, totalVisits] = await Promise.all([
+          axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/reports-login-stats?sub_domain=${hostname}&start_date=${start_date}&end_date=${end_date}`, {
+            headers: { Authorization: `${token}` },
+          }),
+          axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/reports-login-stats?sub_domain=${hostname}&start_date=${start_date}&end_date=${end_date}`, {
+            headers: { Authorization: `${token}` },
+          }),
+          axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/reports-user-visits?sub_domain=${hostname}&start_date=${start_date}&end_date=${end_date}`, {
+            headers: { Authorization: `${token}` },
+          }),
         ]);
+
+        const [cumulative_report, page_view_report, search_report, download_report] = await Promise.all([
+          axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/reports-discovery-search-cumulative?report_type=cumulative_report&sub_domain=${hostname}&start_date=${start_date}&end_date=${end_date}`, {
+            headers: { Authorization: `${token}` },
+          }),
+          axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/reports-discovery-search-cumulative?report_type=page_view_report&sub_domain=${hostname}&start_date=${start_date}&end_date=${end_date}`, {
+            headers: { Authorization: `${token}` },
+          }),
+          axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/reports-discovery-search-cumulative?report_type=search_report&sub_domain=${hostname}&start_date=${start_date}&end_date=${end_date}`, {
+            headers: { Authorization: `${token}` },
+          }),
+          axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/reports-discovery-search-cumulative?report_type=download_report&sub_domain=${hostname}&start_date=${start_date}&end_date=${end_date}`, {
+            headers: { Authorization: `${token}` },
+          }),
+        ]);
+
+        const arr = {
+          cumulative_report: cumulative_report.data,
+          page_view_report: page_view_report.data,
+          search_report: search_report.data,
+          download_report: download_report.data,
+        };
+
+        function getTotalCount(array) {
+          return array.reduce((sum, item) => sum + item.count, 0);
+        }
+
+        const cumulativeTotal = getTotalCount(arr.cumulative_report.cumulative_count || []);
+        const downloadTotal = getTotalCount(arr.download_report.download_count || []);
+        const pageViewTotal = getTotalCount(arr.page_view_report.page_visit_count || []);
+        const searchTotal = getTotalCount(arr.search_report.search_query_count || []);
+
+        const grandTotal = cumulativeTotal + downloadTotal + pageViewTotal + searchTotal;
 
         setCardValues({
           1: res1.data ?? "N/A",
-          // 2: res2.data?.value ?? "N/A",
-          // 3: res3.data?.value ?? "N/A",
-          // 4: res4.data?.value ?? "N/A",
+          2: res2.data ?? "N/A",
+          3: arr ?? "N/A",
         });
+
+        setTotalVisits(totalVisits?.data?.no_of_days);
+        setTotalCount(grandTotal);
       } catch (error) {
-        console.error("Error fetching card summaries:", error);
+        console.error("Error fetching card values:", error);
       }
     };
 
-    if (selectedDate != undefined) {
+    if (selectedDate && selectedDate.start && selectedDate.end) {
       fetchCardValues(selectedDate);
+    } else {
+      console.warn("selectedDate is missing or malformed:", selectedDate);
     }
   }, [selectedDate]);
+
+
 
   const cardData = [
     {
@@ -99,47 +133,51 @@ const Report = ({ selectedDate }) => {
       icon: <FaCalendarAlt />,
       component: <TabCard1 apiData={cardValues[1]} />,
     },
-    // {
-    //   id: 2,
-    //   title: "Tab 2",
-    //   subtitle: "Monthly Overview",
-    //   icon: <FaUsers />,
-    //   component: <TabCard2 apiData={cardValues[2]} />,
-    // },
-    // {
-    //   id: 3,
-    //   title: "Tab 3",
-    //   subtitle: "Revenue Growth",
-    //   icon: <FaChartLine />,
-    //   component: <TabCard3 apiData={cardValues[3]} />,
-    // },
+    {
+      id: 2,
+      title: "Vistits & Logins",
+      subtitle: "(Includes guest sessions)",
+      icon: <FaUsers />,
+      component: <TabCard2 apiData={cardValues[2]} />,
+    },
+    {
+      id: 3,
+      title: "Comulative page views, search and Downloads",
+      subtitle: "Revenue Growth",
+      icon: <FaChartLine />,
+      component: <TabCard3 setTotalCount={setTotalCount} totalCount={totalCount} apiData={cardValues[3]} />,
+    },
     // {
     //   id: 4,
     //   title: "Tab 4",
     //   subtitle: "Settings",
     //   icon: <FaCog />,
-    //   component: <TabCard4 apiData={cardValues[4]} />,
+    //   component: <TabCard4 setTotalCount={setTotalCount2} totalCount2={totalCount2} apiData={cardValues[4]} />,
     // },
   ];
 
   // Calculate total count for each card (before return)
   const calculateTotalCount = (cardId) => {
     const data = cardValues[cardId];
+    var total = 0
     if (data && Array.isArray(data.date_wise_counts)) {
-      return data.date_wise_counts.reduce((sum, item) => sum + item.count, 0);
+      total = data.date_wise_counts.reduce((sum, item) => sum + item.count, 0);
+      if (cardId == 2) {
+        total = total + totalVisit
+      }
     }
-    return "...";
+
+    return total;
   };
 
   return (
     <div className="container mt-5">
       <Row className="mb-4">
         {cardData.map(({ id, title, subtitle, icon }) => (
-          <Col key={id} xs={12} md={3}>
+          <Col className="mt-3" key={id} xs={12} md={3}>
             <Card
-              className={`h-100 shadow-sm ${
-                activeTab === id ? "bg-primary text-white border-primary" : ""
-              }`}
+              className={`h-100 shadow-sm ${activeTab === id ? "bg-primary text-white border-primary" : "bg-light"
+                }`}
               onClick={() => setActiveTab(id)}
               style={{ cursor: "pointer" }}
             >
@@ -163,11 +201,10 @@ const Report = ({ selectedDate }) => {
                 </div>
                 <div>
                   <h3
-                    className={`fw-bold ${
-                      activeTab === id ? "text-white" : ""
-                    }`}
+                    className={`fw-bold ${activeTab === id ? "text-white" : ""
+                      }`}
                   >
-                    {calculateTotalCount(id)}
+                    {id != 3 ? calculateTotalCount(id) : totalCount}
                   </h3>
                 </div>
               </Card.Body>

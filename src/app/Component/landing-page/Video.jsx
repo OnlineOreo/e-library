@@ -9,15 +9,40 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 
-export default function Video({ toggle, landingPageData = [] }) {
+export default function Video({ toggle, landingPageData = [], }) {
     const videos = landingPageData?.staff_picks?.filter(staff_pick =>
         staff_pick.article_type_name?.toLowerCase() === "video"
     ) || [];
 
+    const getToken = () => {
+        const cookieString = document.cookie
+          .split("; ")
+          .find((row) => row.startsWith("access_token="));
+        return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
+      };
+
     const handleWatchClick = (url) => {
-        if (url) {
-            window.open(url, '_blank');
-        }
+        const token = getToken();
+        if (!token) {
+            setShow(true);
+            router.push(`?book=${url}`);
+            return;
+          }
+
+        const screenWidth = window.screen.width;
+        const screenHeight = window.screen.height;
+        const width = screenWidth / 2;
+        const height = screenHeight;
+        const left = screenWidth / 2;
+      
+        window.open(
+            url,
+          'targetWindow',
+          `toolbar=no,location=no,menubar=no,scrollbars=yes,resizable=yes,width=${width},height=${height},left=${left},top=0`
+        );
+        // if (url) {
+        //     window.open(url, '_blank');
+        // }
     };
 
     return (
