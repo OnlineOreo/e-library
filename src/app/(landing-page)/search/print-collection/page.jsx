@@ -18,7 +18,7 @@ function combineFacetData(facetData) {
   return combined;
 }
 
-async function fetchSolrData(searchQuery, startIndex = 0, pubPkg) {
+async function fetchSolrData(searchQuery, startIndex = 0) {
   if (!searchQuery) {
     return {
       results: [],
@@ -33,10 +33,13 @@ async function fetchSolrData(searchQuery, startIndex = 0, pubPkg) {
 
   try {
     const baseUrl = process.env.NEXT_PUBLIC_SOLR_BASE_URL;
-    const solrQuery = `fq=pkg_id%3A(${pubPkg})&indent=true`;
+    const solrQuery = `indent=true`;
 
     const mainUrl = `${baseUrl}/solr/Print-collection/select?${solrQuery}&q.op=OR&q=${searchQuery}&rows=15&start=${startIndex}`;
     const sideUrl = `${baseUrl}/solr/Print-collection/select?${solrQuery}&q=*:*&fq=${searchQuery}&facet=true&facet.field=dc_publishers_string&facet.field=datacite_rights_string&facet.field=resource_types_string&facet.field=dc_date&facet.field=datacite_creators_string&facet.limit=500&facet.sort=count`;
+
+    console.log(mainUrl);
+    
 
     const [mainRes, sideRes] = await Promise.all([
       axios.get(mainUrl),
@@ -87,20 +90,7 @@ export default async function PrintCollectionPage({ searchParams }) {
   const searchParamsObj = await searchParams || {};
   const searchQuery = searchParamsObj.q || '';
 
-  const headersList = await headers();
-  const fullHostname = headersList.get('host') || '';
-  const hostname = fullHostname.split('.')[0];
-
-  const pkgIdMapping = {
-    mriirs: '11%2043',
-    fri: '45%2048',
-    lhlb: '11%2046',
-    dev: '44%2047',
-    demo: '44%2047',
-  };
-
-  const pubPkg = pkgIdMapping[hostname] || '';
-  const data = await fetchSolrData(searchQuery, 0, pubPkg);
+  const data = await fetchSolrData(searchQuery, 0);
 
   return (
     <Container className="px-4 text-secondary">
@@ -119,17 +109,10 @@ export default async function PrintCollectionPage({ searchParams }) {
               initialResults={data.results}
               initialResultsCount={data.resultsCount}
               catalogCore="Print-collection"
-              pubPkg={pubPkg}
             />
           </Suspense>
         </Col>
       </Row>
-      <LogUpdateClient
-        path={data.path}
-        status_code={data.status_code}
-        initialResults={data.results}
-        error_trace={data.error_trace}
-      />
     </Container>
   );
 }

@@ -2,23 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useTranslation } from 'react-i18next';
-import '@/i18n'; // cleaner using path alias `@`
 
 const SearchBar = ({ show, setShow }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { t } = useTranslation();
 
   const [filterType, setFilterType] = useState("datacite_titles");
   const [searchText, setSearchText] = useState(filterType === "resource_types_string" ? "book" : "");
-
-  const getToken = () => {
-    const cookieString = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("access_token="));
-    return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
-  };
 
   useEffect(() => {
     const fullQuery = searchParams.get("q") || "";
@@ -60,15 +50,7 @@ const SearchBar = ({ show, setShow }) => {
       }
     }
 
-    const token = getToken();
-
     const query = `${filterType}%3A(${encodeURIComponent(searchText === "" ? "*:*" : searchText)})`;
-
-    if (!token) {
-      setShow(true);
-      router.push(`/?search=/search/${catalogCore}?q=${query}`);
-      return;
-    }
 
     router.push(`/search/${catalogCore}?q=${query}`);
   };
@@ -77,26 +59,26 @@ const SearchBar = ({ show, setShow }) => {
     <div className="search-style-2">
       <form id="search_form" className="d-flex w-100" onSubmit={handleSubmit}>
         <select value={filterType} onChange={(e) => setFilterType(e.target.value)}>
-          <option value="datacite_titles">{t('Title')}</option>
-          <option value="datacite_creators">{t('Author')}</option>
-          <option value="dc_publishers">{t('Publisher')}</option>
-          <option value="resource_types_string">{t('Resource Types')}</option>
-          <option value="college_category">{t('Subject')}</option>
+          <option value="datacite_titles">{'Title'}</option>
+          <option value="datacite_creators">{'Author'}</option>
+          <option value="dc_publishers">{'Publisher'}</option>
+          <option value="resource_types_string">{'Resource Types'}</option>
+          <option value="college_category">{'Subject'}</option>
         </select>
 
         {filterType === "resource_types_string" ? (
           <select value={searchText} onChange={(e) => setSearchText(e.target.value)} style={{ width: "60%" }}>
-            <option value="book">{t('Print Collection')}</option>
-            <option value="e-book">{t('e-book')}</option>
-            <option value="e-journals">{t('e-journals')}</option>
-            <option value="Video">{t('Video')}</option>
-            <option value="audio">{t('Audio')}</option>
+            <option value="book">{'Print Collection'}</option>
+            <option value="e-book">{'e-book'}</option>
+            <option value="e-journals">{'e-journals'}</option>
+            <option value="Video">{'Video'}</option>
+            <option value="audio">{'Audio'}</option>
           </select>
         ) : (
           <input
             type="text"
             value={searchText}
-            placeholder={t('Search with/without any keyword')}
+            placeholder={'Search with/without any keyword'}
             onChange={(e) => setSearchText(e.target.value)}
             style={{ width: "60%" }}
           />

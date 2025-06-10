@@ -127,12 +127,6 @@ export default async function PrintCollectionPage({ searchParams }) {
           </Suspense>
         </Col>
       </Row>
-      <LogUpdateClient
-        path={data.path}
-        status_code={data.status_code}
-        initialResults={data.results}
-        error_trace={data.error_trace}
-      />
     </Container>
   );
 }

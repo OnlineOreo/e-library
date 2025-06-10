@@ -22,7 +22,7 @@ const BookCover = ({ title, author, thumbnail }) => {
   if (thumbnail && thumbnail !== "") {
     return (
       <div className="mx-3 mt-3 mb-3 border">
-      <Image
+      <img
         src={thumbnail}
         alt={title}
         width={300}

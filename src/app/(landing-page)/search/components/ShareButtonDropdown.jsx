@@ -14,9 +14,16 @@ const ShareButtonDropdown = ({ id, catalogType }) => {
   const [shareDropdown, setShareDropdown] = useState(false);
   const containerRef = useRef(null);
 
+  const arrayCors = {
+    "Print-collection": "print-collection",
+    "e-resources": "e-resources",
+    "e-collection": "e-collection",
+    "multimedia-n": "multimedia",
+};
+
   const baseShareUrl =
     typeof window !== "undefined"
-      ? `${window.location.origin}/search?filter_type=id&search_text=${id}`
+      ? `${window.location.origin}/search/${arrayCors[catalogType]}?q=id%3A(${id})`
       : "";
 
   const encodedUrl = encodeURIComponent(baseShareUrl);

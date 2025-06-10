@@ -3,12 +3,8 @@
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 
-import { useTranslation } from 'react-i18next';
-import '@/i18n'; // cleaner using path alias `@`
-
 export default function SolrSearchNav() {
 
-    const { t, i18n } = useTranslation();
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const qParam = searchParams.get('q');
@@ -21,31 +17,31 @@ export default function SolrSearchNav() {
 
     if (isAdvanceSearch) {
         links = [
-            { href: '/advance-search/print-collection', label: t('Print Collection') },
-            { href: '/advance-search/e-collection', label: t('E Collection') },
-            { href: '/advance-search/e-resources', label: t('E Resources') },
-            { href: '/advance-search/multimedia', label: t('Multimedia') },
+            { href: '/advance-search/print-collection', label: 'Print Collection' },
+            { href: '/advance-search/e-collection', label: 'E Collection' },
+            { href: '/advance-search/e-resources', label: 'E Resources' },
+            { href: '/advance-search/multimedia', label: 'Multimedia' },
         ];
     } else if (isSavedCatalog) {
         links = [
-            { href: '/saved-catalog/print-collection', label: t('Print Collection') },
-            { href: '/saved-catalog/e-collection', label: t('E Collection') },
-            { href: '/saved-catalog/e-resources', label: t('E Resources') },
-            { href: '/saved-catalog/multimedia', label: t('Multimedia') },
+            { href: '/saved-catalog/print-collection', label: 'Print Collection' },
+            { href: '/saved-catalog/e-collection', label: 'E Collection' },
+            { href: '/saved-catalog/e-resources', label: 'E Resources' },
+            { href: '/saved-catalog/multimedia', label: 'Multimedia' },
         ];
     } else if (isReadHistory){
         links = [
-            { href: '/read-history/print-collection', label: t('Print Collection') },
-            { href: '/read-history/e-collection', label: t('E Collection') },
-            { href: '/read-history/e-resources', label: t('E Resources') },
-            { href: '/read-history/multimedia', label: t('Multimedia') },
+            { href: '/read-history/print-collection', label: 'Print Collection' },
+            { href: '/read-history/e-collection', label: 'E Collection' },
+            { href: '/read-history/e-resources', label: 'E Resources' },
+            { href: '/read-history/multimedia', label: 'Multimedia' },
         ];
     } else {
         links = [
-            { href: '/search/print-collection', label: t('Print Collection') },
-            { href: '/search/e-collection', label: t('E Collection') },
-            { href: '/search/e-resources', label: t('E Resources') },
-            { href: '/search/multimedia', label: t('Multimedia') },
+            { href: '/search/print-collection', label: 'Print Collection' },
+            { href: '/search/e-collection', label: 'E Collection' },
+            { href: '/search/e-resources', label: 'E Resources' },
+            { href: '/search/multimedia', label: 'Multimedia' },
         ];
     }
     

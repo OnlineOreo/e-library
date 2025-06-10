@@ -14,11 +14,7 @@ import GridViewSkelton from './GridViewSkelton';
 import CatalogDetailModal from './CatalogDetailModal';
 import SearchWithinSearch from './SearchWithinSearch';
 
-import { useTranslation } from 'react-i18next';
-import '@/i18n'; // cleaner using path alias `@`
-
-export default function ShowResults({ initialResults, initialResultsCount, catalogCore, pubPkg}){
-    const { t } = useTranslation();
+export default function ShowResults({ initialResults, initialResultsCount, catalogCore}){
     const searchParams = useSearchParams();
     const urlParams = searchParams.get("q");
     
@@ -41,48 +37,7 @@ export default function ShowResults({ initialResults, initialResultsCount, catal
         setResults(initialResults || []);
         setResultsCount(initialResultsCount || 0);
         setStartIndex(initialResults.length || 0);
-        loadSavedCatalog()
     }, [initialResults, initialResultsCount]);
-
-      const getToken = () => {
-        if (typeof document === "undefined") return null;
-    
-        const cookieString = document.cookie
-          .split("; ")
-          .find((row) => row.startsWith("access_token="));
-    
-        return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
-      };
-      const getUserID = () => {
-        if (typeof document === "undefined") return null;
-    
-        const cookieString = document.cookie
-          .split("; ")
-          .find((row) => row.startsWith("user_id="));
-    
-        return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
-      }; 
-
-    const loadSavedCatalog = async () => {
-        const token = getToken();
-        if (!token) {
-            console.error("Authentication required!");
-            return;
-        }
-        const userId = getUserID();
-        // console.log("user_id", userId);
-        try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-saved-article?user_id=${userId}`, {
-                headers: { Authorization: `${token}` },
-            });
-            setUserSavedCatalogs(response.data);
-            // console.log("user saved catalog : ", response.data);
-
-        } catch (error) {
-            console.error(error)
-        }
-
-    }
 
     const handleLoadMore = async () => {
         if (!urlParams) return;
@@ -90,12 +45,7 @@ export default function ShowResults({ initialResults, initialResultsCount, catal
         const nextStart = startIndex;
 
         try {
-            let res;
-            if (pubPkg) {
-                res = await fetch(`/internal-api/load-more?pkgId=${pubPkg}&q=${urlParams}&start=${nextStart}&catalogCore=${catalogCore}`);
-            } else {
-                res = await fetch(`/internal-api/load-more?q=${urlParams}&start=${nextStart}&catalogCore=${catalogCore}`);
-            }
+            let res = await fetch(`/internal-api/load-more?q=${urlParams}&start=${nextStart}&catalogCore=${catalogCore}`);
             const data = await res.json();            
             const newDocs = data.results || [];
 
@@ -115,7 +65,7 @@ export default function ShowResults({ initialResults, initialResultsCount, catal
         <div>
             <Row className="mb-3">
                 <Col md={6}>
-                    <p>{t('Showing')} <strong>{resultsCount}</strong> {t('results from data')}</p>
+                    <p>{'Showing'} <strong>{resultsCount}</strong> {'results from data'}</p>
                 </Col>
                 <Col md={6}>
                     <div className="d-flex align-items-center justify-content-end">
@@ -159,7 +109,6 @@ export default function ShowResults({ initialResults, initialResultsCount, catal
                                     uploader={item.uploader}
                                     url={item.url}
                                     resource_type={item.resource_types_string}
-                                    user_saved_catalog={userSavedCatalogs}
                                     catalogCore={catalogCore}
                                     thumbnail={item.thumbnail}
                                     onShow={handleShow}
@@ -195,7 +144,6 @@ export default function ShowResults({ initialResults, initialResultsCount, catal
                                     uploader={item.uploader}
                                     url={item.url}
                                     resource_type={item.resource_types_string}
-                                    user_saved_catalog={userSavedCatalogs}
                                     thumbnail={item.thumbnail}
                                     catalogCore={catalogCore}
                                     onShow={handleShow}

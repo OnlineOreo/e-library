@@ -53,7 +53,7 @@ const LogUpdateClient = ({
       formdata.append("institute", instituteId);
       formdata.append("request_body", "");
       formdata.append("response_body", JSON.stringify(initialResults));
-      formdata.append("error_trace", error_trace);
+      formdata.append("error_trace", error_trace);  
 
       axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/log`, formdata, {
         headers: { Authorization: token },

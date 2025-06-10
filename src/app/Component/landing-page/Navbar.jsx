@@ -1,198 +1,21 @@
 "use client";
 import React, { useEffect, useState, Suspense } from "react";
-import MobileNav from "./MobileNav";
-import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import Link from "next/link";
 import SearchBar from "./SearchBar";
-import DropdownMenu from "./DropdownMenu";
-import AuthButtons from "./AuthButtons";
-import UserProfile from "./UserProfile";
-import Swal from "sweetalert2";
 import { LuSlidersHorizontal } from "react-icons/lu";
 import "../../../../public/landingPageAsset/css/style2.css";
 import "../../../../public/landingPageAsset/css/header.css";
-// import { useLandingPageData } from "@/app/context/LandingPageContext"; 
-import { useTranslation } from "react-i18next";
-import "@/i18n";
 
 const Navbar = ({show, setShow}) => {
-  const { t, i18n } = useTranslation();
   const router = useRouter();
-  const landingPageData2 = useSelector((state) => state.landingPageDataSlice);
-  const landingPageData = landingPageData2?.landingPageData || []
-  const instituteId = useSelector((state) => state.institute.instituteId);
   const [token, setToken] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
   // const [show, setShow] = useState(false)
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
-
-  const getBaseDomain = () => {
-    const hostname =
-      typeof window !== "undefined" ? window.location.hostname : "";
-    return hostname;
-  };
-
-  const getToken = () => {
-    const cookieString = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("access_token="));
-    return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
-  };
-
-  const getSession = () => {
-    const cookieString = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("session_id="));
-    return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
-  };
-
-  const getUserId = () => {
-    const cookieString = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("user_id="));
-    return cookieString ? decodeURIComponent(cookieString.split("=")[1]) : null;
-  };
-
-  const handleLogout = async (institute_id, setShow) => {
-    const token = getToken();
-    const session_id = getSession();
-    const userId = getUserId();
-    if (session_id) {
-      try {
-        await axios.put(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user-session?session_id=${session_id}&institute_id=${institute_id}&user_id=${userId}`,
-          {
-            ended_at: new Date().toISOString(),
-            institute: instituteId,
-            user: userId,
-          },
-          {
-            headers: {
-              Authorization: `${token}`,
-            },
-          }
-        );
-        Swal.fire({
-          icon: "success",
-          title: "Logged Out",
-          text: "You have been successfully logged out.",
-          confirmButtonText: "OK",
-        });
-        // toggleMenu(false)
-      } catch (error) {
-        console.error("Failed to update user session:", error);
-        router.push("/");
-      }
-    }
-    
-    document.cookie = `access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
-    document.cookie = `user_role=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
-    document.cookie = `session_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
-    document.cookie = `user_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
-    document.cookie = `user_name=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
-    document.cookie = `user_image=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
-
-    setShow = false;
-    setToken('');
-    router.push("/");
-  };
-
-  const baseDomain = getBaseDomain();
-
-  const publisherUrls = {
-    "EBSCO Academic Collection": `https://research-ebsco-com.${baseDomain}:8811/login.aspx?authtype=ip,uid&custid=ns193200&groupid=main&profile=ehost&defaultdb=bsh&token=${token}`,
-    Manupatra: `https://www-manupatrafast-in.${baseDomain}:8811/LoginSwitch/ipRedirect.aspx?token=${token}`,
-  };
-  // const publisherUrls = {
-  //   "EBSCO Academic Collection": `https://research-ebsco-com.mriirs.libvirtuua.com:8811/login.aspx?authtype=ip,uid&custid=ns193200&groupid=main&profile=ehost&defaultdb=bsh&token=${token}`,
-  //   Manupatra: `https://www-manupatrafast-in.mriirs.libvirtuua.com:8811/LoginSwitch/ipRedirect.aspx?token=${token}`,
-  // };
-
-  const handlePublisherClick = (publisher) => {
-    const token = getToken();
-
-    // handle mobile navbar
-    toggleMenu(false);
-    setMenuOpen(false);
-
-    if (!publisherUrls[publisher.publisher_name]) {
-      Swal.fire({
-        title: "Warning!",
-        text: "Publisher not available!",
-        icon: "warning",
-        confirmButtonText: "OK",
-      });
-    }
-
-    if (publisherUrls[publisher.publisher_name]) {
-      if (!token) {
-        const searchParams = new URLSearchParams();
-        searchParams.set("redirect", publisher.publisher_name);
-        router.push(`/?${searchParams.toString()}`);
-        // open login popup
-        setShow(true);
-        // add log vie function
-        return;
-      }
-      addLogs(publisherUrls[publisher.publisher_name]);
-      window.open(publisherUrls[publisher.publisher_name], "_blank");
-    }
-  };
-
-  const getIpAddress = async () => {
-    try {
-      const response = await fetch("https://api64.ipify.org?format=json");
-      const data = await response.json();
-      return data.ip;
-    } catch (error) {
-      console.error("Error fetching IP address:", error);
-    }
-  };
-
-  const addLogs = async (path, status_code = 200) => {
-    const token = getToken();
-    const userId = getUserId();
-    const ipAddress = await getIpAddress();
-    // console.log(ipAddress)
-
-    if (!token || !userId) {
-      console.error("Authentication or user ID missing.");
-      return;
-    }
-
-    const formdata = new FormData();
-    formdata.append("method", "get");
-    formdata.append("path", path);
-    formdata.append("status_code", status_code);
-    formdata.append("user", userId);
-    formdata.append("institute", instituteId);
-    formdata.append("request_body", "");
-    formdata.append("ip_address", ipAddress);
-    // formdata.append("response_body", JSON.stringify(initialResults));
-    // formdata.append("error_trace", error_trace || "");
-
-    try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/log`,
-        formdata,
-        {
-          headers: { Authorization: token },
-        }
-      );
-      // console.log("log response:", response.data);
-    } catch (error) {
-      // console.error("Log API Error:", error);
-    }
-  };
-
-  useEffect(() => {
-    const token = getToken();
-    setToken(token);
-  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -205,65 +28,38 @@ const Navbar = ({show, setShow}) => {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   const navItems = [
-    { type: "link", title: t("Home"), href: "/" },
+    { type: "link", title: "Home", href: "/" },
     {
       type: "dropdown",
-      title: t("eResources"),
-      items: landingPageData?.publishers || [],
+      title: "eResources",
+      items: [],
       isPublisher: true,
     },
     {
       type: "dropdown",
-      title: t("Categories"),
-      items: landingPageData?.categories || [],
+      title: "Categories",
+      items:  [],
     },
     {
       type: "dropdown",
-      title: t("Media"),
-      items: landingPageData?.medias || [],
+      title: "Media",
+      items:  [],
     },
-    // {
-    //   type: "dropdown",
-    //   title: t("Collection"),
-    //   items: landingPageData?.collections || [],
-    // },
     {
       type: "dropdown",
-      title: t("Important Link"),
+      title: "Important Link",
       href: "/",
       items: [
-        ...(landingPageData?.metas || []),
-        ...(landingPageData?.dynamic_page || []),
+        ...( []),
+        ...( []),
       ],
       isImportantLink: true,
     },
     {
       type: "link",
-      title: t("E-news-clipping"),
+      title: "E-news-clipping",
       href: "/e-news-clipping", // Change this to your actual path
     },
-    
-    // {
-    //   type: "dropdown",
-    //   title: t("Account"),
-    //   items: [
-    //     {
-    //       image: "/images/avatar/saved_icon.png",
-    //       name: t("Saved Article"),
-    //       href: "/saved-catalog/print-collection",
-    //     },
-    //     {
-    //       image: "/images/avatar/search_history_icon.png",
-    //       name: t("Search History"),
-    //       href: "#",
-    //     },
-    //     {
-    //       image: "/images/avatar/read_history.png",
-    //       name: t("Read History"),
-    //       href: "#",
-    //     },
-    //   ],
-    // },
   ];
 
 
@@ -304,13 +100,7 @@ const Navbar = ({show, setShow}) => {
                 <div className="logo logo-width-1">
                   <Link href="/">
                     <img
-                      src={
-                        `${
-                          landingPageData?.configurations?.[0]?.latest_logos.find(
-                            (config) => config.is_active
-                          )?.logo
-                        }` || "default"
-                      }
+                      src={`/public/images/avatar/elib_logo.png` }
                       alt="App Icon"
                     />
                   </Link>
@@ -328,18 +118,18 @@ const Navbar = ({show, setShow}) => {
                     <LuSlidersHorizontal />
                   </Link>
                 </div>
-                <UserProfile handleLogout={handleLogout} instituteId={instituteId} setShow={setShow}/>
-                {!token && (
+                {/* <UserProfile handleLogout={handleLogout} instituteId={instituteId} setShow={setShow}/> */}
+                {/* {!token && (
                   <div className="mx-2">
-                    {/* <Link
+                    <Link
                       href="/student-profile"
                       className="mx-1 hover-underline"
                       title="Profile"
                     >
                       Admin
-                    </Link> */}
+                    </Link>
                   </div>
-                )}
+                )} */}
               </div>
             </div>
           </div>
@@ -349,13 +139,7 @@ const Navbar = ({show, setShow}) => {
                 <div className="logo logo-width-1 d-block d-lg-none">
                   <Link href="/">
                     <img
-                      src={
-                        `${
-                          landingPageData?.configurations?.[0]?.latest_logos.find(
-                            (config) => config.is_active
-                          )?.logo
-                        }` || "default"
-                      }
+                      src={"/public/images/avatar/elib_logo.png"}
                       alt="App Icon"
                     />
                   </Link>
@@ -368,42 +152,12 @@ const Navbar = ({show, setShow}) => {
                           className="menu-bar menu_bar_a navbar-nav flex-row"
                           style={{ height: 35 }}
                         >
-                          {visibleNavItems.map((item, index) => (
-                            <li key={index}>
-                              {item.type === "link" ? (
-                                <Link
-                                  className="nav-link nav-btn"
-                                  href={item.href}
-                                >
-                                  {item.title}
-                                </Link>
-                              ) : (
-                                <DropdownMenu
-                                  title={item.title}
-                                  show={show}
-                                  setShow={setShow}
-                                  items={item.items}
-                                  token={token}
-                                  isPublisher={item.isPublisher}
-                                  handlePublisherClick={handlePublisherClick}
-                                />
-                              )}
-                            </li>
-                          ))}
                         </ul>
                       </nav>
                     </div>
                   </div>
                   <div className="header-action-right">
                     <div className="header-action-2">
-                      <AuthButtons
-                        token={token}
-                        setToken={setToken}
-                        handleLogout={() => handleLogout(instituteId, setShow)}
-                        show={show}
-                        setShow={setShow}
-                        publisherUrls={publisherUrls}
-                      />
                       <div className="header-action-icon-2 d-block d-lg-none">
                         <div
                           className="burger-icon burger-icon-white ms-2"
@@ -422,17 +176,6 @@ const Navbar = ({show, setShow}) => {
           </div>
         </header>
       </div>
-      <MobileNav
-        menuOpen={menuOpen}
-        publisherUrls={publisherUrls}
-        toggleMenu={toggleMenu}
-        token={token}
-        handlePublisherClick={handlePublisherClick}
-        handleLogout={() => handleLogout(instituteId, setShow)}
-        setShow={setShow}
-        setMenuOpen={setMenuOpen}
-        show={show}
-      />
     </>
   );
 };

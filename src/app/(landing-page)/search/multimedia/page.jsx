@@ -87,19 +87,6 @@ export default async function PrintCollectionPage({ searchParams }) {
   const searchParamsObj = await searchParams || {};
   const searchQuery = searchParamsObj.q || '';
 
-  // const headersList = await headers();
-  // const fullHostname = headersList.get('host') || '';
-  // const hostname = fullHostname.split('.')[0];
-
-  // const pkgIdMapping = {
-  //   mriirs: '11%2043',
-  //   fri: '45%2048',
-  //   lhlb: '11%2046',
-  //   dev: '44%2047',
-  //   demo: '44%2047',
-  // };
-
-  // const pubPkg = pkgIdMapping[hostname] || '';
   const data = await fetchSolrData(searchQuery, 0);
 
   return (
@@ -119,17 +106,10 @@ export default async function PrintCollectionPage({ searchParams }) {
               initialResults={data.results}
               initialResultsCount={data.resultsCount}
               catalogCore="multimedia-n"
-               // pubPkg={pubPkg}
             />
           </Suspense>
         </Col>
       </Row>
-      <LogUpdateClient
-        path={data.path}
-        status_code={data.status_code}
-        initialResults={data.results}
-        error_trace={data.error_trace}
-      />
     </Container>
   );
 }

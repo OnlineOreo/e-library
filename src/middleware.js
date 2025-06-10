@@ -37,21 +37,6 @@ const accessRules = {
   "/student-profile": ["STUDENT", "STAFF", "FACULTY"],
   "/logs": ["ADMIN", "INSTITUTE ADMIN"],
   "/notification": ["ADMIN", "INSTITUTE ADMIN"],
-  "/search": ["ADMIN", "INSTITUTE ADMIN", "STUDENT", "STAFF", "FACULTY"],
-  "/advance-search-filter": [
-    "ADMIN",
-    "INSTITUTE ADMIN",
-    "STUDENT",
-    "STAFF",
-    "FACULTY",
-  ],
-  "/advance-search": [
-    "ADMIN",
-    "INSTITUTE ADMIN",
-    "STUDENT",
-    "STAFF",
-    "FACULTY",
-  ],
   "/change-password": [
     "ADMIN",
     "INSTITUTE ADMIN",
@@ -66,8 +51,6 @@ const accessRules = {
     "STAFF",
     "FACULTY",
   ],
-  "/saved-catalog": ["ADMIN", "INSTITUTE ADMIN", "STUDENT", "STAFF", "FACULTY"],
-  "/read-history": ["ADMIN", "INSTITUTE ADMIN", "STUDENT", "STAFF", "FACULTY"],
 };
 
 function decodeJwt(token) {
@@ -117,10 +100,7 @@ export const config = {
     "/logs/:path*",
     "/notification/:path*",
     "/reports/:path*",
-    "/search/:path*",
     "/student-profile/:path*",
-    "/advance-search-filter/:path*",
     "/change-password/:path*",
-    "/e-news-clipping/:path*",
   ],
 };
