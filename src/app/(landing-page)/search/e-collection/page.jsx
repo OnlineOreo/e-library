@@ -2,8 +2,6 @@ import { Container, Row, Col } from 'react-bootstrap';
 import { Suspense } from 'react';
 import SearchSideFilter from '../components/SearchSideFilter';
 import axios from 'axios';
-// import { headers } from 'next/headers';
-import LogUpdateClient from '../components/LogUpdateClient';
 import ShowResults from '../components/ShowResults';
 
 function combineFacetData(facetData) {

@@ -1,13 +1,16 @@
 "use client";
+import { Suspense } from 'react'
 import './dynamic.css'
 
-import SearchBar from "./Component/landing-page/SearchBar";
+import Navbar from "./Component/landing-page/Navbar";
 
 export default function Home() {
 
   return (
     <>
-      <SearchBar />
+      <Suspense fallback={<div>Loading Navbar...</div>}>
+        <Navbar />
+      </Suspense>
       <h4>Hello</h4>
     </>
   );
