@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-const SearchBar = ({ show, setShow }) => {
+const SearchBar = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
